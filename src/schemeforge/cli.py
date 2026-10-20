@@ -72,9 +72,9 @@ def eval_cmd(
 
     from schemeforge.core import evaluation, registry
 
-    if suite == Suite.promo:
-        _fail("the promo suite needs the held-out families, which are not built yet", 2)
     _check_integrity(arena)
+    if suite == Suite.promo and case:
+        _fail("--case cannot be combined with the promo suite", 2)
     path = Path(target)
     if not path.is_file():
         try:
@@ -129,6 +129,13 @@ def _print_report(r: dict) -> None:
     for case_id, ms in r.get("cases", {}).items():
         body = "  ".join(f"{k}={_fmt(v)}" for k, v in ms.items() if k != "seconds")
         typer.echo(f"  {case_id:9s} {ms.get('seconds', 0.0):6.2f} s  {body}")
+    for fam, agg in r.get("families", {}).items():
+        typer.echo(f"  {fam} (n={agg['n']}, pass rate {agg['pass_rate']:.2f})")
+        for k, v in agg.items():
+            if isinstance(v, dict):
+                typer.echo(f"      {k:18s} median={_fmt(v['median'])}  p90={_fmt(v['p90'])}  worst={_fmt(v['worst'])}")
+    if "max_cfl" in r:
+        typer.echo(f"  max_cfl: {r['max_cfl']}")
     if r.get("metamorphic"):
         typer.echo("  measured: " + "  ".join(f"{k}={_fmt(v)}" for k, v in r["metamorphic"].items()))
     if "cost" in r:
@@ -172,8 +179,6 @@ def zoo_eval(
     from schemeforge.core import evaluation
     from schemeforge.core.locks import max_parallel
 
-    if suite == ZooSuite.promo:
-        _fail("the promo suite needs the held-out families, which are not built yet", 2)
     _check_integrity(arena)
     zoo = importlib.import_module(f"schemeforge.arenas.{arena}.zoo")
     ev = importlib.import_module(f"schemeforge.arenas.{arena}.evaluate")
@@ -186,13 +191,25 @@ def zoo_eval(
 
     with ThreadPoolExecutor(max_workers=max_parallel()) as pool:
         results = list(pool.map(one, jobs))
-    key = [("R1", "shock_width"), ("R1", "contact_width"), ("S1", "order_smooth"), ("R7", "l1_ref"),
-           ("N1", "res_orders_expl"), ("N1", "newton_iters"), ("N4", "roughness_J")]
+    if suite == ZooSuite.promo:  # family medians
+        key = [("RF1", "l1_smooth"), ("RF1", "shock_width"), ("RF2", "tv_increase"), ("NF1", "shock_pos_err"),
+               ("NF1", "res_orders_expl"), ("NF1", "newton_iters"), ("NF3", "roughness_J")]
+
+        def value(r, c, m):
+            v = r.get("families", {}).get(c, {}).get(m)
+            return v["median"] if isinstance(v, dict) else None
+    else:
+        key = [("R1", "shock_width"), ("R1", "contact_width"), ("S1", "order_smooth"), ("R7", "l1_ref"),
+               ("N1", "res_orders_expl"), ("N1", "newton_iters"), ("N4", "roughness_J")]
+
+        def value(r, c, m):
+            return r.get("cases", {}).get(c, {}).get(m)
+
     typer.echo(f"{'slot':15s}{'member':17s}{'status':9s}{'s':>6s}  " + "  ".join(f"{c}.{m}" for c, m in key))
     for slot, name, res in results:
         r = res.report
         cells = "  ".join(
-            f"{_fmt(r['cases'][c][m]) if m in r['cases'].get(c, {}) else '-':>{len(c) + len(m) + 1}s}" for c, m in key
+            f"{_fmt(value(r, c, m)) if value(r, c, m) is not None else '-':>{len(c) + len(m) + 1}s}" for c, m in key
         )
         typer.echo(f"{slot:15s}{name:17s}{r['status']:9s}{r.get('seconds', 0.0):6.1f}  {cells}")
         for v in r.get("violations", [])[:2]:
@@ -263,9 +280,18 @@ def dossier_build(candidate_id: Annotated[str, typer.Argument(help="Promoted can
 
 
 @judge_app.command("verify")
-def judge_verify() -> None:
+def judge_verify(
+    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
+) -> None:
     """Check exact solutions against Appendix H, the zoo sanity ranking and the metamorphic tests."""
-    _not_implemented("judge verify")
+    import importlib
+
+    checks = importlib.import_module(f"schemeforge.arenas.{arena}.verify").verify()
+    for c in checks:
+        typer.echo(f"{'PASS' if c.ok else 'FAIL'}  {c.name}: {c.detail}")
+    failed = [c for c in checks if not c.ok]
+    typer.echo(f"{len(checks) - len(failed)} of {len(checks)} checks passed")
+    raise typer.Exit(code=1 if failed else 0)
 
 
 @judge_app.command("version")
@@ -287,13 +313,42 @@ def judge_exact(
     json_out: JsonOut = False,
 ) -> None:
     """Print the exact or reference solution for one case (for the blind audit)."""
-    _not_implemented("judge exact")
+    import importlib
+    import json
+
+    import yaml
+
+    cases = importlib.import_module(f"schemeforge.arenas.{arena}.cases")
+    verify = importlib.import_module(f"schemeforge.arenas.{arena}.verify")
+    c = cases.case_from_dict(yaml.safe_load(case.read_text(encoding="utf-8")))
+    try:
+        rep = verify.exact_report(c)
+    except (ValueError, TypeError) as exc:
+        _fail(str(exc), 2)
+    if json_out:
+        typer.echo(json.dumps(rep))
+    else:
+        typer.echo("  ".join(f"{k}={v}" for k, v in rep.items() if not isinstance(v, list)))
 
 
 @app.command()
 def reveal(run: Annotated[str, typer.Argument(help="Run id.")]) -> None:
     """Show full held-out diagnostics. Refuses to run without an interactive terminal."""
-    _not_implemented("reveal")
+    import json
+    import sys
+
+    from schemeforge.core.evaluation import HELDOUT_DIR
+
+    if not (sys.stdin.isatty() and sys.stdout.isatty()):
+        _fail("reveal needs an interactive terminal (held-out details are for Peter only)", 5)
+    path = HELDOUT_DIR / f"{run}.json"
+    if not path.is_file():
+        _fail(f"no held-out details for run {run}", 2)
+    for inst_id, d in json.loads(path.read_text(encoding="utf-8")).items():
+        state = "OK" if not d["violations"] else "VIOLATION: " + "; ".join(d["violations"])
+        typer.echo(f"{inst_id} [{d['family']}] {state}")
+        typer.echo(f"    case: {json.dumps(d['case'])}")
+        typer.echo("    " + "  ".join(f"{k}={_fmt(v)}" for k, v in d["metrics"].items()))
 
 
 if __name__ == "__main__":

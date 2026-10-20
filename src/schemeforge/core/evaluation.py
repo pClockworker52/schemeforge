@@ -18,9 +18,19 @@ from .loader import code_hash
 from .locks import acquire_core
 from .worker import MARKER
 
-TIMEOUTS = {"smoke": 120, "dev": 600}  # wall-clock seconds, JIT included
+TIMEOUTS = {"smoke": 120, "dev": 600, "promo": 3600}  # wall-clock seconds, JIT included
 MEMORY_BYTES = 0  # RLIMIT_AS; 0 = off (JAX reserves large virtual address ranges, see DECISIONS.md)
 REPORTS_DIR = Path("runs") / "reports"
+HELDOUT_DIR = Path.home() / ".schemeforge" / "heldout_runs"  # per-instance promo details; denied to Claude Code
+
+
+def store_heldout(run_id: str, instances: dict, heldout_dir: Path = HELDOUT_DIR) -> Path:
+    """Write per-instance promo details outside the repo (owner-readable only)."""
+    heldout_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    path = heldout_dir / f"{run_id}.json"
+    path.write_text(json.dumps(instances, indent=1, default=float), encoding="utf-8")
+    path.chmod(0o600)
+    return path
 
 
 @dataclass(frozen=True)
@@ -82,7 +92,7 @@ def register_candidate(conn: sqlite3.Connection, path: Path, arena: str, slot: s
 
 def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: list[dict] | None = None,
                   registry_path: Path = registry.DEFAULT_PATH, origin: str = "eval",
-                  candidate_id: str | None = None) -> EvalResult:
+                  candidate_id: str | None = None, heldout_dir: Path = HELDOUT_DIR) -> EvalResult:
     conn = registry.connect(registry_path)
     cid = register_candidate(conn, path, arena, slot, origin, candidate_id)
     version, jhash = judge_version(arena), tree_hash()
@@ -96,6 +106,9 @@ def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: li
     job = {"arena": arena, "slot": slot, "suite": suite, "candidate": str(path.resolve()),
            "extra_cases": extra_cases or []}
     report = run_worker(job, TIMEOUTS.get(suite, 600))
+    instances = report.pop("instances", None)
+    if instances is not None:
+        store_heldout(run_id, instances, heldout_dir)
     report.update(run_id=run_id, candidate_id=cid, judge_version=version, judge_hash=jhash)
 
     report_path = REPORTS_DIR / f"{run_id}.json"
@@ -108,6 +121,15 @@ def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: li
         rows.append((run_id, cid, "R1", None, k, float(v), version, jhash))
     if "cost" in report:
         rows.append((run_id, cid, None, None, "cost", float(report["cost"]), version, jhash))
+    for fam, agg in report.get("families", {}).items():
+        for k, v in agg.items():
+            if isinstance(v, dict):
+                rows += [(run_id, cid, None, fam, f"{k}:{stat}", float(v[stat]), version, jhash)
+                         for stat in ("median", "p90", "worst")]
+            elif k == "pass_rate":
+                rows.append((run_id, cid, None, fam, "pass_rate", float(v), version, jhash))
+    if "max_cfl" in report:
+        rows.append((run_id, cid, None, "RF1", "max_cfl", float(report["max_cfl"]), version, jhash))
     conn.executemany(
         "INSERT INTO scores (run_id, candidate_id, case_id, family, metric, value, judge_version, judge_hash) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", rows)

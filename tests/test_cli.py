@@ -40,6 +40,6 @@ def test_commands_are_not_implemented_yet(argv: list[str]) -> None:
     assert result.exit_code == NOT_IMPLEMENTED_EXIT
 
 
-def test_promo_is_refused_until_families_exist() -> None:
-    result = runner.invoke(app, ["eval", "x.py", "--arena", "euler1d", "--slot", "limiter", "--suite", "promo"])
-    assert result.exit_code == 2
+def test_reveal_refuses_without_a_terminal() -> None:
+    result = runner.invoke(app, ["reveal", "r-anything"])
+    assert result.exit_code == 5

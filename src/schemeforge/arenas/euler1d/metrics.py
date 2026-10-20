@@ -195,8 +195,9 @@ def wall_force_numerical(W: np.ndarray, A_face: np.ndarray, x: np.ndarray, x_thr
 
 
 def wall_force_exact(exact: NozzleSolution, nz: Nozzle, x_from: float) -> float:
-    """J = integral of p dA/dx over [x_from, x_exit] for the exact profile (split at the shock)."""
-    h = 1e-6
+    """J = integral of p dA/dx over [x_from, x_exit] for the exact profile (split at the shock).
+    dA/dx by central differences (h = 1e-5, error ~1e-10), far below the second differences of J (~1e-2)."""
+    h = 1e-5
 
     def dAdx(x):
         return (float(nz.area(x + h)) - float(nz.area(x - h))) / (2 * h)
@@ -208,7 +209,7 @@ def wall_force_exact(exact: NozzleSolution, nz: Nozzle, x_from: float) -> float:
     if exact.x_shock is not None and x_from < exact.x_shock < nz.x_exit:
         pts = [x_from, exact.x_shock, nz.x_exit]
     segments = zip(pts, pts[1:], strict=False)
-    return float(sum(quad(integrand, a, b, epsabs=1e-13, epsrel=1e-12, limit=200)[0] for a, b in segments))
+    return float(sum(quad(integrand, a, b, epsabs=1e-12, epsrel=1e-10, limit=200)[0] for a, b in segments))
 
 
 def roughness(J_num: np.ndarray, J_exact: np.ndarray) -> float:

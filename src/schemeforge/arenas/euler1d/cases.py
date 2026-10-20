@@ -46,27 +46,44 @@ class SmoothCase:
 
 @dataclass(frozen=True)
 class NozzleSpec:
-    """Geometry. 'anderson': A = 1 + 2.2 (x - 1.5)^2 on [0, 3]. 'parabolic': throat at x = 1 with a parabolic
-    convergent part (inlet area ratio `inlet_ratio`) and a parabolic divergent part of `length` reaching
-    `area_ratio` at the exit."""
+    """Geometry, throat area 1.
+
+    - 'anderson': A = 1 + 2.2 (x - 1.5)^2 on [0, 3] (x_in is ignored).
+    - 'parabolic': throat at x = 1; parabolic convergent part A = 1 + (inlet_ratio - 1)(1 - x)^2 and parabolic
+      divergent part A = 1 + (area_ratio - 1)((x - 1)/length)^2.
+    - 'conical': same convergent part; smoothed-conical divergent part with radius
+      r = 1 + k (sqrt(d^2 + delta^2) - delta), d = x - 1, delta = 0.2, k chosen so that r(length)^2 = area_ratio.
+    x_in (default 0) moves the inlet inside or before the convergent part; the families use it to shift the grid.
+    """
 
     type: str = "anderson"
     area_ratio: float = 5.95
     length: float = 1.5
     inlet_ratio: float = 2.0
+    x_in: float = 0.0
 
     def build(self) -> Nozzle:
         if self.type == "anderson":
             return anderson_nozzle()
+        ci, cd, L = self.inlet_ratio - 1.0, self.area_ratio - 1.0, self.length
         if self.type == "parabolic":
-            ci, cd, L = self.inlet_ratio - 1.0, self.area_ratio - 1.0, self.length
 
             def area(x):
                 x = np.asarray(x, dtype=float)
                 return np.where(x < 1.0, 1.0 + ci * (1.0 - x) ** 2, 1.0 + cd * ((x - 1.0) / L) ** 2)
 
-            return Nozzle(area, 0.0, 1.0 + L, 1.0)
-        raise ValueError(f"unknown nozzle type {self.type!r}")
+        elif self.type == "conical":
+            delta = 0.2
+            k = (np.sqrt(self.area_ratio) - 1.0) / (np.sqrt(L * L + delta * delta) - delta)
+
+            def area(x):
+                x = np.asarray(x, dtype=float)
+                r = 1.0 + k * (np.sqrt((x - 1.0) ** 2 + delta * delta) - delta)
+                return np.where(x < 1.0, 1.0 + ci * (1.0 - x) ** 2, r * r)
+
+        else:
+            raise ValueError(f"unknown nozzle type {self.type!r}")
+        return Nozzle(area, float(self.x_in), 1.0 + L, 1.0)
 
 
 @dataclass(frozen=True)

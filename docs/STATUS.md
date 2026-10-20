@@ -30,10 +30,16 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
 - Judge bug found by the first zoo run and fixed: shocks near the nozzle exit escaped during the transient and
   the solver settled on a spurious supersonic-exit state (roughness_J ≈ 25 for every scheme). Fix: pressure
   outlet for p_b > p_crit2 and a subsonic-exit initial guess in the shock regime (spec §5.3).
-- Tests: 184 passed, ruff clean.
+- Held-out families RF1 (20), RF2 (10), NF1 (20), NF2 (10), NF3 (5) from ~/.schemeforge/heldout_seed
+  (`families.py`; parabolic and smoothed-conical nozzles, NF1 grid shifted so the shock lands at a random cell
+  fraction). Promo suite: family aggregates only (median, p90, worst, pass rate) plus max_cfl on 5 RF1
+  instances; per-instance details go to ~/.schemeforge/heldout_runs/<run>.json; `sforge reveal` needs a TTY.
+- `sforge judge verify` (Appendix H, zoo hard constraints, Gate 1 sanity ranking, mirror/scaling) and
+  `sforge judge exact --case YAML --json` for the audit.
+- Tests: 201 passed, ruff clean.
 
 ## Next (ordered)
-1. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
+1. Zoo promo run; problem-existence report docs/judge/euler1d_baseline.md (§9.9).
 2. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
 
 ## Blockers / questions for Peter

@@ -6,6 +6,8 @@ evaluate(fn, slot, suite, extra_cases) -> report (JSON-serializable dict):
     cases        {case_id: {metric: value, "seconds": wall time}}
     metamorphic  {mirror_err, scaling_err, galilean_err} on R1 (measured, not required)
     cost         wall time per cell update on R1 [ns] (normalized to the zoo median by the leaderboard)
+Promo instead: families (aggregates per family), max_cfl, seed_fingerprint, and `instances` with the
+per-instance details, which core/evaluation.py strips and stores outside the repo before anything is shown.
 """
 
 from __future__ import annotations
@@ -35,7 +37,7 @@ from .steady import default_operator, make_grid, solve_explicit, solve_implicit
 from .unsteady import solve_unsteady
 
 SLOTS = ("limiter", "flux", "reconstruction")
-SUITES = ("smoke", "dev")
+SUITES = ("smoke", "dev", "promo")
 
 
 def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
@@ -175,30 +177,114 @@ def evaluate(fn: Callable, slot: str, suite: str, extra_cases: Iterable[Case] = 
         report.update(status="rejected", violations=v, seconds=time.perf_counter() - t_start)
         return report
     reconstruct, flux = slot_scheme(fn, slot)
+    if suite == "promo":
+        return _evaluate_promo(reconstruct, flux, report, t_start)
     for case in [*suite_cases(suite), *extra_cases]:
         t0 = time.perf_counter()
-        try:
-            if isinstance(case, RiemannCase):
-                m, v, W = run_riemann(case, reconstruct, flux)
-                if case.id in ("R1", "smoke-R1") and not v:
-                    v += _r1_extras(case, reconstruct, flux, W, report)
-            elif isinstance(case, ReferenceCase):
-                m, v = run_reference(case, reconstruct, flux)
-            elif isinstance(case, SmoothCase):
-                m, v = run_smooth(case, reconstruct, flux)
-            elif isinstance(case, NozzleCase):
-                m, v = run_nozzle(case, reconstruct, flux)
-            elif isinstance(case, NozzleSweepCase):
-                m, v = run_nozzle_sweep(case, reconstruct, flux)
-            else:
-                raise TypeError(type(case).__name__)
-        except Exception as exc:  # noqa: BLE001 - candidate code can fail in any way
-            m, v = {}, [f"{type(exc).__name__}: {exc}"]
+        m, v = run_case(case, reconstruct, flux, report)
         report["cases"][case.id] = {**m, "seconds": time.perf_counter() - t0}
         report["violations"] += [f"{case.id}: {msg}" for msg in v]
     report["status"] = "rejected" if report["violations"] else "ok"
     report["seconds"] = time.perf_counter() - t_start
     return report
+
+
+def run_case(case: Case, reconstruct, flux, report: dict | None = None) -> tuple[dict[str, float], list[str]]:
+    """Metrics and hard-constraint violations of one case; candidate failures become violations."""
+    try:
+        if isinstance(case, RiemannCase):
+            m, v, W = run_riemann(case, reconstruct, flux)
+            if report is not None and case.id in ("R1", "smoke-R1") and not v:
+                v += _r1_extras(case, reconstruct, flux, W, report)
+            return m, v
+        if isinstance(case, ReferenceCase):
+            return run_reference(case, reconstruct, flux)
+        if isinstance(case, SmoothCase):
+            return run_smooth(case, reconstruct, flux)
+        if isinstance(case, NozzleCase):
+            return run_nozzle(case, reconstruct, flux)
+        if isinstance(case, NozzleSweepCase):
+            return run_nozzle_sweep(case, reconstruct, flux)
+        raise TypeError(type(case).__name__)
+    except Exception as exc:  # noqa: BLE001 - candidate code can fail in any way
+        return {}, [f"{type(exc).__name__}: {exc}"]
+
+
+# --- promo: held-out families, aggregates only ---------------------------------------------------------------
+HIGHER_IS_BETTER = {"order_smooth", "res_orders_expl", "converged_expl", "converged_impl", "max_cfl"}
+CFL_SWEEP = (0.3, 0.5, 0.7, 0.9)
+CFL_INSTANCES = 5  # first RF1 instances used for max_cfl
+
+
+def aggregate(instances: dict[str, dict]) -> dict[str, dict]:
+    """Per family: n, pass rate, and per metric median, p90 and worst on the bad side (PLAN §5.6)."""
+    out: dict[str, dict] = {}
+    for fam in sorted({d["family"] for d in instances.values()}):
+        rows = [d for d in instances.values() if d["family"] == fam]
+        agg: dict[str, Any] = {"n": len(rows), "pass_rate": float(np.mean([not d["violations"] for d in rows]))}
+        names = sorted({k for d in rows for k in d["metrics"] if k != "seconds"})
+        for k in names:
+            vals = np.array([d["metrics"][k] for d in rows if k in d["metrics"]], dtype=float)
+            vals = vals[np.isfinite(vals)]
+            if vals.size == 0:
+                continue
+            hi = k in HIGHER_IS_BETTER
+            agg[k] = {"median": float(np.median(vals)),
+                      "p90": float(np.percentile(vals, 10 if hi else 90)),
+                      "worst": float(vals.min() if hi else vals.max()),
+                      "n": int(vals.size)}
+        out[fam] = agg
+    return out
+
+
+def max_cfl(cases: list[RiemannCase], reconstruct, flux) -> float:
+    """Largest CFL of CFL_SWEEP at which every given Riemann case runs without a hard-constraint violation."""
+    best = 0.0
+    for cfl in CFL_SWEEP:
+        for case in cases:
+            x, dx = _grid(case.n, case.domain)
+            W0 = np.where((x < case.x0)[:, None], case.left, case.right)
+            try:
+                W = np.asarray(solve_unsteady(W0, dx, case.t_end, case.gamma, reconstruct, flux=flux, cfl=cfl).W)
+            except Exception:  # noqa: BLE001
+                return best
+            if constraints.check_run(W):
+                return best
+        best = cfl
+    return best
+
+
+def _evaluate_promo(reconstruct, flux, report: dict, t_start: float) -> dict[str, Any]:
+    from .families import promo_suite, read_seed, seed_fingerprint
+
+    seed = read_seed()
+    suite = promo_suite(seed)
+    instances: dict[str, dict] = {}
+    for fam, case in suite:
+        t0 = time.perf_counter()
+        m, v = run_case(case, reconstruct, flux)
+        instances[case.id] = {"family": fam, "metrics": {**m, "seconds": time.perf_counter() - t0},
+                              "violations": v, "case": _case_dict(case)}
+    rf1 = [c for fam, c in suite if fam == "RF1"][:CFL_INSTANCES]
+    report.update(
+        families=aggregate(instances),
+        max_cfl=max_cfl(rf1, reconstruct, flux),
+        seed_fingerprint=seed_fingerprint(seed),
+        instances=instances,  # stripped by the parent and stored outside the repo
+        violations=[f"{fam}: {sum(1 for d in instances.values() if d['family'] == fam and d['violations'])} of "
+                    f"{sum(1 for d in instances.values() if d['family'] == fam)} instances violate hard constraints"
+                    for fam in sorted({d['family'] for d in instances.values()})
+                    if any(d["violations"] for d in instances.values() if d["family"] == fam)],
+    )
+    report["status"] = "rejected" if report["violations"] else "ok"
+    report["seconds"] = time.perf_counter() - t_start
+    return report
+
+
+def _case_dict(case: Case) -> dict:
+    from dataclasses import asdict
+
+    return asdict(case)
 
 
 def _r1_extras(case: RiemannCase, reconstruct, flux, W: np.ndarray, report: dict) -> list[str]:
