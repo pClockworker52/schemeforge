@@ -72,6 +72,20 @@ def test_implicit_van_leer_converges_on_N1() -> None:
     assert np.mean(np.abs(r.W[smooth, 2] - prof["p"][smooth])) < 2e-3
 
 
+@pytest.mark.parametrize("x_shock", [1.6, 2.475, 2.8, 2.95])
+def test_shock_near_the_exit_stays_inside(x_shock) -> None:
+    """Regression: with a supersonic-extrapolation outlet the transient blew such shocks out of the nozzle and the
+    solver settled on a spurious supersonic-exit state. The pressure outlet (p_b > p_crit2) keeps them inside."""
+    from schemeforge.arenas.euler1d.exact_nozzle import back_pressure_for_shock
+
+    pb = back_pressure_for_shock(NZ, x_shock, G)
+    grid = make_grid(NZ, 120)
+    exact = solve_nozzle(NZ, pb, G)
+    r = solve_implicit(grid, pb, G, MINMOD)
+    assert r.converged
+    assert shock_cell_error(r.W, grid, exact) < 1.0
+
+
 def test_both_solvers_agree_on_supersonic_N3() -> None:
     grid = make_grid(NZ, 120)
     prof = solve_nozzle(NZ, 0.01, G).profile(grid.x)

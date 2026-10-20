@@ -18,7 +18,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 
-from .exact_nozzle import Nozzle
+from .exact_nozzle import Nozzle, back_pressure_for_shock, critical_pressures, solve_nozzle
 from .numerics import NG, Flux, Reconstruction, cons_to_prim, hllc, prim_to_cons
 
 CONVERGED = 1e-12
@@ -52,8 +52,18 @@ def make_grid(nz: Nozzle, n: int) -> Grid:
 
 
 # --- boundary conditions (judge-owned) ---------------------------------------------------------------------
-def boundary_states(W: jax.Array, pb, g) -> tuple[jax.Array, jax.Array]:
-    """Inlet and outlet ghost states (3,) from the interior primitive states W (n, 3)."""
+def pressure_outlet(nz: Nozzle, pb: float, g: float) -> bool:
+    """True when the case is a pressure outlet: p_b > p_crit2, so the exact flow has a subsonic exit (shock or
+    unchoked regime). Decided from geometry and p_b alone, never from the exact solution."""
+    return bool(pb > critical_pressures(nz, g).p_crit2)
+
+
+def boundary_states(W: jax.Array, pb, g, force_pb=False) -> tuple[jax.Array, jax.Array]:
+    """Inlet and outlet ghost states (3,) from the interior primitive states W (n, 3).
+
+    Outlet: p = pb with entropy and J+ extrapolated when the last cell is subsonic or force_pb is set (pressure
+    outlet; without forcing, a shock that leaves the domain during the pseudo-time transient never returns and the
+    discrete problem settles on a spurious supersonic-exit state); otherwise everything is extrapolated."""
     # Inlet: p0 = T0 = 1; extrapolate the outgoing invariant J- = u - 2a/(g-1) from the first cell.
     k = 0.5 * (g - 1.0)
     J = W[0, 1] - jnp.sqrt(g * W[0, 2] / W[0, 0]) / k
@@ -64,18 +74,17 @@ def boundary_states(W: jax.Array, pb, g) -> tuple[jax.Array, jax.Array]:
     p_in = T_in ** (g / (g - 1.0))
     inlet = jnp.stack([p_in / T_in, u_in, p_in])
 
-    # Outlet: subsonic -> impose pb, extrapolate entropy and J+ = u + 2a/(g-1); supersonic -> extrapolate all.
     rn, un, pn = W[-1, 0], W[-1, 1], W[-1, 2]
     an = jnp.sqrt(g * pn / rn)
     rb = rn * (pb / pn) ** (1.0 / g)
     ab = jnp.sqrt(g * pb / rb)
     ub = un + (an - ab) / k
-    outlet = jnp.where(un < an, jnp.stack([rb, ub, pb * jnp.ones_like(rb)]), W[-1])
+    outlet = jnp.where((un < an) | force_pb, jnp.stack([rb, ub, pb * jnp.ones_like(rb)]), W[-1])
     return inlet, outlet
 
 
-def pad_nozzle(W: jax.Array, pb, g) -> jax.Array:
-    inlet, outlet = boundary_states(W, pb, g)
+def pad_nozzle(W: jax.Array, pb, g, force_pb=False) -> jax.Array:
+    inlet, outlet = boundary_states(W, pb, g, force_pb)
     return jnp.concatenate([jnp.tile(inlet, (NG, 1)), W, jnp.tile(outlet, (NG, 1))])
 
 
@@ -92,21 +101,34 @@ def default_operator(reconstruct: Reconstruction, flux: Flux = hllc) -> Operator
     return operator
 
 
-def rhs(U, A, A_face, dx, pb, g, operator: Operator) -> jax.Array:
+def rhs(U, A, A_face, dx, pb, g, operator: Operator, force_pb=False) -> jax.Array:
     """dU/dt = -(F[1:] - F[:-1]) / dx + [0, S_mom, 0], shape (n, 3), for U = (rho A, rho u A, E A)."""
     W = cons_to_prim(U / A[:, None], g)
-    F, S = operator(U, A_face, dx, g, pad_nozzle(W, pb, g))
+    F, S = operator(U, A_face, dx, g, pad_nozzle(W, pb, g, force_pb))
     return (-(F[1:] - F[:-1]) / dx).at[:, 1].add(S)
 
 
 def initial_state(grid: Grid, pb: float, g: float) -> jax.Array:
-    """Isentropic guess with p falling linearly from 1 at the inlet to pb at the exit (independent of the exact
-    solution). Returns U (n, 3)."""
-    s = (grid.x - grid.nozzle.x_in) / (grid.nozzle.x_exit - grid.nozzle.x_in)
-    p = 1.0 + (pb - 1.0) * s
-    rho = p ** (1.0 / g)
-    u = np.sqrt(np.maximum(2.0 * g / (g - 1.0) * (1.0 - p / rho), 0.0))
-    return prim_to_cons(jnp.asarray(np.stack([rho, u, p], axis=1)), g) * jnp.asarray(grid.A)[:, None]
+    """Initial guess U (n, 3); it depends on the geometry and the regime of p_b, never on the case's own solution.
+
+    - p_crit2 < p_b <= p_crit1 (choked, shock inside): the exact flow with a standing shock in the middle of the
+      divergent section (a different back pressure). Its exit is subsonic, so the imposed p_b moves the shock to
+      its place; an isentropic guess has a supersonic exit and lets shocks near the exit escape.
+    - otherwise: isentropic, p falling linearly from 1 at the inlet to p_b at the exit.
+    """
+    nz = grid.nozzle
+    cp = critical_pressures(nz, g)
+    if cp.p_crit2 < pb <= cp.p_crit1:
+        x_g = nz.x_throat + 0.5 * (nz.x_exit - nz.x_throat)
+        prof = solve_nozzle(nz, back_pressure_for_shock(nz, x_g, g), g).profile(grid.x)
+        W = np.stack([prof["rho"], prof["u"], prof["p"]], axis=1)
+    else:
+        s = (grid.x - nz.x_in) / (nz.x_exit - nz.x_in)
+        p = 1.0 + (pb - 1.0) * s
+        rho = p ** (1.0 / g)
+        u = np.sqrt(np.maximum(2.0 * g / (g - 1.0) * (1.0 - p / rho), 0.0))
+        W = np.stack([rho, u, p], axis=1)
+    return prim_to_cons(jnp.asarray(W), g) * jnp.asarray(grid.A)[:, None]
 
 
 @dataclass(frozen=True)
@@ -151,8 +173,8 @@ def _local_dt(U, A, dx, g, cfl):
 
 # --- explicit pseudo-time ----------------------------------------------------------------------------------
 @partial(jax.jit, static_argnames=("operator", "max_iters"))
-def _explicit_loop(U0, A, A_face, dx, pb, g, cfl, operator, max_iters):
-    L = partial(rhs, A=A, A_face=A_face, dx=dx, pb=pb, g=g, operator=operator)
+def _explicit_loop(U0, A, A_face, dx, pb, g, cfl, force_pb, operator, max_iters):
+    L = partial(rhs, A=A, A_face=A_face, dx=dx, pb=pb, g=g, operator=operator, force_pb=force_pb)
     R0 = residual_norm(L(U0))
     hist = jnp.full(max_iters + 1, jnp.nan).at[0].set(R0)
 
@@ -178,7 +200,9 @@ def solve_explicit(grid: Grid, pb: float, g: float, operator: Operator, U0=None,
     """SSP-RK3 in pseudo-time with local time steps dt_i = cfl dx / (|u_i| + a_i)."""
     A, A_face = jnp.asarray(grid.A), jnp.asarray(grid.A_face)
     U0 = initial_state(grid, pb, g) if U0 is None else U0
-    U, k, hist, ok = _explicit_loop(U0, A, A_face, grid.dx, float(pb), float(g), float(cfl), operator, int(max_iters))
+    force = pressure_outlet(grid.nozzle, pb, g)
+    U, k, hist, ok = _explicit_loop(U0, A, A_face, grid.dx, float(pb), float(g), float(cfl), force, operator,
+                                    int(max_iters))
     k = int(k)
     res = np.asarray(hist[: k + 1])
     res = res / res[0]
@@ -213,9 +237,9 @@ def colored_jacobian(f, u: jax.Array, n: int) -> jax.Array:
 
 
 @partial(jax.jit, static_argnames=("operator",))
-def _implicit_step(U, A, A_face, dx, pb, g, cfl, operator):
+def _implicit_step(U, A, A_face, dx, pb, g, cfl, force_pb, operator):
     n = U.shape[0]
-    flat = lambda v: rhs(v.reshape(n, 3), A, A_face, dx, pb, g, operator).reshape(-1)  # noqa: E731
+    flat = lambda v: rhs(v.reshape(n, 3), A, A_face, dx, pb, g, operator, force_pb).reshape(-1)  # noqa: E731
     u = U.reshape(-1)
     J = colored_jacobian(flat, u, n)
     dt = jnp.repeat(_local_dt(U, A, dx, g, cfl), 3)
@@ -236,12 +260,13 @@ def solve_implicit(grid: Grid, pb: float, g: float, operator: Operator, U0=None,
     linear solve, rejected ones included; `residuals` holds the accepted steps."""
     A, A_face = jnp.asarray(grid.A), jnp.asarray(grid.A_face)
     U = initial_state(grid, pb, g) if U0 is None else U0
-    R0 = float(residual_norm(rhs(U, A, A_face, grid.dx, pb, g, operator)))
+    force = pressure_outlet(grid.nozzle, pb, g)
+    R0 = float(residual_norm(rhs(U, A, A_face, grid.dx, pb, g, operator, force)))
     res = [1.0]
     scale, rejects, solves, failed = 1.0, 0, 0, False
     while solves < max_iters and res[-1] > CONVERGED:
         cfl = min(cfl_max, scale * cfl0 / res[-1])
-        U_new, R_new = _implicit_step(U, A, A_face, grid.dx, float(pb), float(g), cfl, operator)
+        U_new, R_new = _implicit_step(U, A, A_face, grid.dx, float(pb), float(g), cfl, force, operator)
         solves += 1
         if not bool(_physical(U_new, A, g)) or not np.isfinite(float(R_new)):
             rejects += 1

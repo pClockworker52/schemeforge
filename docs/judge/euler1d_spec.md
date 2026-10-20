@@ -100,9 +100,17 @@ them, so their conventions are fixed here. Slot interfaces: `euler1d_slots.md`.
 - Inlet ghosts: p₀ = T₀ = 1 imposed; the outgoing invariant J⁻ = u − 2a/(γ−1) is taken from the first cell, and
   u_in is the root with a > 0 of a² + (γ−1)u²/2 = γ, a = (γ−1)(u − J⁻)/2. Then T = 1 − (γ−1)u²/(2γ),
   p = T^(γ/(γ−1)), ρ = p/T.
-- Outlet ghosts: if the last cell is subsonic, p = p_b, entropy and J⁺ = u + 2a/(γ−1) from the last cell;
-  otherwise all variables from the last cell.
-- Initial guess: isentropic, p linear from 1 (inlet) to p_b (exit), ρ = p^(1/γ), u from the energy equation.
+- Outlet ghosts: if p_b > p_crit2 (pressure outlet, decided from geometry and p_b only) or the last cell is
+  subsonic: p = p_b, entropy and J⁺ = u + 2a/(γ−1) from the last cell; otherwise all variables from the last
+  cell. Forcing p_b while the transient is locally supersonic keeps the shock inside: with plain extrapolation a
+  shock near the exit can leave during the transient, and the discrete problem then settles on a spurious
+  supersonic-exit steady state.
+- Initial guess (depends on geometry and the regime of p_b only, never on the case's own exact solution):
+  for p_crit2 < p_b ≤ p_crit1 the exact flow with a standing shock at x_t + (x_exit − x_t)/2; otherwise
+  isentropic with p linear from 1 (inlet) to p_b (exit), ρ = p^(1/γ), u from the energy equation. The isentropic
+  guess has a supersonic exit, which let shocks near the exit escape for good in the shock regime.
+- Known limit: the explicit solver still loses shocks within about 2 % of the divergent length from the exit
+  (x_s = 2.95 on the Anderson nozzle); families keep shocks within 15–90 % of the divergent length.
 - Residual R_k: L2 norm over all cells and components of dU/dt, reported as R_k/R_0. Converged: R_k/R_0 ≤ 1e-12.
 - Explicit: SSP-RK3 with local dt_i = 0.8·dx/(|u_i| + a_i), at most 50,000 iterations.
 - Implicit: backward Euler, (diag(1/dt_i) − ∂R/∂U) ΔU = R(U), exact Jacobian (forward mode, coloured with a
