@@ -79,6 +79,37 @@ At x = x_t in the choked regimes, M = 1. A point exactly at x_s takes the upstre
 Anderson (1995) nozzle: A(x) = 1 + 2.2 (x − 1.5)², x ∈ [0, 3], throat at x = 1.5, A_e/A_t = 5.95.
 Reference values: PLAN Appendix H.
 
-## 5. Unsteady and steady solvers *(planned)*
+## 5. Solvers
+
+The solvers are not part of the blind audit (only the exact solutions are), but candidates are scored through
+them, so their conventions are fixed here. Slot interfaces: `euler1d_slots.md`.
+
+### 5.1 Common pieces
+- Uniform grid, cell centres x_i, 3 ghost cells per side.
+- Default reconstruction: MUSCL on primitive variables with the limiter slot (slot doc for the slope formula).
+- Default flux: HLLC (Toro §10.4) with Einfeldt wave speeds S_L = min(u_L − a_L, ũ − ã),
+  S_R = max(u_R + a_R, ũ + ã), where ũ, H̃ are Roe averages and ã² = (γ−1)(H̃ − ũ²/2).
+
+### 5.2 Unsteady 1D
+- Boundaries: transmissive (ghost = edge cell) or periodic.
+- SSP-RK3 with global dt = CFL·dx / max(|u| + a), CFL 0.5 by default; the last step is shortened to hit t_end.
+
+### 5.3 Steady quasi-1D nozzle
+- Cell areas A_i = A(x_i), face areas A_{i±½} = A(x_{i±½}); unknowns U_i = (ρA, ρuA, EA)_i.
+- dU_i/dt = −(F_{i+½}A_{i+½} − F_{i−½}A_{i−½})/dx + (0, p_i (A_{i+½} − A_{i−½})/dx, 0). Flow at rest is balanced.
+- Inlet ghosts: p₀ = T₀ = 1 imposed; the outgoing invariant J⁻ = u − 2a/(γ−1) is taken from the first cell, and
+  u_in is the root with a > 0 of a² + (γ−1)u²/2 = γ, a = (γ−1)(u − J⁻)/2. Then T = 1 − (γ−1)u²/(2γ),
+  p = T^(γ/(γ−1)), ρ = p/T.
+- Outlet ghosts: if the last cell is subsonic, p = p_b, entropy and J⁺ = u + 2a/(γ−1) from the last cell;
+  otherwise all variables from the last cell.
+- Initial guess: isentropic, p linear from 1 (inlet) to p_b (exit), ρ = p^(1/γ), u from the energy equation.
+- Residual R_k: L2 norm over all cells and components of dU/dt, reported as R_k/R_0. Converged: R_k/R_0 ≤ 1e-12.
+- Explicit: SSP-RK3 with local dt_i = 0.8·dx/(|u_i| + a_i), at most 50,000 iterations.
+- Implicit: backward Euler, (diag(1/dt_i) − ∂R/∂U) ΔU = R(U), exact Jacobian (forward mode, coloured with a
+  ±3-cell stencil), dense LU. dt_i as above with CFL_k = min(1e8, s·R_0/R_k); a non-physical update is rejected
+  and s is multiplied by 0.25 (12 consecutive rejections = failure), each accepted step doubles s up to 1.
+  At most 300 linear solves, rejected ones included.
+- Limit cycle: not converged, the median residual over the last 5 % of iterations is at least 0.9× that over the
+  5 % before, and the residual still varies by more than 1 % within the last 10 %.
 ## 6. Cases and families *(planned; format in euler1d_cases.md)*
 ## 7. Metrics *(planned)*

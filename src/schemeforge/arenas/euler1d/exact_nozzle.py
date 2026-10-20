@@ -177,6 +177,15 @@ class NozzleSolution:
         return {"M": M, "p": p, "rho": rho, "T": T, "u": M * a, "a": a, "p0": p0, "A": A}
 
 
+def back_pressure_for_shock(nz: Nozzle, x_shock: float, gamma: float) -> float:
+    """p_b/p0 that places the normal shock at x_shock in (x_throat, x_exit]."""
+    g, At, Ae = float(gamma), nz.A_throat, nz.A_exit
+    M1 = mach_from_area_ratio(float(nz.area(x_shock)) / At, g, supersonic=True)
+    r0 = shock_p0_ratio(M1, g)
+    Me = mach_from_area_ratio(Ae / (At / r0), g, supersonic=False)
+    return r0 * float(p_over_p0(Me, g))
+
+
 def solve_nozzle(nz: Nozzle, pb: float, gamma: float) -> NozzleSolution:
     """Exact steady solution for back pressure pb (= p_b/p0, 0 < pb < 1)."""
     g = float(gamma)
@@ -192,13 +201,8 @@ def solve_nozzle(nz: Nozzle, pb: float, gamma: float) -> NozzleSolution:
     if pb <= cp.p_crit2:  # supersonic exit; any shocks stand outside the nozzle
         return NozzleSolution(nz, g, pb, "supersonic", At, At, None, None, 1.0)
 
-    def exit_pressure(xs: float) -> float:
-        M1 = mach_from_area_ratio(float(nz.area(xs)) / At, g, supersonic=True)
-        r0 = shock_p0_ratio(M1, g)
-        Me = mach_from_area_ratio(Ae / (At / r0), g, supersonic=False)
-        return r0 * float(p_over_p0(Me, g))
-
-    xs = float(brentq(lambda s: exit_pressure(s) - pb, nz.x_throat, nz.x_exit, xtol=1e-15, rtol=_RTOL, maxiter=500))
+    xs = float(brentq(lambda s: back_pressure_for_shock(nz, s, g) - pb, nz.x_throat, nz.x_exit,
+                      xtol=1e-15, rtol=_RTOL, maxiter=500))
     M1 = mach_from_area_ratio(float(nz.area(xs)) / At, g, supersonic=True)
     r0 = shock_p0_ratio(M1, g)
     return NozzleSolution(nz, g, pb, "shock", At, At / r0, xs, M1, r0)
