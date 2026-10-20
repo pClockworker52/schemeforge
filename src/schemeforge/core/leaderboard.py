@@ -33,7 +33,8 @@ def objectives(arena: str, slot: str) -> list[tuple[str, str, str]]:
     return OBJECTIVES[arena][slot]
 
 
-def build(conn: sqlite3.Connection, arena: str, slot: str, version: str | None = None) -> list[Row]:
+def build(conn: sqlite3.Connection, arena: str, slot: str, version: str | None = None,
+          suite: str = "dev") -> list[Row]:
     version = version or judge_version(arena)
     objs = objectives(arena, slot)
     rows: list[Row] = []
@@ -41,8 +42,8 @@ def build(conn: sqlite3.Connection, arena: str, slot: str, version: str | None =
                          (arena, slot)).fetchall()
     for c in cands:
         run = conn.execute(
-            "SELECT id FROM runs WHERE candidate_id = ? AND suite = 'dev' AND status = 'ok' AND judge_version = ? "
-            "ORDER BY started_at DESC LIMIT 1", (c[0], version)).fetchone()
+            "SELECT id FROM runs WHERE candidate_id = ? AND suite = ? AND status = 'ok' AND judge_version = ? "
+            "ORDER BY started_at DESC LIMIT 1", (c[0], suite, version)).fetchone()
         if run is None:
             continue
         vals = {f"{r[0]}.{r[1]}": r[2] for r in conn.execute(

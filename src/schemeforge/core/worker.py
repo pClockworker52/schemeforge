@@ -51,6 +51,13 @@ def main() -> int:
             cases_mod.validate_case(case)
             extra.append(case)
         report = arena.evaluate(fn, job["slot"], job["suite"], extra)
+        if job.get("probe") and report.get("status") == "ok":
+            from schemeforge.engine.probes import probe  # search policy: descriptors and fingerprint
+
+            try:
+                report["probe"] = probe(fn, job["arena"], job["slot"])
+            except Exception as exc:  # noqa: BLE001 - a probe failure must not hide the evaluation
+                report["probe"] = {"error": f"{type(exc).__name__}: {exc}"}
     print(MARKER + json.dumps(report, default=float), flush=True)
     return 0
 

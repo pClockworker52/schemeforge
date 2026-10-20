@@ -319,16 +319,36 @@ def case_accept(case_id: Annotated[str, typer.Argument(help="Quarantined case id
 def evolve(
     arena: Arena,
     slot: Slot,
-    hunch: Annotated[list[str], typer.Option("--hunch", help="Hunch id (repeatable, one island each).")],
-    islands: Annotated[int, typer.Option("--islands", help="Number of islands.")] = 3,
+    hunch: Annotated[list[str] | None, typer.Option("--hunch", help="Hunch id (repeatable, one island each).")] = None,
+    islands: Annotated[int | None, typer.Option("--islands", help="Number of islands (must match --hunch).")] = None,
     gens: Annotated[int, typer.Option("--gens", help="Generations.")] = 20,
     children: Annotated[int, typer.Option("--children", help="Children per generation and island.")] = 8,
     backend: Annotated[str, typer.Option("--backend", help="LLM backend: claude-cli or dummy.")] = "claude-cli",
     model: Annotated[str, typer.Option("--model", help="Model alias for the backend.")] = "sonnet",
     budget: Annotated[int | None, typer.Option("--budget", help="Maximum number of candidates.")] = None,
+    seed: Annotated[list[Path] | None, typer.Option("--seed", help="Seed file (repeatable; default: zoo).")] = None,
+    resume: Annotated[str | None, typer.Option("--resume", help="Resume an evolve run id.")] = None,
+    rng_seed: Annotated[int, typer.Option("--rng-seed", help="Random seed of the run.")] = 0,
 ) -> None:
     """Run the inner evolutionary loop (resumable)."""
-    _not_implemented("evolve")
+    from schemeforge.engine import evolve as ev
+
+    _check_integrity(arena)
+    if resume:
+        state = ev.evolve(resume=resume, log=typer.echo)
+    else:
+        if not hunch:
+            _fail("give at least one --hunch (one island per hunch) or --resume RUN", 2)
+        if islands is not None and islands != len(hunch):
+            _fail(f"--islands {islands} does not match the {len(hunch)} hunch(es) given", 2)
+        cfg = ev.Config(arena, slot, list(hunch), gens, children, backend, model, budget,
+                        [str(s) for s in seed or []], rng_seed=rng_seed)
+        try:
+            state = ev.evolve(cfg, log=typer.echo)
+        except ValueError as exc:
+            _fail(str(exc), 2)
+    typer.echo(f"{state.run_id}: {state.generation} generations, {state.children_made} children, "
+               f"front {len(state.front)}; state in {state.dir}")
 
 
 @dossier_app.command("build")

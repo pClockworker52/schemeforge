@@ -111,7 +111,8 @@ def submit_candidate(path: Path, hunch_id: str, parents: list[str] | None = None
 
 def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: list[dict] | None = None,
                   registry_path: Path = registry.DEFAULT_PATH, origin: str = "eval",
-                  candidate_id: str | None = None, heldout_dir: Path = HELDOUT_DIR) -> EvalResult:
+                  candidate_id: str | None = None, heldout_dir: Path = HELDOUT_DIR,
+                  probe: bool = False) -> EvalResult:
     conn = registry.connect(registry_path)
     cid = register_candidate(conn, path, arena, slot, origin, candidate_id)
     version, jhash = judge_version(arena), tree_hash()
@@ -123,7 +124,7 @@ def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: li
     )
     conn.commit()
     job = {"arena": arena, "slot": slot, "suite": suite, "candidate": str(path.resolve()),
-           "extra_cases": extra_cases or []}
+           "extra_cases": extra_cases or [], "probe": probe}
     report = run_worker(job, TIMEOUTS.get(suite, 600))
     instances = report.pop("instances", None)
     if instances is not None:
