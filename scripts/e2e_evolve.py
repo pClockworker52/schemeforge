@@ -14,18 +14,14 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 
-HUNCHES = [
-    {"arena": "euler1d", "slot": "limiter", "lens": "human",
-     "statement": "Calibration island A: smooth rational limiters (engine test, not a research hunch).",
-     "mechanism": "Engine calibration only.", "predicted_effect": [{"metric": "none", "direction": "same",
-                                                                     "size": "n/a"}],
-     "kill_criterion": "n/a (calibration)", "known_relatives": ["van Albada"], "author": "orchestrator"},
-    {"arena": "euler1d", "slot": "limiter", "lens": "human",
-     "statement": "Calibration island B: same family, second island (engine test, not a research hunch).",
-     "mechanism": "Engine calibration only.", "predicted_effect": [{"metric": "none", "direction": "same",
-                                                                     "size": "n/a"}],
-     "kill_criterion": "n/a (calibration)", "known_relatives": ["van Leer"], "author": "orchestrator"},
-]
+def calibration_hunch(k: int) -> dict:
+    return {"arena": "euler1d", "slot": "limiter", "lens": "human",
+            "statement": f"Calibration island {k + 1}: find a good MUSCL slope limiter (engine calibration C1, "
+                         "not a research hunch).",
+            "mechanism": "Engine calibration only: textbook limiters are expected to reappear.",
+            "predicted_effect": [{"metric": "R1.shock_width", "direction": "down", "size": "towards the zoo"}],
+            "kill_criterion": "n/a (calibration)", "known_relatives": ["all zoo limiters"],
+            "author": "orchestrator"}
 
 
 def main() -> int:
@@ -39,6 +35,7 @@ def main() -> int:
     ap.add_argument("--children", type=int, default=8)
     ap.add_argument("--budget", type=int, default=208)
     ap.add_argument("--seed", action="append", default=[])
+    ap.add_argument("--islands", type=int, default=2)
     a = ap.parse_args()
 
     work = Path(a.workdir).resolve()
@@ -52,8 +49,8 @@ def main() -> int:
     if a.mode == "start":
         if not ledger.LEDGER.exists():
             ledger.LEDGER.write_text("[]\n")
-            for h in HUNCHES:
-                ledger.add(h)
+            for k in range(a.islands):
+                ledger.add(calibration_hunch(k))
         ids = [h["id"] for h in ledger.load()]
         cfg = evolve.Config("euler1d", "limiter", ids, gens=a.gens, children=a.children, backend=a.backend,
                             model=a.model, budget=a.budget, seeds=[str(Path(s).resolve()) for s in a.seed])

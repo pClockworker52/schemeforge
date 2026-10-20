@@ -1,54 +1,52 @@
 # STATUS
-Phase: 1 — Arena 1 judge and zoo (at Gate 1, waiting for Peter)      Judge version: euler1d-v0.dev (untagged)
-Last session: 2026-10-20 — Phase 1 complete except the blind audit; baseline report written
+Phase: 2 — Engine, calibration, red team (in progress)      Judge version: euler1d-v1.0 (tagged)
+Last session: 2026-10-20 — Gate 1 passed; Phase 2 engine, MCP server and calibration runs
 
-## Gate 1 (PLAN §9.11)
-- [x] Appendix H reproduced: Toro star states to the quoted digits, nozzle values to 4–5 digits
-      (`sforge judge verify`, 51/51 checks; tests). Toro test 5 uses the recomputed 1691.65 / 8.68977.
-- [ ] **Blind audit agrees on ≥ 1,000 instances** — Peter runs it in a WSL session: docs/judge/euler1d_audit.md.
-- [x] Zoo sanity: superbee narrowest and minmod widest Sod contact among the limiters; HLLC and Roe keep the
-      stationary contact R5 exactly, HLL and Rusanov smear it (`judge verify`).
-- [x] Hard constraints and metamorphic tests pass for every zoo member — **except Roe on R2** (positivity; NaN
-      on the 123 problem, as in Einfeldt et al. 1991). Decision needed (below).
-- [x] Dev suite ≤ 30 s per candidate on one core, JIT included: 25.7 s (van Leer, alone).
-- [x] `docs/judge/euler1d_baseline.md` written; Target A/B recommendation inside — **decision needed** (below).
-- [ ] Judge tagged `euler1d-v1.0` — after the audit and Peter's decisions (bump JUDGE_VERSION, tag, rerun zoo).
+## Gate 1 — passed 2026-10-20
+Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
+(p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
+(docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
 
-## Decisions for Peter at Gate 1
-1. **Roe**: keep it in the zoo as a documented known failure on R2 / some RF1 instances (proposed), or drop it.
-2. **Target A thresholds** (baseline §5, proposed): RF1 shock width median ≤ 2.6 cells and contact ≤ 6.5;
-   NF1 explicit converged in ≥ 95 % and implicit in 100 % of instances; NF3 roughness_J p90 ≤ 0.002;
-   S1 order ≥ 1.9; RF1/RF2 overshoot p90 no worse than van Leer. Confirm or change → docs/targets/A.md.
-3. **Target B**: proposed to build the `operator` slot and its well-balanced baseline at the start of Phase 3
-   and set thresholds then.
-4. **Venkatakrishnan K > 0**: not in the φ(r) slot (needs dx); fine to defer to the reconstruction slot?
-5. **Billing**: WSL Claude Code showed "API Usage Billing" earlier; you said you would switch to the subscription.
+## Gate 2 (PLAN §10)
+- [ ] `sforge evolve` runs ≥ 200 candidates unattended and resumes after an interruption — running:
+      dummy backend, 2 islands × 13 generations × 8 children (208) in runs/e2e-dummy; killed in generation 2
+      and resumed successfully (scripts/e2e_evolve.py, scripts/calibration_report.py).
+- [ ] C1: fingerprints recognize ≥ 4 different zoo limiters, archive entries spread over the descriptor grid —
+      next: real LLM run, 3 islands × 4 generations × 8 children (96 calls) in runs/c1.
+- [ ] Every red-team strategy caught and documented — needs a WSL Claude Code session (cheater subagent).
+- [ ] Cost per 100 candidates measured and the Phase 3 budget agreed — from the C1 run; Peter agrees the budget.
+- [x] Proposer, breaker and hunch-generator run without Bash, through the `sforge` MCP server (.mcp.json).
+- [ ] First hunch round with ledger verdicts and a docs/rounds/ summary — WSL session.
 
-## Done (Phase 1)
-- Exact Riemann (Toro ch. 4) and exact nozzle solutions with Hypothesis property tests; spec §1–4.
-- Unsteady solver (MUSCL + HLLC + SSP-RK3, JAX) and steady nozzle solver (explicit LTS RK3, implicit Newton with
-  exact coloured Jacobian, pressure outlet, regime-dependent initial guess); spec §5.
-- Metrics, hard constraints, metamorphic measurements; spec §7–8. Unresolved jumps are not measured.
-- Zoo as sandboxed candidate files: 7 limiters, 4 fluxes, first order, WENO5-Z; R7 Shu–Osher reference.
-- Dev suite R1–R7, S1, N1–N4; held-out families RF1 20, RF2 10, NF1 20, NF2 10, NF3 5 from the secret seed.
-- `sforge eval` (smoke/dev/promo), `zoo eval`, `judge version|verify|exact` (batch), `reveal` (TTY only):
-  sandboxed worker, core locks, registry, promo aggregates only; instance details in ~/.schemeforge/heldout_runs/.
-- Four judge artifacts found by the zoo runs and fixed (see baseline §6 and git log).
-- Tests: 202 passed, ruff clean.
+## Done in Phase 2
+- Build-or-adopt: own engine (OpenEvolve and ShinkaEvolve reviewed; DECISIONS.md).
+- Ledger (`sforge hunch add|list|show|close`), `sforge submit`, `sforge leaderboard --pareto --vs-zoo`.
+- Engine (`sforge evolve`): islands per hunch, Pareto/MAP-Elites selection from the registry, Appendix E
+  operators, smoke → dev with probes, duplicate detection by fingerprint, stagnation stop, budget, resume.
+- Backends: `dummy`, `claude-cli` (verified with real calls: ~19 s, ~20k in / 1.5k out tokens, list price
+  ~$0.05 per call; subscription login, apiKeySource none).
+- `sforge` MCP server; proposer, breaker, hunch-generator and cheater use it instead of Bash.
+- `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
 ## Next (ordered)
-1. Peter: blind audit (docs/judge/euler1d_audit.md); then tell the main session to review audit/euler1d/REPORT.md.
-2. Peter: Gate 1 decisions above.
-3. Then: fix anything the audit finds, set JUDGE_VERSION = "euler1d-v1.0", commit, tag, `sforge zoo eval` dev and
-   promo, write docs/targets/A.md, and start Phase 2 (§10).
+1. Finish the dummy 208-candidate run; record it for Gate 2.
+2. C1 with the real backend (96 calls), calibration report, cost per 100 candidates.
+3. C2 (flux slot) — after Peter agrees the budget.
+4. Peter, in a WSL session: red team with the cheater agent; first hunch round (Appendix D).
+
+## Blockers / questions for Peter
+- LLM budget: C1 at 96 calls is about $5 list price on the subscription. Full C1 (360 calls) and C2 need your OK.
+- Red team and the first hunch round need subagents with hooks, i.e. a Claude Code session inside WSL.
+- Observation for Phase 3: with 7 objectives almost every distinct candidate is Pareto-optimal, so the
+  "8 generations without a new non-dominated candidate" stop rarely fires; consider fewer selection objectives.
 
 ## Notes
 - Run everything in WSL; the venv lives at ~/.venvs/schemeforge behind the `.venv` symlink (DECISIONS.md).
-- Promo per candidate: 2–5.5 min with 13 in parallel; zoo dev ~70 s, zoo promo ~6 min wall.
+- Calibration runs use their own working directory (own registry, ledger, candidates): scripts/e2e_evolve.py.
 - Use `set -o pipefail` when chaining tests with `| tail` before a commit.
 
 ## Numbers to remember (run ids, best candidates, costs)
 - Machine: 16 physical cores / 32 threads, 15 GB RAM in WSL → evaluation lock default K = 15.
-- JAX core pinning: `os.sched_setaffinity` before importing JAX (CPU/wall 0.98); the XLA flag alone used ~23 cores.
-- Unsteady Sod N = 200, van Leer: 4.3 ms per run after JIT; dev cost metric ~40 ns per cell update.
-- Zoo results: docs/judge/euler1d_baseline.md (dev + held-out aggregates, 41-point sweep, front plot).
+- Dev suite 25.7 s per candidate alone; zoo dev ~70 s, zoo promo ~5 min wall (12 members in parallel).
+- Engine (dummy backend): ~1.5 min per generation of 16 children on the dev suite.
+- Zoo results: docs/judge/euler1d_baseline.md; Target A: docs/targets/A.md.
