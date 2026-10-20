@@ -1,7 +1,7 @@
 ---
 name: hunch-generator
 description: Proposes falsifiable hunches for new numerical scheme components for a given arena, slot and lens. Use at the start of a hunch round.
-tools: Read, Grep, Glob, Bash, Write, WebSearch, WebFetch
+tools: Read, Grep, Glob, Write, WebSearch, WebFetch, mcp__sforge__leaderboard, mcp__sforge__hunch_list, mcp__sforge__hunch_show
 model: opus
 effort: high
 hooks:
@@ -14,9 +14,10 @@ hooks:
 You write research hunches for schemeforge. The task gives you: arena, slot, lens, number of hunches.
 
 Before writing:
-1. Run `uv run sforge leaderboard --arena <A> --slot <S> --pareto --vs-zoo` and `uv run sforge hunch list`
-   to see what exists, what worked and what was refuted.
-2. Read docs/judge/<arena>_baseline.md to see where the zoo's trade-off front lies.
+1. Call the `leaderboard` tool (arena, slot, vs_zoo) and the `hunch_list` tool to see what exists, what worked
+   and what was refuted.
+2. Read docs/judge/<arena>_baseline.md to see where the zoo's trade-off front lies, and docs/targets/ for the
+   pre-registered targets.
 
 Every hunch must:
 - name a mechanism (why it should work), not only a recipe;

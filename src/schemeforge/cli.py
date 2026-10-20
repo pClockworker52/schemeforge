@@ -304,15 +304,36 @@ def hunch_close(
 
 
 @case_app.command("propose")
-def case_propose(yaml_file: Annotated[Path, typer.Argument(help="Case YAML.")]) -> None:
+def case_propose(
+    yaml_file: Annotated[Path, typer.Argument(help="Case YAML.")],
+    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
+) -> None:
     """Put a breaker case into cases/quarantine/."""
-    _not_implemented("case propose")
+    from schemeforge.core import quarantine
+
+    try:
+        cid = quarantine.propose(yaml_file, arena)
+    except (ValueError, TypeError, KeyError) as exc:
+        _fail(f"inadmissible case: {exc}", 2)
+    typer.echo(f"{cid} quarantined in cases/quarantine/")
 
 
 @case_app.command("accept")
 def case_accept(case_id: Annotated[str, typer.Argument(help="Quarantined case id.")]) -> None:
     """Move a case into the judge tree (interactive confirmation; bumps the judge version)."""
-    _not_implemented("case accept")
+    import sys
+
+    from schemeforge.core import quarantine
+
+    if not (sys.stdin.isatty() and sys.stdout.isatty()):
+        _fail("case accept needs an interactive terminal (Peter only)", 5)
+    if not typer.confirm(f"Accept {case_id} into the judge? This is a judge change (bump, commit, tag, rescore)."):
+        raise typer.Exit(code=1)
+    try:
+        dest = quarantine.accept(case_id)
+    except ValueError as exc:
+        _fail(str(exc), 2)
+    typer.echo(f"{case_id} -> {dest}\nNext: bump JUDGE_VERSION, commit, tag, `sforge zoo eval`, rescore the archive.")
 
 
 @app.command()

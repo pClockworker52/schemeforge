@@ -31,7 +31,6 @@ def test_command_help(cmd: list[str]) -> None:
 @pytest.mark.parametrize(
     "argv",
     [
-        ["case", "propose", "x.yaml"],
         ["dossier", "build", "c-x"],
     ],
 )

@@ -7,11 +7,13 @@
       "Bash(uv run python *)",
       "Bash(git status *)",
       "Bash(git diff *)",
-      "Bash(git log *)"
+      "Bash(git log *)",
+      "mcp__sforge"
     ],
     "deny": [
       "Read(~/.schemeforge/**)",
       "Edit(~/.schemeforge/**)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": ["sforge"]
 }
