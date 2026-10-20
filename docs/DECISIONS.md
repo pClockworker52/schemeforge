@@ -20,6 +20,15 @@ subagent runs: its hooks would call a Windows `python3`, which may not exist, an
 The venv sits in the repo on the Windows file system (`.venv/`); if imports or JIT times turn out slow in
 Phase 1, move it to the WSL file system with `UV_PROJECT_ENVIRONMENT`.
 
+## 2026-10-20 — Venv on the WSL file system; no memory limit yet
+*Context:* Every evaluation runs in a fresh worker process. With the venv on `/mnt/c`, a cold
+`import schemeforge.arenas.euler1d.evaluate` took 27 s (9p file system); on ext4 it takes 4.8 s.
+*Decision:* The venv lives at `~/.venvs/schemeforge` (WSL ext4) and the repo's `.venv` is a symlink to it, so
+`uv run` works unchanged for Peter and the agents. `RLIMIT_AS` is off for now (JAX reserves large virtual
+address ranges); the worker has a CPU-time limit and the parent a wall-clock timeout.
+*Consequences:* After cloning elsewhere, recreate the link (`ln -s ~/.venvs/schemeforge .venv`, then
+`uv sync`). Revisit a memory limit (RLIMIT_DATA or a cgroup) in the Phase 2 red-team work.
+
 ## 2026-10-20 — Appendices A–C adaptations
 *Context:* Phase 0 creates CLAUDE.md, the agents, the hook and the settings verbatim from the plan.
 *Decision:* Two changes. CLAUDE.md says to run commands inside WSL. The CLI exits with code 3 for "not

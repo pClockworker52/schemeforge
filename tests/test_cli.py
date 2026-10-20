@@ -31,12 +31,15 @@ def test_command_help(cmd: list[str]) -> None:
 @pytest.mark.parametrize(
     "argv",
     [
-        ["eval", "cand.py", "--arena", "euler1d", "--slot", "limiter", "--suite", "dev"],
         ["hunch", "list", "--open"],
-        ["judge", "version"],
         ["evolve", "--arena", "euler1d", "--slot", "limiter", "--hunch", "H-0001", "--backend", "dummy"],
     ],
 )
 def test_commands_are_not_implemented_yet(argv: list[str]) -> None:
     result = runner.invoke(app, argv)
     assert result.exit_code == NOT_IMPLEMENTED_EXIT
+
+
+def test_promo_is_refused_until_families_exist() -> None:
+    result = runner.invoke(app, ["eval", "x.py", "--arena", "euler1d", "--slot", "limiter", "--suite", "promo"])
+    assert result.exit_code == 2

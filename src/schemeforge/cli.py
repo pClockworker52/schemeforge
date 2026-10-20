@@ -68,7 +68,73 @@ def eval_cmd(
     json_out: JsonOut = False,
 ) -> None:
     """Sandboxed evaluation; stores scores and prints the report and run id."""
-    _not_implemented("eval")
+    import json
+
+    from schemeforge.core import evaluation, registry
+
+    if suite == Suite.promo:
+        _fail("the promo suite needs the held-out families, which are not built yet", 2)
+    _check_integrity(arena)
+    path = Path(target)
+    if not path.is_file():
+        try:
+            path, arena_reg, slot_reg = evaluation.candidate_path(registry.connect(), target)
+        except KeyError:
+            _fail(f"{target} is neither a file nor a registered candidate id", 2)
+        if (arena_reg, slot_reg) != (arena, slot):
+            _fail(f"{target} is registered for {arena_reg}/{slot_reg}, not {arena}/{slot}", 2)
+    extra = [_load_case(arena, case)] if case else []
+    res = evaluation.evaluate_file(path, arena, slot, suite.value, extra)
+    if json_out:
+        typer.echo(json.dumps(res.report, indent=1, default=float))
+    else:
+        _print_report(res.report)
+    raise typer.Exit(code=0 if res.report["status"] == "ok" else 1)
+
+
+def _fail(message: str, code: int) -> NoReturn:
+    typer.echo(f"sforge: {message}", err=True)
+    raise typer.Exit(code=code)
+
+
+def _check_integrity(arena: str) -> None:
+    from schemeforge.core.integrity import integrity_problems
+
+    problems = integrity_problems(arena)
+    if problems:
+        _fail("refusing to score: " + "; ".join(problems), 4)
+
+
+def _load_case(arena: str, path: Path) -> dict:
+    import importlib
+
+    import yaml
+
+    cases = importlib.import_module(f"schemeforge.arenas.{arena}.cases")
+    d = yaml.safe_load(path.read_text(encoding="utf-8"))
+    try:
+        cases.validate_case(cases.case_from_dict(d))
+    except (ValueError, TypeError, KeyError) as exc:
+        _fail(f"inadmissible case {path}: {exc}", 2)
+    return d
+
+
+def _fmt(v: float) -> str:
+    return f"{v:.3g}" if abs(v) >= 1e-3 or v == 0 else f"{v:.2e}"
+
+
+def _print_report(r: dict) -> None:
+    typer.echo(f"run {r['run_id']}  candidate {r['candidate_id']}  judge {r['judge_version']} "
+               f"({r['judge_hash'][:12]})  status {r['status'].upper()}  {r.get('seconds', 0.0):.1f} s")
+    for case_id, ms in r.get("cases", {}).items():
+        body = "  ".join(f"{k}={_fmt(v)}" for k, v in ms.items() if k != "seconds")
+        typer.echo(f"  {case_id:9s} {ms.get('seconds', 0.0):6.2f} s  {body}")
+    if r.get("metamorphic"):
+        typer.echo("  measured: " + "  ".join(f"{k}={_fmt(v)}" for k, v in r["metamorphic"].items()))
+    if "cost" in r:
+        typer.echo(f"  cost: {r['cost']:.1f} ns per cell update (R1)")
+    for v in r.get("violations", []):
+        typer.echo(f"  VIOLATION: {v}")
 
 
 @app.command()
@@ -99,8 +165,39 @@ def zoo_eval(
     arena: Arena,
     suite: Annotated[ZooSuite, typer.Option("--suite", help="dev or promo.")] = ZooSuite.dev,
 ) -> None:
-    """Evaluate every zoo member."""
-    _not_implemented("zoo eval")
+    """Evaluate every zoo member (in parallel, one locked core each)."""
+    import importlib
+    from concurrent.futures import ThreadPoolExecutor
+
+    from schemeforge.core import evaluation
+    from schemeforge.core.locks import max_parallel
+
+    if suite == ZooSuite.promo:
+        _fail("the promo suite needs the held-out families, which are not built yet", 2)
+    _check_integrity(arena)
+    zoo = importlib.import_module(f"schemeforge.arenas.{arena}.zoo")
+    ev = importlib.import_module(f"schemeforge.arenas.{arena}.evaluate")
+    jobs = [(slot, name, path) for slot in ev.SLOTS for name, path in zoo.members(slot).items()]
+
+    def one(job):
+        slot, name, path = job
+        return slot, name, evaluation.evaluate_file(path, arena, slot, suite.value, origin="zoo",
+                                                    candidate_id=f"zoo-{slot}-{name}")
+
+    with ThreadPoolExecutor(max_workers=max_parallel()) as pool:
+        results = list(pool.map(one, jobs))
+    key = [("R1", "shock_width"), ("R1", "contact_width"), ("S1", "order_smooth"), ("R7", "l1_ref"),
+           ("N1", "res_orders_expl"), ("N1", "newton_iters"), ("N4", "roughness_J")]
+    typer.echo(f"{'slot':15s}{'member':17s}{'status':9s}{'s':>6s}  " + "  ".join(f"{c}.{m}" for c, m in key))
+    for slot, name, res in results:
+        r = res.report
+        cells = "  ".join(
+            f"{_fmt(r['cases'][c][m]) if m in r['cases'].get(c, {}) else '-':>{len(c) + len(m) + 1}s}" for c, m in key
+        )
+        typer.echo(f"{slot:15s}{name:17s}{r['status']:9s}{r.get('seconds', 0.0):6.1f}  {cells}")
+        for v in r.get("violations", [])[:2]:
+            typer.echo(f"{'':32s}VIOLATION: {v}")
+    typer.echo(f"{len(results)} members; reports in {evaluation.REPORTS_DIR}/")
 
 
 @hunch_app.command("add")
@@ -172,9 +269,15 @@ def judge_verify() -> None:
 
 
 @judge_app.command("version")
-def judge_version() -> None:
-    """Print the judge version and content hash."""
-    _not_implemented("judge version")
+def judge_version(
+    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
+) -> None:
+    """Print the judge version, content hash and integrity state."""
+    from schemeforge.core import integrity
+
+    problems = integrity.integrity_problems(arena)
+    typer.echo(f"{integrity.judge_version(arena)}  {integrity.tree_hash()}")
+    typer.echo("integrity: ok" if not problems else "integrity: " + "; ".join(problems))
 
 
 @judge_app.command("exact")
