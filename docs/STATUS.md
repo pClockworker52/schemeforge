@@ -7,6 +7,17 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
 
+## Latest results (2026-10-20, evening)
+- Dummy engine run (runs/e2e-dummy): 208 children, all ok on dev; survived a kill, a SQLite lock crash (fixed:
+  WAL + busy timeout) and its own stagnation stop, each resumed from state.json. → Gate 2 item 1 met.
+- C1 real backend (runs/c1, sonnet + haiku for wild): 96 calls, 90 ok, 1 rejected, 5 LLM errors (gen 3);
+  36 duplicates, 5 distinct zoo limiters rediscovered (MC 11, van Leer 7, Koren 4, van Albada 4, superbee 2)
+  → fingerprints work (≥ 4 required); only 6 archive cells occupied (grid too coarse / descriptors cluster).
+  Cost: $4.34 per 100 candidates (list price, subscription), 10.5 s mean latency, ~19k/630 tokens per call,
+  ~570 candidates/h. 5 LLM errors not yet investigated (see runs/c1/runs/evolve/*/children.jsonl).
+- Next: investigate the LLM errors; C2 (bash scripts/headless/c2.sh); red team and first hunch round via
+  bash scripts/headless/run.sh scripts/headless/redteam.txt redteam; then Gate 2 with Peter (budget).
+
 ## Gate 2 (PLAN §10)
 - [ ] `sforge evolve` runs ≥ 200 candidates unattended and resumes after an interruption — running:
       dummy backend, 2 islands × 13 generations × 8 children (208) in runs/e2e-dummy; killed in generation 2
