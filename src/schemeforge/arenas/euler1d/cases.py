@@ -92,7 +92,40 @@ class NozzleSweepCase:
     kind: str = field(default="nozzle_sweep", init=False)
 
 
-Case = RiemannCase | SmoothCase | NozzleCase | NozzleSweepCase
+@dataclass(frozen=True)
+class ReferenceCase:
+    """Unsteady case without an exact solution, scored against a cached fine-grid reference in references/."""
+
+    id: str
+    init: str  # name of an initial-data function in INITS
+    n: int
+    t_end: float
+    domain: tuple[float, float]
+    reference: str  # file name in references/
+    gamma: float = 1.4
+    kind: str = field(default="reference", init=False)
+
+
+def shu_osher_initial(x: np.ndarray) -> np.ndarray:
+    """Shu & Osher (1989): Mach 3 shock at x = -4 running into rho = 1 + 0.2 sin(5x), on [-5, 5]."""
+    left = np.array([3.857143, 2.629369, 10.333333])
+    right = np.stack([1.0 + 0.2 * np.sin(5.0 * x), np.zeros_like(x), np.ones_like(x)], axis=1)
+    return np.where((x < -4.0)[:, None], left, right)
+
+
+INITS = {"shu_osher": shu_osher_initial}
+REFERENCES_DIR = Path(__file__).parent / "references"
+
+
+def load_reference(case: ReferenceCase) -> np.ndarray:
+    """Reference primitive state averaged onto the case grid (n, 3). The fine grid must be a multiple of n."""
+    W = np.load(REFERENCES_DIR / case.reference)["W"]
+    if W.shape[0] % case.n:
+        raise ValueError(f"reference grid {W.shape[0]} is not a multiple of n = {case.n}")
+    return W.reshape(case.n, W.shape[0] // case.n, 3).mean(axis=1)
+
+
+Case = RiemannCase | SmoothCase | NozzleCase | NozzleSweepCase | ReferenceCase
 
 
 def slowly_moving_shock(mach: float = 3.0, speed_frac: float = 0.05, gamma: float = 1.4):
@@ -126,7 +159,7 @@ def _n4_back_pressures(n_points: int = 11, n_cells: int = 120, cells_crossed: fl
 
 
 def dev_suite() -> list[Case]:
-    """The fixed dev suite of PLAN §9.5 (R7 Shu-Osher is added once its WENO5-Z reference is cached)."""
+    """The fixed dev suite of PLAN §9.5."""
     r6_left, r6_right, _ = slowly_moving_shock()
     return [
         RiemannCase("R1", (1.0, 0.0, 1.0), (0.125, 0.0, 0.1), 0.2, 200),
@@ -135,6 +168,7 @@ def dev_suite() -> list[Case]:
         RiemannCase("R4", (5.99924, 19.5975, 460.894), (5.99242, -6.19633, 46.0950), 0.035, 200, x0=0.4),
         RiemannCase("R5", (1.4, 0.0, 1.0), (1.0, 0.0, 1.0), 2.0, 100),
         RiemannCase("R6", r6_left, r6_right, 0.95, 200, x0=0.2),
+        ReferenceCase("R7", "shu_osher", 400, 1.8, (-5.0, 5.0), "shu_osher_weno5z_hllc_N12800.npz"),
         SmoothCase("S1", (50, 100, 200)),
         NozzleCase("N1", 0.6784, 120),
         NozzleCase("N2", 0.995, 120),

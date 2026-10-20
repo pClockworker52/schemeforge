@@ -68,7 +68,7 @@ nozzle: {type: anderson}
 | R4 | shock collision (Toro test 5 states), t = 0.035, x0 = 0.4, N = 200 |
 | R5 | stationary contact (1.4, 0, 1) / (1, 0, 1), t = 2, N = 100 |
 | R6 | shock of Mach 3 into (1, ·, 1), speed 0.05·max(\|u\| + a), from x0 = 0.2, t = 0.95, N = 200 |
-| R7 | Shu–Osher *(added with its cached WENO5-Z reference)* |
+| R7 | Shu–Osher: (3.857143, 2.629369, 10.333333) for x < −4, (1 + 0.2 sin 5x, 0, 1) otherwise, on [−5, 5], t = 1.8, N = 400. Reference: WENO5-Z + HLLC + SSP-RK3 (CFL 0.5) at N = 12,800, averaged onto the case grid (`references/`; self-check N = 6,400 vs 12,800: L1 ρ difference 4.3e-4 on 400 cells) |
 | S1 | smooth wave, amp 0.2, u = 1, p = 1, N = 50/100/200, t = 1 |
 | N1 | Anderson nozzle, p_b = 0.6784, N = 120 |
 | N2 | Anderson nozzle, p_b = 0.995 (unchoked, exit Mach 0.085), N = 120 |

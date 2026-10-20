@@ -26,6 +26,17 @@ Phase 1, move it to the WSL file system with `UV_PROJECT_ENVIRONMENT`.
 implemented", so tests can tell it apart from usage errors (2).
 *Consequences:* None for later phases.
 
+## 2026-10-20 — Zoo: Venkatakrishnan form and the Roe positivity failure
+*Context:* PLAN §9.8 asks for a Venkatakrishnan-type limiter "with several values of K", and Gate 1 asks that
+every zoo member passes the hard constraints.
+*Decision:* (1) The zoo has the ε = 0 (K = 0) Venkatakrishnan limiter in exact 1D slope-ratio form. K > 0 adds
+ε² = (K dx)³ to differences, which needs absolute differences and dx and breaks scaling homogeneity, so it does
+not fit the φ(r) slot; it can return with the reconstruction slot. (2) Roe with Harten's entropy fix produces NaN
+on R2 (123 problem) with MUSCL-minmod, as expected from Einfeldt et al. (1991). It stays in the zoo as a
+documented known failure rather than being weakened (proposed; Peter decides at Gate 1).
+*Consequences:* Gate 1's "hard constraints pass for every zoo member" reads "except the documented Roe/R2
+failure". Roe is scored on the cases where it runs and marked "rejected: R2" on the leaderboard.
+
 ## 2026-10-20 — Sandbox validator scope
 *Context:* PLAN §5.6 lists the static checks.
 *Decision:* Beyond the plan's list, the validator also rejects decorators (they run code at import time),

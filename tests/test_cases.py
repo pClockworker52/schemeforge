@@ -8,6 +8,7 @@ from schemeforge.arenas.euler1d.cases import (
     NozzleSpec,
     case_from_dict,
     dev_suite,
+    load_reference,
     slowly_moving_shock,
     validate_case,
 )
@@ -18,9 +19,19 @@ from schemeforge.arenas.euler1d.gas import sound_speed
 
 def test_dev_suite_ids_and_admissibility() -> None:
     suite = dev_suite()
-    assert [c.id for c in suite] == ["R1", "R2", "R3", "R4", "R5", "R6", "S1", "N1", "N2", "N3", "N4"]
+    assert [c.id for c in suite] == ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "S1", "N1", "N2", "N3", "N4"]
     for case in suite:
         validate_case(case)
+
+
+def test_r7_reference_is_cached_and_averaged() -> None:
+    r7 = next(c for c in dev_suite() if c.id == "R7")
+    ref = load_reference(r7)
+    assert ref.shape == (400, 3) and np.all(np.isfinite(ref)) and np.all(ref[:, [0, 2]] > 0)
+    # post-shock state on the far left, undisturbed wave on the far right
+    np.testing.assert_allclose(ref[0], (3.857143, 2.629369, 10.333333), rtol=1e-6)
+    x = -5.0 + (np.arange(400) + 0.5) * 0.025
+    np.testing.assert_allclose(ref[-20:, 0], 1.0 + 0.2 * np.sin(5.0 * x[-20:]), atol=2e-3)
 
 
 def test_r6_is_a_single_slow_shock() -> None:

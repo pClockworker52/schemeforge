@@ -17,17 +17,23 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
   flux slots plus run-level checks, metamorphic measurements (mirror, scaling, Galilean); spec §7–8.
   Sanity: on Sod, superbee < minmod < first order in contact and shock width; mirror error < 1e-12 for symmetric
   limiters and > 1e-6 for Koren; scaling exact to 1e-12.
-- Tests: 141 passed, ruff clean.
+- Zoo (§9.8, Phase 1 scope) as sandboxed candidate files: 7 limiters, 4 fluxes (Rusanov, HLL, HLLC, Roe),
+  first order and WENO5-Z. All pass the sandbox and hard constraints; Roe fails R2 (see blockers).
+  The judge's default HLLC is the zoo file.
+- R7 Shu–Osher with a cached WENO5-Z reference at N = 12,800 (70 s to build; N = 6,400 differs by 4.3e-4 in L1 ρ
+  on 400 cells, 36× below the best zoo error at N = 400).
+- Tests: 172 passed, ruff clean.
 
 ## Next (ordered)
-1. Zoo (§9.8): limiters and fluxes as candidate-style files that pass the sandbox; WENO5-Z, then R7 with its
-   cached reference.
-2. `sforge eval` / `sforge zoo eval` with the sandbox subprocess, per-core pinning, registry rows; `judge version`.
-3. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
-4. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
+1. `sforge eval` / `sforge zoo eval` with the sandbox subprocess, per-core pinning, registry rows; `judge version`.
+2. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
+3. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
 
 ## Blockers / questions for Peter
-- None blocking. Observations for the baseline report (see Numbers):
+- Gate 1 decision (proposed in DECISIONS.md): keep Roe in the zoo as a documented known failure on R2 (NaN on
+  the 123 problem, as in Einfeldt et al. 1991), instead of dropping it or weakening the positivity constraint.
+- Venkatakrishnan with K > 0 does not fit the φ(r) slot (needs dx and absolute differences); the zoo has K = 0.
+- Observations for the baseline report (see Numbers):
   - N2 (unchoked, exit Mach 0.085) is dominated by low-Mach dissipation: first-order HLLC underpredicts ṁ by
     75 % at N = 120 (converging slowly with N), MUSCL is within 1–8 %. It is a valid case but tests low-Mach
     behaviour as much as the limiter.
