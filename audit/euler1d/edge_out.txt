@@ -1,0 +1,22 @@
+E-R01 OK
+E-R02 OK
+E-R03 OK
+E-R04 OK
+E-R05 OK
+E-R06 OK
+E-R07 OK
+E-N01 OK
+E-N02 OK
+E-N03 OK
+E-N04 OK
+E-N05 OK
+E-N06 OK
+E-B01 OK
+E-B02 OK
+E-B03 OK
+E-B11 OK
+E-B12 OK
+E-B13 OK
+E-B21 OK
+E-B22 JUDGE: {'error': 'sforge: f(a) and f(b) must have different signs', 'rc': 2}
+E-B23 OK

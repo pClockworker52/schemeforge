@@ -1,0 +1,29 @@
+counts {'nozzle': 402, 'riemann': 600}
+quantity                        max rel   no floor  worst case
+N:A_star_1                    0.000e+00  0.000e+00  -
+N:A_star_2                    2.520e-15  2.520e-15  A-N0237
+N:M1                          4.330e-15  4.330e-15  A-N0363
+N:mass_flow                   7.594e-16  7.594e-16  A-N0001
+N:p0_ratio                    2.465e-15  2.465e-15  A-N0237
+N:p_crit1                     8.153e-16  8.153e-16  A-N0353
+N:p_crit2                     2.263e-15  2.263e-15  A-N0268
+N:p_crit3                     2.670e-15  2.670e-15  A-N0364
+N:profile_M                   5.998e-13  5.998e-13  A-N0058
+N:profile_p                   6.541e-13  6.541e-13  A-N0058
+N:profile_rho                 5.450e-13  5.450e-13  A-N0058
+N:profile_u                   5.454e-13  5.454e-13  A-N0058
+N:profile_x                   2.329e-16  1.262e-14  A-N0034
+N:regime                      0.000e+00  0.000e+00  -
+N:x_shock                     2.761e-15  2.761e-15  A-N0311
+R:p_star                      8.481e-16  8.481e-16  A-R0095
+R:profile_p                   2.456e-15  2.456e-15  A-R0311
+R:profile_rho                 1.818e-15  1.818e-15  A-R0311
+R:profile_u                   1.022e-15  1.889e-13  A-R0590
+R:profile_x                   1.110e-16  1.948e-16  A-R0000
+R:rho_star_L                  7.428e-16  7.428e-16  A-R0434
+R:rho_star_R                  7.654e-16  7.654e-16  A-R0135
+R:u_star                      4.746e-16  6.297e-14  A-R0463
+R:wave_kinds                  0.000e+00  0.000e+00  -
+R:wave_speeds                 6.390e-16  1.047e-13  A-R0574
+
+flagged > 1e-10: 0

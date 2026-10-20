@@ -39,8 +39,8 @@ Input: W_L, W_R, γ, with ρ, p > 0.
    - c = 2/(γ+1) − (γ−1)/((γ+1)a_R) (u_R − ξ)
    - ρ = ρ_R c^(2/(γ−1)), u = (2/(γ+1)) (−a_R + (γ−1)u_R/2 + ξ), p = p_R c^(2γ/(γ−1)).
 
-   Points exactly on a wave boundary take the value of the inner (star) side; points exactly on the contact take
-   the right star state.
+   Points exactly on a shock take the value of the inner (star) side (at rarefaction heads and tails both sides
+   coincide); points exactly on the contact take the right star state.
 
 ## 3. Exact steady quasi-1D nozzle
 
@@ -66,9 +66,11 @@ subsonic.
 **Regimes:**
 - p_b/p₀ > p_crit1: subsonic everywhere, not choked. M_e from p_b/p₀ = Ψ(M_e)^(−γ/(γ−1)); A* = A_e / (A/A*)(M_e);
   M(x) is the subsonic root of A(x)/A* everywhere.
-- p_crit2 < p_b/p₀ ≤ p_crit1: choked with a normal shock at x_s ∈ (x_t, x_exit). Upstream of the throat M is
+- p_crit2 < p_b/p₀ ≤ p_crit1: choked with a normal shock at x_s ∈ [x_t, x_exit]. Upstream of the throat M is
   subsonic, between throat and shock supersonic (A* = A_t), downstream subsonic with A*₂ and p₀₂. x_s is the
   unique root of p_exit(x_s) = p_b, where p_exit(x_s) = p₀₂/p₀₁ · (p/p₀)(M_e), M_e the subsonic root of A_e/A*₂.
+  At p_b = p_crit1, x_s = x_t and M1 = 1. If rounding puts p_b on the wrong side of an end of [x_t, x_exit]
+  (p_b within a few ulp of p_crit2 or p_crit1), x_s is that end (blind audit, 2026-10-20).
 - p_b/p₀ ≤ p_crit2: subsonic upstream of the throat, supersonic downstream, no shock inside the nozzle; the exit
   pressure is p_crit3 (the shocks or expansions that match p_b stand outside and are not modelled).
 
@@ -161,6 +163,10 @@ for that case (features a few cells apart, e.g. R3's contact and shock at N = 20
 | `limit_cycle` | the explicit solver's flag (§5.3). |
 | `roughness_J` | J = Σ over cells with x_i > x_t of p_i (A_{i+½} − A_{i−½}); J_exact = ∫ p dA/dx over [x_from, x_exit], x_from the left face of the first such cell. roughness = RMS(Δ²(J − J_exact))/RMS(Δ²J_exact) over the sweep. |
 | `cost` | wall time per cell update, normalized to the zoo median (computed by the evaluator). |
+
+**Promo aggregates** (per held-out family and metric): median, mean (for 0/1 flags such as `converged_impl`
+this is the share of instances), p90 and worst on the bad side (10th percentile / minimum for metrics where
+higher is better), and the pass rate (share of instances without a hard-constraint violation).
 
 ## 8. Hard constraints and metamorphic tests
 

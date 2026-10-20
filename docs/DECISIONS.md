@@ -43,6 +43,15 @@ address ranges); the worker has a CPU-time limit and the parent a wall-clock tim
 implemented", so tests can tell it apart from usage errors (2).
 *Consequences:* None for later phases.
 
+## 2026-10-20 — Gate 1 decisions (Peter)
+*Context:* Gate 1 review of the Arena 1 judge, baseline report and blind audit.
+*Decision:* (1) Roe is dropped from the zoo (positivity failure on R2 and some RF1 instances). (2) The Target A
+thresholds proposed in the baseline report are accepted → docs/targets/A.md. (3) Target B thresholds are set
+later, from the well-balanced `operator` baseline at the start of Phase 3. (4) Venkatakrishnan K > 0 waits for
+the reconstruction slot. (5) The blind audit (audit/euler1d/REPORT.md) is accepted: 1,002 random instances
+agree to 6.5e-13; the one judge bug it found (p_b within rounding of p_crit2) is fixed.
+*Consequences:* Judge tagged `euler1d-v1.0` after these changes; zoo re-evaluated under v1.0.
+
 ## 2026-10-20 — Zoo: Venkatakrishnan form and the Roe positivity failure
 *Context:* PLAN §9.8 asks for a Venkatakrishnan-type limiter "with several values of K", and Gate 1 asks that
 every zoo member passes the hard constraints.

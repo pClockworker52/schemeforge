@@ -1,0 +1,10 @@
+gamma: 1.6666666666666667
+id: E-N06
+kind: nozzle
+n: 40
+nozzle:
+  area_ratio: 2.0
+  inlet_ratio: 1.5
+  length: 2.0
+  type: parabolic
+pb: 0.9

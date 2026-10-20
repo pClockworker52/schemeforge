@@ -1,0 +1,10 @@
+gamma: 1.6666666666666667
+id: E-B22
+kind: nozzle
+n: 40
+nozzle:
+  area_ratio: 6.0
+  inlet_ratio: 2.5
+  length: 2.5
+  type: conical
+pb: 0.18479048879760412

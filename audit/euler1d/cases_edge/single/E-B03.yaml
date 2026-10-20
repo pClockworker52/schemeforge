@@ -1,0 +1,7 @@
+gamma: 1.4
+id: E-B03
+kind: nozzle
+n: 40
+nozzle:
+  type: anderson
+pb: 0.016045588636455565

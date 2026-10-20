@@ -1,0 +1,10 @@
+gamma: 1.2
+id: E-B11
+kind: nozzle
+n: 40
+nozzle:
+  area_ratio: 4.0
+  inlet_ratio: 2.0
+  length: 3.0
+  type: parabolic
+pb: 0.986633425100395

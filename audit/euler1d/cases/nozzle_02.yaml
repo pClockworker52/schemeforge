@@ -1,0 +1,21 @@
+- gamma: 1.2
+  id: A-N0400
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.866976311106577
+    inlet_ratio: 2.945107588598953
+    length: 2.8047203225513027
+    type: parabolic
+    x_in: -0.31462004881875394
+  pb: 0.4740872443273403
+- gamma: 1.2
+  id: A-N0401
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.580346471387693
+    inlet_ratio: 1.7342702037726863
+    length: 3.1353657017238117
+    type: conical
+  pb: 0.8294883302613623

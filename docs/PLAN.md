@@ -513,7 +513,7 @@ Document the case YAML format in `docs/judge/euler1d_cases.md`. Breakers write t
 
 Phase 1 builds only what Gate 1 and the Phase 2 calibrations need:
 - **Limiters:** minmod, MC, van Leer, van Albada, superbee, Koren, and a Venkatakrishnan-type limiter (1D form, several values of K).
-- **Fluxes:** Rusanov, HLL, HLLC, Roe with Harten's entropy fix.
+- **Fluxes:** Rusanov, HLL, HLLC. (Roe with Harten's entropy fix was dropped at Gate 1: it violates positivity on the 123 problem.)
 - **Reconstructions:** first order, MUSCL with each limiter, and WENO5-Z (also used for the R7 reference).
 
 Added when the matching slot or target becomes active:
@@ -548,7 +548,7 @@ Also add Hypothesis property tests:
 
 - [ ] Appendix H reproduced: Toro star states to 5 significant digits, nozzle values to 4–5 digits
 - [ ] The blind audit agrees on at least 1,000 instances
-- [ ] Zoo sanity: superbee gives the narrowest shocks and squares off smooth waves; minmod is the most diffusive; HLLC and Roe keep the stationary contact exactly while HLL and Rusanov don't
+- [ ] Zoo sanity: superbee gives the narrowest shocks and squares off smooth waves; minmod is the most diffusive; HLLC keeps the stationary contact exactly while HLL and Rusanov don't
 - [ ] Hard constraints and metamorphic tests pass for every zoo member
 - [ ] The dev suite takes ≤ 30 s per candidate on your laptop, JIT excluded
 - [ ] `euler1d_baseline.md` is written and the decision on Targets A and B is recorded

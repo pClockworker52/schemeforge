@@ -1,0 +1,12 @@
+id: E-R03
+kind: riemann
+left:
+- 2.0
+- 0.5
+- 1.0
+n: 10
+right:
+- 0.5
+- 0.5
+- 1.0
+t_end: 0.1

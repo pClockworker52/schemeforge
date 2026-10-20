@@ -1,0 +1,1859 @@
+- gamma: 1.4
+  id: A-N0000
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9983128659129469
+- gamma: 1.2
+  id: A-N0001
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.689853117091781
+    inlet_ratio: 2.0806553461602473
+    length: 3.115640060302634
+    type: parabolic
+  pb: 0.9970979601085961
+- gamma: 1.2
+  id: A-N0002
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.870879548559945
+    inlet_ratio: 1.924207539523654
+    length: 2.846248918520959
+    type: conical
+  pb: 0.9971873642404329
+- gamma: 1.2
+  id: A-N0003
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.6443660231148429
+- gamma: 1.405
+  id: A-N0004
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.607404978330497
+    inlet_ratio: 1.5975558674781063
+    length: 2.442791908558943
+    type: parabolic
+  pb: 0.42221063473499504
+- gamma: 1.2
+  id: A-N0005
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.600841511482991
+    inlet_ratio: 2.079571399616192
+    length: 3.48729864307521
+    type: conical
+  pb: 0.575391266945558
+- gamma: 1.6666666666666667
+  id: A-N0006
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.1307143527557732
+- gamma: 1.2
+  id: A-N0007
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.1103101032672
+    inlet_ratio: 2.8341853801008177
+    length: 2.030160422330588
+    type: parabolic
+    x_in: -0.11919903028302914
+  pb: 0.005861726832152606
+- gamma: 1.4
+  id: A-N0008
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.312528677236145
+    inlet_ratio: 2.127280569846351
+    length: 2.2162147532188508
+    type: conical
+    x_in: -0.1517765426551323
+  pb: 0.02962795663533139
+- gamma: 1.4
+  id: A-N0009
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9960486934103701
+- gamma: 1.2
+  id: A-N0010
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.551011376896302
+    inlet_ratio: 2.1293414649173705
+    length: 2.8564687412023084
+    type: parabolic
+    x_in: -0.19266336012007468
+  pb: 0.9994182956280413
+- gamma: 1.405
+  id: A-N0011
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.217690849594123
+    inlet_ratio: 2.8193330544221937
+    length: 2.3361029188949853
+    type: conical
+    x_in: -0.05207613802421174
+  pb: 0.994300090161589
+- gamma: 1.2
+  id: A-N0012
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.4735014737459951
+- gamma: 1.4
+  id: A-N0013
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.362719299512797
+    inlet_ratio: 2.5968494929725963
+    length: 2.716850328087822
+    type: parabolic
+    x_in: 0.060143080440850594
+  pb: 0.8036362086384718
+- gamma: 1.2
+  id: A-N0014
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.762259987536324
+    inlet_ratio: 1.8497344626526313
+    length: 3.781110407035852
+    type: conical
+    x_in: -0.2715031657287955
+  pb: 0.7187808505127031
+- gamma: 1.405
+  id: A-N0015
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.07858122936525133
+- gamma: 1.2
+  id: A-N0016
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.35654259330725
+    inlet_ratio: 1.7284445266378021
+    length: 3.3838438792737717
+    type: parabolic
+  pb: 0.15119358214110468
+- gamma: 1.405
+  id: A-N0017
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.081799957505567
+    inlet_ratio: 2.9749342609735163
+    length: 2.336839247687464
+    type: conical
+  pb: 0.15347215063572914
+- gamma: 1.2
+  id: A-N0018
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9972215978247108
+- gamma: 1.2
+  id: A-N0019
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.892498887599498
+    inlet_ratio: 1.8580442361726368
+    length: 2.8408214798401588
+    type: parabolic
+    x_in: -0.1731328113345817
+  pb: 0.9987582334280312
+- gamma: 1.2
+  id: A-N0020
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.10189771096286
+    inlet_ratio: 1.5446488238428349
+    length: 2.458760219519755
+    type: conical
+  pb: 0.9957379141131492
+- gamma: 1.4
+  id: A-N0021
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.3138938751702713
+- gamma: 1.4
+  id: A-N0022
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.788991843334934
+    inlet_ratio: 2.6108610291451115
+    length: 3.4551347440278626
+    type: parabolic
+  pb: 0.3333550053366481
+- gamma: 1.4
+  id: A-N0023
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.551601104861012
+    inlet_ratio: 1.9164660209940263
+    length: 2.8137665178356643
+    type: conical
+    x_in: -0.19208864993013508
+  pb: 0.27610510678157546
+- gamma: 1.4
+  id: A-N0024
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.013338646695074166
+- gamma: 1.405
+  id: A-N0025
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.0286742965423796
+    inlet_ratio: 2.7405670924962635
+    length: 3.1153989895807346
+    type: parabolic
+    x_in: -0.20569357023846935
+  pb: 0.16689346199301405
+- gamma: 1.4
+  id: A-N0026
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.558099538217682
+    inlet_ratio: 2.4496298232766947
+    length: 2.861693682643192
+    type: conical
+  pb: 0.1286925278344973
+- gamma: 1.4
+  id: A-N0027
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9988579996363234
+- gamma: 1.405
+  id: A-N0028
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.931034853277264
+    inlet_ratio: 1.6761414049596868
+    length: 2.065293362228483
+    type: parabolic
+    x_in: 0.24194355007008916
+  pb: 0.9990492285650562
+- gamma: 1.2
+  id: A-N0029
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.257971611533492
+    inlet_ratio: 1.5229418625844366
+    length: 2.4091871871617654
+    type: conical
+  pb: 0.9809412303400276
+- gamma: 1.6666666666666667
+  id: A-N0030
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.6389931810264596
+- gamma: 1.405
+  id: A-N0031
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.618425506713454
+    inlet_ratio: 2.104007777651746
+    length: 3.5869440161226045
+    type: parabolic
+  pb: 0.4063323850926164
+- gamma: 1.4
+  id: A-N0032
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.531080756404089
+    inlet_ratio: 1.5502520735151102
+    length: 3.8432015460792197
+    type: conical
+    x_in: 0.34992050868553604
+  pb: 0.40751436043290123
+- gamma: 1.6666666666666667
+  id: A-N0033
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.030586580057154387
+- gamma: 1.2
+  id: A-N0034
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.198052395256718
+    inlet_ratio: 2.311870517347554
+    length: 3.255506059961113
+    type: parabolic
+    x_in: -0.11398284659041502
+  pb: 0.18447197931577097
+- gamma: 1.6666666666666667
+  id: A-N0035
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.057511983228986
+    inlet_ratio: 2.3417944372614317
+    length: 3.683853947317161
+    type: conical
+    x_in: -0.3337773998497616
+  pb: 0.11635418222509875
+- gamma: 1.405
+  id: A-N0036
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9979604786908269
+- gamma: 1.4
+  id: A-N0037
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.6478578178168686
+    inlet_ratio: 2.6845282904022465
+    length: 2.0458183433026997
+    type: parabolic
+  pb: 0.9925990535743568
+- gamma: 1.405
+  id: A-N0038
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.288500547881086
+    inlet_ratio: 2.637194038343126
+    length: 2.7326509203178144
+    type: conical
+  pb: 0.9954795200987254
+- gamma: 1.2
+  id: A-N0039
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.7986002918180256
+- gamma: 1.2
+  id: A-N0040
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.707823472142437
+    inlet_ratio: 2.9259744877169807
+    length: 3.6396321346685845
+    type: parabolic
+  pb: 0.2916025238959635
+- gamma: 1.405
+  id: A-N0041
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.664277645870314
+    inlet_ratio: 2.597686239741459
+    length: 2.700779668422496
+    type: conical
+    x_in: 0.13913233617119136
+  pb: 0.43367071322474815
+- gamma: 1.405
+  id: A-N0042
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.024092450799264333
+- gamma: 1.2
+  id: A-N0043
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.042037560094248
+    inlet_ratio: 2.3961795346819024
+    length: 3.4167417974216483
+    type: parabolic
+  pb: 0.2071789705339391
+- gamma: 1.6666666666666667
+  id: A-N0044
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.322828758298792
+    inlet_ratio: 2.004804504167926
+    length: 3.4194145666382707
+    type: conical
+    x_in: -0.271901411130014
+  pb: 0.13841026356365824
+- gamma: 1.405
+  id: A-N0045
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9973489669207897
+- gamma: 1.405
+  id: A-N0046
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.663834694222757
+    inlet_ratio: 2.2839329617559105
+    length: 3.3046533128207276
+    type: parabolic
+    x_in: -0.34533646553303865
+  pb: 0.9995177067226843
+- gamma: 1.6666666666666667
+  id: A-N0047
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.512798822486416
+    inlet_ratio: 1.704109804078361
+    length: 3.5055164144401414
+    type: conical
+    x_in: 0.3380255130459162
+  pb: 0.9986768676061136
+- gamma: 1.4
+  id: A-N0048
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.8332612408332405
+- gamma: 1.405
+  id: A-N0049
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.420714928581598
+    inlet_ratio: 2.84162915232356
+    length: 3.0997788210571606
+    type: parabolic
+    x_in: -0.42274320190270553
+  pb: 0.35343910147332147
+- gamma: 1.4
+  id: A-N0050
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.6986594271688915
+    inlet_ratio: 1.6127944051991505
+    length: 2.9324774241620903
+    type: conical
+  pb: 0.91375274981025
+- gamma: 1.6666666666666667
+  id: A-N0051
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.0037405145202381454
+- gamma: 1.2
+  id: A-N0052
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.3188282088862975
+    inlet_ratio: 2.981723238606236
+    length: 2.189621339616874
+    type: parabolic
+  pb: 0.159734747327039
+- gamma: 1.4
+  id: A-N0053
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.889082705469945
+    inlet_ratio: 1.626863450433409
+    length: 2.052981485478158
+    type: conical
+  pb: 0.18923824749783993
+- gamma: 1.2
+  id: A-N0054
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9985242879666607
+- gamma: 1.405
+  id: A-N0055
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.062574291139471
+    inlet_ratio: 1.77814149562623
+    length: 2.3290923848372476
+    type: parabolic
+  pb: 0.9980017584406488
+- gamma: 1.4
+  id: A-N0056
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.50882049903854
+    inlet_ratio: 1.9458086810202253
+    length: 2.3143081768072666
+    type: conical
+  pb: 0.9977865044385612
+- gamma: 1.405
+  id: A-N0057
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.7280448542181023
+- gamma: 1.2
+  id: A-N0058
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.973135851644183
+    inlet_ratio: 1.5350853398681181
+    length: 2.4753360077401343
+    type: parabolic
+  pb: 0.7465332152681338
+- gamma: 1.405
+  id: A-N0059
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.26037785671468
+    inlet_ratio: 2.1347678871278815
+    length: 2.929821447417916
+    type: conical
+    x_in: 0.414165950428767
+  pb: 0.42831352740951656
+- gamma: 1.6666666666666667
+  id: A-N0060
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.07222956029153939
+- gamma: 1.6666666666666667
+  id: A-N0061
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.082116194104719
+    inlet_ratio: 1.590548469392505
+    length: 3.7858500718353794
+    type: parabolic
+    x_in: 0.1256761002505571
+  pb: 0.32728843218038445
+- gamma: 1.405
+  id: A-N0062
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.495488206669373
+    inlet_ratio: 2.494897304620367
+    length: 3.141809867885695
+    type: conical
+    x_in: 0.3468597469449044
+  pb: 0.12474171656265655
+- gamma: 1.405
+  id: A-N0063
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9990284681705465
+- gamma: 1.6666666666666667
+  id: A-N0064
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.6454837527848944
+    inlet_ratio: 1.8503562446913362
+    length: 2.5820440142195635
+    type: parabolic
+    x_in: 0.24099075670823844
+  pb: 0.9905494493480537
+- gamma: 1.2
+  id: A-N0065
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.9491806199453166
+    inlet_ratio: 2.895026888980075
+    length: 2.7100672616198365
+    type: conical
+  pb: 0.9951887762729474
+- gamma: 1.6666666666666667
+  id: A-N0066
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.260396473030726
+- gamma: 1.405
+  id: A-N0067
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.598402073450469
+    inlet_ratio: 2.0559409410491574
+    length: 3.7399894461125056
+    type: parabolic
+  pb: 0.9406904226248702
+- gamma: 1.6666666666666667
+  id: A-N0068
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.045171773117861
+    inlet_ratio: 2.240966767768719
+    length: 2.9522771894066455
+    type: conical
+  pb: 0.6276853635260397
+- gamma: 1.6666666666666667
+  id: A-N0069
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.1443593922268605
+- gamma: 1.4
+  id: A-N0070
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.675846805119273
+    inlet_ratio: 1.7194140350034468
+    length: 2.92493159851485
+    type: parabolic
+  pb: 0.13411115046461775
+- gamma: 1.4
+  id: A-N0071
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.588558156961608
+    inlet_ratio: 1.8384388432352985
+    length: 3.6675527623162134
+    type: conical
+  pb: 0.1115526477922408
+- gamma: 1.405
+  id: A-N0072
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9983420293590662
+- gamma: 1.2
+  id: A-N0073
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.16044471058406
+    inlet_ratio: 2.4042532798389846
+    length: 3.224809870116249
+    type: parabolic
+  pb: 0.9968981871676449
+- gamma: 1.6666666666666667
+  id: A-N0074
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.6523174072170415
+    inlet_ratio: 2.2597547246182454
+    length: 2.952852659627956
+    type: conical
+    x_in: 0.07557631719564728
+  pb: 0.9968490948944215
+- gamma: 1.2
+  id: A-N0075
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.8148964717455167
+- gamma: 1.2
+  id: A-N0076
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.263686894806115
+    inlet_ratio: 2.3694551549590064
+    length: 3.8258944209365744
+    type: parabolic
+  pb: 0.46091960835954393
+- gamma: 1.4
+  id: A-N0077
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.219697570567967
+    inlet_ratio: 1.6502315550100224
+    length: 2.7534744353850877
+    type: conical
+  pb: 0.6953911065151506
+- gamma: 1.2
+  id: A-N0078
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.2046706175587105
+- gamma: 1.405
+  id: A-N0079
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.198882532327013
+    inlet_ratio: 2.7890339352544946
+    length: 3.2767492754737013
+    type: parabolic
+  pb: 0.42856240409735874
+- gamma: 1.2
+  id: A-N0080
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.704471531065495
+    inlet_ratio: 2.276432271246064
+    length: 2.411749728301233
+    type: conical
+  pb: 0.1356213218711085
+- gamma: 1.6666666666666667
+  id: A-N0081
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9974167219070263
+- gamma: 1.405
+  id: A-N0082
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.7077367634737817
+    inlet_ratio: 2.117445545887292
+    length: 2.570169245779423
+    type: parabolic
+    x_in: 0.12350246055396696
+  pb: 0.994849985451374
+- gamma: 1.405
+  id: A-N0083
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.130920089651797
+    inlet_ratio: 1.5643780127356206
+    length: 3.1568577949677143
+    type: conical
+    x_in: 0.4268299304024258
+  pb: 0.9958838443178356
+- gamma: 1.4
+  id: A-N0084
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.32081492313126103
+- gamma: 1.405
+  id: A-N0085
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.6908623922293167
+    inlet_ratio: 2.288609747684598
+    length: 2.1459936865630898
+    type: parabolic
+  pb: 0.8032212578974244
+- gamma: 1.6666666666666667
+  id: A-N0086
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.704686494957286
+    inlet_ratio: 2.6496720936314158
+    length: 2.177178478008139
+    type: conical
+    x_in: -0.39738565260348147
+  pb: 0.9528677394747942
+- gamma: 1.405
+  id: A-N0087
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.10576614632664286
+- gamma: 1.6666666666666667
+  id: A-N0088
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.910305627099383
+    inlet_ratio: 1.5249240678246714
+    length: 3.9520669729425757
+    type: parabolic
+  pb: 0.11455120552944313
+- gamma: 1.405
+  id: A-N0089
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.55292610562608
+    inlet_ratio: 2.949266755721246
+    length: 2.3275629511128297
+    type: conical
+  pb: 0.10574757003692119
+- gamma: 1.6666666666666667
+  id: A-N0090
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9991323382805747
+- gamma: 1.6666666666666667
+  id: A-N0091
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.603343947732095
+    inlet_ratio: 2.1276445640157977
+    length: 2.342066557624554
+    type: parabolic
+  pb: 0.9846015854870932
+- gamma: 1.6666666666666667
+  id: A-N0092
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.096528405410584
+    inlet_ratio: 1.7192698472961294
+    length: 2.4397534190166716
+    type: conical
+    x_in: 0.2930379533126315
+  pb: 0.9973767599646043
+- gamma: 1.6666666666666667
+  id: A-N0093
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.4190137982167351
+- gamma: 1.6666666666666667
+  id: A-N0094
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.795822389141616
+    inlet_ratio: 2.357764091437063
+    length: 2.533447078237583
+    type: parabolic
+    x_in: 0.03656033914778023
+  pb: 0.22446448118122733
+- gamma: 1.6666666666666667
+  id: A-N0095
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.8978153594611875
+    inlet_ratio: 2.8692903921706145
+    length: 2.0583832960078
+    type: conical
+  pb: 0.8857132194205566
+- gamma: 1.405
+  id: A-N0096
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.005776510625752776
+- gamma: 1.405
+  id: A-N0097
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.5177559142288084
+    inlet_ratio: 2.9742071757993696
+    length: 2.9533477523982175
+    type: parabolic
+  pb: 0.2003183040268407
+- gamma: 1.6666666666666667
+  id: A-N0098
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.538025802609636
+    inlet_ratio: 2.1442176209578614
+    length: 2.5276545407779096
+    type: conical
+    x_in: 0.18764926369186896
+  pb: 0.11881520465537691
+- gamma: 1.405
+  id: A-N0099
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9992641112282564
+- gamma: 1.4
+  id: A-N0100
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.551100180582286
+    inlet_ratio: 1.9573433339851152
+    length: 3.557961241366406
+    type: parabolic
+  pb: 0.9925696133937827
+- gamma: 1.4
+  id: A-N0101
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.8047405427123833
+    inlet_ratio: 2.588329501614547
+    length: 2.6527138617920687
+    type: conical
+    x_in: 0.34512753766882387
+  pb: 0.9825402371988149
+- gamma: 1.405
+  id: A-N0102
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.25215237223619147
+- gamma: 1.6666666666666667
+  id: A-N0103
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.031435973800315
+    inlet_ratio: 1.7403395966559563
+    length: 2.2766662939556612
+    type: parabolic
+  pb: 0.6278841607102432
+- gamma: 1.405
+  id: A-N0104
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.006280137949223
+    inlet_ratio: 2.910966949581062
+    length: 3.3915640872941104
+    type: conical
+  pb: 0.29841949785143757
+- gamma: 1.405
+  id: A-N0105
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.06471341893729675
+- gamma: 1.4
+  id: A-N0106
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.9806132192528993
+    inlet_ratio: 2.4304040250873467
+    length: 2.1128077310561495
+    type: parabolic
+  pb: 0.16791023954872336
+- gamma: 1.405
+  id: A-N0107
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.124532776027717
+    inlet_ratio: 2.341610599919099
+    length: 2.098054895259288
+    type: conical
+  pb: 0.12451754979533658
+- gamma: 1.6666666666666667
+  id: A-N0108
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.996174802303413
+- gamma: 1.405
+  id: A-N0109
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.9241405637661524
+    inlet_ratio: 2.130630475665128
+    length: 3.910035934544201
+    type: parabolic
+  pb: 0.9755828814635565
+- gamma: 1.4
+  id: A-N0110
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.8746201833539082
+    inlet_ratio: 2.6491722679182637
+    length: 2.159272699422779
+    type: conical
+  pb: 0.9891248335006189
+- gamma: 1.405
+  id: A-N0111
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.7506927362617019
+- gamma: 1.4
+  id: A-N0112
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.948970489454899
+    inlet_ratio: 2.304146988876289
+    length: 2.4854521319030227
+    type: parabolic
+  pb: 0.45478776046282404
+- gamma: 1.4
+  id: A-N0113
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.637449409954518
+    inlet_ratio: 1.9813723608674294
+    length: 3.4207221386385798
+    type: conical
+    x_in: 0.14738594510548864
+  pb: 0.5579806603816675
+- gamma: 1.6666666666666667
+  id: A-N0114
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.016612002722842092
+- gamma: 1.6666666666666667
+  id: A-N0115
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.2409470472513497
+    inlet_ratio: 2.029363054343144
+    length: 3.4306392230035936
+    type: parabolic
+  pb: 0.1527460254407926
+- gamma: 1.405
+  id: A-N0116
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.906685606876921
+    inlet_ratio: 1.5639044027194726
+    length: 3.4036304356551295
+    type: conical
+    x_in: -0.16144628260974736
+  pb: 0.06658504583656034
+- gamma: 1.2
+  id: A-N0117
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9987053731626195
+- gamma: 1.4
+  id: A-N0118
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.6099333590738656
+    inlet_ratio: 1.7496310271281155
+    length: 3.494905078239377
+    type: parabolic
+    x_in: -0.301589380318119
+  pb: 0.9965789099822889
+- gamma: 1.405
+  id: A-N0119
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.0626013213892467
+    inlet_ratio: 2.2202330363388496
+    length: 3.32963443705535
+    type: conical
+    x_in: 0.48290826934474007
+  pb: 0.999309810725927
+- gamma: 1.4
+  id: A-N0120
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9849689382008382
+- gamma: 1.405
+  id: A-N0121
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.50569415184547
+    inlet_ratio: 1.5303501189383162
+    length: 3.767387699929674
+    type: parabolic
+  pb: 0.6316461799312061
+- gamma: 1.2
+  id: A-N0122
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.138932686263466
+    inlet_ratio: 1.6933304025656566
+    length: 3.4636985494913812
+    type: conical
+  pb: 0.6601053705080836
+- gamma: 1.4
+  id: A-N0123
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.09753674702298162
+- gamma: 1.4
+  id: A-N0124
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.237113042017247
+    inlet_ratio: 2.7584223518617397
+    length: 3.1409647358923016
+    type: parabolic
+  pb: 0.16529053525445134
+- gamma: 1.6666666666666667
+  id: A-N0125
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.2645462383533603
+    inlet_ratio: 2.940330755878483
+    length: 2.8955885624968194
+    type: conical
+  pb: 0.05579015857826249
+- gamma: 1.4
+  id: A-N0126
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9986524492157018
+- gamma: 1.6666666666666667
+  id: A-N0127
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.382509346958598
+    inlet_ratio: 2.270735644677764
+    length: 2.481840421392484
+    type: parabolic
+    x_in: 0.15680705086914204
+  pb: 0.9971080753418885
+- gamma: 1.6666666666666667
+  id: A-N0128
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.4223138322939235
+    inlet_ratio: 2.453468765034236
+    length: 2.426529009464591
+    type: conical
+    x_in: 0.22001601405963722
+  pb: 0.9978413300308085
+- gamma: 1.6666666666666667
+  id: A-N0129
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.5938365209597135
+- gamma: 1.6666666666666667
+  id: A-N0130
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.931519442235429
+    inlet_ratio: 1.91288443063535
+    length: 3.412776612033777
+    type: parabolic
+    x_in: -0.4655118682554017
+  pb: 0.469181745753092
+- gamma: 1.405
+  id: A-N0131
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.995222543365642
+    inlet_ratio: 2.7896772081955286
+    length: 2.8458830618396274
+    type: conical
+  pb: 0.4316260845338178
+- gamma: 1.4
+  id: A-N0132
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.08274675707421732
+- gamma: 1.405
+  id: A-N0133
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.134704657618137
+    inlet_ratio: 1.7962043122316933
+    length: 2.5690960618604546
+    type: parabolic
+  pb: 0.10130910505302264
+- gamma: 1.4
+  id: A-N0134
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.8089122134574005
+    inlet_ratio: 2.507277570203171
+    length: 3.6190431177191584
+    type: conical
+  pb: 0.061399653733568205
+- gamma: 1.6666666666666667
+  id: A-N0135
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9966822372733312
+- gamma: 1.4
+  id: A-N0136
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.340750677558828
+    inlet_ratio: 1.5478980493261167
+    length: 3.504355532113258
+    type: parabolic
+    x_in: -0.2398531798282586
+  pb: 0.9972455970084951
+- gamma: 1.6666666666666667
+  id: A-N0137
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.76386759166115
+    inlet_ratio: 1.8786740821982852
+    length: 2.000106698371078
+    type: conical
+  pb: 0.9967813063882542
+- gamma: 1.4
+  id: A-N0138
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.7686242057242103
+- gamma: 1.2
+  id: A-N0139
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.979704657371087
+    inlet_ratio: 2.3774175988401094
+    length: 3.491467238969204
+    type: parabolic
+  pb: 0.4804872544026142
+- gamma: 1.4
+  id: A-N0140
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.157463326587636
+    inlet_ratio: 2.374420165499563
+    length: 2.9377533026864047
+    type: conical
+    x_in: 0.26782597692675325
+  pb: 0.2733791818150013
+- gamma: 1.6666666666666667
+  id: A-N0141
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.17842192897503376
+- gamma: 1.4
+  id: A-N0142
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.189618868219165
+    inlet_ratio: 2.8106839234230527
+    length: 3.540656711821823
+    type: parabolic
+  pb: 0.12237103776351262
+- gamma: 1.6666666666666667
+  id: A-N0143
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.73274340314519
+    inlet_ratio: 2.384313907561566
+    length: 2.0593606735511907
+    type: conical
+    x_in: 0.47905057518267
+  pb: 0.02199242455141704
+- gamma: 1.4
+  id: A-N0144
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9962637666965672
+- gamma: 1.6666666666666667
+  id: A-N0145
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.094162220508189
+    inlet_ratio: 2.501118189246749
+    length: 2.125691206324458
+    type: parabolic
+  pb: 0.9996321560094067
+- gamma: 1.405
+  id: A-N0146
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.5492348697359954
+    inlet_ratio: 2.2527394564982712
+    length: 2.6521761856375408
+    type: conical
+    x_in: 0.0772022260966212
+  pb: 0.9993450099016657
+- gamma: 1.2
+  id: A-N0147
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.7372566209763665
+- gamma: 1.405
+  id: A-N0148
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.056892556770197
+    inlet_ratio: 2.027983708152862
+    length: 2.6524789153945827
+    type: parabolic
+    x_in: -0.0015408618279789676
+  pb: 0.8479958883524887
+- gamma: 1.6666666666666667
+  id: A-N0149
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.446234273293964
+    inlet_ratio: 1.7478947478268614
+    length: 2.5034552177015366
+    type: conical
+    x_in: -0.050478116589916744
+  pb: 0.823655066095678
+- gamma: 1.4
+  id: A-N0150
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.09339960050518865
+- gamma: 1.6666666666666667
+  id: A-N0151
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.3045401941171235
+    inlet_ratio: 2.586836938906704
+    length: 2.2688764358162503
+    type: parabolic
+  pb: 0.16654603020352704
+- gamma: 1.2
+  id: A-N0152
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.085318329142886
+    inlet_ratio: 1.8125060261372723
+    length: 2.640036772378795
+    type: conical
+    x_in: -0.47443207472633486
+  pb: 0.13682091060191376
+- gamma: 1.6666666666666667
+  id: A-N0153
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9947985521901812
+- gamma: 1.2
+  id: A-N0154
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.962456831519699
+    inlet_ratio: 1.545143569367024
+    length: 2.4323444878200444
+    type: parabolic
+  pb: 0.9968151783470405
+- gamma: 1.2
+  id: A-N0155
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.911121225629144
+    inlet_ratio: 2.088043494621768
+    length: 3.9369384675715144
+    type: conical
+  pb: 0.9991480652304667
+- gamma: 1.4
+  id: A-N0156
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.8641905828185807
+- gamma: 1.4
+  id: A-N0157
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.166971862857164
+    inlet_ratio: 2.009715832035577
+    length: 2.041419676614916
+    type: parabolic
+  pb: 0.6497688998633586
+- gamma: 1.2
+  id: A-N0158
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.014373021731512
+    inlet_ratio: 2.1640142289060353
+    length: 3.809780354923496
+    type: conical
+  pb: 0.9323001624452962
+- gamma: 1.4
+  id: A-N0159
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.09753727233835555
+- gamma: 1.405
+  id: A-N0160
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.825974718180892
+    inlet_ratio: 2.9098402629445204
+    length: 2.471361042531512
+    type: parabolic
+  pb: 0.12763921322745828
+- gamma: 1.6666666666666667
+  id: A-N0161
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.254294176281816
+    inlet_ratio: 2.9657950758455747
+    length: 2.057776582272089
+    type: conical
+    x_in: 0.10244282436735874
+  pb: 0.23380193272300198
+- gamma: 1.2
+  id: A-N0162
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9985610292166571
+- gamma: 1.6666666666666667
+  id: A-N0163
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.048996117476495
+    inlet_ratio: 1.5430278077531083
+    length: 3.809645368713394
+    type: parabolic
+  pb: 0.9958831795764485
+- gamma: 1.405
+  id: A-N0164
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.896351698599721
+    inlet_ratio: 2.847998280762484
+    length: 3.6957168152750395
+    type: conical
+    x_in: 0.39660596267447945
+  pb: 0.9989353644319229
+- gamma: 1.405
+  id: A-N0165
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.38841501033865705
+- gamma: 1.4
+  id: A-N0166
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.182492591032121
+    inlet_ratio: 1.7159139844645495
+    length: 2.454611052839488
+    type: parabolic
+    x_in: 0.38035627977985254
+  pb: 0.909743072153399
+- gamma: 1.405
+  id: A-N0167
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.558117437491024
+    inlet_ratio: 1.937144193538154
+    length: 2.6361119013247585
+    type: conical
+    x_in: -0.17404278692037978
+  pb: 0.8508605993699239
+- gamma: 1.6666666666666667
+  id: A-N0168
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.17096986523268445
+- gamma: 1.2
+  id: A-N0169
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.455531012402415
+    inlet_ratio: 1.989692811687132
+    length: 3.647160832801423
+    type: parabolic
+  pb: 0.013676250949167308
+- gamma: 1.2
+  id: A-N0170
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 6.788228392349817
+    inlet_ratio: 2.3482610774047625
+    length: 3.793839163488018
+    type: conical
+  pb: 0.16129180328304915
+- gamma: 1.2
+  id: A-N0171
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.996968976199323
+- gamma: 1.405
+  id: A-N0172
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.962380151944114
+    inlet_ratio: 2.478130637072921
+    length: 3.815454341778765
+    type: parabolic
+  pb: 0.9981598283752211
+- gamma: 1.405
+  id: A-N0173
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.4635578803621696
+    inlet_ratio: 2.2261706152134595
+    length: 2.5603275897725304
+    type: conical
+    x_in: 0.1522302413231874
+  pb: 0.9629302680874853
+- gamma: 1.4
+  id: A-N0174
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.4303881358378554
+- gamma: 1.4
+  id: A-N0175
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.748717478027894
+    inlet_ratio: 2.027568666123886
+    length: 3.1981677896188145
+    type: parabolic
+    x_in: 0.032261632353810854
+  pb: 0.6135564423783563
+- gamma: 1.2
+  id: A-N0176
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.657338682382273
+    inlet_ratio: 1.8773370083374474
+    length: 2.8849923211988395
+    type: conical
+    x_in: 0.3638768680316766
+  pb: 0.2783211513570677
+- gamma: 1.4
+  id: A-N0177
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.039819532921695336
+- gamma: 1.405
+  id: A-N0178
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 8.524863895588423
+    inlet_ratio: 1.744207774692118
+    length: 2.4765025963760943
+    type: parabolic
+  pb: 0.07210456213747822
+- gamma: 1.2
+  id: A-N0179
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.093495255821929
+    inlet_ratio: 2.666103235507512
+    length: 2.0373570588351058
+    type: conical
+    x_in: 0.42681134941949905
+  pb: 0.26782552120487
+- gamma: 1.405
+  id: A-N0180
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9991268703745635
+- gamma: 1.2
+  id: A-N0181
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.089152598419077
+    inlet_ratio: 1.9618930260805199
+    length: 2.3586349176296717
+    type: parabolic
+  pb: 0.9956812027683922
+- gamma: 1.405
+  id: A-N0182
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.372233023723016
+    inlet_ratio: 2.6541879361973137
+    length: 3.8819528649532806
+    type: conical
+    x_in: 0.2005126801155528
+  pb: 0.9894061609399376
+- gamma: 1.2
+  id: A-N0183
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.7551627937960554
+- gamma: 1.4
+  id: A-N0184
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.9515751871283795
+    inlet_ratio: 2.5599675931703616
+    length: 2.1391807045474356
+    type: parabolic
+  pb: 0.8866724785718119
+- gamma: 1.405
+  id: A-N0185
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.373058520620553
+    inlet_ratio: 2.6365657280811963
+    length: 2.84547226390497
+    type: conical
+  pb: 0.8341713189620379
+- gamma: 1.405
+  id: A-N0186
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.029185691756505174
+- gamma: 1.6666666666666667
+  id: A-N0187
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.866374574807885
+    inlet_ratio: 2.404334701525392
+    length: 3.511251162868544
+    type: parabolic
+    x_in: 0.04495712017429687
+  pb: 0.0667376674210658
+- gamma: 1.405
+  id: A-N0188
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 5.525245594746497
+    inlet_ratio: 1.6184730033945414
+    length: 3.2208117656753883
+    type: conical
+    x_in: -0.1699770368960113
+  pb: 0.16012310714944844
+- gamma: 1.405
+  id: A-N0189
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9960688371921977
+- gamma: 1.4
+  id: A-N0190
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 2.464530425830586
+    inlet_ratio: 2.481665958069949
+    length: 3.7312760038342425
+    type: parabolic
+    x_in: 0.21758942370534862
+  pb: 0.9662430788031448
+- gamma: 1.6666666666666667
+  id: A-N0191
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.793646661682873
+    inlet_ratio: 1.7141860323158231
+    length: 3.4118078502335187
+    type: conical
+    x_in: 0.39438090154671945
+  pb: 0.9878005827160727
+- gamma: 1.405
+  id: A-N0192
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.312163600254726
+- gamma: 1.405
+  id: A-N0193
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.610466286550111
+    inlet_ratio: 1.6677923838428033
+    length: 3.5259673153958495
+    type: parabolic
+  pb: 0.19091168047481977
+- gamma: 1.6666666666666667
+  id: A-N0194
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 7.815709804551732
+    inlet_ratio: 1.9575970311285138
+    length: 3.4773521202555804
+    type: conical
+  pb: 0.8630012151960289
+- gamma: 1.4
+  id: A-N0195
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.06250628582264424
+- gamma: 1.6666666666666667
+  id: A-N0196
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 9.497382653377604
+    inlet_ratio: 2.389863753024997
+    length: 2.120860545711124
+    type: parabolic
+    x_in: 0.48145125296221203
+  pb: 0.09703297642453305
+- gamma: 1.4
+  id: A-N0197
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 3.735216192512355
+    inlet_ratio: 2.4393027828732277
+    length: 3.1760842501039597
+    type: conical
+    x_in: 0.05088186594719213
+  pb: 0.12532927580273986
+- gamma: 1.6666666666666667
+  id: A-N0198
+  kind: nozzle
+  n: 40
+  nozzle:
+    type: anderson
+  pb: 0.9941903184809819
+- gamma: 1.4
+  id: A-N0199
+  kind: nozzle
+  n: 40
+  nozzle:
+    area_ratio: 4.858235890793082
+    inlet_ratio: 2.2955095079553005
+    length: 2.2602626639126826
+    type: parabolic
+    x_in: -0.07076473012797635
+  pb: 0.9941411989432818

@@ -1,0 +1,13 @@
+gamma: 1.2
+id: E-R06
+kind: riemann
+left:
+- 0.1
+- 0.0
+- 1000.0
+n: 50
+right:
+- 10.0
+- 0.0
+- 0.001
+t_end: 0.004

@@ -18,3 +18,6 @@ dist/
 
 # local Claude Code settings
 .claude/settings.local.json
+
+# blind-audit judge answers (regenerable: see audit/<arena>/REPORT.md "Reproduce")
+audit/*/judge_out*/

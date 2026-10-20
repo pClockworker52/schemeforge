@@ -102,7 +102,7 @@ Target B thresholds from that baseline, not now.
 ## 6. Other observations
 
 - Roe + Harten fix violates positivity on R2 (123 problem) and on 2 of 20 RF1 instances (Einfeldt et al. 1991);
-  it stays in the zoo as a documented failure (Gate 1 decision).
+  dropped from the zoo at Gate 1 (Peter, 2026-10-20).
 - Rusanov stalls explicitly on NF1 (median 2.2 orders): flux dissipation, not just the limiter, matters for
   steady convergence.
 - WENO5-Z: sharpest on moving discontinuities (RF1 shock 2.35, contact 4.3 cells) but RF2 (slowly moving shocks)

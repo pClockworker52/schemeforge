@@ -1,0 +1,10 @@
+gamma: 1.2
+id: E-N05
+kind: nozzle
+n: 40
+nozzle:
+  area_ratio: 10.0
+  inlet_ratio: 3.0
+  length: 4.0
+  type: conical
+pb: 0.0005

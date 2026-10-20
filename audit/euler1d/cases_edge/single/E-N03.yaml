@@ -1,0 +1,11 @@
+gamma: 1.4
+id: E-N03
+kind: nozzle
+n: 7
+nozzle:
+  area_ratio: 4.0
+  inlet_ratio: 2.0
+  length: 2.75
+  type: parabolic
+  x_in: 0.25
+pb: 0.999

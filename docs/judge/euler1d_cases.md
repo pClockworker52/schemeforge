@@ -8,7 +8,7 @@ reference the judge computes itself. Units and conventions: `euler1d_spec.md`.
 
 ```yaml
 kind: riemann
-id: B-0001              # breaker cases: B-<number>; assigned by `sforge case propose` if missing
+id: B-0001              # required; breaker cases use B-<number>
 left: [1.0, 0.0, 100.0]  # rho, u, p
 right: [0.01, 0.0, 0.001]
 t_end: 0.01
@@ -41,7 +41,8 @@ pb: 0.6784              # p_b / p0
 n: 120
 gamma: 1.4
 nozzle:                 # optional, default anderson
-  type: parabolic       # anderson | parabolic
+  type: parabolic       # anderson | parabolic | conical (formulas: euler1d_spec.md §4)
+  x_in: 0.0             # optional inlet position, default 0 (ignored for anderson)
   area_ratio: 4.0       # exit area / throat area
   length: 2.0           # divergent length in throat units
   inlet_ratio: 2.0      # inlet area / throat area (convergent length 1)
