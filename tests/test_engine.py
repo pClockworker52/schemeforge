@@ -62,8 +62,11 @@ def test_dummy_backend_writes_valid_candidates() -> None:
 
 def test_claude_cli_backend_parses_structured_output(tmp_path) -> None:
     fake = tmp_path / "fake-claude"
-    payload = {"structured_output": {"code": "def phi(r):\n    return r\n", "rationale": "r", "expected_change": "e"},
-               "total_cost_usd": 0.0123, "usage": {"input_tokens": 100, "output_tokens": 20}}
+    # Claude Code 2.1.x prints the session's messages as a list; the last "result" item carries the output
+    payload = [{"type": "system", "subtype": "init"},
+               {"type": "result", "subtype": "success", "total_cost_usd": 0.0123,
+                "structured_output": {"code": "def phi(r):\n    return r\n", "rationale": "r", "expected_change": "e"},
+                "usage": {"input_tokens": 2, "cache_creation_input_tokens": 98, "output_tokens": 20}}]
     fake.write_text(f"#!/bin/sh\ncat > /dev/null\nprintf '%s\\n' '{json.dumps(payload)}'\n")  # echo expands \n
     fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
     b = backends.ClaudeCLI("sonnet", executable=str(fake))

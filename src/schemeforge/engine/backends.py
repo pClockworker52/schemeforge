@@ -62,7 +62,14 @@ class ClaudeCLI:
         except json.JSONDecodeError:
             tail = (proc.stderr or proc.stdout).strip()[-300:]
             return Completion(None, None, latency, error=f"exit {proc.returncode}: {tail}")
+        if isinstance(out, list):  # Claude Code 2.1.x: the session's messages; the last "result" item counts
+            results = [m for m in out if isinstance(m, dict) and m.get("type") == "result"]
+            if not results:
+                return Completion(None, None, latency, error="no result message in the output")
+            out = results[-1]
         usage = out.get("usage") or {}
+        input_tokens = sum(int(usage.get(k) or 0) for k in
+                           ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens"))
         data = out.get("structured_output")
         if data is None and isinstance(out.get("result"), str):  # fallback: JSON in the text result
             try:
@@ -70,7 +77,7 @@ class ClaudeCLI:
             except json.JSONDecodeError:
                 data = None
         ok = isinstance(data, dict) and isinstance(data.get("code"), str)
-        return Completion(data if ok else None, out.get("total_cost_usd"), latency, usage.get("input_tokens"),
+        return Completion(data if ok else None, out.get("total_cost_usd"), latency, input_tokens or None,
                           usage.get("output_tokens"), None if ok else f"no structured output: {str(out)[:300]}")
 
 
