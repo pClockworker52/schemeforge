@@ -28,15 +28,13 @@ def test_command_help(cmd: list[str]) -> None:
     assert result.exit_code == 0, result.output
 
 
-@pytest.mark.parametrize(
-    "argv",
-    [
-        ["dossier", "build", "c-x"],
-    ],
-)
-def test_commands_are_not_implemented_yet(argv: list[str]) -> None:
-    result = runner.invoke(app, argv)
-    assert result.exit_code == NOT_IMPLEMENTED_EXIT
+def test_every_command_is_implemented() -> None:
+    import inspect
+
+    import schemeforge.cli as cli
+
+    assert inspect.getsource(cli).count('_not_implemented("') == 0
+    assert NOT_IMPLEMENTED_EXIT == 3
 
 
 def test_reveal_refuses_without_a_terminal() -> None:

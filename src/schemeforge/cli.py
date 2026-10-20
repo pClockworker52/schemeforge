@@ -419,9 +419,18 @@ def evolve(
 
 
 @dossier_app.command("build")
-def dossier_build(candidate_id: Annotated[str, typer.Argument(help="Promoted candidate id.")]) -> None:
+def dossier_build(
+    candidate_id: Annotated[str, typer.Argument(help="Promoted candidate id.")],
+    target: Annotated[str, typer.Option("--target", help="Pre-registered target.")] = "A",
+) -> None:
     """Build a dossier skeleton with tables and plots."""
-    _not_implemented("dossier build")
+    from schemeforge.core import dossier
+
+    try:
+        path = dossier.build(candidate_id, target)
+    except KeyError as exc:
+        _fail(str(exc), 2)
+    typer.echo(f"dossier: {path}")
 
 
 @judge_app.command("verify")
