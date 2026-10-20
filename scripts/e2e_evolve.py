@@ -36,6 +36,7 @@ def main() -> int:
     ap.add_argument("--budget", type=int, default=208)
     ap.add_argument("--seed", action="append", default=[])
     ap.add_argument("--islands", type=int, default=2)
+    ap.add_argument("--wild-model", default="haiku")
     a = ap.parse_args()
 
     work = Path(a.workdir).resolve()
@@ -53,7 +54,8 @@ def main() -> int:
                 ledger.add(calibration_hunch(k))
         ids = [h["id"] for h in ledger.load()]
         cfg = evolve.Config("euler1d", "limiter", ids, gens=a.gens, children=a.children, backend=a.backend,
-                            model=a.model, budget=a.budget, seeds=[str(Path(s).resolve()) for s in a.seed])
+                            model=a.model, budget=a.budget, seeds=[str(Path(s).resolve()) for s in a.seed],
+                            wild_model=a.wild_model)
         state = evolve.evolve(cfg, log=lambda m: print(m, flush=True))
     else:
         state = evolve.evolve(resume=a.run_id, log=lambda m: print(m, flush=True))

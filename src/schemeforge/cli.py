@@ -395,6 +395,7 @@ def evolve(
     seed: Annotated[list[Path] | None, typer.Option("--seed", help="Seed file (repeatable; default: zoo).")] = None,
     resume: Annotated[str | None, typer.Option("--resume", help="Resume an evolve run id.")] = None,
     rng_seed: Annotated[int, typer.Option("--rng-seed", help="Random seed of the run.")] = 0,
+    wild_model: Annotated[str, typer.Option("--wild-model", help="Cheaper model for the wild operator.")] = "haiku",
 ) -> None:
     """Run the inner evolutionary loop (resumable)."""
     from schemeforge.engine import evolve as ev
@@ -408,7 +409,7 @@ def evolve(
         if islands is not None and islands != len(hunch):
             _fail(f"--islands {islands} does not match the {len(hunch)} hunch(es) given", 2)
         cfg = ev.Config(arena, slot, list(hunch), gens, children, backend, model, budget,
-                        [str(s) for s in seed or []], rng_seed=rng_seed)
+                        [str(s) for s in seed or []], rng_seed=rng_seed, wild_model=wild_model)
         try:
             state = ev.evolve(cfg, log=typer.echo)
         except ValueError as exc:

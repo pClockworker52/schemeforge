@@ -47,6 +47,7 @@ class Config:
     stagnation: int = STAGNATION_LIMIT
     rng_seed: int = 0
     suite: str = "dev"  # selection suite after the smoke gate ("smoke" only for fast tests)
+    wild_model: str | None = "haiku"  # cheaper model for the "wild" operator (PLAN §5.9); None = same model
 
 
 @dataclass
@@ -74,7 +75,7 @@ class State:
     @classmethod
     def load(cls, run_id: str) -> State:
         d = json.loads((EVOLVE_DIR / run_id / "state.json").read_text(encoding="utf-8"))
-        d["config"] = Config(**d["config"])
+        d["config"] = Config(**{k: v for k, v in d["config"].items() if k in Config.__dataclass_fields__})
         return cls(**d)
 
 
@@ -114,7 +115,8 @@ def make_child(state: State, hunch: dict[str, Any], operator: str, parents: list
     keys = [f"{c}.{m}" for c, m, _ in leaderboard.objectives(cfg.arena, cfg.slot)]
     prompt = prompts.user_prompt(cfg.arena, cfg.slot, hunch, [_parent_view(p, rows, keys) for p in parents],
                                  archive_ctx, operator)
-    backend = backends.make_backend(cfg.backend, cfg.model, seed=cfg.rng_seed * 100003 + index)
+    model = cfg.wild_model if operator == "wild" and cfg.wild_model and cfg.backend != "dummy" else cfg.model
+    backend = backends.make_backend(cfg.backend, model, seed=cfg.rng_seed * 100003 + index)
     comp = backend.complete(prompt)
     out_dir = CANDIDATES_DIR / hunch["id"] / state.run_id
     out_dir.mkdir(parents=True, exist_ok=True)
