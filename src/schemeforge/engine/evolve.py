@@ -19,7 +19,7 @@ import numpy as np
 
 from schemeforge.core import evaluation, leaderboard, ledger, registry
 from schemeforge.core.integrity import REPO_ROOT
-from schemeforge.core.loader import CandidateRejected, load_function
+from schemeforge.core.loader import load_function
 from schemeforge.core.locks import max_parallel
 from schemeforge.core.sandbox import validate_source
 
@@ -266,7 +266,7 @@ def run_generation(state: State, rng: np.random.Generator) -> dict[str, Any]:
 def _safe_child(state, rows, hunch, op, parents, ctx, index) -> dict[str, Any]:
     try:
         return make_child(state, hunch, op, parents, rows, ctx, index)
-    except (CandidateRejected, OSError, KeyError, ValueError) as exc:
+    except Exception as exc:  # noqa: BLE001 - one failing child must not end the generation
         return {"status": "error", "error": f"{type(exc).__name__}: {exc}", "operator": op, "hunch": hunch["id"]}
 
 

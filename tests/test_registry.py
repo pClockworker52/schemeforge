@@ -42,6 +42,26 @@ def test_duplicate_code_hash_is_rejected() -> None:
         conn.execute(sql, ("c2", *row[1:]))
 
 
+def test_concurrent_writers(tmp_path) -> None:
+    """Regression: 16 engine threads hit 'database is locked' (5 s default timeout, a write on every connect)."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    path = tmp_path / "reg.sqlite"
+    registry.connect(path).close()
+
+    def write(i: int) -> None:
+        for k in range(20):
+            conn = registry.connect(path)
+            conn.execute("INSERT INTO llm_calls (backend, model, prompt_hash, created_at) VALUES ('t', 'm', ?, 't')",
+                         (f"{i}-{k}",))
+            conn.commit()
+            conn.close()
+
+    with ThreadPoolExecutor(max_workers=16) as pool:
+        list(pool.map(write, range(16)))
+    assert registry.connect(path).execute("SELECT COUNT(*) FROM llm_calls").fetchone()[0] == 320
+
+
 def test_newer_schema_is_refused() -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute(f"PRAGMA user_version = {registry.SCHEMA_VERSION + 1}")

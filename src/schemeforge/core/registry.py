@@ -10,6 +10,7 @@ import sqlite3
 from pathlib import Path
 
 SCHEMA_VERSION = 1
+BUSY_TIMEOUT = 120.0  # seconds to wait for a lock held by another writer
 DEFAULT_PATH = Path("runs") / "registry.sqlite"
 
 SCHEMA = """
@@ -84,20 +85,27 @@ TABLES = ("candidates", "runs", "scores", "cases", "llm_calls")
 
 def connect(path: Path | str = DEFAULT_PATH) -> sqlite3.Connection:
     """Open the registry, creating the file and schema if needed. Foreign keys are enforced."""
-    if str(path) != ":memory:":
+    file_db = str(path) != ":memory:"
+    if file_db:
         Path(path).parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(path)
+    # Many engine threads and evaluations write concurrently: wait up to BUSY_TIMEOUT for locks, use WAL.
+    conn = sqlite3.connect(path, timeout=BUSY_TIMEOUT)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
+    if file_db:
+        conn.execute("PRAGMA journal_mode = WAL")
     init_db(conn)
     return conn
 
 
 def init_db(conn: sqlite3.Connection) -> None:
-    """Create the schema (idempotent) and record its version in PRAGMA user_version."""
+    """Create the schema (idempotent) and record its version in PRAGMA user_version. An up-to-date registry is
+    left untouched, so that opening a connection takes no write lock."""
     (version,) = conn.execute("PRAGMA user_version").fetchone()
     if version > SCHEMA_VERSION:
         raise RuntimeError(f"registry schema v{version} is newer than this code (v{SCHEMA_VERSION})")
+    if version == SCHEMA_VERSION:
+        return
     conn.executescript(SCHEMA)
     conn.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
     conn.commit()
