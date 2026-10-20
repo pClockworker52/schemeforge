@@ -22,7 +22,7 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
 ## Next (ordered)
 1. Zoo (§9.8): limiters and fluxes as candidate-style files that pass the sandbox; WENO5-Z, then R7 with its
    cached reference.
-3. `sforge eval` / `sforge zoo eval` with the sandbox subprocess, per-core pinning, registry rows; `judge version`.
+2. `sforge eval` / `sforge zoo eval` with the sandbox subprocess, per-core pinning, registry rows; `judge version`.
 3. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
 4. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
 
