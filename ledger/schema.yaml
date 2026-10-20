@@ -1,0 +1,21 @@
+# Format of one hunch in ledger/hunches.yaml (a YAML list) and of a draft in ledger/drafts/<name>.yaml
+# (one mapping). See docs/PLAN.md §6. `sforge hunch add` validates drafts against this file and assigns the id.
+fields:
+  id:               {type: string, pattern: "^H-[0-9]{4}$", set_by: sforge}
+  arena:            {type: string, enum: [euler1d, euler2d, contact], required: true}
+  slot:             {type: string, required: true}
+  lens:             {type: string, enum: [steady-convergence, shock physics, approximation theory,
+                                          structure preservation, practitioner, contrarian, transfer, human],
+                     required: true}
+  statement:        {type: string, required: true}
+  mechanism:        {type: string, required: true, note: "why it should work, not only a recipe"}
+  predicted_effect:
+    type: list
+    required: true
+    min_items: 1
+    items: {metric: string, direction: {enum: [up, down, same]}, size: string}
+  kill_criterion:   {type: string, required: true}
+  known_relatives:  {type: list, items: string, required: true, note: "empty list only if none are known"}
+  status:           {type: string, enum: [open, testing, supported, refuted, inconclusive, merged], default: open}
+  verdict_note:     {type: string, default: ""}
+  author:           {type: string, required: true, example: "hunch-generator/steady-convergence or peter"}

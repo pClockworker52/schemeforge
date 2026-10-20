@@ -1,0 +1,4 @@
+# The repo is used from WSL; keep LF everywhere (CRLF breaks shebangs and hook scripts).
+* text=auto eol=lf
+*.png binary
+*.sqlite binary
