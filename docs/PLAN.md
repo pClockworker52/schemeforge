@@ -1346,7 +1346,7 @@ These were recomputed on 2026-10-20 with an independent script. Primitive states
 | Toro test 2 (123): (1, −2, 0.4) / (1, 2, 0.4) | p* = 0.00189, u* = 0 |
 | Toro test 3: (1, 0, 1000) / (1, 0, 0.01) | p* = 460.894, u* = 19.5975 |
 | Toro test 4: (1, 0, 0.01) / (1, 0, 100) | p* = 46.0950, u* = −6.19633 |
-| Toro test 5: (5.99924, 19.5975, 460.894) / (5.99242, −6.19633, 46.0950) | p* = 1691.64, u* = 8.68975 (±1 in the last digit) |
+| Toro test 5: (5.99924, 19.5975, 460.894) / (5.99242, −6.19633, 46.0950) | p* = 1691.65, u* = 8.68977 (Toro's table: 1691.64 and 8.68975; the inputs are rounded to 6 digits) |
 | Anderson nozzle A(x) = 1 + 2.2 (x − 1.5)², x ∈ [0, 3] | A_e/A_t = 5.95 |
 | p_crit1/p0, the limit of subsonic choked flow | 0.99333 (M_e = 0.09782) |
 | p_crit2/p0, normal shock at the exit | 0.20854 |
