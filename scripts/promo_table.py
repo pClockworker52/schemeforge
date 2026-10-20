@@ -21,7 +21,7 @@ def main() -> int:
                          "ORDER BY slot, path").fetchall()
     for m in metrics:
         fam, name = m.split(".")
-        print(f"\n{m}  (median / p90 / worst)")
+        print(f"\n{m}  (median / mean / p90 / worst)")
         for c in cands:
             run = conn.execute("SELECT id FROM runs WHERE candidate_id = ? AND suite = 'promo' AND status != 'running' "
                                "ORDER BY started_at DESC LIMIT 1", (c["id"],)).fetchone()
@@ -29,7 +29,7 @@ def main() -> int:
                 continue
             vals = {r["metric"]: r["value"] for r in conn.execute(
                 "SELECT metric, value FROM scores WHERE run_id = ? AND family = ?", (run["id"], fam))}
-            cells = [vals.get(f"{name}:{s}") for s in ("median", "p90", "worst")]
+            cells = [vals.get(f"{name}:{s}") for s in ("median", "mean", "p90", "worst")]
             label = c["path"].rsplit("/", 1)[-1][:-3]
             print(f"  {c['slot']:14s} {label:16s} " + "  ".join("     -    " if v is None else f"{v:10.4g}"
                                                                 for v in cells))

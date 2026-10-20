@@ -1,6 +1,6 @@
 # Arena 1 baseline: does the problem exist? (PLAN §9.9)
 
-Judge `euler1d-v0.dev` (untagged, Phase 1). Zoo members run through `sforge eval` exactly like candidates:
+Judge `euler1d-v0.dev` during Phase 1; all held-out numbers re-checked under the tagged `euler1d-v1.0`. Zoo members run through `sforge eval` exactly like candidates:
 limiters with MUSCL + HLLC, fluxes with MUSCL-van Leer, reconstructions with HLLC. Sources: `sforge zoo eval
 --suite dev|promo` (runs/reports/, registry), `scripts/promo_table.py` (held-out family aggregates — no
 instance data), and `scripts/euler1d_baseline.py` (41-point back-pressure sweep on the Anderson nozzle with both
@@ -16,8 +16,8 @@ Held-out NF1 (20 nozzles with a shock, random geometry, γ and sub-cell shock po
 | minmod | 12 / 11.2 / 3.0 | 1.00 | 114 |
 | van Leer | 12 / 2.0 / 1.8 | 1.00 | 115 |
 | Venkatakrishnan (K = 0) | 12 / 2.3 / 1.8 | 1.00 | 118 |
-| Koren | 12 / 1.5 / 1.2 | 0.00 | 300 (cap) |
-| MC | 4.3 / 1.8 / 1.5 | 0.00 | 300 (cap) |
+| Koren | 12 / 1.5 / 1.2 | 0.30 | 300 (cap) |
+| MC | 4.3 / 1.8 / 1.5 | 0.35 | 300 (cap) |
 | superbee | 1.7 / 0.8 / 0.5 | 0.00 | 300 (cap) |
 
 41-point sweep on the Anderson nozzle (shock moved over 30 cells), share of back pressures that converge to 1e-12:
@@ -32,8 +32,8 @@ Held-out NF1 (20 nozzles with a shock, random geometry, γ and sub-cell shock po
 | Koren | 0.73 | 0.39 |
 | superbee | 0.27 | 0.00 |
 
-- The three sharp limiters (superbee, MC, Koren) never converge with Newton on held-out nozzles: their kinks
-  make the Jacobian discontinuous at the shock. Explicitly, superbee and MC stall; Koren converges in the median
+- The three sharp limiters (superbee, MC, Koren) rarely converge with Newton on held-out nozzles (0–35 % of
+  instances, median: never): their kinks make the Jacobian discontinuous at the shock. Explicitly, superbee and MC stall; Koren converges in the median
   but stalls in the worst 10 %.
 - van Leer and Venkatakrishnan converge with Newton but stall explicitly in at least 10 % of cases (limit cycles).
 - minmod stalls explicitly on the Anderson sweep (8 orders) but converges on most NF1 instances.
@@ -45,13 +45,17 @@ Held-out RF1 (20 random Riemann problems, N = 200), medians (p90):
 
 | limiter | shock width [cells] | contact width [cells] | overshoot |
 |---|---|---|---|
-| superbee | 2.49 (3.13) | 4.58 (5.37) | 0.0069 (0.11) |
-| Koren | 2.53 (3.66) | 6.37 (7.07) | 0.0044 (0.094) |
-| MC | 2.54 (3.71) | 6.12 (7.35) | 0.0036 (0.088) |
-| van Leer | 2.95 (4.37) | 7.12 (8.62) | 0.0017 (0.042) |
-| Venkatakrishnan | 2.94 (4.49) | 7.58 (9.12) | 0.0014 (0.041) |
-| van Albada | 3.42 (5.31) | 8.42 (10.1) | 0.0006 (0.022) |
-| minmod | 3.89 (6.71) | 10.7 (12.8) | 0.0008 (0.016) |
+| superbee | 2.49 (3.13) | 4.58 (5.37) | 0.0095 (0.107) |
+| Koren | 2.53 (3.66) | 6.37 (7.07) | 0.0063 (0.066) |
+| MC | 2.54 (3.71) | 6.12 (7.35) | 0.0061 (0.060) |
+| van Leer | 2.95 (4.37) | 7.12 (8.62) | 0.0042 (0.022) |
+| Venkatakrishnan | 2.94 (4.49) | 7.58 (9.12) | 0.0039 (0.021) |
+| van Albada | 3.42 (5.31) | 8.42 (10.1) | 0.00085 (0.014) |
+| minmod | 3.89 (6.71) | 10.7 (12.8) | 0.00036 (0.0049) |
+
+(Judge v1.0; overshoot measured on resolved jumps only. NF1 share of instances converging: explicit van Albada
+0.95, minmod 0.90, van Leer and Venkatakrishnan 0.60, Koren 0.55, MC 0.45, superbee 0.05; implicit 1.00 for
+minmod, van Albada, van Leer, Venkatakrishnan, 0.35 MC, 0.30 Koren, 0 superbee.)
 
 Steady nozzle shocks are captured in about 1.6–1.8 cells by every limiter (NF1 median), so sharpness is decided on
 moving discontinuities and contacts, not on the steady shock itself.

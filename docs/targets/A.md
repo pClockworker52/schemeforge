@@ -12,15 +12,17 @@ smooth limiters converge but pay 0.5–1.4 cells of shock width and 2–6 cells 
 
 ## Thresholds (all must hold on the promo suite)
 
-| # | Metric (family, statistic) | Threshold | Zoo reference |
+| # | Metric (family, statistic) | Threshold | Zoo reference (judge v1.0 promo) |
 |---|---|---|---|
-| A1 | RF1 shock_width, median | ≤ 2.6 cells | MC 2.54, Koren 2.53; van Albada 3.42 |
-| A2 | RF1 contact_width, median | ≤ 6.5 cells | Koren 6.37, MC 6.12; van Albada 8.42 |
-| A3 | NF1 converged_expl, share of instances | ≥ 0.95 | van Albada ≈ 1, superbee ≈ 0.3 |
-| A4 | NF1 converged_impl, share of instances | = 1.00 | van Albada 1.00; MC, Koren, superbee 0.00 |
-| A5 | NF3 roughness_J, p90 | ≤ 0.002 | van Albada 0.0015; superbee 21 |
+| A1 | RF1 shock_width, median | ≤ 2.6 cells | superbee 2.49, Koren 2.53, MC 2.54; van Leer 2.94, van Albada 3.42 |
+| A2 | RF1 contact_width, median | ≤ 6.5 cells | superbee 4.58, MC 6.12, Koren 6.37; van Leer 7.12, van Albada 8.42 |
+| A3 | NF1 converged_expl, mean (share of instances) | ≥ 0.95 | van Albada 0.95, minmod 0.90, van Leer 0.60, Koren 0.55, MC 0.45, superbee 0.05 |
+| A4 | NF1 converged_impl, mean (share of instances) | = 1.00 | minmod, van Albada, van Leer, Venkatakrishnan 1.00; MC 0.35, Koren 0.30, superbee 0 |
+| A5 | NF3 roughness_J, p90 | ≤ 0.002 | minmod 0.0009, van Albada 0.0015, van Leer 0.0018; superbee 21 |
 | A6 | S1 order_smooth (dev) | ≥ 1.9 | van Albada 2.00, van Leer 1.98 |
-| A7 | RF1 overshoot p90 and RF2 overshoot p90 | ≤ van Leer's value × 1.1 | van Leer RF1 0.042 |
+| A7 | RF1 overshoot p90 and RF2 overshoot p90 | ≤ 1.1 × van Leer's | van Leer RF1 0.0219, RF2 0.0233 |
+
+No zoo member meets A1–A5 together: the sharp limiters fail A3–A5, the convergent ones fail A1–A2.
 
 Guard metrics (may not regress by more than 10 % against van Leer, median): RF1 l1_smooth, NF1 shock_pos_err,
 NF2 mdot_var, NF2 converged_impl. Hard constraints and all dev cases must pass.
