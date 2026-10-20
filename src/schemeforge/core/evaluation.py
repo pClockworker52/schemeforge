@@ -125,7 +125,7 @@ def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: li
         for k, v in agg.items():
             if isinstance(v, dict):
                 rows += [(run_id, cid, None, fam, f"{k}:{stat}", float(v[stat]), version, jhash)
-                         for stat in ("median", "p90", "worst")]
+                         for stat in ("median", "mean", "p90", "worst")]
             elif k == "pass_rate":
                 rows.append((run_id, cid, None, fam, "pass_rate", float(v), version, jhash))
     if "max_cfl" in report:

@@ -61,7 +61,7 @@ def _run(left, right, n, t, reconstruct, flux):
 
 
 def check_zoo_sanity() -> list[Check]:
-    """Gate 1: superbee sharpest and minmod most diffusive limiter on Sod; HLLC and Roe keep R5 exactly."""
+    """Gate 1: superbee sharpest and minmod most diffusive limiter on Sod; HLLC keeps R5 exactly."""
     from .numerics import hllc
 
     sod = ((1.0, 0.0, 1.0), (0.125, 0.0, 0.1))
@@ -78,7 +78,7 @@ def check_zoo_sanity() -> list[Check]:
     for name in zoo.members("flux"):
         x, W = _run((1.4, 0.0, 1.0), (1.0, 0.0, 1.0), 100, 2.0, mm, zoo.load("flux", name))
         err = float(np.max(np.abs(W - exact.sample(x, 2.0, 0.5))))
-        keeps = name in ("hllc", "roe")
+        keeps = name == "hllc"
         out.append(Check(f"{name} {'keeps' if keeps else 'smears'} the stationary contact",
                          err < 1e-12 if keeps else err > 1e-2, f"max error {err:.2e}"))
     return out

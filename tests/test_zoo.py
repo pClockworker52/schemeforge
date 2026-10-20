@@ -17,7 +17,7 @@ G = 1.4
 
 def test_expected_members() -> None:
     assert LIMITERS == ["koren", "mc", "minmod", "superbee", "van_albada", "van_leer", "venkatakrishnan"]
-    assert FLUXES == ["hll", "hllc", "roe", "rusanov"]
+    assert FLUXES == ["hll", "hllc", "rusanov"]  # Roe dropped at Gate 1 (fails positivity on R2)
     assert RECONSTRUCTIONS == ["first_order", "weno5z"]
 
 
@@ -60,9 +60,9 @@ def riemann(WL, WR, n, t, flux, reconstruct):
     return W, solve_riemann(WL, WR, G).sample(x, t, 0.5)
 
 
-@pytest.mark.parametrize("name,exact", [("hllc", True), ("roe", True), ("hll", False), ("rusanov", False)])
+@pytest.mark.parametrize("name,exact", [("hllc", True), ("hll", False), ("rusanov", False)])
 def test_stationary_contact(name, exact) -> None:
-    """Gate 1: HLLC and Roe keep the stationary contact R5 exactly, HLL and Rusanov smear it."""
+    """Gate 1: HLLC keeps the stationary contact R5 exactly, HLL and Rusanov smear it."""
     W, Wx = riemann((1.4, 0.0, 1.0), (1.0, 0.0, 1.0), 100, 2.0, zoo.load("flux", name),
                     muscl(zoo.load("limiter", "minmod")))
     err = np.max(np.abs(W - Wx))
@@ -71,14 +71,10 @@ def test_stationary_contact(name, exact) -> None:
 
 @pytest.mark.parametrize("name", FLUXES)
 def test_positivity_on_123(name) -> None:
-    """HLL-type fluxes stay positive on the 123 problem; Roe's linearization does not (Einfeldt et al. 1991),
-    so the Roe zoo member fails the R2 hard constraint. Kept as a documented known failure (STATUS, Gate 1)."""
+    """All zoo fluxes stay positive on the 123 problem (Roe, which does not, was dropped at Gate 1)."""
     W, _ = riemann((1.0, -2.0, 0.4), (1.0, 2.0, 0.4), 200, 0.15, zoo.load("flux", name),
                    muscl(zoo.load("limiter", "minmod")))
-    if name == "roe":
-        assert constraints.check_run(W) != []
-    else:
-        assert constraints.check_run(W) == []
+    assert constraints.check_run(W) == []
 
 
 def test_weno5z_is_high_order_on_the_smooth_wave() -> None:

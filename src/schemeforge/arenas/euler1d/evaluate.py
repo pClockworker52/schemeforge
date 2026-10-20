@@ -230,6 +230,7 @@ def aggregate(instances: dict[str, dict]) -> dict[str, dict]:
                 continue
             hi = k in HIGHER_IS_BETTER
             agg[k] = {"median": float(np.median(vals)),
+                      "mean": float(np.mean(vals)),  # for 0/1 flags: the share of instances
                       "p90": float(np.percentile(vals, 10 if hi else 90)),
                       "worst": float(vals.min() if hi else vals.max()),
                       "n": int(vals.size)}

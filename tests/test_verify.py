@@ -45,6 +45,16 @@ def test_exact_batch_cli(tmp_path) -> None:
     assert [r["kind"] for r in reps] == ["nozzle", "riemann"]
 
 
+def test_exact_batch_reports_bad_cases_individually(tmp_path) -> None:
+    path = tmp_path / "batch.yaml"
+    path.write_text("- {kind: nozzle, id: A, pb: 0.9, n: 10}\n- {kind: riemann, id: B, left: [1, -20, 0.4], "
+                    "right: [1, 20, 0.4], t_end: 0.1, n: 10}\n")
+    res = CliRunner().invoke(app, ["judge", "exact", "--arena", "euler1d", "--case", str(path), "--json"])
+    assert res.exit_code == 0, res.output
+    reps = json.loads(res.output)
+    assert reps[0]["kind"] == "nozzle" and reps[1]["id"] == "B" and "Vacuum" in reps[1]["error"]
+
+
 def test_exact_report_rejects_reference_cases() -> None:
     from schemeforge.arenas.euler1d.cases import dev_suite
 

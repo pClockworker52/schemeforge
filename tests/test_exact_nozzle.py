@@ -54,6 +54,30 @@ def test_dev_cases_regimes_and_exit_pressure(pb: float, regime: str) -> None:
     assert p_exit == pytest.approx(expected, rel=1e-12)
 
 
+@pytest.mark.parametrize(
+    "spec,g",
+    [({"type": "anderson"}, 1.4),
+     ({"type": "parabolic", "area_ratio": 4.0, "length": 3.0, "inlet_ratio": 2.0}, 1.2),
+     ({"type": "conical", "area_ratio": 6.0, "length": 2.5, "inlet_ratio": 2.5}, 5.0 / 3.0)],
+)
+def test_back_pressure_within_rounding_of_the_critical_pressures(spec, g) -> None:
+    """Blind-audit finding: p_b 1-8 ulp above p_crit2 crashed the shock search. Now the shock sits at the exit;
+    at p_b = p_crit1 it sits at the throat."""
+    import math
+
+    from schemeforge.arenas.euler1d.cases import NozzleSpec
+
+    nz = NozzleSpec(**spec).build()
+    cp = critical_pressures(nz, g)
+    pb = cp.p_crit2
+    for _ in range(16):
+        pb = math.nextafter(pb, 1.0)
+        sol = solve_nozzle(nz, pb, g)
+        assert sol.regime == "shock" and sol.x_shock == pytest.approx(nz.x_exit, abs=1e-6)
+    top = solve_nozzle(nz, cp.p_crit1, g)
+    assert top.regime == "shock" and top.x_shock == pytest.approx(nz.x_throat) and top.M1 == pytest.approx(1.0)
+
+
 gammas = st.sampled_from([*GAMMAS, GAMMA_STRESS])
 
 

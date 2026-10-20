@@ -201,8 +201,17 @@ def solve_nozzle(nz: Nozzle, pb: float, gamma: float) -> NozzleSolution:
     if pb <= cp.p_crit2:  # supersonic exit; any shocks stand outside the nozzle
         return NozzleSolution(nz, g, pb, "supersonic", At, At, None, None, 1.0)
 
-    xs = float(brentq(lambda s: back_pressure_for_shock(nz, s, g) - pb, nz.x_throat, nz.x_exit,
-                      xtol=1e-15, rtol=_RTOL, maxiter=500))
+    def f(s: float) -> float:  # decreases from p_crit1 - pb at the throat to p_crit2 - pb at the exit
+        return back_pressure_for_shock(nz, s, g) - pb
+
+    # Within rounding of a critical pressure the endpoint values can have the "wrong" sign (blind audit,
+    # 2026-10-20: p_b 1-8 ulp above p_crit2 crashed brentq); the shock then sits at that endpoint.
+    if f(nz.x_exit) >= 0.0:
+        xs = float(nz.x_exit)
+    elif f(nz.x_throat) <= 0.0:
+        xs = float(nz.x_throat)
+    else:
+        xs = float(brentq(f, nz.x_throat, nz.x_exit, xtol=1e-15, rtol=_RTOL, maxiter=500))
     M1 = mach_from_area_ratio(float(nz.area(xs)) / At, g, supersonic=True)
     r0 = shock_p0_ratio(M1, g)
     return NozzleSolution(nz, g, pb, "shock", At, At / r0, xs, M1, r0)

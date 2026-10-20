@@ -30,7 +30,19 @@ def test_integrity_refuses_uncommitted_judge_changes(tmp_path) -> None:
     _git(tmp_path, "init", "-q")
     _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "add", "-A")
     _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "init")
+    version = integrity.judge_version("euler1d")
+    if not version.endswith(".dev"):
+        assert "no git tag" in integrity.integrity_problems("euler1d", repo=tmp_path, judge_rel="judge")[0]
+        _git(tmp_path, "tag", version)
     assert integrity.integrity_problems("euler1d", repo=tmp_path, judge_rel="judge") == []
+    # a committed judge change after the tag is refused too
+    if not version.endswith(".dev"):
+        (judge / "extra.py").write_text("B = 1\n")
+        _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "add", "-A")
+        _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "change")
+        assert "differs from tag" in integrity.integrity_problems("euler1d", repo=tmp_path, judge_rel="judge")[0]
+        _git(tmp_path, "rm", "-q", "judge/extra.py")
+        _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "revert")
     (judge / "metrics.py").write_text("A = 2\n")
     assert "uncommitted" in integrity.integrity_problems("euler1d", repo=tmp_path, judge_rel="judge")[0]
     (judge / "metrics.py").write_text("A = 1\n")
@@ -61,7 +73,8 @@ def test_smoke_eval_of_a_zoo_limiter_records_everything(in_tmp) -> None:
     assert set(res.report["cases"]) == {"smoke-R1"} and res.report["cost"] > 0
     conn = registry.connect(in_tmp / "reg.sqlite")
     run = conn.execute("SELECT * FROM runs WHERE id = ?", (res.run_id,)).fetchone()
-    assert run["status"] == "ok" and run["judge_version"] == "euler1d-v0.dev" and len(run["judge_hash"]) == 64
+    assert run["status"] == "ok" and run["judge_version"] == integrity.judge_version("euler1d")
+    assert len(run["judge_hash"]) == 64
     metrics = {r[0] for r in conn.execute("SELECT metric FROM scores WHERE run_id = ?", (res.run_id,))}
     assert {"l1_smooth", "tv_increase", "seconds", "cost"} <= metrics  # widths are unresolved at N = 50
     assert json.loads((in_tmp / run["report_path"]).read_text())["run_id"] == res.run_id
