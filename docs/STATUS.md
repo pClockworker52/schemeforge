@@ -13,15 +13,18 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
   (21 jvps instead of 360) and CFL backtracking.
 - docs/judge: `euler1d_spec.md` (§1–5), `euler1d_slots.md`, `euler1d_cases.md`.
 - Dev suite R1–R6, S1, N1–N4 in `cases.py` with YAML loading and admissibility checks.
-- Tests: 123 passed, ruff clean.
+- Metrics (§9.6, except cost and max_cfl, which need the evaluator / promo), hard constraints on limiter and
+  flux slots plus run-level checks, metamorphic measurements (mirror, scaling, Galilean); spec §7–8.
+  Sanity: on Sod, superbee < minmod < first order in contact and shock width; mirror error < 1e-12 for symmetric
+  limiters and > 1e-6 for Koren; scaling exact to 1e-12.
+- Tests: 141 passed, ruff clean.
 
 ## Next (ordered)
-1. Metrics (§9.6) and hard constraints / metamorphic tests (§9.7).
-2. Zoo (§9.8): limiters and fluxes as candidate-style files that pass the sandbox; WENO5-Z, then R7 with its
+1. Zoo (§9.8): limiters and fluxes as candidate-style files that pass the sandbox; WENO5-Z, then R7 with its
    cached reference.
 3. `sforge eval` / `sforge zoo eval` with the sandbox subprocess, per-core pinning, registry rows; `judge version`.
-4. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
-5. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
+3. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
+4. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
 
 ## Blockers / questions for Peter
 - None blocking. Observations for the baseline report (see Numbers):

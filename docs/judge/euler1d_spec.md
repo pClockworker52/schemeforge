@@ -112,4 +112,40 @@ them, so their conventions are fixed here. Slot interfaces: `euler1d_slots.md`.
 - Limit cycle: not converged, the median residual over the last 5 % of iterations is at least 0.9× that over the
   5 % before, and the residual still varies by more than 1 % within the last 10 %.
 ## 6. Cases and families *(planned; format in euler1d_cases.md)*
-## 7. Metrics *(planned)*
+## 7. Metrics
+
+Lower is better unless noted. Implemented in `arenas/euler1d/metrics.py`.
+
+**Jumps of a Riemann solution.** Shocks and contacts of nonzero strength (|p*/p_K − 1| > 1e-12, resp.
+|ρ*_L/ρ*_R − 1| > 1e-12) at t_end. Each has a window bounded by the midpoints to the neighbouring features (shock
+positions, contact, rarefaction heads and tails) or the domain ends. Shocks are measured in p, contacts in ρ;
+a and b are the exact values left and right of the jump.
+
+| Metric | Definition |
+|---|---|
+| `l1_smooth` | Mean over ρ, u, p of mean\|W − W_exact\| / scale over cells more than 5 cells from every jump (nozzle: from the shock). Scales: max\|ρ\|, max(\|u\| + a), max\|p\| of the exact solution. |
+| `order_smooth` | S1: log(e₅₀/e₂₀₀)/log 4 with e = L1 density error at t = 1 (higher is better). |
+| `shock_width`, `contact_width` | In the window, f = (q − a)/(b − a). x_hi: first cell with f ≥ 0.95; x_lo: last cell before it with f ≤ 0.05; both linearly interpolated; width = (x_hi − x_lo)/dx. If the transition never completes: the window width in cells. Mean over jumps of that kind. Nozzle: window ±12 cells around x_s, a = p just upstream, b = p just downstream. |
+| `overshoot` | Largest excursion of q beyond [min, max] of the exact values in the window, divided by \|b − a\|; max over jumps. |
+| `tv_increase` | max over ρ, p of (TV(q) − TV(q_exact))/TV(q_exact), floored at 0, TV on cell values at t_end. |
+| `shock_pos_err` | \|x_s,num − x_s\|/dx; x_s,num is where p first rises through (p₁ + p₂)/2 downstream of the pressure minimum (linear interpolation). |
+| `mdot_var` | max over cells \|ρuA / ṁ_exact − 1\|. |
+| `h0_var` | max over cells \|h₀/h₀,exact − 1\|, h₀ = γ/(γ−1) p/ρ + u²/2, h₀,exact = γ/(γ−1). |
+| `entropy_spurious` | max(0, max over cells more than 5 cells from the shock of s − s_exact). |
+| `res_orders_expl` | −log₁₀ of the smallest R_k/R₀ reached by the explicit solver (higher is better). |
+| `newton_iters` | linear solves of the implicit solver until R_k/R₀ ≤ 1e-12 (300 if not reached). |
+| `limit_cycle` | the explicit solver's flag (§5.3). |
+| `roughness_J` | J = Σ over cells with x_i > x_t of p_i (A_{i+½} − A_{i−½}); J_exact = ∫ p dA/dx over [x_from, x_exit], x_from the left face of the first such cell. roughness = RMS(Δ²(J − J_exact))/RMS(Δ²J_exact) over the sweep. |
+| `cost` | wall time per cell update, normalized to the zoo median (computed by the evaluator). |
+
+## 8. Hard constraints and metamorphic tests
+
+**Hard (reject):** on fixed probe sets (`constraints.py`):
+- limiter: output shape and dtype, finite for all probe r (negative, zero, tiny, huge, ±1e10), bitwise
+  deterministic, pointwise (permuted input gives permuted output; reshaping does not matter);
+- flux: finite on 256 fixed admissible state pairs, consistency max\|flux(U, U) − F(U)\|/max\|F\| ≤ 1e-12,
+  mirror symmetry \|flux(RU_R, RU_L) + R·flux(U_L, U_R)\| ≤ 1e-12 relative, deterministic, row-wise;
+- every run: finite output, ρ > 0, p > 0, and no solver failure.
+
+**Measured, not required** (`metamorphic.py`, on R1): mirror symmetry of the whole run (exact for symmetric
+limiters, not for Koren), scaling homogeneity (ρ, p, E) → 10·(ρ, p, E), Galilean shift by 10 cells.
