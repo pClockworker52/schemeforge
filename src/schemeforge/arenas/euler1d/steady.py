@@ -18,7 +18,15 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 
-from .exact_nozzle import Nozzle, back_pressure_for_shock, critical_pressures, solve_nozzle
+from .exact_nozzle import (
+    Nozzle,
+    area_ratio,
+    back_pressure_for_shock,
+    critical_pressures,
+    mach_from_area_ratio,
+    p_over_p0,
+    solve_nozzle,
+)
 from .numerics import NG, Flux, Reconstruction, cons_to_prim, hllc, prim_to_cons
 
 CONVERGED = 1e-12
@@ -27,6 +35,7 @@ EXPLICIT_MAX_ITERS = 50_000
 IMPLICIT_CFL0 = 1.0
 IMPLICIT_CFL_MAX = 1e8
 IMPLICIT_MAX_ITERS = 300
+SUBSONIC_GUESS_MACH = 0.5  # throat Mach of the initial guess for unchoked cases
 
 # operator(U, A_face, dx, gamma, W_padded) -> (F_face * A_face: (n + 1, 3), S_mom: (n,)); see euler1d_slots.md
 Operator = Callable[[jax.Array, jax.Array, float, float, jax.Array], tuple[jax.Array, jax.Array]]
@@ -114,13 +123,20 @@ def initial_state(grid: Grid, pb: float, g: float) -> jax.Array:
     - p_crit2 < p_b <= p_crit1 (choked, shock inside): the exact flow with a standing shock in the middle of the
       divergent section (a different back pressure). Its exit is subsonic, so the imposed p_b moves the shock to
       its place; an isentropic guess has a supersonic exit and lets shocks near the exit escape.
+    - p_b > p_crit1 (unchoked): the exact subsonic flow with throat Mach SUBSONIC_GUESS_MACH (a different back
+      pressure). From the linear guess below, low-Mach subsonic cases often did not converge in 300 Newton steps.
     - otherwise: isentropic, p falling linearly from 1 at the inlet to p_b at the exit.
     """
     nz = grid.nozzle
     cp = critical_pressures(nz, g)
+    pb_guess = None
     if cp.p_crit2 < pb <= cp.p_crit1:
-        x_g = nz.x_throat + 0.5 * (nz.x_exit - nz.x_throat)
-        prof = solve_nozzle(nz, back_pressure_for_shock(nz, x_g, g), g).profile(grid.x)
+        pb_guess = back_pressure_for_shock(nz, nz.x_throat + 0.5 * (nz.x_exit - nz.x_throat), g)
+    elif pb > cp.p_crit1:
+        a_star = nz.A_throat / float(area_ratio(SUBSONIC_GUESS_MACH, g))
+        pb_guess = float(p_over_p0(mach_from_area_ratio(nz.A_exit / a_star, g, supersonic=False), g))
+    if pb_guess is not None:
+        prof = solve_nozzle(nz, pb_guess, g).profile(grid.x)
         W = np.stack([prof["rho"], prof["u"], prof["p"]], axis=1)
     else:
         s = (grid.x - nz.x_in) / (nz.x_exit - nz.x_in)

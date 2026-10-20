@@ -118,8 +118,10 @@ them, so their conventions are fixed here. Slot interfaces: `euler1d_slots.md`.
   shock near the exit can leave during the transient, and the discrete problem then settles on a spurious
   supersonic-exit steady state.
 - Initial guess (depends on geometry and the regime of p_b only, never on the case's own exact solution):
-  for p_crit2 < p_b ≤ p_crit1 the exact flow with a standing shock at x_t + (x_exit − x_t)/2; otherwise
-  isentropic with p linear from 1 (inlet) to p_b (exit), ρ = p^(1/γ), u from the energy equation. The isentropic
+  for p_crit2 < p_b ≤ p_crit1 the exact flow with a standing shock at x_t + (x_exit − x_t)/2; for p_b > p_crit1
+  the exact unchoked flow with throat Mach 0.5; otherwise isentropic with p linear from 1 (inlet) to p_b
+  (exit), ρ = p^(1/γ), u from the energy equation. (From the linear guess, low-Mach subsonic cases often did
+  not converge within 300 Newton steps.) The isentropic
   guess has a supersonic exit, which let shocks near the exit escape for good in the shock regime.
 - Known limit: the explicit solver still loses shocks within about 2 % of the divergent length from the exit
   (x_s = 2.95 on the Anderson nozzle); families keep shocks within 15–90 % of the divergent length.
