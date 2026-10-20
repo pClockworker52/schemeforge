@@ -94,7 +94,10 @@ converging everywhere) and roughness_J ≤ 0.002. Proposed thresholds for docs/t
 - order_smooth (S1) ≥ 1.9; RF1/RF2 overshoot p90 no worse than van Leer.
 
 **Target B** (well-balanced operator): not assessed yet — it needs the `operator` slot and the well-balanced
-zoo baseline (Kröner & Thanh). See §6 for the NF2 observation that bears on it.
+zoo baseline (Kröner & Thanh). The NF2 numbers in §6 show how far the simple source term is from
+well-balanced on smooth steady flow: mass-flow errors of 5–14 % (median) at N = 120 for the MUSCL schemes.
+Recommendation: build the `operator` slot and its well-balanced baseline at the start of Phase 3 and set the
+Target B thresholds from that baseline, not now.
 
 ## 6. Other observations
 
@@ -104,4 +107,23 @@ zoo baseline (Kröner & Thanh). See §6 for the NF2 observation that bears on it
   steady convergence.
 - WENO5-Z: sharpest on moving discontinuities (RF1 shock 2.35, contact 4.3 cells) but RF2 (slowly moving shocks)
   tv_increase median 1.3, and Newton fails in ≥ 10 % of NF1 instances.
-- NF2 (shock-free nozzles): *(being investigated — subsonic mass-flow errors p90 ≈ 0.65 for every scheme)*.
+- NF2 (10 shock-free nozzles, half unchoked subsonic with throat Mach 0.3–0.9, half with supersonic exit),
+  median (p90):
+
+  | scheme | mdot_var | l1_smooth | Newton converged | Newton steps |
+  |---|---|---|---|---|
+  | minmod | 0.048 (0.081) | 0.0060 (0.012) | 1.00 | 47 |
+  | van Albada | 0.093 (0.14) | 0.013 (0.029) | 1.00 | 55 |
+  | van Leer | 0.097 (0.19) | 0.018 (0.032) | 1.00 | 65 |
+  | MC | 0.11 (0.23) | 0.022 (0.039) | 1.00 | 97 |
+  | Koren | 0.14 (0.31) | 0.022 (0.040) | p90 fails | 126 |
+  | superbee | 0.11 (0.20) | 0.012 (0.025) | 0.00 | 300 (cap) |
+  | first order | 0.71 (0.79) | 0.067 (0.099) | 1.00 | 152 |
+
+  The unchoked cases have exit Mach 0.04–0.2, where upwind dissipation is large (first order loses 70 % of the
+  mass flow at N = 120). Superbee does not converge with Newton even without a shock (kinks at smooth extrema).
+- How the judge got here: the first zoo runs exposed four judge artifacts, all fixed and reproduced with a test
+  seed, never with held-out instances: shocks escaping through the nozzle exit (pressure outlet + subsonic-exit
+  initial guess), unresolved jumps scored as infinitely wide (resolved-jump rule), NF2 instances with exit
+  Mach ~0.02 (throat-Mach parameterization), and low-Mach cases that did not converge from the linear initial
+  guess (subsonic initial guess). See git history and spec §5.3, §7.
