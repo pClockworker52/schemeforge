@@ -151,7 +151,13 @@ def submit(
     parent: Annotated[list[str] | None, typer.Option("--parent", help="Parent candidate id (repeatable).")] = None,
 ) -> None:
     """Register a candidate with its lineage and code hash."""
-    _not_implemented("submit")
+    from schemeforge.core import evaluation, ledger
+
+    try:
+        cid = evaluation.submit_candidate(file, hunch, parent or [])
+    except (ledger.LedgerError, KeyError, FileNotFoundError) as exc:
+        _fail(str(exc), 2)
+    typer.echo(f"{cid}  hunch {hunch}  parents {', '.join(parent or []) or '-'}")
 
 
 @app.command()
@@ -164,7 +170,32 @@ def leaderboard(
     json_out: JsonOut = False,
 ) -> None:
     """Show rankings and the Pareto set."""
-    _not_implemented("leaderboard")
+    import json
+
+    from schemeforge.core import leaderboard as lb
+    from schemeforge.core import registry
+
+    rows = lb.build(registry.connect(), arena, slot)
+    if pareto:
+        rows = [r for r in rows if r.rank == 0]
+    if top:
+        rows = rows[:top]
+    keys = [f"{c}.{m}" for c, m, _ in lb.objectives(arena, slot)]
+    if json_out:
+        typer.echo(json.dumps([{"id": r.candidate_id, "zoo": r.is_zoo, "hunch": r.hunch_id, "run": r.run_id,
+                                "pareto_rank": r.rank, "score_vs_zoo": r.score,
+                                "values": {k: r.values.get(k) for k in keys},
+                                "vs_zoo": r.vs_zoo if vs_zoo else None} for r in rows], indent=1))
+        return
+    typer.echo(f"{'rank':>4s} {'candidate':22s} {'hunch':7s} {'vs zoo':>7s}  " + "  ".join(keys))
+    for r in rows:
+        name = r.path.rsplit("/", 1)[-1][:-3] if r.is_zoo else r.candidate_id
+        cells = [(r.vs_zoo.get(k) if vs_zoo else r.values.get(k)) for k in keys]
+        body = "  ".join(f"{_fmt(v) if v is not None else '-':>{len(k)}s}" for v, k in zip(cells, keys, strict=True))
+        typer.echo(f"{r.rank:4d} {('zoo:' if r.is_zoo else '') + name:22s} {r.hunch_id or '-':7s} {r.score:7.3f}  "
+                   f"{body}")
+    if vs_zoo:
+        typer.echo("(values are ratios to the best zoo member per metric; < 1 is better than every zoo member)")
 
 
 @zoo_app.command("eval")
@@ -220,19 +251,40 @@ def zoo_eval(
 @hunch_app.command("add")
 def hunch_add(yaml_file: Annotated[Path, typer.Argument(help="Hunch draft YAML.")]) -> None:
     """Validate a hunch draft against ledger/schema.yaml and register it."""
-    _not_implemented("hunch add")
+    import yaml
+
+    from schemeforge.core import ledger
+
+    try:
+        hid = ledger.add(yaml.safe_load(yaml_file.read_text(encoding="utf-8")) or {})
+    except ledger.LedgerError as exc:
+        _fail(f"invalid hunch draft: {exc}", 2)
+    typer.echo(hid)
 
 
 @hunch_app.command("list")
 def hunch_list(open_only: Annotated[bool, typer.Option("--open", help="Only open hunches.")] = False) -> None:
     """List hunches."""
-    _not_implemented("hunch list")
+    from schemeforge.core import ledger
+
+    for h in ledger.load():
+        if open_only and h.get("status") not in ("open", "testing"):
+            continue
+        typer.echo(f"{h['id']}  {h['arena']}/{h['slot']:16s} {h.get('status', 'open'):12s} {h['lens']:22s} "
+                   f"{' '.join(str(h['statement']).split())[:90]}")
 
 
 @hunch_app.command("show")
 def hunch_show(hunch_id: Annotated[str, typer.Argument(help="Hunch id.")]) -> None:
     """Show one hunch."""
-    _not_implemented("hunch show")
+    import yaml
+
+    from schemeforge.core import ledger
+
+    try:
+        typer.echo(yaml.safe_dump(ledger.get(hunch_id), sort_keys=False, allow_unicode=True, width=110))
+    except ledger.LedgerError as exc:
+        _fail(str(exc), 2)
 
 
 @hunch_app.command("close")
@@ -242,7 +294,13 @@ def hunch_close(
     note: Annotated[str, typer.Option("--note", help="Verdict note with evidence (run ids).")],
 ) -> None:
     """Close a hunch with a verdict."""
-    _not_implemented("hunch close")
+    from schemeforge.core import ledger
+
+    try:
+        ledger.close(hunch_id, verdict.value, note)
+    except ledger.LedgerError as exc:
+        _fail(str(exc), 2)
+    typer.echo(f"{hunch_id} closed: {verdict.value}")
 
 
 @case_app.command("propose")

@@ -31,8 +31,8 @@ def test_command_help(cmd: list[str]) -> None:
 @pytest.mark.parametrize(
     "argv",
     [
-        ["hunch", "list", "--open"],
-        ["evolve", "--arena", "euler1d", "--slot", "limiter", "--hunch", "H-0001", "--backend", "dummy"],
+        ["case", "propose", "x.yaml"],
+        ["dossier", "build", "c-x"],
     ],
 )
 def test_commands_are_not_implemented_yet(argv: list[str]) -> None:

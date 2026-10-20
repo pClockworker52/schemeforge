@@ -90,6 +90,25 @@ def register_candidate(conn: sqlite3.Connection, path: Path, arena: str, slot: s
     return cid
 
 
+def submit_candidate(path: Path, hunch_id: str, parents: list[str] | None = None,
+                     registry_path: Path = registry.DEFAULT_PATH, origin: str = "proposer") -> str:
+    """Register a candidate under a hunch (arena and slot come from the hunch). A file already registered by
+    `sforge eval` keeps its id and gets the hunch and lineage attached."""
+    from . import ledger
+
+    h = ledger.get(hunch_id)
+    conn = registry.connect(registry_path)
+    for p in parents or []:
+        if conn.execute("SELECT 1 FROM candidates WHERE id = ?", (p,)).fetchone() is None:
+            raise KeyError(f"unknown parent candidate {p}")
+    cid = register_candidate(conn, path, h["arena"], h["slot"], origin, hunch_id=hunch_id, parents=parents)
+    conn.execute("UPDATE candidates SET hunch_id = ?, parents = ?, origin = CASE WHEN origin = 'eval' THEN ? "
+                 "ELSE origin END WHERE id = ?", (hunch_id, json.dumps(parents or []), origin, cid))
+    conn.commit()
+    conn.close()
+    return cid
+
+
 def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: list[dict] | None = None,
                   registry_path: Path = registry.DEFAULT_PATH, origin: str = "eval",
                   candidate_id: str | None = None, heldout_dir: Path = HELDOUT_DIR) -> EvalResult:

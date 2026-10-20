@@ -43,6 +43,19 @@ address ranges); the worker has a CPU-time limit and the parent a wall-clock tim
 implemented", so tests can tell it apart from usage errors (2).
 *Consequences:* None for later phases.
 
+## 2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)
+*Context:* PLAN §5.9/§10 task 1: adopt an existing framework only if it can use `sforge eval` unchanged as its
+evaluator and our registry and ledger stay the source of truth.
+*Findings:* OpenEvolve (Apache-2.0): Python `evaluate(program_path)` returning metrics (could wrap `sforge eval`),
+MAP-Elites over evaluator metrics, ring-migration islands, a `claude_code` provider; but its own program
+database and checkpoints drive parent selection. ShinkaEvolve (Apache-2.0): `evaluate.py` + `run_shinka_eval`,
+its own SQLite program database, embedding-based novelty, `headless/claude` model strings.
+https://github.com/algorithmicsuperintelligence/openevolve · https://github.com/SakanaAI/ShinkaEvolve
+*Decision:* Write our own engine (~500 lines): islands keyed by registered hunches, Pareto/MAP-Elites selection
+from our registry, operators and prompts from Appendix E, backends `dummy` and `claude-cli`. Ideas borrowed:
+raw-metric descriptors binned by the engine, migration as a later option, CLI provider pattern.
+*Consequences:* No second population database; every candidate and score lives in runs/registry.sqlite.
+
 ## 2026-10-20 — Gate 1 decisions (Peter)
 *Context:* Gate 1 review of the Arena 1 judge, baseline report and blind audit.
 *Decision:* (1) Roe is dropped from the zoo (positivity failure on R2 and some RF1 instances). (2) The Target A
