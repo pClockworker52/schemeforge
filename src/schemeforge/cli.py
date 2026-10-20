@@ -161,6 +161,51 @@ def submit(
 
 
 @app.command()
+def promote(
+    candidate: Annotated[str, typer.Argument(help="Candidate id.")],
+    target: Annotated[str, typer.Option("--target", help="Pre-registered target (docs/targets/).")] = "A",
+    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
+    slot: Annotated[str, typer.Option("--slot", help="Slot.")] = "limiter",
+) -> None:
+    """Promotion test (PLAN §5.8): thresholds and paired bootstraps on the held-out suite. Needs promo runs of the
+    candidate and of the zoo references under the current judge version; prints verdicts only."""
+    from schemeforge.core import promotion, registry
+    from schemeforge.core.integrity import judge_version
+
+    conn = registry.connect()
+    version = judge_version(arena)
+
+    def latest(cid: str, suite: str) -> str | None:
+        row = conn.execute("SELECT id FROM runs WHERE candidate_id = ? AND suite = ? AND status = 'ok' AND "
+                           "judge_version = ? ORDER BY started_at DESC LIMIT 1", (cid, suite, version)).fetchone()
+        return row["id"] if row else None
+
+    cand_run = latest(candidate, "promo")
+    if cand_run is None:
+        _fail(f"{candidate} has no ok promo run under {version}: run `sforge eval {candidate} --suite promo` first", 2)
+    spec = promotion.TARGETS[target]
+    members = {m for _, _, _, m in spec["bootstrap"]} | {m for *_, m in spec["relative"]}
+    zoo_runs = {}
+    for m in sorted(members):
+        row = conn.execute("SELECT id FROM candidates WHERE path = ?",
+                           (f"src/schemeforge/arenas/{arena}/zoo/{slot}/{m}.py",)).fetchone()
+        run = latest(row["id"], "promo") if row else None
+        if run is None:
+            _fail(f"zoo member {m} has no promo run under {version}: run `sforge zoo eval --suite promo`", 2)
+        zoo_runs[m] = run
+    dev_run = latest(candidate, "dev")
+    dev = {f"{r['case_id']}.{r['metric']}": r["value"] for r in conn.execute(
+        "SELECT case_id, metric, value FROM scores WHERE run_id = ?", (dev_run,))} if dev_run else {}
+    checks = promotion.check_target(target, cand_run, zoo_runs, dev)
+    for c in checks:
+        typer.echo(f"{'PASS' if c.ok else 'FAIL'}  {c.id:4s} {c.description}: {c.detail}")
+    ok = all(c.ok for c in checks)
+    typer.echo(f"{candidate}: {'PROMOTED' if ok else 'not promoted'} for Target {target} (promo run {cand_run}, "
+               f"judge {version})")
+    raise typer.Exit(code=0 if ok else 1)
+
+
+@app.command()
 def leaderboard(
     arena: Arena,
     slot: Slot,

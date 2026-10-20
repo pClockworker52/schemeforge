@@ -29,11 +29,13 @@ NF2 mdot_var, NF2 converged_impl. Hard constraints and all dev cases must pass.
 
 ## Promotion
 
-Per PLAN §5.8: paired bootstrap (10,000 resamples) of log(candidate / best qualifying zoo member) on the
-held-out instances for A1, A2 and A5; the 95 % interval must lie entirely on the good side. A3, A4 and A7 are
-checked as stated. The statistics come from `sforge eval --suite promo` aggregates; the bootstrap needs the
-per-instance values, which the promotion tool reads from ~/.schemeforge/heldout_runs/ (to be built in Phase 2
-or 3; agents never see them).
+Per PLAN §5.8: paired bootstrap (10,000 resamples) of log(candidate / zoo reference) on the held-out
+instances; the 95 % interval must lie entirely below 0. "Best qualifying zoo member" is made concrete as the
+member on the other side of the front: B1, B2 — RF1 shock and contact width against **van Albada** (the
+convergent, smooth member); B5 — NF3 roughness_J against **MC** (the sharp member). A1–A5 and A7 are checked
+as stated, A6 on the dev suite. Implemented in `src/schemeforge/core/promotion.py`; run
+`sforge promote <candidate> --target A` after promo runs of the candidate and the zoo. The tool reads the
+per-instance values from ~/.schemeforge/heldout_runs/ and prints only verdicts and confidence intervals.
 
 ## Kill criterion
 
