@@ -22,12 +22,19 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
   The judge's default HLLC is the zoo file.
 - R7 Shu–Osher with a cached WENO5-Z reference at N = 12,800 (70 s to build; N = 6,400 differs by 4.3e-4 in L1 ρ
   on 400 cells, 36× below the best zoo error at N = 400).
-- Tests: 172 passed, ruff clean.
+- `sforge eval` (smoke, dev), `sforge zoo eval` (parallel) and `sforge judge version`: sandboxed worker with
+  CPU pinning and CPU-time limit, core locks, wall-clock timeout, registry rows with judge version and hash,
+  JSON reports in runs/reports/. Eval refuses uncommitted judge changes.
+- Dev suite timing (van Leer, alone): 25.7 s in the worker including JIT, 37 s wall with CLI and worker start.
+  With 13 zoo members in parallel each takes 24–68 s (shared memory bandwidth / SMT siblings).
+- Judge bug found by the first zoo run and fixed: shocks near the nozzle exit escaped during the transient and
+  the solver settled on a spurious supersonic-exit state (roughness_J ≈ 25 for every scheme). Fix: pressure
+  outlet for p_b > p_crit2 and a subsonic-exit initial guess in the shock regime (spec §5.3).
+- Tests: 184 passed, ruff clean.
 
 ## Next (ordered)
-1. `sforge eval` / `sforge zoo eval` with the sandbox subprocess, per-core pinning, registry rows; `judge version`.
-2. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
-3. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
+1. Held-out families (RF1, RF2, NF1–NF3) from the seed; `judge verify`; `judge exact` for the audit.
+2. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
 
 ## Blockers / questions for Peter
 - Gate 1 decision (proposed in DECISIONS.md): keep Roe in the zoo as a documented known failure on R2 (NaN on
@@ -46,6 +53,20 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
 - Machine: 16 physical cores / 32 threads, 15 GB RAM in WSL → evaluation lock default K = 15.
 - JAX core pinning: `os.sched_setaffinity` before importing JAX gives CPU/wall 0.98; the XLA flag alone used ~23 cores.
 - Unsteady Sod N = 200, van Leer: 4.3 ms per run after JIT (1 core).
-- First look at Target A (N1, N = 120, explicit, 50k iterations): first order converges (12 orders), minmod
-  stalls at 8.3, van Leer at 3.7, superbee at 0.8 orders, all flagged as limit cycles. Implicit: first order,
-  minmod, van Leer converge in 111–160 steps; superbee does not converge in 300.
+- Zoo on the dev suite after the nozzle fix (judge euler1d-v0.dev, reports in runs/reports/):
+
+  | member | R1 shock | R1 contact | S1 order | R7 l1_ref | N1 expl orders | N1 Newton | N4 roughness_J |
+  |---|---|---|---|---|---|---|---|
+  | superbee | 2.67 | 3.1 | 1.67 | 0.0049 | 1.2 | 300 (no conv.) | 9.67 |
+  | MC | 2.74 | 5.42 | 1.91 | 0.0052 | 1.6 | 300 | 11.2 |
+  | Koren | 2.77 | 6.1 | 1.84 | 0.0056 | 1.5 | 300 | 12.8 |
+  | van Leer | 2.92 | 6.29 | 1.98 | 0.0058 | 2.5 | 60 | 0.0020 |
+  | Venkatakrishnan | 2.97 | 6.73 | 1.98 | 0.0059 | 2.7 | 60 | 0.0020 |
+  | van Albada | 3.67 | 7.36 | 2.00 | 0.0066 | 12 | 57 | 0.0015 |
+  | minmod | 4.21 | 9.29 | 1.83 | 0.0072 | 8.3 | 59 | 0.0014 |
+  | WENO5-Z | 2.56 | 3.9 | 3.33 | 0.0023 | 12 | 85 | 0.215 |
+  | first order | 9.7 | 22.2 | 0.90 | 0.0126 | 12 | 50 | 0.0013 |
+
+  Fluxes (MUSCL-van Leer): HLL, HLLC, Rusanov, Roe; Roe rejected on R2. First sign that Target A stands:
+  sharp limiters stall and give roughness ~1e4× higher; smooth ones converge but smear contacts. To be
+  confirmed on NF1/NF3 in the baseline report.
