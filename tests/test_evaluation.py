@@ -62,8 +62,8 @@ def test_smoke_eval_of_a_zoo_limiter_records_everything(in_tmp) -> None:
     conn = registry.connect(in_tmp / "reg.sqlite")
     run = conn.execute("SELECT * FROM runs WHERE id = ?", (res.run_id,)).fetchone()
     assert run["status"] == "ok" and run["judge_version"] == "euler1d-v0.dev" and len(run["judge_hash"]) == 64
-    n_scores = conn.execute("SELECT COUNT(*) FROM scores WHERE run_id = ?", (res.run_id,)).fetchone()[0]
-    assert n_scores >= 5
+    metrics = {r[0] for r in conn.execute("SELECT metric FROM scores WHERE run_id = ?", (res.run_id,))}
+    assert {"l1_smooth", "tv_increase", "seconds", "cost"} <= metrics  # widths are unresolved at N = 50
     assert json.loads((in_tmp / run["report_path"]).read_text())["run_id"] == res.run_id
     # the same code is the same candidate
     again = evaluation.evaluate_file(path, "euler1d", "limiter", "smoke", registry_path=in_tmp / "reg.sqlite")
