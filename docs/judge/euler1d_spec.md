@@ -139,7 +139,9 @@ Lower is better unless noted. Implemented in `arenas/euler1d/metrics.py`.
 **Jumps of a Riemann solution.** Shocks and contacts of nonzero strength (|p*/p_K − 1| > 1e-12, resp.
 |ρ*_L/ρ*_R − 1| > 1e-12) at t_end. Each has a window bounded by the midpoints to the neighbouring features (shock
 positions, contact, rarefaction heads and tails) or the domain ends. Shocks are measured in p, contacts in ρ;
-a and b are the exact values left and right of the jump.
+a and b are the exact values left and right of the jump. Width and overshoot are measured only for resolved
+jumps: at least 8 cells of window on each side and |b − a|/max(|a|, |b|) ≥ 0.05; otherwise they are skipped
+for that case (features a few cells apart, e.g. R3's contact and shock at N = 200, are not separable).
 
 | Metric | Definition |
 |---|---|

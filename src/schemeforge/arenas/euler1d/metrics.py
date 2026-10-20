@@ -13,6 +13,8 @@ from .exact_riemann import RiemannSolution
 from .gas import entropy, sound_speed
 
 EXCLUDE_CELLS = 5  # cells excluded on each side of a discontinuity in smooth-region errors
+MIN_HALF_WINDOW = 8  # cells on each side of a jump needed to measure its width and overshoot
+MIN_JUMP_STRENGTH = 0.05  # |b - a| / max(|a|, |b|) needed to measure width and overshoot
 LEVEL_LO, LEVEL_HI = 0.05, 0.95
 NOZZLE_WINDOW = 12  # half-width in cells of the window around a nozzle shock
 
@@ -59,6 +61,15 @@ def riemann_jumps(sol: RiemannSolution, x0: float, t: float, domain: tuple[float
         lo, hi = window(x)
         jumps.append(Jump("contact", x, lo, hi, 0, sol.rho_star_L, sol.rho_star_R))
     return sorted(jumps, key=lambda j: j.x)
+
+
+def jump_measurable(j: Jump, dx: float) -> bool:
+    """Width and overshoot are defined only for resolved jumps: a window of at least MIN_HALF_WINDOW cells on
+    each side (neighbouring features farther than 2 MIN_HALF_WINDOW cells) and a relative strength of at least
+    MIN_JUMP_STRENGTH. Unresolved jumps are skipped, not penalized."""
+    half = min(j.x - j.lo, j.hi - j.x) / dx
+    strength = abs(j.b - j.a) / max(abs(j.a), abs(j.b))
+    return half >= MIN_HALF_WINDOW and strength >= MIN_JUMP_STRENGTH
 
 
 # --- generic jump measures ------------------------------------------------------------------------------------
@@ -130,9 +141,9 @@ def riemann_metrics(x: np.ndarray, W: np.ndarray, sol: RiemannSolution, x0: floa
     widths: dict[str, list[float]] = {"shock": [], "contact": []}
     overs: list[float] = []
     for j in jumps:
-        m = (x > j.lo) & (x < j.hi)
-        if m.sum() < 4:
+        if not jump_measurable(j, dx):
             continue
+        m = (x > j.lo) & (x < j.hi)
         widths[j.kind].append(jump_width(x[m], W[m, j.var], j.a, j.b, dx))
         overs.append(overshoot(W[m, j.var], W_exact[m, j.var], j.b - j.a))
     if widths["shock"]:

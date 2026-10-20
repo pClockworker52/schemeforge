@@ -56,9 +56,14 @@ def promo_medians(registry: Path) -> dict[str, dict[str, float]]:
     conn.row_factory = sqlite3.Row
     out: dict[str, dict[str, float]] = {}
     for name in LIMITERS:
-        cid = f"zoo-limiter-{name}"
+        # by file, not id: the registry deduplicates by code hash, so a zoo file first seen via `sforge eval`
+        # keeps its c-... id
+        cand = conn.execute("SELECT id FROM candidates WHERE path = ?",
+                            (f"src/schemeforge/arenas/euler1d/zoo/limiter/{name}.py",)).fetchone()
+        if cand is None:
+            continue
         run = conn.execute("SELECT id FROM runs WHERE candidate_id = ? AND suite = 'promo' AND status != 'running' "
-                           "ORDER BY started_at DESC LIMIT 1", (cid,)).fetchone()
+                           "ORDER BY started_at DESC LIMIT 1", (cand["id"],)).fetchone()
         if run is None:
             continue
         rows = conn.execute("SELECT family, metric, value FROM scores WHERE run_id = ?", (run["id"],)).fetchall()
@@ -95,10 +100,13 @@ def plot(sweeps: list[dict], promo: dict[str, dict[str, float]]) -> None:
 
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
-    k = max(1, len(os.sched_getaffinity(0)) // 2 - 1)
-    with ProcessPoolExecutor(max_workers=min(k, len(LIMITERS))) as pool:
-        sweeps = list(pool.map(sweep, [(n, 1 + i) for i, n in enumerate(LIMITERS)]))
-    (OUT / "sweep41.json").write_text(json.dumps(sweeps, indent=1))
+    if "--plot-only" in sys.argv:  # reuse the sweep, refresh the promo medians and the plot
+        sweeps = json.loads((OUT / "sweep41.json").read_text())
+    else:
+        k = max(1, len(os.sched_getaffinity(0)) // 2 - 1)
+        with ProcessPoolExecutor(max_workers=min(k, len(LIMITERS))) as pool:
+            sweeps = list(pool.map(sweep, [(n, 1 + i) for i, n in enumerate(LIMITERS)]))
+        (OUT / "sweep41.json").write_text(json.dumps(sweeps, indent=1))
     promo = promo_medians(Path("runs/registry.sqlite"))
     (OUT / "promo_medians.json").write_text(json.dumps(promo, indent=1))
     plot(sweeps, promo)

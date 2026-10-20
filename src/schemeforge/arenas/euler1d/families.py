@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 
 from .cases import Case, NozzleCase, NozzleSpec, NozzleSweepCase, RiemannCase, slowly_moving_shock, validate_case
-from .exact_nozzle import back_pressure_for_shock, critical_pressures
+from .exact_nozzle import area_ratio, back_pressure_for_shock, critical_pressures, mach_from_area_ratio, p_over_p0
 from .exact_riemann import VacuumError, solve_riemann
 from .gas import GAMMA_STRESS, GAMMAS, sound_speed
 
@@ -64,7 +64,7 @@ def rf1(seed: str, i: int) -> RiemannCase:
         a_ref = max(float(sound_speed(rhoL, pL, g)), float(sound_speed(rhoR, pR, g)))
         uL, uR = (float(v) for v in rng.uniform(-1.0, 1.0, 2) * a_ref)
         try:
-            t_end = _riemann_t_end((rhoL, uL, pL), (rhoR, uR, pR), g, 0.5, 0.35)
+            t_end = _riemann_t_end((rhoL, uL, pL), (rhoR, uR, pR), g, 0.5, 0.45)
         except VacuumError:
             continue
         case = RiemannCase(f"RF1-{i:03d}", (rhoL, uL, pL), (rhoR, uR, pR), t_end, N_RIEMANN, gamma=g)
@@ -116,13 +116,18 @@ def nf1(seed: str, i: int) -> NozzleCase:
 
 
 def nf2(seed: str, i: int) -> NozzleCase:
-    """Shock-free nozzles: subsonic (p_b above p_crit1) or supersonic exit (p_b below p_crit2), half each."""
+    """Shock-free nozzles, half each: subsonic with throat Mach 0.3..0.9 (unchoked), or supersonic exit
+    (p_b below p_crit2). Drawing p_b between p_crit1 and 1 instead gives exit Mach ~0.02 for large area ratios,
+    where every upwind scheme fails by low-Mach dissipation alone."""
     rng = _rng(seed, "NF2", i)
     spec = _geometry(rng)
     g = float(rng.choice(ALL_GAMMAS))
-    cp = critical_pressures(spec.build(), g)
+    nz = spec.build()
+    cp = critical_pressures(nz, g)
     if rng.random() < 0.5:
-        pb = cp.p_crit1 + float(rng.uniform(0.1, 0.9)) * (1.0 - cp.p_crit1)
+        m_throat = float(rng.uniform(0.3, 0.9))
+        a_star = nz.A_throat / float(area_ratio(m_throat, g))
+        pb = float(p_over_p0(mach_from_area_ratio(nz.A_exit / a_star, g, supersonic=False), g))
     else:
         pb = float(rng.uniform(0.2, 0.9)) * cp.p_crit2
     case = NozzleCase(f"NF2-{i:03d}", pb, N_NOZZLE, gamma=g, nozzle=spec)
