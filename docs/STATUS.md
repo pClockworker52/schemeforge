@@ -1,6 +1,6 @@
 # STATUS
-Phase: 1 — Arena 1 judge and zoo (in progress)      Judge version: — (not tagged yet)
-Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solvers, slot contracts, dev suite cases
+Phase: 1 — Arena 1 judge and zoo (near Gate 1)      Judge version: euler1d-v0.dev (not tagged yet)
+Last session: 2026-10-20 — Phase 1 judge complete except the blind audit; baseline report in progress
 
 ## Done
 - Phase 0, Gate 0 passed (see git history and DECISIONS.md).
@@ -34,13 +34,20 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
   (`families.py`; parabolic and smoothed-conical nozzles, NF1 grid shifted so the shock lands at a random cell
   fraction). Promo suite: family aggregates only (median, p90, worst, pass rate) plus max_cfl on 5 RF1
   instances; per-instance details go to ~/.schemeforge/heldout_runs/<run>.json; `sforge reveal` needs a TTY.
-- `sforge judge verify` (Appendix H, zoo hard constraints, Gate 1 sanity ranking, mirror/scaling) and
-  `sforge judge exact --case YAML --json` for the audit.
-- Tests: 201 passed, ruff clean.
+- `sforge judge verify` (51 checks: Appendix H, zoo hard constraints, Gate 1 sanity ranking, mirror/scaling)
+  and `sforge judge exact --case YAML --json` (batch mode for YAML lists) for the audit.
+- First zoo promo run exposed two judge artifacts, reproduced with a test seed and fixed (commit 9dfb791):
+  unresolved jumps (contact and shock 2–3 cells apart) were scored as "never completes" in RF1 widths, and
+  NF2 subsonic instances had exit Mach ~0.02 (pure low-Mach dissipation). Widths are now measured only for
+  resolved jumps (spec §7); NF2 subsonic instances are drawn by throat Mach 0.3–0.9.
+- 41-point back-pressure sweep with both solvers (scripts/euler1d_baseline.py → docs/judge/baseline/).
+- Blind-audit instructions and prompt for the WSL session: docs/judge/euler1d_audit.md.
+- Tests: 202 passed, ruff clean.
 
 ## Next (ordered)
-1. Zoo promo run; problem-existence report docs/judge/euler1d_baseline.md (§9.9).
-2. Blind audit with judge-auditor; problem-existence report `euler1d_baseline.md`; tag `euler1d-v1.0`.
+1. (running) zoo dev + promo rerun with the fixed judge, promo table, front plot.
+2. Write docs/judge/euler1d_baseline.md (§9.9) with the Target A/B recommendation.
+3. Peter: blind audit in a WSL session (docs/judge/euler1d_audit.md); decisions at Gate 1; tag `euler1d-v1.0`.
 
 ## Blockers / questions for Peter
 - Gate 1 decision (proposed in DECISIONS.md): keep Roe in the zoo as a documented known failure on R2 (NaN on
@@ -50,8 +57,7 @@ Last session: 2026-10-20 — Gate 0 passed; Phase 1: exact solutions, both solve
   - N2 (unchoked, exit Mach 0.085) is dominated by low-Mach dissipation: first-order HLLC underpredicts ṁ by
     75 % at N = 120 (converging slowly with N), MUSCL is within 1–8 %. It is a valid case but tests low-Mach
     behaviour as much as the limiter.
-  - Dev budget: an implicit nozzle solve takes ~8 ms per Newton step (N = 120); N1–N4 implicit is 14 solves.
-    Measure the full dev suite once `sforge eval` exists; if it exceeds 30 s, cut N4 to fewer points first.
+  - Dev budget met: 25.7 s per candidate including JIT (van Leer, alone).
 - Appendix H, Toro test 5: our recomputed p* = 1691.65, u* = 8.68977 (v1.0 had this; my v1.1 edit was wrong and
   is reverted). Toro's table rounds the inputs.
 
