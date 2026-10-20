@@ -86,9 +86,10 @@ def check_flux(flux: Callable, gamma: float = 1.4) -> list[str]:
     err = np.max(np.abs(Fc - Fe) / scale)
     if not err <= CONSISTENCY_TOL:
         v.append(f"consistency flux(U, U) = F(U) violated: max relative error {err:.2e}")
-    # mirror symmetry flux(R UR, R UL) = -R flux(UL, UR)
+    # mirror symmetry flux(R UR, R UL) = -R flux(UL, UR), relative to the largest flux magnitude involved
     Fm = np.asarray(flux(jnp.asarray(UR * R_MIRROR), jnp.asarray(UL * R_MIRROR), gamma))
-    scale = np.max(np.abs(F), axis=1, keepdims=True) + np.max(np.abs(Fe), axis=1, keepdims=True)
+    FR = np.asarray(physical_flux(jnp.asarray(UR), gamma))
+    scale = np.max(np.abs(np.concatenate([F, Fe, FR], axis=1)), axis=1, keepdims=True)
     err = np.max(np.abs(Fm + F * R_MIRROR) / scale)
     if not err <= MIRROR_TOL:
         v.append(f"mirror symmetry violated: max relative error {err:.2e}")

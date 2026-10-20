@@ -144,7 +144,8 @@ a and b are the exact values left and right of the jump.
 - limiter: output shape and dtype, finite for all probe r (negative, zero, tiny, huge, ±1e10), bitwise
   deterministic, pointwise (permuted input gives permuted output; reshaping does not matter);
 - flux: finite on 256 fixed admissible state pairs, consistency max\|flux(U, U) − F(U)\|/max\|F\| ≤ 1e-12,
-  mirror symmetry \|flux(RU_R, RU_L) + R·flux(U_L, U_R)\| ≤ 1e-12 relative, deterministic, row-wise;
+  mirror symmetry \|flux(RU_R, RU_L) + R·flux(U_L, U_R)\| ≤ 1e-12 · max(\|F_num\|, \|F(U_L)\|, \|F(U_R)\|) per
+  row, deterministic, row-wise;
 - every run: finite output, ρ > 0, p > 0, and no solver failure.
 
 **Measured, not required** (`metamorphic.py`, on R1): mirror symmetry of the whole run (exact for symmetric

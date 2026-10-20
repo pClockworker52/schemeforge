@@ -14,6 +14,8 @@ jax.config.update("jax_enable_x64", True)
 
 import jax.numpy as jnp  # noqa: E402
 
+from . import zoo  # noqa: E402  (after x64 is enabled)
+
 NG = 3
 R_CLIP = 1e10  # slope ratios are clipped to [-R_CLIP, R_CLIP] before the limiter sees them
 
@@ -76,34 +78,9 @@ def first_order(W: Array, gamma: float) -> tuple[Array, Array]:
 
 
 # --- flux ---------------------------------------------------------------------------------------------------
-def hllc(UL: Array, UR: Array, g: float) -> Array:
-    """HLLC (Toro 2009, §10.4) with Einfeldt/Roe-average wave-speed estimates. UL, UR: (m, 3) -> F: (m, 3)."""
-    WL, WR = cons_to_prim(UL, g), cons_to_prim(UR, g)
-    rL, uL, pL = WL[:, 0], WL[:, 1], WL[:, 2]
-    rR, uR, pR = WR[:, 0], WR[:, 1], WR[:, 2]
-    aL, aR = jnp.sqrt(g * pL / rL), jnp.sqrt(g * pR / rR)
-    HL, HR = (UL[:, 2] + pL) / rL, (UR[:, 2] + pR) / rR
-    sl, sr = jnp.sqrt(rL), jnp.sqrt(rR)
-    u_roe = (sl * uL + sr * uR) / (sl + sr)
-    H_roe = (sl * HL + sr * HR) / (sl + sr)
-    a_roe = jnp.sqrt(jnp.maximum((g - 1.0) * (H_roe - 0.5 * u_roe * u_roe), 0.0))
-    SL = jnp.minimum(uL - aL, u_roe - a_roe)
-    SR = jnp.maximum(uR + aR, u_roe + a_roe)
-    S_star = (pR - pL + rL * uL * (SL - uL) - rR * uR * (SR - uR)) / (rL * (SL - uL) - rR * (SR - uR))
-
-    def star_state(U, r, u, p, S):
-        coef = r * (S - u) / (S - S_star)
-        E = U[:, 2]
-        return jnp.stack(
-            [coef, coef * S_star, coef * (E / r + (S_star - u) * (S_star + p / (r * (S - u))))], axis=1
-        )
-
-    FL, FR = physical_flux(UL, g), physical_flux(UR, g)
-    FsL = FL + SL[:, None] * (star_state(UL, rL, uL, pL, SL) - UL)
-    FsR = FR + SR[:, None] * (star_state(UR, rR, uR, pR, SR) - UR)
-    return jnp.where(
-        (SL >= 0.0)[:, None], FL, jnp.where((S_star >= 0.0)[:, None], FsL, jnp.where((SR > 0.0)[:, None], FsR, FR))
-    )
+# The judge's default flux is the zoo's HLLC file (one implementation): HLLC (Toro 2009, §10.4) with Einfeldt
+# wave-speed estimates. UL, UR: (m, 3) -> F: (m, 3).
+hllc: Flux = zoo.load("flux", "hllc")
 
 
 # --- boundaries ---------------------------------------------------------------------------------------------
