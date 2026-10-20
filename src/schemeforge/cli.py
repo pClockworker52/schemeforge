@@ -320,15 +320,17 @@ def judge_exact(
 
     cases = importlib.import_module(f"schemeforge.arenas.{arena}.cases")
     verify = importlib.import_module(f"schemeforge.arenas.{arena}.verify")
-    c = cases.case_from_dict(yaml.safe_load(case.read_text(encoding="utf-8")))
+    data = yaml.safe_load(case.read_text(encoding="utf-8"))
+    batch = isinstance(data, list)  # a YAML list of cases is answered with a JSON list, in one process
     try:
-        rep = verify.exact_report(c)
-    except (ValueError, TypeError) as exc:
+        reps = [verify.exact_report(cases.case_from_dict(d)) for d in (data if batch else [data])]
+    except (ValueError, TypeError, KeyError) as exc:
         _fail(str(exc), 2)
     if json_out:
-        typer.echo(json.dumps(rep))
+        typer.echo(json.dumps(reps if batch else reps[0]))
     else:
-        typer.echo("  ".join(f"{k}={v}" for k, v in rep.items() if not isinstance(v, list)))
+        for rep in reps:
+            typer.echo("  ".join(f"{k}={v}" for k, v in rep.items() if not isinstance(v, list)))
 
 
 @app.command()

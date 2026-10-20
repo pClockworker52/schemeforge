@@ -35,6 +35,16 @@ def test_exact_report_nozzle_cli(tmp_path) -> None:
     assert rep["regime"] == "shock" and rep["x_shock"] == pytest.approx(2.0993, abs=5e-5) and len(rep["p"]) == 30
 
 
+def test_exact_batch_cli(tmp_path) -> None:
+    path = tmp_path / "batch.yaml"
+    path.write_text("- {kind: nozzle, id: A, pb: 0.9, n: 10}\n"
+                    "- {kind: riemann, id: B, left: [1, 0, 1], right: [0.125, 0, 0.1], t_end: 0.2, n: 10}\n")
+    res = CliRunner().invoke(app, ["judge", "exact", "--arena", "euler1d", "--case", str(path), "--json"])
+    assert res.exit_code == 0, res.output
+    reps = json.loads(res.output)
+    assert [r["kind"] for r in reps] == ["nozzle", "riemann"]
+
+
 def test_exact_report_rejects_reference_cases() -> None:
     from schemeforge.arenas.euler1d.cases import dev_suite
 

@@ -74,10 +74,22 @@ subsonic.
 
 At x = x_t in the choked regimes, M = 1. A point exactly at x_s takes the upstream state.
 
-## 4. Reference geometry
+## 4. Geometries
 
-Anderson (1995) nozzle: A(x) = 1 + 2.2 (x − 1.5)², x ∈ [0, 3], throat at x = 1.5, A_e/A_t = 5.95.
-Reference values: PLAN Appendix H.
+- **anderson** (Anderson 1995): A(x) = 1 + 2.2 (x − 1.5)², x ∈ [0, 3], throat at x = 1.5, A_e/A_t = 5.95.
+  Reference values: PLAN Appendix H.
+- **parabolic** (parameters area_ratio R, length L, inlet_ratio Rᵢ, x_in): throat at x = 1 with A = 1;
+  A = 1 + (Rᵢ − 1)(1 − x)² for x < 1 and A = 1 + (R − 1)((x − 1)/L)² for x ≥ 1; domain [x_in, 1 + L].
+- **conical** (same parameters): the same convergent part; for x ≥ 1, A = r², r = 1 + k(√((x−1)² + δ²) − δ)
+  with δ = 0.2 and k = (√R − 1)/(√(L² + δ²) − δ), so that A(1 + L) = R.
+
+x_in only moves the inlet within (or before) the convergent part; the choked flow does not depend on it.
+The grid has n uniform cells on [x_in, x_exit]; "cell centres" are x_in + (i + ½)(x_exit − x_in)/n.
+
+`sforge judge exact --arena euler1d --case FILE --json` prints the judge's solution for one case (or a JSON list
+for a YAML list of cases). Riemann: p_star, u_star, rho_star_L/R, waves, and x, rho, u, p at the cell centres
+of the case grid at t_end. Nozzle: regime, x_shock, M1, p0_ratio, A_star_1/2, mass_flow, p_crit1..3, and
+x, M, rho, u, p at the cell centres.
 
 ## 5. Solvers
 

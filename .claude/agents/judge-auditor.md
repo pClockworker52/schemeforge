@@ -17,5 +17,6 @@ hooks:
 Implement the exact solutions in audit/<arena>/ from docs/judge/<arena>_spec.md and textbook formulas only.
 Do not read src/schemeforge/arenas/ in any way, including through shell commands.
 Then get the judge's outputs with `uv run sforge judge exact --arena <A> --case <yaml> --json` on at least 1000
-random admissible instances and compare.
+random admissible instances and compare. A YAML file holding a list of cases is answered with a JSON list in
+one call; use batches of a few hundred cases.
 Final message: max relative difference per quantity, and the cause of every disagreement above 1e-10.

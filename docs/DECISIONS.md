@@ -20,6 +20,14 @@ subagent runs: its hooks would call a Windows `python3`, which may not exist, an
 The venv sits in the repo on the Windows file system (`.venv/`); if imports or JIT times turn out slow in
 Phase 1, move it to the WSL file system with `UV_PROJECT_ENVIRONMENT`.
 
+## 2026-10-20 — Held-out family sizes and the NF3 sweep
+*Context:* Promo must stay at "minutes" per candidate and give at least 50 held-out instances (PLAN §5.8).
+*Decision:* RF1 20, RF2 10, NF1 20, NF2 10, NF3 5 instances (65 in total). NF3 sweeps 11 back pressures with the
+implicit solver only; the 41-point sweep with both solvers is run once for the zoo in the baseline study, not
+for every candidate. max_cfl uses the first 5 RF1 instances. Grid-convergence studies on held-out nozzles are
+not in promo yet.
+*Consequences:* PLAN §9.5 table note updated. Revisit the sizes when promotion tests need more power.
+
 ## 2026-10-20 — Venv on the WSL file system; no memory limit yet
 *Context:* Every evaluation runs in a fresh worker process. With the venv on `/mnt/c`, a cold
 `import schemeforge.arenas.euler1d.evaluate` took 27 s (9p file system); on ext4 it takes 4.8 s.

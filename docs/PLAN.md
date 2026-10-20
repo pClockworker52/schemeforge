@@ -459,7 +459,7 @@ Dev suite, visible to agents:
 | N1 | Anderson nozzle, p_b/p0 = 0.6784 (shock at x = 2.0993) | 120 | exact |
 | N2 | Anderson nozzle, p_b/p0 = 0.995 (subsonic, not choked) | 120 | exact |
 | N3 | Anderson nozzle, p_b/p0 = 0.01 (supersonic exit) | 120 | exact |
-| N4 | sweep over 11 values of p_b, implicit solver only; the shock crosses about 30 cells (the 41-point sweep with both solvers runs in promo as part of NF3) | 120 | exact (smooth in p_b) |
+| N4 | sweep over 11 values of p_b, implicit solver only; the shock crosses about 30 cells (NF3 in promo uses the same 11-point implicit sweep on random geometries; a 41-point sweep with both solvers is part of the one-off baseline study, §9.9) | 120 | exact (smooth in p_b) |
 
 Held-out families, with instances drawn from the secret seed:
 

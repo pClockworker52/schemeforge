@@ -58,6 +58,11 @@ solvers: [implicit]     # implicit | explicit
 nozzle: {type: anderson}
 ```
 
+Geometry types and formulas: `euler1d_spec.md` §4 (`conical` is also available, `x_in` moves the inlet).
+
+A file holding a YAML list of cases is accepted by `sforge judge exact` (batch mode); `sforge eval --case`
+takes a single case.
+
 ## Dev suite (fixed, visible)
 
 | ID | Definition |
