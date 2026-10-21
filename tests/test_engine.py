@@ -41,6 +41,13 @@ def test_zoo_members_occupy_distinct_cells(slot: str, names: list[str]) -> None:
     assert len(cells) == len(names)
 
 
+def test_stagnation_counts_archive_progress() -> None:
+    assert evolve.archive_progress([{"archive": "rejected"}, {"archive": "new cell"}])
+    assert evolve.archive_progress([{"archive": "replaced c-1"}])
+    assert not evolve.archive_progress([{"archive": "rejected"}, {"archive": "duplicate:zoo:minmod"},
+                                        {"status": "llm_error"}])
+
+
 def test_archive_cells_duplicates_and_replacement() -> None:
     a = arch.Archive("euler1d", "limiter")
     mm = probe(zoo.load("limiter", "minmod"), "euler1d", "limiter")

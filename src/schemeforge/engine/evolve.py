@@ -202,6 +202,11 @@ def _zoo_references(archive: Archive) -> None:
         archive.references[name] = probe(fn, archive.arena, archive.slot).get("fingerprint", [])
 
 
+def archive_progress(results: list[dict[str, Any]]) -> bool:
+    """True if a child of this generation filled a new archive cell or replaced an elite."""
+    return any(str(r.get("archive", "")).startswith(("new cell", "replaced")) for r in results)
+
+
 def run_generation(state: State, rng: np.random.Generator) -> dict[str, Any]:
     cfg = state.config
     conn = registry.connect()
@@ -247,7 +252,9 @@ def run_generation(state: State, rng: np.random.Generator) -> dict[str, Any]:
             placed += 1
     front = sorted(c for c, r in rows.items() if r.rank == 0)
     new_front = [c for c in front if c not in state.front and any(r.get("id") == c for r in results)]
-    state.stagnation = 0 if new_front else state.stagnation + 1
+    # with 7 objectives nearly every distinct child is non-dominated, so stagnation counts generations without
+    # archive progress instead (DECISIONS.md, Gate 2)
+    state.stagnation = 0 if archive_progress(results) else state.stagnation + 1
     state.front = front
     state.archive = archive.to_dict()
     summary = {"generation": state.generation, "finished": _now(), "children": len(jobs),
@@ -295,7 +302,7 @@ def evolve(cfg: Config | None = None, resume: str | None = None, log=print) -> S
             log("budget exhausted")
             break
         if state.stagnation >= cfg.stagnation:
-            log(f"no new non-dominated candidate for {state.stagnation} generations")
+            log(f"no new archive cell or better elite for {state.stagnation} generations")
             break
         s = run_generation(state, rng)
         log(f"gen {s['generation']}: {s['children']} children, {s['ok']} ok, {s['rejected']} rejected, "
