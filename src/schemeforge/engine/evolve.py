@@ -126,7 +126,7 @@ def make_child(state: State, hunch: dict[str, Any], operator: str, parents: list
     try:
         if comp.data is None:
             backends.log_call(conn, backend, prompt, comp, None)
-            return {**result, "status": "llm_error", "error": comp.error}
+            return {**result, "status": "llm_error", "error": comp.error, "unreached": comp.unreached}
         path = out_dir / f"{stem}.py"
         path.write_text(comp.data["code"], encoding="utf-8")
         (out_dir / f"{stem}.json").write_text(json.dumps({k: comp.data[k] for k in ("rationale", "expected_change")}
@@ -254,6 +254,7 @@ def run_generation(state: State, rng: np.random.Generator) -> dict[str, Any]:
                "ok": sum(r.get("status") == "ok" for r in results),
                "rejected": sum(r.get("status") == "rejected" for r in results),
                "llm_errors": sum(r.get("status") == "llm_error" for r in results),
+               "unreached": sum(bool(r.get("unreached")) for r in results),
                "duplicates": sum(str(r.get("archive", "")).startswith("duplicate") for r in results),
                "placed": placed, "new_front": new_front, "cost_usd": sum(r.get("cost_usd") or 0 for r in results)}
     with (state.dir / "children.jsonl").open("a", encoding="utf-8") as fh:
@@ -300,5 +301,9 @@ def evolve(cfg: Config | None = None, resume: str | None = None, log=print) -> S
         log(f"gen {s['generation']}: {s['children']} children, {s['ok']} ok, {s['rejected']} rejected, "
             f"{s['llm_errors']} llm errors, {s['duplicates']} duplicates, {s['placed']} placed, "
             f"new front {len(s['new_front'])}, cost ${s['cost_usd']:.3f}")
+        if s["children"] and s["unreached"] >= max(1, s["children"] // 2):
+            log(f"pausing: {s['unreached']} of {s['children']} requests did not reach the model (usage or rate "
+                f"limit). State saved; continue later with --resume {state.run_id}")
+            break
         rng = np.random.default_rng([cfg.rng_seed, state.generation])
     return state

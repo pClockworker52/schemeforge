@@ -27,6 +27,7 @@ class Completion:
     input_tokens: int | None = None
     output_tokens: int | None = None
     error: str | None = None
+    unreached: bool = False  # the request never reached the model (usage or rate limit)
 
 
 class Backend(Protocol):
@@ -77,8 +78,16 @@ class ClaudeCLI:
             except json.JSONDecodeError:
                 data = None
         ok = isinstance(data, dict) and isinstance(data.get("code"), str)
-        return Completion(data if ok else None, out.get("total_cost_usd"), latency, input_tokens or None,
-                          usage.get("output_tokens"), None if ok else f"no structured output: {str(out)[:300]}")
+        if ok:
+            return Completion(data, out.get("total_cost_usd"), latency, input_tokens or None,
+                              usage.get("output_tokens"))
+        # No model call at all (zero API time) means the request never reached the model: usage or rate limit.
+        unreached = not out.get("duration_api_ms")
+        why = (f"{'request did not reach the model (usage/rate limit?)' if unreached else 'no structured output'}: "
+               f"is_error={out.get('is_error')} api_error_status={out.get('api_error_status')} "
+               f"result={str(out.get('result'))[:300]!r}")
+        return Completion(None, out.get("total_cost_usd"), latency, input_tokens or None, usage.get("output_tokens"),
+                          why, unreached=unreached)
 
 
 class Dummy:

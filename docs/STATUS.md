@@ -14,9 +14,13 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   36 duplicates, 5 distinct zoo limiters rediscovered (MC 11, van Leer 7, Koren 4, van Albada 4, superbee 2)
   → fingerprints work (≥ 4 required); only 6 archive cells occupied (grid too coarse / descriptors cluster).
   Cost: $4.34 per 100 candidates (list price, subscription), 10.5 s mean latency, ~19k/630 tokens per call,
-  ~570 candidates/h. 5 LLM errors not yet investigated (see runs/c1/runs/evolve/*/children.jsonl).
-- Next: investigate the LLM errors; C2 (bash scripts/headless/c2.sh); red team and first hunch round via
+  ~570 candidates/h. The 5 LLM errors (all in the last generation, 20:44 UTC) had zero API time and zero
+  tokens: the requests never reached the model — the subscription usage limit ran out at that time. Fixed:
+  the backend now reports such calls as "did not reach the model" with the CLI's own message, and `evolve`
+  pauses (state saved, `--resume`) when half a generation's requests do not reach the model.
+- Next: C2 (bash scripts/headless/c2.sh); red team and first hunch round via
   bash scripts/headless/run.sh scripts/headless/redteam.txt redteam; then Gate 2 with Peter (budget).
+  All three use the subscription — wait until the usage limit has reset.
 
 ## Gate 2 (PLAN §10)
 - [ ] `sforge evolve` runs ≥ 200 candidates unattended and resumes after an interruption — running:

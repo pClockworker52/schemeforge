@@ -73,6 +73,14 @@ def test_claude_cli_backend_parses_structured_output(tmp_path) -> None:
     assert "--json-schema" in b.command() and "--model" in b.command()
     c = b.complete("prompt")
     assert c.data["code"].startswith("def phi") and c.cost_usd == 0.0123 and c.input_tokens == 100
+    # C1 finding: at the usage limit the CLI returns a result with zero API time and no structured output
+    limited = tmp_path / "limited-claude"
+    lim = [{"type": "result", "subtype": "success", "duration_api_ms": 0, "is_error": True,
+            "result": "usage limit reached", "usage": {}}]
+    limited.write_text(f"#!/bin/sh\ncat > /dev/null\nprintf '%s\\n' '{json.dumps(lim)}'\n")
+    limited.chmod(limited.stat().st_mode | stat.S_IEXEC)
+    c = backends.ClaudeCLI(executable=str(limited)).complete("p")
+    assert c.data is None and c.unreached and "usage limit reached" in c.error
     broken = tmp_path / "broken-claude"
     broken.write_text("#!/bin/sh\necho 'not json'\nexit 1\n")
     broken.chmod(broken.stat().st_mode | stat.S_IEXEC)
