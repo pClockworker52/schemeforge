@@ -117,3 +117,168 @@
     broke the Newton Jacobian, runs r-20261021-044806-2b08 etc.): every g converges (g=1.5 r-20261021-045245-da8a:
     12 orders, Newton 54) but the sharpest, g=1.5, has contact 6.438 > 6.4 (pre-registered bound), narrowly. Island
     child c-5d9d00d656 promo r-20261021-050743-741e: NF1 explicit 0.95, implicit 1.00, but RF1 contact 7.87.'
+- id: H-0005
+  arena: euler1d
+  slot: limiter_stateful
+  lens: steady-convergence
+  statement: Exponential relaxation of the centred limiter factor in pseudo-time (psi_used = s + w (psi(r) - s),
+    s_new = psi_used, phi = psi_used (1 + r) / 2) damps limiter chatter and lets a sharp limiter converge explicitly,
+    while a moderate w keeps moving discontinuities sharp.
+  mechanism: 'The explicit limit cycle is a feedback loop: the limiter value at the cells next to a steady shock
+    switches as the shock profile moves by a fraction of a cell, which moves the profile back. A first-order low-pass
+    filter on the limiter factor with time constant 1/w breaks the loop for oscillations faster than 1/w steps,
+    but follows slow changes. The centred form avoids the downwind instability seen when phi itself is frozen (judge
+    v1.2 zoo).'
+  predicted_effect:
+  - metric: N5.converged_expl
+    direction: up
+    size: '1 for some w in {0.03, 0.1, 0.3} (base: 2/3)'
+  - metric: R1.contact_width
+    direction: same
+    size: within 0.5 cells of the base limiter
+  kill_criterion: Refuted if no w in {0.03, 0.1, 0.3} gives N5.converged_expl = 1 and N6.converged_expl = 1 with
+    R1.contact_width at most 0.5 cells above the stateless base (tanh-cap limiter of c-44f8015f87) on dev.
+  known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+  - residual smoothing / relaxation in pseudo-time
+  author: orchestrator/steady-convergence
+  status: open
+  verdict_note: ''
+- id: H-0006
+  arena: euler1d
+  slot: limiter_stateful
+  lens: contrarian
+  statement: 'A one-way ratchet on the centred limiter factor (after K0 steps the factor may only decrease: psi_used
+    = min(psi(r), s)) converges explicitly with less loss of sharpness than freezing, because only chattering cells
+    are pushed to their most dissipative value.'
+  mechanism: Freezing fixes the factor everywhere at an arbitrary phase of the limit cycle. The ratchet keeps converged
+    cells at their own value (psi(r) settles, so min changes nothing) and caps the chattering ones at the lowest
+    value they visit, which is the dissipative end of the cycle. Contrarian to freezing's "fix it as it is".
+  predicted_effect:
+  - metric: N5.converged_expl
+    direction: up
+    size: '1'
+  - metric: N1.converged_expl
+    direction: up
+    size: '1'
+  - metric: R1.contact_width
+    direction: same
+    size: unchanged (K0 is longer than the unsteady runs)
+  kill_criterion: Refuted if for K0 in {500, 1000} the ratchet on the tanh-cap base converges explicitly on fewer
+    N5/N6 back pressures than the centred freeze at K = 1000 on the same base, on dev.
+  known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+  author: orchestrator/contrarian
+  status: open
+  verdict_note: ''
+- id: H-0007
+  arena: euler1d
+  slot: limiter_stateful
+  lens: practitioner
+  statement: Freezing each limiter factor locally once it has settled (|psi(r) - psi_prev| < tol for one step) lets
+    Newton converge with a sharp limiter (superbee, MC) within 300 steps, without freezing moving discontinuities
+    in unsteady runs.
+  mechanism: Newton fails with sharp limiters because the residual is non-smooth where cells switch limiter branches.
+    Most cells settle within a few Newton steps; freezing them makes the residual smooth there, and the remaining
+    cells are few. A moving shock or contact changes psi every step in its cells, so they are never frozen while
+    it moves. The state stores psi_prev while live and -(1 + psi) once frozen.
+  predicted_effect:
+  - metric: N1.converged_impl
+    direction: up
+    size: 0 -> 1 for superbee or MC
+  - metric: N1.newton_iters
+    direction: down
+    size: 300 -> < 150
+  - metric: R1.contact_width
+    direction: same
+    size: within 0.5 cells of the base
+  kill_criterion: Refuted if for tol in {1e-3, 1e-2} neither superbee nor MC converges with Newton on N1 and on
+    all N5 back pressures, or if R1.contact_width rises by more than 1 cell.
+  known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+  author: orchestrator/practitioner
+  status: open
+  verdict_note: ''
+- id: H-0008
+  arena: euler1d
+  slot: limiter_stateful
+  lens: approximation theory
+  statement: Hysteresis with a dead band (the stored centred factor changes only when the live factor leaves a band
+    of width d around it) removes small-amplitude limiter chatter and lets a sharp limiter converge explicitly,
+    while large changes (a passing shock) go through immediately.
+  mechanism: 'A dead band turns the limiter into a relay with hysteresis: perturbations smaller than d do not change
+    the operator, so the pseudo-time iteration near steady state sees a fixed (linear, stable in centred form) scheme
+    and can converge; a moving discontinuity changes psi by O(1) and is tracked at once. Unlike relaxation (lag)
+    and freezing (a time switch), it has no time scale.'
+  predicted_effect:
+  - metric: N5.converged_expl
+    direction: up
+    size: 1 for some d in {0.02, 0.1}
+  - metric: R1.contact_width
+    direction: same
+    size: within 0.3 cells of the base
+  kill_criterion: Refuted if no d in {0.02, 0.1, 0.3} gives N5.converged_expl = 1 and N6.converged_expl = 1 with
+    the tanh-cap base, or if the run fails (non-physical state) on any dev case for every d.
+  known_relatives:
+  - hysteresis in limiter switching; relay systems
+  - limiter freezing (Venkatakrishnan 1995)
+  author: orchestrator/approximation theory
+  status: open
+  verdict_note: ''
+- id: H-0009
+  arena: euler1d
+  slot: limiter_stateful
+  lens: transfer
+  statement: Round 1's sharpest Newton-robust limiter (c-44f8015f87, tanh-cap) combined with centred freezing after
+    K steps converges explicitly on the nozzles (the one Target A criterion it missed besides the widths) without
+    losing its Newton convergence and roughness.
+  mechanism: c-44f8015f87 failed Target A on NF1 explicit convergence (0.60) while passing Newton (1.00) and roughness.
+    Newton takes fewer than 300 steps, so freezing at K >= 500 leaves the implicit results and the unsteady cases
+    untouched and acts only on the explicit iteration, where the zoo shows centred freezing converges (superbee_frozen,
+    van_leer_frozen on N1 and N5).
+  predicted_effect:
+  - metric: N5.converged_expl
+    direction: up
+    size: 2/3 -> 1
+  - metric: N1.newton_iters
+    direction: same
+    size: unchanged
+  - metric: R1.contact_width
+    direction: same
+    size: unchanged
+  kill_criterion: Refuted if for K in {500, 1000, 2000} N5 or N6 explicit convergence stays below 1 on dev, or the
+    promo NF1 explicit share of the best K is below 0.95.
+  known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+  - c-44f8015f87 (round 1)
+  author: orchestrator/transfer
+  status: open
+  verdict_note: ''
+- id: H-0010
+  arena: euler1d
+  slot: limiter_stateful
+  lens: structure preservation
+  statement: Relaxing the limiter towards superbee's value in pseudo-time but clipping it to Sweby's TVD region
+    at every step (phi_used = clip(s + w (phi_sb(r) - s), 0, min(2r, 2))) keeps the unsteady runs TVD and oscillation-free,
+    unlike unclipped relaxation, and still breaks the explicit limit cycle.
+  mechanism: Relaxation lags behind a moving discontinuity, so the lagged phi can leave the TVD region (overshoot).
+    Clipping to max(0, min(2r, 2)) restores the TVD bound pointwise at every step, while the filtered value inside
+    the region still damps chatter at a steady shock. The state stores the clipped phi.
+  predicted_effect:
+  - metric: R1.overshoot
+    direction: same
+    size: no worse than superbee
+  - metric: R2.tv_increase
+    direction: same
+    size: <= superbee
+  - metric: N5.converged_expl
+    direction: up
+    size: '> superbee''s 1/3'
+  kill_criterion: Refuted if for w in {0.05, 0.2} N5.converged_expl is not above superbee's (1/3) on dev, or R1.overshoot
+    exceeds superbee's by more than 50 %.
+  known_relatives:
+  - superbee (Roe 1985), Sweby's TVD region (1984)
+  - limiter freezing (Venkatakrishnan 1995)
+  author: orchestrator/structure preservation
+  status: open
+  verdict_note: ''

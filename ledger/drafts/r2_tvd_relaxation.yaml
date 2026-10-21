@@ -1,0 +1,22 @@
+arena: euler1d
+slot: limiter_stateful
+lens: structure preservation
+statement: >-
+  Relaxing the limiter towards superbee's value in pseudo-time but clipping it to Sweby's TVD region at every step
+  (phi_used = clip(s + w (phi_sb(r) - s), 0, min(2r, 2))) keeps the unsteady runs TVD and oscillation-free, unlike
+  unclipped relaxation, and still breaks the explicit limit cycle.
+mechanism: >-
+  Relaxation lags behind a moving discontinuity, so the lagged phi can leave the TVD region (overshoot). Clipping
+  to max(0, min(2r, 2)) restores the TVD bound pointwise at every step, while the filtered value inside the
+  region still damps chatter at a steady shock. The state stores the clipped phi.
+predicted_effect:
+  - {metric: R1.overshoot, direction: same, size: "no worse than superbee"}
+  - {metric: R2.tv_increase, direction: same, size: "<= superbee"}
+  - {metric: N5.converged_expl, direction: up, size: "> superbee's 1/3"}
+kill_criterion: >-
+  Refuted if for w in {0.05, 0.2} N5.converged_expl is not above superbee's (1/3) on dev, or R1.overshoot exceeds
+  superbee's by more than 50 %.
+known_relatives:
+  - superbee (Roe 1985), Sweby's TVD region (1984)
+  - limiter freezing (Venkatakrishnan 1995)
+author: orchestrator/structure preservation

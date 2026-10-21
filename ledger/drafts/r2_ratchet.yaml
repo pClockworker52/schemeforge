@@ -1,0 +1,21 @@
+arena: euler1d
+slot: limiter_stateful
+lens: contrarian
+statement: >-
+  A one-way ratchet on the centred limiter factor (after K0 steps the factor may only decrease: psi_used =
+  min(psi(r), s)) converges explicitly with less loss of sharpness than freezing, because only chattering cells
+  are pushed to their most dissipative value.
+mechanism: >-
+  Freezing fixes the factor everywhere at an arbitrary phase of the limit cycle. The ratchet keeps converged cells
+  at their own value (psi(r) settles, so min changes nothing) and caps the chattering ones at the lowest value
+  they visit, which is the dissipative end of the cycle. Contrarian to freezing's "fix it as it is".
+predicted_effect:
+  - {metric: N5.converged_expl, direction: up, size: "1"}
+  - {metric: N1.converged_expl, direction: up, size: "1"}
+  - {metric: R1.contact_width, direction: same, size: "unchanged (K0 is longer than the unsteady runs)"}
+kill_criterion: >-
+  Refuted if for K0 in {500, 1000} the ratchet on the tanh-cap base converges explicitly on fewer N5/N6 back
+  pressures than the centred freeze at K = 1000 on the same base, on dev.
+known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+author: orchestrator/contrarian

@@ -1,0 +1,22 @@
+arena: euler1d
+slot: limiter_stateful
+lens: practitioner
+statement: >-
+  Freezing each limiter factor locally once it has settled (|psi(r) - psi_prev| < tol for one step) lets Newton
+  converge with a sharp limiter (superbee, MC) within 300 steps, without freezing moving discontinuities in
+  unsteady runs.
+mechanism: >-
+  Newton fails with sharp limiters because the residual is non-smooth where cells switch limiter branches. Most
+  cells settle within a few Newton steps; freezing them makes the residual smooth there, and the remaining cells
+  are few. A moving shock or contact changes psi every step in its cells, so they are never frozen while it moves.
+  The state stores psi_prev while live and -(1 + psi) once frozen.
+predicted_effect:
+  - {metric: N1.converged_impl, direction: up, size: "0 -> 1 for superbee or MC"}
+  - {metric: N1.newton_iters, direction: down, size: "300 -> < 150"}
+  - {metric: R1.contact_width, direction: same, size: "within 0.5 cells of the base"}
+kill_criterion: >-
+  Refuted if for tol in {1e-3, 1e-2} neither superbee nor MC converges with Newton on N1 and on all N5 back
+  pressures, or if R1.contact_width rises by more than 1 cell.
+known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+author: orchestrator/practitioner

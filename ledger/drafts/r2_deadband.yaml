@@ -1,0 +1,22 @@
+arena: euler1d
+slot: limiter_stateful
+lens: approximation theory
+statement: >-
+  Hysteresis with a dead band (the stored centred factor changes only when the live factor leaves a band of width
+  d around it) removes small-amplitude limiter chatter and lets a sharp limiter converge explicitly, while large
+  changes (a passing shock) go through immediately.
+mechanism: >-
+  A dead band turns the limiter into a relay with hysteresis: perturbations smaller than d do not change the
+  operator, so the pseudo-time iteration near steady state sees a fixed (linear, stable in centred form) scheme
+  and can converge; a moving discontinuity changes psi by O(1) and is tracked at once. Unlike relaxation (lag)
+  and freezing (a time switch), it has no time scale.
+predicted_effect:
+  - {metric: N5.converged_expl, direction: up, size: "1 for some d in {0.02, 0.1}"}
+  - {metric: R1.contact_width, direction: same, size: "within 0.3 cells of the base"}
+kill_criterion: >-
+  Refuted if no d in {0.02, 0.1, 0.3} gives N5.converged_expl = 1 and N6.converged_expl = 1 with the tanh-cap base,
+  or if the run fails (non-physical state) on any dev case for every d.
+known_relatives:
+  - hysteresis in limiter switching; relay systems
+  - limiter freezing (Venkatakrishnan 1995)
+author: orchestrator/approximation theory

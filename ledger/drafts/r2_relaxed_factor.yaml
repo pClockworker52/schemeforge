@@ -1,0 +1,22 @@
+arena: euler1d
+slot: limiter_stateful
+lens: steady-convergence
+statement: >-
+  Exponential relaxation of the centred limiter factor in pseudo-time (psi_used = s + w (psi(r) - s), s_new =
+  psi_used, phi = psi_used (1 + r) / 2) damps limiter chatter and lets a sharp limiter converge explicitly, while
+  a moderate w keeps moving discontinuities sharp.
+mechanism: >-
+  The explicit limit cycle is a feedback loop: the limiter value at the cells next to a steady shock switches as the
+  shock profile moves by a fraction of a cell, which moves the profile back. A first-order low-pass filter on the
+  limiter factor with time constant 1/w breaks the loop for oscillations faster than 1/w steps, but follows slow
+  changes. The centred form avoids the downwind instability seen when phi itself is frozen (judge v1.2 zoo).
+predicted_effect:
+  - {metric: N5.converged_expl, direction: up, size: "1 for some w in {0.03, 0.1, 0.3} (base: 2/3)"}
+  - {metric: R1.contact_width, direction: same, size: "within 0.5 cells of the base limiter"}
+kill_criterion: >-
+  Refuted if no w in {0.03, 0.1, 0.3} gives N5.converged_expl = 1 and N6.converged_expl = 1 with R1.contact_width
+  at most 0.5 cells above the stateless base (tanh-cap limiter of c-44f8015f87) on dev.
+known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+  - residual smoothing / relaxation in pseudo-time
+author: orchestrator/steady-convergence

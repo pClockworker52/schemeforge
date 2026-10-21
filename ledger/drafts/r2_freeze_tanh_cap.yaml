@@ -1,0 +1,23 @@
+arena: euler1d
+slot: limiter_stateful
+lens: transfer
+statement: >-
+  Round 1's sharpest Newton-robust limiter (c-44f8015f87, tanh-cap) combined with centred freezing after K steps
+  converges explicitly on the nozzles (the one Target A criterion it missed besides the widths) without losing its
+  Newton convergence and roughness.
+mechanism: >-
+  c-44f8015f87 failed Target A on NF1 explicit convergence (0.60) while passing Newton (1.00) and roughness. Newton
+  takes fewer than 300 steps, so freezing at K >= 500 leaves the implicit results and the unsteady cases untouched
+  and acts only on the explicit iteration, where the zoo shows centred freezing converges (superbee_frozen,
+  van_leer_frozen on N1 and N5).
+predicted_effect:
+  - {metric: N5.converged_expl, direction: up, size: "2/3 -> 1"}
+  - {metric: N1.newton_iters, direction: same, size: "unchanged"}
+  - {metric: R1.contact_width, direction: same, size: "unchanged"}
+kill_criterion: >-
+  Refuted if for K in {500, 1000, 2000} N5 or N6 explicit convergence stays below 1 on dev, or the promo NF1
+  explicit share of the best K is below 0.95.
+known_relatives:
+  - limiter freezing (Venkatakrishnan 1995)
+  - c-44f8015f87 (round 1)
+author: orchestrator/transfer
