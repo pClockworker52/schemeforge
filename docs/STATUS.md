@@ -49,11 +49,11 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   dev evaluations with "database is locked").
 
 ## Gate 2 (PLAN §10)
-- [ ] `sforge evolve` runs ≥ 200 candidates unattended and resumes after an interruption — running:
-      dummy backend, 2 islands × 13 generations × 8 children (208) in runs/e2e-dummy; killed in generation 2
-      and resumed successfully (scripts/e2e_evolve.py, scripts/calibration_report.py).
-- [ ] C1: fingerprints recognize ≥ 4 different zoo limiters, archive entries spread over the descriptor grid —
-      next: real LLM run, 3 islands × 4 generations × 8 children (96 calls) in runs/c1.
+- [x] `sforge evolve` runs ≥ 200 candidates unattended and resumes after an interruption — dummy backend,
+      208 children in runs/e2e-dummy; survived a kill, a SQLite lock crash and its stagnation stop, each resumed.
+- [x] C1: fingerprints recognize ≥ 4 different zoo limiters (5: MC, van Leer, Koren, van Albada, superbee) and
+      archive entries spread over the descriptor grid — after the 2026-10-21 re-binning: C1 14 cells, round-1
+      evolve 7 cells from two smooth seeds (were 6 for C1 on the old grid).
 - [x] Every red-team strategy caught and documented — docs/judge/redteam.md, judge v1.1 (attacks run by the
       orchestrator, not an independent cheater agent; a cheater run against v1.1 from WSL is still advisable).
 - [ ] Cost per 100 candidates measured and the Phase 3 budget agreed — from the C1 run; Peter agrees the budget.
