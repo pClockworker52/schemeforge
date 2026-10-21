@@ -18,7 +18,10 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   tokens: the requests never reached the model — the subscription usage limit ran out at that time. Fixed:
   the backend now reports such calls as "did not reach the model" with the CLI's own message, and `evolve`
   pauses (state saved, `--resume`) when half a generation's requests do not reach the model.
-- Next: C2 (bash scripts/headless/c2.sh); red team and first hunch round via
+- C2 started 2026-10-21 (usage limit had reset): runs/c2, log runs/c2.log. If it was interrupted, resume with
+  `uv run python scripts/e2e_evolve.py resume runs/c2 <run id from runs/c2/runs/evolve/>`; then
+  `uv run python scripts/calibration_report.py runs/c2` and record the result here.
+- Next: red team and first hunch round via
   bash scripts/headless/run.sh scripts/headless/redteam.txt redteam; then Gate 2 with Peter (budget).
   All three use the subscription — wait until the usage limit has reset.
 
