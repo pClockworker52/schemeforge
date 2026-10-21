@@ -1,5 +1,5 @@
 # STATUS
-Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.1 (tagged 2026-10-21)
+Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.2 (2026-10-21, c9f21da)  Plan: v1.2
 Last session: 2026-10-20 — Gate 1 passed; Phase 2 engine, MCP server and calibration runs
 
 ## Gate 1 — passed 2026-10-20
@@ -8,6 +8,8 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
 
 ## Latest results (2026-10-20, evening)
+- Reports 2026-10-21: docs/reports/2026-10-21-interim.html (the day's work, round 2 so far) and
+  docs/reports/2026-10-21-big-picture.html (what was built, what it found, whether to continue → plan v1.2).
 - Dummy engine run (runs/e2e-dummy): 208 children, all ok on dev; survived a kill, a SQLite lock crash (fixed:
   WAL + busy timeout) and its own stagnation stop, each resumed from state.json. → Gate 2 item 1 met.
 - C1 real backend (runs/c1, sonnet + haiku for wild): 96 calls, 90 ok, 1 rejected, 5 LLM errors (gen 3);
@@ -76,14 +78,18 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - `sforge` MCP server; proposer, breaker, hunch-generator and cheater use it instead of Bash.
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
-## Next (ordered; Phase 3, Peter's Gate 2 decisions in DECISIONS.md)
-1. Engine: stagnation stop on archive progress (no new cell, no better elite for N generations).
-2. Judge v1.2: dev N1 sweep (several back pressures / geometries) so explicit convergence is not one instance;
-   commit, tag, `sforge zoo eval` dev + promo, rescore.
-3. `limiter_stateful` slot (contract in docs/judge/euler1d_slots.md) and its zoo baseline (stateless limiters
-   wrapped, plus limiter freezing as the known relative), as part of the same or the next judge version.
-4. Round 2 on `limiter_stateful`, full PLAN §18 size (6 hunches, 3 islands × 20 gens × 8).
-5. Phase 3 kill criterion: 4 rounds or ~2,000 candidates without a Target A/B promotion (PLAN §11.4).
+## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
+State: judge euler1d-v1.2 is in use (dev nozzle sweeps N5/N6 and the `limiter_stateful` slot, c9f21da).
+Round 2 (`limiter_stateful`) is paused at generation 11 of 20 (e-20261021-123207-3146), and H-0005…H-0010 are
+still open in the ledger. The round-2 findings so far are in docs/reports/2026-10-21-interim.html.
+1. 3a: close round 2: re-evaluate the ~90 timed-out children alone, resume or stop the run, promo +
+   `sforge promote --target A` for the top 2–3, close H-0005…H-0010, write the round summary.
+2. 3b: swarm test from WSL: check that the sforge MCP server connects; cheater against v1.2; breaker against
+   c-a84758f0e8; the swarm criterion is fixed before round 3.
+3. 3c: register H-0011 and run the A1 + A7 feasibility sweep for φ(r) (~30 dev points, promo on 3).
+4. 3d: judge v1.3 (reconstruction constraints, stateful variant, zoo incl. THINC/BVD, descriptors), zoo eval,
+   red team, then round 3 on `reconstruction` with agent-written hunches.
+5. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
 - Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode

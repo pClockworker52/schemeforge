@@ -1,8 +1,10 @@
 # schemeforge — plan
 
-*Folder `schemeforge/`, Python package `schemeforge`, CLI `sforge`. Plan version 1.1, 2026-10-20. Owner: Peter.*
+*Folder `schemeforge/`, Python package `schemeforge`, CLI `sforge`. Plan version 1.2, 2026-10-21. Owner: Peter.*
 
 *Changes in 1.1 (2026-10-20):* mirror symmetry is a hard constraint for fluxes only; accepted cases and cached references live inside the hashed judge tree; the dead conservation constraint is gone; the dev N4 sweep is smaller; the Phase 1 zoo and slots are cut to what Gates 1–2 need; `grad_mismatch` moved to Phase 5; Phase 2 checks existing engines first, uses the archive alone for selection and has two backends; hunches have one source of truth; Phases 5, 8 and 9 are parked; one generic session prompt; less Claude Code product detail.
+
+*Changes in 1.2 (2026-10-21):* after Gate 2, round 1 and half of round 2 (docs/reports/2026-10-21-big-picture.html), Phase 3 follows a revised sequence (§11.5): close round 2; test the multi-agent swarm itself with a pre-registered criterion; check whether Target A is feasible for a φ(r) limiter at all; run round 3 on a hardened `reconstruction` slot (judge v1.3); a decision point after round 3 that comes before the §11.4 kill criterion. §9.4 notes that `reconstruction` needs locality and translation checks before a search.
 
 schemeforge is an AI swarm that proposes numerical scheme components: limiters, fluxes, reconstructions and third-medium contact energies. A deterministic judge scores every proposal against exact solutions. Breaker agents attack the leading candidates, and analyst agents explain them and check the literature. No result counts until the judge has scored it.
 
@@ -297,7 +299,7 @@ To read the ledger, use `sforge hunch list` and `sforge hunch show H`. The regis
 | 0 Setup | Repo, CLI skeleton, agents, sandbox validator | `sforge --help` works, tests green | 1 session |
 | 1 Arena 1 judge and zoo | Exact solutions, solvers, metrics, zoo baseline | Appendix H reproduced, audit agrees, problem-existence report written | 3–4 sessions |
 | 2 Engine, calibration, red team | Evolution loop, LLM backends, first hunch round | ≥ 200 candidates unattended, every cheat caught, cost known | 2–3 sessions |
-| 3 Production search, Arena 1 | Targets A and B | Promoted dossier with referee verdict, or a negative-result note | 3+ sessions plus runs |
+| 3 Production search, Arena 1 | Targets A and B, in the order of §11.5 (v1.2) | Promoted dossier with referee verdict, or a negative-result note; decision point after round 3 | 3+ sessions plus runs |
 | 4 2D and OpenFOAM | Does the winner survive in 2D? | Exact oblique shock, carbuncle test documented, OpenFOAM comparison | 2–3 sessions |
 | 6 Arena 2 judge and zoo | TMC judge and baseline | Reference table reproduced, zoo trade-off curve plotted | 3–4 sessions |
 | 7 Production search, Arena 2 | Targets D and E | As in Phase 3 | 3+ sessions plus runs |
@@ -409,7 +411,7 @@ A run counts as converged at a residual ≤ 1e-12. It is flagged as a limit cycl
 
 ### 9.4 Slot contracts
 
-Phase 1 implements `limiter` and `flux`. The other three contracts are fixed now but built only when a target or a seed hunch needs them (`operator` for Target B, `limiter_stateful` and `reconstruction` for seed hunches 2–6).
+Phase 1 implements `limiter` and `flux`. The other three contracts are fixed now but built only when a target or a seed hunch needs them (`operator` for Target B, `limiter_stateful` and `reconstruction` for seed hunches 2–6). A `reconstruction` candidate sees the whole array of cell values, which is the batch-visibility hole that judge v1.1 closed for limiters; before any search on this slot the judge needs locality, translation and constant-state checks (§11.5, step 3d).
 
 ```python
 # All arrays float64. Pure jax.numpy / jax.lax. No Python loops over cells.
@@ -639,6 +641,45 @@ Stop after 4 rounds or about 2,000 evaluated candidates without a promotion on T
 **Gate 3**
 - [ ] A promoted candidate with a complete dossier and referee verdict, **or** the negative-result note
 - [ ] A ledger verdict for every hunch that was tested
+
+### 11.5 Phase 3 revision (v1.2)
+
+*Why.* After Gate 2, round 1 and half of round 2 (docs/reports/2026-10-21-big-picture.html): the judge works; the swarm thesis is untested, because the hunch-generator, proposer, breaker and cheater agents never ran (the orchestrator did their jobs); and Target A may be out of reach for a φ(r) limiter. The best candidate so far, the round-2 ratchet c-a84758f0e8 (a variant of limiter freezing), passes the convergence criteria A3–A6 and fails the sharpness and overshoot criteria A1, A2, A7. Instead of repeating §11.3 until §11.4's limit, Phase 3 runs these steps in order. §11.1–11.4 still apply; step 3e is a checkpoint before the kill criterion.
+
+**3a. Close round 2** (1 session in WSL; about $5 to finish the run)
+1. Re-evaluate the ~90 children that timed out during evolve, one at a time by id, with nothing else running next to them.
+2. Resume `e-20261021-123207-3146` to generation 20, or let the stagnation stop end it.
+3. Promo and `sforge promote --target A` for the top 2–3 archive entries.
+4. Close H-0005…H-0010 with run ids (`sforge hunch close`) and write `docs/rounds/2026-10-21-euler1d-limiter_stateful.md`.
+
+*Done when* the ledger has no open round-2 hunch and the round summary is committed.
+
+**3b. Swarm test** (1–2 sessions; WSL with hooks and the `sforge` MCP server). This is the experiment that tests §1's thesis.
+1. Start the agents from a Claude Code session inside WSL, or with `scripts/headless/run.sh`, not from the Windows desktop app, where headless agents were blocked. First check that the `sforge` MCP server from `.mcp.json` connects.
+2. The cheater agent attacks judge v1.2, including the `limiter_stateful` slot (`scripts/headless/redteam.txt`). This replaces the orchestrator's own red team, which Gate 2 flagged as not independent.
+3. The breaker attacks c-a84758f0e8 with at most 10 cases. Cases go to quarantine and Peter reviews them.
+4. Round 3's hunches come from the hunch-generator and are implemented by proposers, as Appendix D describes. This happens inside step 3d; it is not a separate round.
+
+*Pre-registered swarm criterion* (fixed before 3d starts): the swarm adds value if (a) at least one agent-written hunch is not a parameter sweep of an earlier hunch, **and** (b) at least one island's engine elite is non-dominated against its seed on dev (the Target A objectives in `engine/objectives.py`) and does not get worse on promo. If (a) or (b) fails, record a negative result about the method in the ledger and the round summary, separate from the numerics result.
+
+**3c. Feasibility check: A1 and A7 for φ(r)** (half a session; no LLM cost)
+1. Register hunch H-0011 (lens: contrarian): "No φ(r) in Sweby's TVD region reaches an RF1 shock width ≤ 2.6 cells with an overshoot p90 ≤ 1.1 × van Leer's." Kill criterion: one φ that meets both on promo.
+2. Sweep a smooth two-parameter family that spans minmod to superbee, such as the slope at r = 0 and the cap height: about 30 points on dev with `sforge eval`. Plot R1 shock width against R1 and R6 overshoot together with the zoo, then run promo on the 3 points closest to the corner.
+3. If the hunch holds, Target A cannot be met in the `limiter` slot. Write that up as a result in `docs/results/` and treat it as the reason for 3d. If it fails, the corner candidate seeds a φ island in round 3.
+
+**3d. Round 3 on `reconstruction`** (judge v1.3 first, as its own commit)
+1. Judge v1.3:
+   - constraints for `reconstruction`: interface i may depend only on cells i−3…i+3 (the stencil the Newton Jacobian assumes); the result must be identical on a shifted or extended array; a constant state must be reproduced exactly;
+   - a stateful variant (`reconstruction_stateful`, or a rule that composes a reconstruction with a `limiter_stateful` state), so the ratchet can stay as the convergence fix;
+   - zoo for the slot: MUSCL with each zoo limiter, WENO5-Z, and a THINC/BVD scheme as the known relative of seed hunch 4;
+   - archive descriptors for the slot (`engine/archive.py`; `engine/objectives.py` already lists it).
+2. `sforge zoo eval` on dev and promo, an archive rescore, and a cheater-agent pass on the new slot.
+3. Round at the §18 size: 6 hunches from the hunch-generator, steered towards seed hunches 4 (compress contacts harder than shocks) and 3 (blend by entropy production); 3 islands × 20 generations × 8 children; breakers on the top 5. Budget about $25–32 at list price.
+
+**3e. Decision point after round 3** (a gate: Peter decides)
+- Review three things: a Target A promotion, the swarm criterion from 3b, and the finding from 3c.
+- With no promotion: write `docs/results/arena1-negative.md` (the zoo front, the 3c result, every hunch verdict), publish the judge and the zoo as a benchmark (§20), and move to Phase 6. Run rounds 4+ only if round 3 moved the front.
+- With a promotion: analyst, referee and Phase 4 as in §11.3 and §12.
 
 ---
 

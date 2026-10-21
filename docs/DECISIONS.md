@@ -114,3 +114,17 @@ binding constraint. (4) **Dev nozzles:** add an N1 sweep to dev (several back pr
 v1.2, so explicit convergence is not judged on one instance.
 *Consequences:* Gate 2 passed; Phase 3 starts with the stagnation change, judge v1.2 (dev N1 sweep, then
 `limiter_stateful`), zoo re-evaluation, then round 2.
+
+## 2026-10-21 — Phase 3 revision (Peter)
+*Context:* The big-picture report (docs/reports/2026-10-21-big-picture.html) after round 1 and half of round 2.
+The judge works. The swarm thesis is untested, because no subagent has run (the desktop session blocked them).
+The ratchet c-a84758f0e8 fixes nozzle convergence but not sharpness, and the memory mechanism cannot fix
+sharpness by design. Target A asks for Koren-level shock width with van Leer-level overshoot, which may be out
+of reach for any φ(r).
+*Decision:* Plan v1.2: Phase 3 follows PLAN §11.5. In order: close round 2 (3a); a swarm test run from WSL
+with a pre-registered criterion (3b); an A1 + A7 feasibility sweep for φ(r) (3c); round 3 on `reconstruction`
+after judge v1.3 (3d); a decision point after round 3 (3e).
+*Consequences:* Round 3 moves from `limiter` to `reconstruction`, which first needs judge v1.3 (locality,
+translation and constant-state checks, a stateful variant, a zoo with THINC/BVD), a zoo re-evaluation and a red-team pass.
+Agent runs happen from WSL only. The §11.4 kill criterion still applies; 3e can end Phase 3 earlier with the
+negative-result note.
