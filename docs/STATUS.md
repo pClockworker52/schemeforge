@@ -69,12 +69,20 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 4. Peter, in a WSL session: red team with the cheater agent; first hunch round (Appendix D).
 
 ## Blockers / questions for Peter
-- LLM budget: C1 at 96 calls is about $5 list price on the subscription. Full C1 (360 calls) and C2 need your OK.
+- LLM budget (proposal for Gate 2, not agreed): measured list price per 100 single-shot candidates is $4.34
+  (limiter, C1) and $6.43 (flux, C2), sonnet + haiku for wild; ~520–570 candidates/h. PLAN §18's example round
+  (~500 single-shot calls) is then ~$22–32 list and ~1 h of engine time, plus ~10 opus agent sessions not yet
+  measured (the red-team run will give the first number). On the subscription, the 2026-10-20 limit ran out
+  after C1 (96 calls) plus that day's other work, so a full round likely spans two or more usage windows; the
+  engine already pauses and resumes when requests stop reaching the model. Proposal: default mix as in C1/C2;
+  first Phase 3 round at half the example size (3 hunches, 2 islands × 10 gens × 8 ≈ 160 calls ≈ $10 list), then
+  set the per-round budget from its measured agent-session cost.
+- Selection objectives (open): with 7 objectives, 40 of C2's 48 children are non-dominated, so the "no new
+  non-dominated candidate for 8 generations" stop never fires. Options: stop on archive progress (new cell or
+  better elite) instead, or select on 2–3 target objectives. Not changed — it alters PLAN §5.9 behaviour.
 - Red team and the first hunch round need subagents with hooks, i.e. a Claude Code session inside WSL.
   2026-10-21: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
   classifier ("Create Unsafe Agents"). Peter: run it yourself in WSL, or allow it for this session.
-- Observation for Phase 3: with 7 objectives almost every distinct candidate is Pareto-optimal, so the
-  "8 generations without a new non-dominated candidate" stop rarely fires; consider fewer selection objectives.
 
 ## Notes
 - Run everything in WSL; the venv lives at ~/.venvs/schemeforge behind the `.venv` symlink (DECISIONS.md).
