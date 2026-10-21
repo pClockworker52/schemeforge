@@ -100,3 +100,17 @@ without Peter (session goal "continue without my help"); search policy only, jud
 *Consequences:* Re-binning the existing children: C1 6 → 14 cells, C2 3 → 7. Old run states keep their old cell
 keys; do not resume a pre-change run, start a new one. The 7-objective selection issue (STATUS) is separate and
 still open.
+
+## 2026-10-21 — Gate 2 decisions (Peter)
+*Context:* Phase 2 work items done (STATUS, Gate 2). Measured list price per 100 single-shot candidates: $4.34
+(limiter, C1), $6.43 (flux, C2), sonnet with haiku for the wild operator, ~520–570 candidates/h.
+*Decision:* (1) **Budget:** Phase 3 rounds at the full PLAN §18 example size — 6 hunches × 8 proposer evaluations
+plus 3 islands × 20 generations × 8 children (~500 single-shot calls, ~$22–32 list) plus ~10 agent sessions; on
+the subscription a round may span several usage windows (the engine pauses and resumes). Default model mix as in
+C1/C2. (2) **Stagnation:** `evolve` stops on archive progress — no new archive cell and no better elite for N
+generations — instead of "no new non-dominated candidate"; selection objectives unchanged. (3) **Round 2:** the
+`limiter_stateful` slot (seed hunch 2, pseudo-time hysteresis), since explicit limit cycles look like the
+binding constraint. (4) **Dev nozzles:** add an N1 sweep to dev (several back pressures / geometries), judge
+v1.2, so explicit convergence is not judged on one instance.
+*Consequences:* Gate 2 passed; Phase 3 starts with the stagnation change, judge v1.2 (dev N1 sweep, then
+`limiter_stateful`), zoo re-evaluation, then round 2.

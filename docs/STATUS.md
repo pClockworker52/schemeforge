@@ -1,5 +1,5 @@
 # STATUS
-Phase: 2 — Engine, calibration, red team (in progress)      Judge version: euler1d-v1.1 (tagged 2026-10-21)
+Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.1 (tagged 2026-10-21)
 Last session: 2026-10-20 — Gate 1 passed; Phase 2 engine, MCP server and calibration runs
 
 ## Gate 1 — passed 2026-10-20
@@ -56,7 +56,10 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
       evolve 7 cells from two smooth seeds (were 6 for C1 on the old grid).
 - [x] Every red-team strategy caught and documented — docs/judge/redteam.md, judge v1.1 (attacks run by the
       orchestrator, not an independent cheater agent; a cheater run against v1.1 from WSL is still advisable).
-- [ ] Cost per 100 candidates measured and the Phase 3 budget agreed — from the C1 run; Peter agrees the budget.
+- [x] Cost per 100 candidates measured and the Phase 3 budget agreed — Peter 2026-10-21: full PLAN §18 round
+      size (DECISIONS.md "Gate 2 decisions").
+
+**Gate 2 passed 2026-10-21** (Peter's decisions on budget, stagnation stop, round 2 and dev nozzles: DECISIONS.md).
 - [x] Proposer, breaker and hunch-generator run without Bash, through the `sforge` MCP server (.mcp.json).
 - [x] First hunch round with ledger verdicts and a docs/rounds/ summary — 2026-10-21,
       docs/rounds/2026-10-21-euler1d-limiter.md: H-0001, H-0002, H-0004 refuted, H-0003 inconclusive; evolve
@@ -73,32 +76,20 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - `sforge` MCP server; proposer, breaker, hunch-generator and cheater use it instead of Bash.
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
-## Next (ordered)
-1. Finish the dummy 208-candidate run; record it for Gate 2.
-2. C1 with the real backend (96 calls), calibration report, cost per 100 candidates.
-3. ~~C2 (flux slot)~~ done 2026-10-21 (see Latest results); descriptor grids re-binned the same day.
-4. ~~Red team~~ and ~~first hunch round~~ done (orchestrator, 2026-10-21).
-5. **Gate 2 with Peter** — all work items are done; open decisions under "Blockers / questions".
+## Next (ordered; Phase 3, Peter's Gate 2 decisions in DECISIONS.md)
+1. Engine: stagnation stop on archive progress (no new cell, no better elite for N generations).
+2. Judge v1.2: dev N1 sweep (several back pressures / geometries) so explicit convergence is not one instance;
+   commit, tag, `sforge zoo eval` dev + promo, rescore.
+3. `limiter_stateful` slot (contract in docs/judge/euler1d_slots.md) and its zoo baseline (stateless limiters
+   wrapped, plus limiter freezing as the known relative), as part of the same or the next judge version.
+4. Round 2 on `limiter_stateful`, full PLAN §18 size (6 hunches, 3 islands × 20 gens × 8).
+5. Phase 3 kill criterion: 4 rounds or ~2,000 candidates without a Target A/B promotion (PLAN §11.4).
 
 ## Blockers / questions for Peter
-- LLM budget (proposal for Gate 2, not agreed): measured list price per 100 single-shot candidates is $4.34
-  (limiter, C1) and $6.43 (flux, C2), sonnet + haiku for wild; ~520–570 candidates/h. PLAN §18's example round
-  (~500 single-shot calls) is then ~$22–32 list and ~1 h of engine time, plus ~10 opus agent sessions not yet
-  measured (the red-team run will give the first number). On the subscription, the 2026-10-20 limit ran out
-  after C1 (96 calls) plus that day's other work, so a full round likely spans two or more usage windows; the
-  engine already pauses and resumes when requests stop reaching the model. Proposal: default mix as in C1/C2;
-  first Phase 3 round at half the example size (3 hunches, 2 islands × 10 gens × 8 ≈ 160 calls ≈ $10 list), then
-  set the per-round budget from its measured agent-session cost.
-- Selection objectives (open): with 7 objectives, 40 of C2's 48 children are non-dominated, so the "no new
-  non-dominated candidate for 8 generations" stop never fires. Options: stop on archive progress (new cell or
-  better elite) instead, or select on 2–3 target objectives. Not changed — it alters PLAN §5.9 behaviour.
 - Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
   classifier ("Create Unsafe Agents"), and the desktop session has no sforge MCP tools. The red team and round 1
-  were therefore run by the orchestrator itself. Recommended before Phase 3: one cheater-agent run against v1.1
-  from WSL (independent attacker), and proposer/breaker agents for round 2.
-- Round 1 questions (docs/rounds/2026-10-21-euler1d-limiter.md): continue H-0003's tanh-cap family or move to
-  `limiter_stateful`; add more nozzle instances to dev (judge v1.2), since one N1 instance overstated explicit
-  convergence.
+  were therefore run by the orchestrator itself. Recommended: one cheater-agent run against v1.1 from WSL
+  (independent attacker), and proposer/breaker agents for round 2 from a WSL session.
 
 ## Notes
 - Run everything in WSL; the venv lives at ~/.venvs/schemeforge behind the `.venv` symlink (DECISIONS.md).
