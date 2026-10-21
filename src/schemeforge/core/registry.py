@@ -92,7 +92,9 @@ def connect(path: Path | str = DEFAULT_PATH) -> sqlite3.Connection:
     conn = sqlite3.connect(path, timeout=BUSY_TIMEOUT)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
-    if file_db:
+    # setting the journal mode needs a lock even when it is already WAL (zoo eval with 12 parallel members hit
+    # "database is locked" here), so set it only once per file
+    if file_db and conn.execute("PRAGMA journal_mode").fetchone()[0].lower() != "wal":
         conn.execute("PRAGMA journal_mode = WAL")
     init_db(conn)
     return conn

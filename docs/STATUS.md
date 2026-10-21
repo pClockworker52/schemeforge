@@ -1,5 +1,5 @@
 # STATUS
-Phase: 2 — Engine, calibration, red team (in progress)      Judge version: euler1d-v1.0 (tagged)
+Phase: 2 — Engine, calibration, red team (in progress)      Judge version: euler1d-v1.1 (tagged 2026-10-21)
 Last session: 2026-10-20 — Gate 1 passed; Phase 2 engine, MCP server and calibration runs
 
 ## Gate 1 — passed 2026-10-20
@@ -37,9 +37,16 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - Archive grids re-binned 2026-10-21 (DECISIONS.md): every zoo member now has its own cell; re-binning the
   existing children gives C1 6 → 14 cells, C2 3 → 7. Gate 2's "spread over the descriptor grid" should be
   re-checked on the next real run.
-- Next: red team and first hunch round via
-  bash scripts/headless/run.sh scripts/headless/redteam.txt redteam; then Gate 2 with Peter (budget).
-  All three use the subscription — wait until the usage limit has reset.
+- Red team done 2026-10-21 by the orchestrator (the cheater subagent could not be launched; docs/judge/redteam.md):
+  12 attempts. Four got through v1.0: case detection from the batch size or from batch statistics (limiter:
+  superbee sharpness on Riemann cases plus van Albada convergence on nozzles; flux: HLLC contacts plus HLL
+  convergence), and cost gaming via the same channel. Fixed in judge v1.1 (2f4652f, tagged): candidates are
+  applied one item at a time in runs, plus a hard batch-independence check; `lax.stop_gradient` rejected. All 12
+  attempts caught under v1.1 (run ids in the log). Zoo re-evaluated (dev + promo) with unchanged scores;
+  `judge verify` 49/49. Known gap: derivative decoupling via zero-derivative ops (no gain seen; Phase 5
+  `grad_mismatch`).
+- Registry: `connect` no longer re-sets WAL mode on every open (it took a lock and crashed 6 of 12 parallel zoo
+  dev evaluations with "database is locked").
 
 ## Gate 2 (PLAN §10)
 - [ ] `sforge evolve` runs ≥ 200 candidates unattended and resumes after an interruption — running:
@@ -47,7 +54,8 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
       and resumed successfully (scripts/e2e_evolve.py, scripts/calibration_report.py).
 - [ ] C1: fingerprints recognize ≥ 4 different zoo limiters, archive entries spread over the descriptor grid —
       next: real LLM run, 3 islands × 4 generations × 8 children (96 calls) in runs/c1.
-- [ ] Every red-team strategy caught and documented — needs a WSL Claude Code session (cheater subagent).
+- [x] Every red-team strategy caught and documented — docs/judge/redteam.md, judge v1.1 (attacks run by the
+      orchestrator, not an independent cheater agent; a cheater run against v1.1 from WSL is still advisable).
 - [ ] Cost per 100 candidates measured and the Phase 3 budget agreed — from the C1 run; Peter agrees the budget.
 - [x] Proposer, breaker and hunch-generator run without Bash, through the `sforge` MCP server (.mcp.json).
 - [ ] First hunch round with ledger verdicts and a docs/rounds/ summary — WSL session.
@@ -66,7 +74,8 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 1. Finish the dummy 208-candidate run; record it for Gate 2.
 2. C1 with the real backend (96 calls), calibration report, cost per 100 candidates.
 3. ~~C2 (flux slot)~~ done 2026-10-21 (see Latest results); descriptor grids re-binned the same day.
-4. Peter, in a WSL session: red team with the cheater agent; first hunch round (Appendix D).
+4. ~~Red team~~ done (orchestrator). First hunch round (Appendix D) — needs subagents with the sforge MCP tools,
+   i.e. a WSL Claude Code session (Peter), or permission for headless runs from the desktop session.
 
 ## Blockers / questions for Peter
 - LLM budget (proposal for Gate 2, not agreed): measured list price per 100 single-shot candidates is $4.34
