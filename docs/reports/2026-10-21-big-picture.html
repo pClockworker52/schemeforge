@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>schemeforge big picture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with a verdict box up front, diagrams and tables full column width. */
+:root{
+  --paper:#f6f7f9; --ink:#1a2330; --mute:#5d6878; --line:#d5dae2; --panel:#eceff4;
+  --accent:#2b5c8a; --ok:#2f8a4c; --warn:#b7791f; --bad:#b9412f;
+  --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);margin:0}
+main{max-width:860px;margin:0 auto;padding-block:28px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:650;line-height:1.25;text-wrap:balance}
+h1{font-size:2.1rem;margin:0 0 .2em}
+h2{font-size:1.45rem;margin:2.4em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+h3{font-size:1.1rem;margin:1.6em 0 .4em}
+p,li{max-width:68ch}
+.sub{color:var(--mute);margin:0 0 1.6em}
+code,.id{font-family:var(--mono);font-size:.88em}
+.verdict{background:var(--panel);border-left:4px solid var(--accent);padding:16px 20px;margin:1.4em 0}
+.verdict p{margin:.4em 0}
+.verdict strong{font-weight:600}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.scroll{overflow-x:auto;margin:1em 0}
+table{border-collapse:collapse;font-size:.92rem;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--mute);font-size:.8rem;letter-spacing:.03em}
+.pill{display:inline-block;padding:0 8px;border-radius:9px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.pill.ok{color:var(--ok);border:1px solid var(--ok)}
+.pill.warn{color:var(--warn);border:1px solid var(--warn)}
+.pill.bad{color:var(--bad);border:1px solid var(--bad)}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--ink);font-family:var(--body);font-size:13px}
+svg .m{fill:var(--mute)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:1em 0}
+.cols>div{min-width:0;border-top:3px solid var(--line);padding-top:8px}
+.cols>div.ok{border-color:var(--ok)}.cols>div.warn{border-color:var(--warn)}.cols>div.bad{border-color:var(--bad)}
+.cols h3{margin-top:.2em}
+ol.steps li{margin:.5em 0}
+.note{color:var(--mute);font-size:.9rem}
+</style>
+</head><body>
+
+<main>
+<p class="eyebrow">schemeforge · state on 2026-10-21, judge euler1d-v1.2</p>
+<h1>The big picture</h1>
+<p class="sub">What the project is, how the first 30 hours were spent, what came out, and whether to keep going.</p>
+
+<div class="verdict">
+<p class="eyebrow">Short answer</p>
+<p><strong>The judge works. The search has not yet been tested as designed. The current target may be the wrong place to look.</strong></p>
+<p>The scoring machinery (exact solutions, held-out cases, red team, promotion test) is solid and is already a useful result on its own. The AI-swarm part ran only in a reduced form: the main session wrote every hunch itself and the evolution engine mostly reproduced its seeds. The best candidate fixes nozzle convergence but not sharpness, and the fix is a variant of a known technique (limiter freezing).</p>
+<p><strong>Recommendation: continue, with a narrower question.</strong> Finish round 2, run the real multi-agent setup once, and move the sharpness search to the reconstruction slot. Decide after round 3 whether to write the negative-result note.</p>
+</div>
+
+<h2>1. The idea</h2>
+<p>Proof-search systems work because a proof checker like Lean is a cheap and strict judge: an AI can try many ideas and the wrong ones fail fast. schemeforge asks whether exact solutions of flow problems can play the same role for numerical methods. If the judge is fast, exact and hard to fool, an LLM can propose code for a scheme component (a slope limiter, a flux), the judge scores it, and an evolutionary loop keeps the good ones.</p>
+<p>The first arena is 1D compressible flow: shock tubes (Riemann problems) and the steady Laval nozzle with a normal shock. Both have exact solutions and run in milliseconds.</p>
+<p>The first target, <b>Target A</b>, is a known gap. Sharp limiters (superbee, MC, Koren) give thin shocks and contacts but stall in steady nozzle runs: the residual stops dropping and Newton does not converge. Smooth limiters (van Albada, minmod) converge but smear discontinuities by 1–6 extra cells. No standard limiter has both properties. Target A asks for one that does, measured on held-out cases with pre-registered thresholds.</p>
+
+<h2>2. How it works</h2>
+<p>Every idea passes through the same pipeline. The colour shows what actually ran as the plan describes and what the main session did by hand instead.</p>
+<div class="scroll">
+<svg viewBox="0 0 860 300" role="img" aria-label="Pipeline from hunch to promotion, with stages marked as run as designed or done by the main session">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--mute)"/></marker></defs>
+<g id="pipe"></g>
+<g transform="translate(20,270)">
+ <rect x="0" y="-11" width="14" height="14" rx="3" style="fill:var(--ok);fill-opacity:.18;stroke:var(--ok)"/><text x="22" y="0">ran as designed</text>
+ <rect x="170" y="-11" width="14" height="14" rx="3" style="fill:var(--warn);fill-opacity:.18;stroke:var(--warn)"/><text x="192" y="0">done by the main session instead of its own agent</text>
+ <rect x="560" y="-11" width="14" height="14" rx="3" style="fill:var(--line);fill-opacity:.5;stroke:var(--mute)"/><text x="582" y="0">not reached yet</text>
+</g>
+</svg>
+</div>
+<div class="scroll"><table>
+<tr><th>Stage</th><th>What it does</th></tr>
+<tr><td>Hunch</td><td>A written, falsifiable idea: mechanism, predicted metric change and a kill criterion, registered in the ledger before any test.</td></tr>
+<tr><td>Proposer / engine</td><td>An LLM writes the candidate as a pure Python function. The engine (<code>sforge evolve</code>) mutates and crosses candidates on "islands", one per hunch.</td></tr>
+<tr><td>Sandbox</td><td>Static checks: only <code>jax.numpy</code> and <code>math</code>, no I/O, no hidden state.</td></tr>
+<tr><td>Judge</td><td>Runs the candidate inside the project's own solvers. Smoke (seconds), dev (12 visible cases, ~26 s) and promo (65 held-out instances drawn from a secret seed; agents see only aggregates).</td></tr>
+<tr><td>Archive</td><td>Keeps the best candidate per "behaviour cell" (how compressive, how smooth) plus the Pareto set, and picks parents from them.</td></tr>
+<tr><td>Promotion</td><td>Target A thresholds plus paired bootstrap tests against the best standard limiter on held-out data.</td></tr>
+<tr><td>Breaker, analyst, referee</td><td>Agents that look for failure cases, explain a winner, check the literature and judge novelty.</td></tr>
+</table></div>
+
+<h2>3. What was built, and when</h2>
+<p>From the first commit (2026-10-20, 15:30) to the last push (2026-10-21, 20:27) is about 29 hours and 52 commits: ~5,400 lines of source and ~1,900 lines of tests. The plan estimated 6–9 sessions for phases 0–2.</p>
+<div class="scroll">
+<svg viewBox="0 0 860 150" role="img" aria-label="Timeline of phases and gates over two days">
+<g id="tline"></g>
+</svg>
+</div>
+<div class="scroll"><table>
+<tr><th>Component</th><th>Evidence that it works</th><th></th></tr>
+<tr><td>Exact Riemann and nozzle solutions</td><td>A blind audit re-implemented them from the written spec without seeing the code: 1,002 random cases agree to 6.5e-13. It found one real judge bug, now fixed.</td><td><span class="pill ok">strong</span></td></tr>
+<tr><td>Standard-limiter "zoo" baseline</td><td>8 known limiters scored on dev and held-out data. It confirms the Target A gap: no member is both sharp and convergent.</td><td><span class="pill ok">strong</span></td></tr>
+<tr><td>Cheat resistance</td><td>12 attacks. 4 got through judge v1.0 (a limiter could guess the test case from the batch size); v1.1 closed the hole and catches all 12. The attacks were run by the main session, not by the independent "cheater" agent, so this is weaker than planned.</td><td><span class="pill warn">good, not independent</span></td></tr>
+<tr><td>Held-out data</td><td>It caught real over-fitting: round 1's best converged on the single dev nozzle but on only 60 % of held-out nozzles.</td><td><span class="pill ok">strong</span></td></tr>
+<tr><td>Evolution engine</td><td>208 candidates unattended; survived a kill, a database crash and a usage-limit pause, and resumed each time. Rediscovered 5 known limiters and 2 known fluxes from scratch.</td><td><span class="pill ok">works</span></td></tr>
+<tr><td>Cost</td><td>$4–6 list price per 100 candidates, about 520–570 candidates per hour, on the subscription. 2026-10-21 alone: 335 LLM calls, $17.9 list.</td><td><span class="pill ok">cheap</span></td></tr>
+<tr><td>Multi-agent layer</td><td>Hunch-generator, proposer, breaker and cheater agents could not be started from the Windows desktop session (blocked as unsafe headless agents; no <code>sforge</code> tools there). The main session did their jobs.</td><td><span class="pill bad">not run</span></td></tr>
+<tr><td>Machine stability</td><td>WSL crashed once; running other evaluations next to <code>evolve</code> caused 45 false timeouts, and 90 more timeouts in round 2 are unexplained.</td><td><span class="pill warn">fragile</span></td></tr>
+</table></div>
+
+<h2>4. What the search found</h2>
+<h3>Round 1: stateless limiters φ(r), 4 hunches, 48 engine children</h3>
+<p>Three hunches refuted, one inconclusive. Smoothing the kinks of superbee or MC does not stop the stall. The best child, <span class="id">c-44f8015f87</span>, is a smooth limiter (2r below r = 1, capped by a tanh curve above). It converges with Newton everywhere and is sharper than van Leer, but converges explicitly on only 60 % of held-out nozzles. It sits between van Leer and Koren on the existing trade-off curve, not beyond it. Label: variant of the superbee/MC family.</p>
+<h3>Round 2: limiters with memory (paused at generation 11 of 20)</h3>
+<p>The new <code>limiter_stateful</code> slot lets a limiter keep one value per cell between pseudo-time steps. The useful finding came from a failure: freezing φ itself is unstable, while freezing the <i>centred</i> factor ψ = 2φ/(1+r) is stable. A one-way "ratchet" on ψ after 1,000 steps (<span class="id">c-a84758f0e8</span>) converges explicitly on <b>all 20</b> held-out nozzles. Label: variant of limiter freezing (Venkatakrishnan 1995).</p>
+<h3>Where that leaves Target A</h3>
+<div class="scroll"><table>
+<tr><th>#</th><th>Criterion</th><th>Threshold</th><th>Best candidate (ratchet)</th><th></th></tr>
+<tr><td>A1</td><td>Shock width, held-out Riemann, median</td><td>≤ 2.6 cells</td><td>2.99</td><td><span class="pill bad">fail</span></td></tr>
+<tr><td>A2</td><td>Contact width, median</td><td>≤ 6.5 cells</td><td>6.60</td><td><span class="pill bad">fail</span></td></tr>
+<tr><td>A3</td><td>Explicit convergence, held-out nozzles</td><td>≥ 95 %</td><td>100 % (20 of 20)</td><td><span class="pill ok">pass</span></td></tr>
+<tr><td>A4</td><td>Newton convergence, held-out nozzles</td><td>100 %</td><td>100 %</td><td><span class="pill ok">pass</span></td></tr>
+<tr><td>A5</td><td>Roughness of the wall force over a back-pressure sweep</td><td>≤ 0.002</td><td>pass</td><td><span class="pill ok">pass</span></td></tr>
+<tr><td>A6</td><td>Order of accuracy on smooth flow</td><td>≥ 1.9</td><td>pass</td><td><span class="pill ok">pass</span></td></tr>
+<tr><td>A7</td><td>Overshoot, p90</td><td>≤ 1.1 × van Leer</td><td>above</td><td><span class="pill bad">fail</span></td></tr>
+<tr><td>B1, B2, B5</td><td>Bootstrap tests against van Albada and MC</td><td>95 % interval below 0</td><td>pass</td><td><span class="pill ok">pass</span></td></tr>
+</table></div>
+<p>7 of 10 checks pass. The convergence half of the gap, the practically painful half, is closed for this limiter. Sharpness is not, and the memory mechanism cannot help there by design: it only acts after 1,000 pseudo-time steps, and unsteady runs are shorter. The remaining gap sits in the stateless base limiter, where round 1 already failed.</p>
+
+<h2>5. Does the approach make sense?</h2>
+<p>It helps to split the project's thesis into three separate claims. They have very different amounts of evidence.</p>
+<div class="cols">
+<div class="ok"><h3>A strict judge can be built cheaply</h3><p><b>Supported.</b> Audited exact solutions, held-out families, a red team that found real holes, a promotion test, all in about a day. The judge caught both cheating and dev-set over-fitting. This part would be worth publishing as a benchmark even if nothing else works.</p></div>
+<div class="warn"><h3>An LLM swarm searches better than a person would</h3><p><b>Not tested yet.</b> All 10 hunches were written by the main session; proposals were mostly parameter sweeps; engine children mostly landed back on their seeds. The one engine improvement came from a "wild" mutation, and the best idea of the project (ratchet on ψ) came from reasoning about a failed run. So far this is an LLM-assisted parameter study, which is useful but not the thesis.</p></div>
+<div class="bad"><h3>Target A has room for a new limiter</h3><p><b>Doubtful in this slot.</b> A φ(r) limiter is a one-variable function inside Sweby's TVD region, studied for 40 years. Target A also asks for Koren-level sharpness (A1) with van Leer-level overshoot (A7); on held-out data the sharp limiters overshoot 3–5 times more than van Leer (p90). That pair may be close to contradictory for any φ(r). This is a hypothesis worth one cheap check, not a result.</p></div>
+</div>
+<p>On practical value: limiter freezing is already common in production CFD codes (SU2, for example, has a setting for it), so a "variant of freezing" is an honest but modest outcome. A smooth, sharp limiter that converges with Newton and can be dropped into OpenFOAM would matter more. That is still the right goal, but sharpness probably has to come from a richer slot than φ(r).</p>
+
+<h2>6. What I would do next</h2>
+<ol class="steps">
+<li><b>Close round 2 properly (one session, cheap).</b> The repo still lists H-0005…H-0010 as open, and <code>docs/STATUS.md</code> "Next" predates round 2. The round-2 numbers currently exist only in the interim report and in the git-ignored <code>runs/</code> folder on your PC. Re-evaluate the 90 timed-out children alone, finish or stop the paused run, record verdicts, write <code>docs/rounds/…-limiter_stateful.md</code>.</li>
+<li><b>Run the real multi-agent setup once, from a WSL session.</b> This is the one experiment that tests the core thesis. Have the hunch-generator write round 3's hunches, the proposers implement them, a breaker attack the ratchet, and the cheater agent attack judge v1.2. Then compare: did the agents produce ideas or candidates the main session did not?</li>
+<li><b>Check whether A1 + A7 is feasible for φ(r) at all.</b> A short sweep over the Sweby region (or a small optimisation over a smooth φ family) against dev widths and overshoot. If no φ reaches both, say so; that is a real finding.</li>
+<li><b>Round 3 on the <code>reconstruction</code> slot</b>, keeping the ratchet as the convergence fix. Seed hunches 4 (compress contacts harder than shocks, THINC/BVD-type) and 3 (blend by entropy production) target sharpness directly.</li>
+<li><b>Decision point after round 3</b> (2.5 of 4 rounds, ~1,000 of 2,000 candidates). If nothing crosses the trade-off curve, write <code>docs/results/arena1-negative.md</code>, publish the judge and zoo as a benchmark, and move to Arena 2 (third-medium contact), where the plan expects the better odds.</li>
+</ol>
+<p class="note">Sources: docs/PLAN.md, docs/STATUS.md, docs/DECISIONS.md, docs/targets/A.md, docs/judge/euler1d_baseline.md, docs/judge/redteam.md, audit/euler1d/REPORT.md, docs/rounds/2026-10-21-euler1d-limiter.md, ledger/hunches.yaml, docs/reports/2026-10-21-interim.html, and git history. Round-2 figures are from the interim report; their run ids are on your machine, not in the repo.</p>
+</main>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;p.appendChild(e);return e}
+const C={ok:"var(--ok)",warn:"var(--warn)",no:"var(--mute)"};
+// pipeline: two rows
+const g=document.getElementById("pipe");
+const S=[["Hunch","10 written","warn"],["Proposer","sweeps by hand","warn"],["Engine","C1, C2, rounds 1–2","ok"],["Sandbox","static checks","ok"],
+["Judge","smoke · dev · promo","ok"],["Archive","MAP-Elites + Pareto","ok"],["Promotion","nothing promoted yet","ok"],["Breaker","promo used instead","warn"],["Analyst + referee","no winner yet","no"]];
+const pos=[[20,30],[210,30],[400,30],[590,30],[590,140],[400,140],[210,140],[20,140],[20,210]];
+S.forEach((s,i)=>{const[x,y]=pos[i],w=i==8?360:170,h=i==8?40:62,c=C[s[2]];
+ el(g,"rect",{x,y,width:w,height:h,rx:8,style:`fill:${c};fill-opacity:${s[2]=="no"?.08:.15};stroke:${c}`});
+ el(g,"text",{x:x+12,y:y+24,"font-weight":"600"},s[0]);el(g,"text",{x:x+(i==8?160:12),y:y+(i==8?24:46),class:"m"},s[1])});
+const A=[[190,61,210,61],[380,61,400,61],[570,61,590,61],[675,92,675,140],[590,171,570,171],[400,171,380,171],[210,171,190,171],[105,202,105,210]];
+A.forEach(a=>el(g,"line",{x1:a[0],y1:a[1],x2:a[2]-2,y2:a[3]-2,style:"stroke:var(--mute)","stroke-width":1.5,"marker-end":"url(#arr)"}));
+el(g,"path",{d:"M485,140 C485,110 485,110 485,94",style:"stroke:var(--mute);fill:none","stroke-dasharray":"4 3","stroke-width":1.5,"marker-end":"url(#arr)"});
+el(g,"text",{x:495,y:120,class:"m","font-size":"12"},"parents");
+// timeline over ~29 h
+const t=document.getElementById("tline"),L=30,W=800,X=h=>L+h/29*W;
+el(t,"line",{x1:L,y1:70,x2:L+W,y2:70,style:"stroke:var(--line)","stroke-width":2});
+const ph=[[0,0.5,"P0","setup"],[0.5,6.3,"Phase 1","judge, zoo, audit"],[6.3,22.3,"Phase 2","engine, calibration, red team, round 1"],[22.3,29,"Phase 3","judge v1.2, round 2"]];
+ph.forEach((p,i)=>{el(t,"rect",{x:X(p[0]),y:62,width:X(p[1])-X(p[0]),height:16,style:`fill:var(--accent);fill-opacity:${.25+.18*i}`});
+ if(i)el(t,"text",{x:(X(p[0])+X(p[1]))/2,y:100,"text-anchor":"middle","font-weight":"600"},p[2]);
+ if(i)el(t,"text",{x:(X(p[0])+X(p[1]))/2,y:118,"text-anchor":"middle",class:"m","font-size":"12"},p[3])});
+[[0,"Oct 20, 15:30"],[8.5,"midnight"],[29,"Oct 21, 20:30"]].forEach(d=>el(t,"text",{x:X(d[0]),y:140,"text-anchor":d[0]==0?"start":d[0]==29?"end":"middle",class:"m","font-size":"12"},d[1]));
+[[0.2,"Gate 0"],[6.2,"Gate 1"],[22.3,"Gate 2"]].forEach(d=>{el(t,"line",{x1:X(d[0]),y1:40,x2:X(d[0]),y2:62,style:"stroke:var(--ink)"});el(t,"text",{x:X(d[0]),y:34,"text-anchor":"middle","font-size":"12"},d[1])});
+})();
+</script>
+</body></html>

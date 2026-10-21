@@ -78,7 +78,7 @@ Freezing ψ fixes a multiple of the <i>centred</i> difference → stable. The be
 
 <h2>8. On track?</h2>
 <svg id="track" viewBox="0 0 960 120" role="img" aria-label="progress"></svg>
-<p><b>Yes, with a caveat.</b> Of Target A's seven criteria the best candidate (ratchet, c-a84758f0e8) now passes
+<p><b>Yes, with a caveat.</b> Of Target A's ten criteria (A1–A7 plus bootstrap tests B1, B2, B5) the best candidate (ratchet, c-a84758f0e8) now passes
 A3, A4, A5, A6 and the bootstrap tests B1, B2, B5; it fails A1/A2 (widths) and A7 (overshoot). Explicit and Newton
 convergence — the hard, "practically relevant" half of the gap — is solved for this limiter. What is left is a
 sharpness gap of ~0.4 cells (shock) and ~0.1 cells (contact) without more overshoot. Phase 3 budget: 1.5 of 4 rounds,
@@ -94,7 +94,7 @@ function el(p,t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e
 const tl=document.getElementById("tl");
 [["C2 flux calibration","48/48 ok, HLLC-level R5"],["grids re-binned","cells 6→14, 3→7"],["red team","4 holes → judge v1.1"],
  ["round 1","4 hunches, 1 inconclusive"],["Gate 2","budget, stagnation, v1.2"],["judge v1.2","N5/N6 + stateful slot"],["round 2","ratchet: 20/20 nozzles"]]
-.forEach((d,i)=>{const x=40+i*140;el(tl,"circle",{cx:x,cy:70,r:7,fill:i==4?"var(--b)":"var(--a)"});
+.forEach((d,i)=>{const x=90+i*130;el(tl,"circle",{cx:x,cy:70,r:7,fill:i==4?"var(--b)":"var(--a)"});
  el(tl,"text",{x:x,y:i%2?110:45,"text-anchor":"middle","font-weight":"600"},d[0]);el(tl,"text",{x:x,y:i%2?126:28,"text-anchor":"middle",fill:"var(--mute)"},d[1])});
 // cells
 const cg=document.getElementById("cells");for(let i=0;i<6;i++){el(cg,"rect",{x:i*62,y:15,width:52,height:40,class:"box"});el(cg,"text",{x:i*62+14,y:40},"φ(r"+"₁₂₃₄₅₆"[i]+")")}
@@ -110,12 +110,12 @@ el(s,"text",{x:L+W/2,y:T+H+34,"text-anchor":"middle"},"RF1 contact width, median
 el(s,"text",{x:16,y:T+H/2,transform:`rotate(-90 16 ${T+H/2})`,"text-anchor":"middle"},"NF1 explicit converged (share)");
 const zoo=[["superbee",4.58,.05,0],["MC",6.12,.45,0],["Koren",6.37,.55,0],["van Leer",7.12,.60,1],["Venkat.",7.58,.60,1],["van Albada",8.42,.95,1],["minmod",10.71,.90,1],["van Leer frozen",7.12,.85,1]];
 zoo.forEach(z=>{el(s,"circle",{cx:X(z[1]),cy:Y(z[2]),r:6,fill:"var(--zoo)"});if(z[3])el(s,"circle",{cx:X(z[1]),cy:Y(z[2]),r:10,fill:"none",stroke:"var(--zoo)"});
- el(s,"text",{x:X(z[1])+12,y:Y(z[2])+(z[0]=="Venkat."?14:4),fill:"var(--mute)"},z[0])});
+ const dy={"Venkat.":18,"van Leer":-12,"van Albada":-14,"van Leer frozen":18};el(s,"text",{x:X(z[1])+12,y:Y(z[2])+(dy[z[0]]??4),fill:"var(--mute)"},z[0])});
 const ours=[["round 1 best (tanh-cap)",6.60,.60,"var(--a)"],["round 1, H-0004 island",7.87,.95,"var(--d)"],["round 2: tanh-cap + ratchet",6.60,1.0,"var(--b)"]];
 el(s,"line",{x1:X(6.6),y1:Y(.6)-10,x2:X(6.6),y2:Y(1)+12,stroke:"var(--b)","stroke-width":2,"marker-end":"url(#ar)"});
 const m=el(el(s,"defs",{}),"marker",{id:"ar",viewBox:"0 0 10 10",refX:5,refY:5,markerWidth:6,markerHeight:6,orient:"auto"});el(m,"path",{d:"M0,0L10,5L0,10z",fill:"var(--b)"});
 ours.forEach((o,i)=>{el(s,"circle",{cx:X(o[1]),cy:Y(o[2]),r:7,fill:o[3]});el(s,"circle",{cx:X(o[1]),cy:Y(o[2]),r:11,fill:"none",stroke:o[3]});
- el(s,"text",{x:X(o[1])+14,y:Y(o[2])+(i==2?-8:4),fill:o[3],"font-weight":"600"},o[0])});})();
+ el(s,"text",{x:X(o[1])+(i==0?-14:14),y:Y(o[2])+[-12,22,-8][i],"text-anchor":i==0?"end":"start",fill:o[3],"font-weight":"600"},o[0])});})();
 // phi curves
 (function(){const s=document.getElementById("phi"),L=60,T=15,W=560,H=300,X=r=>L+r/3*W,Y=p=>T+H-p/2.1*H;
 el(s,"path",{d:`M${X(0)},${Y(0)} L${X(.5)},${Y(1)} L${X(1)},${Y(1)} L${X(2)},${Y(2)} L${X(3)},${Y(2)} L${X(3)},${Y(1)} L${X(1)},${Y(1)} L${X(.5)},${Y(.5)} L${X(0)},${Y(0)}z`,fill:"var(--zoo)","fill-opacity":.15});
