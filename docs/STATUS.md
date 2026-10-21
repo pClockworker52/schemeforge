@@ -18,9 +18,12 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   tokens: the requests never reached the model — the subscription usage limit ran out at that time. Fixed:
   the backend now reports such calls as "did not reach the model" with the CLI's own message, and `evolve`
   pauses (state saved, `--resume`) when half a generation's requests do not reach the model.
-- C2 started 2026-10-21 (usage limit had reset): runs/c2, log runs/c2.log. If it was interrupted, resume with
-  `uv run python scripts/e2e_evolve.py resume runs/c2 <run id from runs/c2/runs/evolve/>`; then
-  `uv run python scripts/calibration_report.py runs/c2` and record the result here.
+- C2 done 2026-10-21 (runs/c2, run e-20261021-032121-30b5; flux slot, Rusanov seed, 2 islands × 3 gens × 8,
+  sonnet + haiku for wild): 48 calls, 48 ok on dev, 0 rejected, 0 LLM errors, no interruption.
+  9 duplicates, 2 distinct zoo fluxes rediscovered (HLLC 4, Rusanov 3); only 3 archive cells occupied
+  (6,0 / 6,3 / 7,0) — same clustering as C1; Pareto front 40 of 48 (the 7-objective issue again).
+  Cost $3.09 list = $6.43 per 100 candidates (longer outputs than limiters: ~20.8k/2.1k tokens per call),
+  16.0 s mean latency, 516 candidates/h. Run took 8 min.
 - Next: red team and first hunch round via
   bash scripts/headless/run.sh scripts/headless/redteam.txt redteam; then Gate 2 with Peter (budget).
   All three use the subscription — wait until the usage limit has reset.
@@ -49,7 +52,8 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 ## Next (ordered)
 1. Finish the dummy 208-candidate run; record it for Gate 2.
 2. C1 with the real backend (96 calls), calibration report, cost per 100 candidates.
-3. C2 (flux slot) — after Peter agrees the budget.
+3. ~~C2 (flux slot)~~ done 2026-10-21 (see Latest results). Descriptor grid for flux and limiter needs a look
+   before Phase 3: 3–6 occupied cells is too little spread for MAP-Elites.
 4. Peter, in a WSL session: red team with the cheater agent; first hunch round (Appendix D).
 
 ## Blockers / questions for Peter
