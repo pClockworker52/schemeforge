@@ -172,11 +172,18 @@ higher is better), and the pass rate (share of instances without a hard-constrai
 
 **Hard (reject):** on fixed probe sets (`constraints.py`):
 - limiter: output shape and dtype, finite for all probe r (negative, zero, tiny, huge, ±1e10), bitwise
-  deterministic, pointwise (permuted input gives permuted output; reshaping does not matter);
+  deterministic, pointwise (permuted input gives permuted output; reshaping does not matter), elementwise
+  (since v1.1: on (rows, 3) batches with rows ∈ {1, 54, 101, 104, 121, 124, 201, 204, 404}, plain and with every
+  other entry set to 0, phi agrees to 1e-13 relative with phi applied to one ratio at a time);
 - flux: finite on 256 fixed admissible state pairs, consistency max\|flux(U, U) − F(U)\|/max\|F\| ≤ 1e-12,
   mirror symmetry \|flux(RU_R, RU_L) + R·flux(U_L, U_R)\| ≤ 1e-12 · max(\|F_num\|, \|F(U_L)\|, \|F(U_R)\|) per
-  row, deterministic, row-wise;
+  row, deterministic, row-wise (permutation, and since v1.1 the same batch-size test as the limiter, one
+  interface at a time);
 - every run: finite output, ρ > 0, p > 0, and no solver failure.
+
+**In runs (since v1.1)** a candidate limiter is applied one slope ratio at a time and a candidate flux one
+interface at a time (`numerics.elementwise`, `numerics.rowwise`, both `jax.vmap`), so a candidate never sees the
+batch, its size or its statistics. Red-team log: docs/judge/redteam.md.
 
 **Measured, not required** (`metamorphic.py`, on R1): mirror symmetry of the whole run (exact for symmetric
 limiters, not for Koren), scaling homogeneity (ρ, p, E) → 10·(ρ, p, E), Galilean shift by 10 cells.

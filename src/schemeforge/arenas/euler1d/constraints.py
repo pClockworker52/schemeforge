@@ -11,11 +11,14 @@ from collections.abc import Callable
 import jax.numpy as jnp
 import numpy as np
 
-from .numerics import physical_flux, prim_to_cons
+from .numerics import elementwise, physical_flux, prim_to_cons, rowwise
 
 CONSISTENCY_TOL = 1e-12  # relative to max |F|
 MIRROR_TOL = 1e-12
+BATCH_TOL = 1e-13  # batch vs one-at-a-time evaluation, relative (rounding only; a case switch differs by O(1))
 R_MIRROR = np.array([1.0, -1.0, 1.0])
+# run-like batch sizes: interfaces/cells of the dev and held-out grids (N = 50 ... 400) and a single item
+BATCH_ROWS = (1, 54, 101, 104, 121, 124, 201, 204, 404)
 
 
 def limiter_probes() -> np.ndarray:
@@ -35,6 +38,37 @@ def flux_probes(m: int = 256, seed: int = 20261020, gamma: float = 1.4) -> tuple
         return np.asarray(prim_to_cons(jnp.asarray(np.stack([rho, u, p], axis=1)), gamma))
 
     return states(), states()
+
+
+def _close(a, b) -> bool:
+    a, b = np.asarray(a), np.asarray(b)
+    if a.shape != b.shape:
+        return False
+    both_nan = np.isnan(a) & np.isnan(b)
+    with np.errstate(invalid="ignore"):
+        ok = np.abs(a - b) <= BATCH_TOL * np.maximum(1.0, np.abs(b))
+    return bool(np.all(ok | both_nan | (a == b)))
+
+
+def _batch_independent_limiter(phi: Callable, r: np.ndarray) -> bool:
+    """phi on run-shaped (rows, 3) batches equals phi applied one ratio at a time, also on zero-heavy batches."""
+    one = elementwise(phi)
+    for rows in BATCH_ROWS:
+        a = np.resize(r, (rows, 3))
+        for batch in (a, np.where(np.arange(a.size).reshape(a.shape) % 2 == 0, 0.0, a)):
+            if not _close(np.asarray(phi(jnp.asarray(batch))), np.asarray(one(jnp.asarray(batch)))):
+                return False
+    return True
+
+
+def _batch_independent_flux(flux: Callable, UL: np.ndarray, UR: np.ndarray, gamma: float) -> bool:
+    one = rowwise(flux)
+    for rows in BATCH_ROWS:
+        a, b = np.resize(UL, (rows, 3)), np.resize(UR, (rows, 3))
+        if not _close(np.asarray(flux(jnp.asarray(a), jnp.asarray(b), gamma)),
+                      np.asarray(one(jnp.asarray(a), jnp.asarray(b), gamma))):
+            return False
+    return True
 
 
 def _bitwise_equal(a, b) -> bool:
@@ -65,6 +99,12 @@ def check_limiter(phi: Callable) -> list[str]:
     out2 = np.asarray(phi(jnp.asarray(r2)))
     if out2.shape != r2.shape or not _bitwise_equal(out2.reshape(-1), np.asarray(phi(jnp.asarray(r2.reshape(-1))))):
         v.append("phi depends on the input shape")
+    try:
+        if not _batch_independent_limiter(phi, r):
+            v.append("phi is not elementwise (on a run-sized batch it differs from phi applied to one ratio at a "
+                     "time: it depends on the batch size or statistics)")
+    except Exception as exc:  # noqa: BLE001
+        v.append(f"phi fails on a single slope ratio: {type(exc).__name__}: {exc}")
     return v
 
 
@@ -98,6 +138,12 @@ def check_flux(flux: Callable, gamma: float = 1.4) -> list[str]:
     perm = np.random.default_rng(2).permutation(UL.shape[0])
     if not _bitwise_equal(np.asarray(flux(jnp.asarray(UL[perm]), jnp.asarray(UR[perm]), gamma)), F[perm]):
         v.append("flux is not row-wise (a permuted batch does not give the permuted output)")
+    try:
+        if not _batch_independent_flux(flux, UL, UR, gamma):
+            v.append("flux is not row-wise (on a run-sized batch it differs from flux applied to one interface at "
+                     "a time: it depends on the batch size or statistics)")
+    except Exception as exc:  # noqa: BLE001
+        v.append(f"flux fails on a single interface: {type(exc).__name__}: {exc}")
     return v
 
 

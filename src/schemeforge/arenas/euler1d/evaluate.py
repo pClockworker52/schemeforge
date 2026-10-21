@@ -32,7 +32,7 @@ from .cases import (
 )
 from .exact_nozzle import solve_nozzle
 from .exact_riemann import solve_riemann
-from .numerics import hllc, muscl
+from .numerics import elementwise, hllc, muscl, rowwise
 from .steady import default_operator, make_grid, solve_explicit, solve_implicit
 from .unsteady import solve_unsteady
 
@@ -41,11 +41,12 @@ SUITES = ("smoke", "dev", "promo")
 
 
 def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
-    """(reconstruct, flux) for a candidate in the given slot; the other component is the judge default."""
+    """(reconstruct, flux) for a candidate in the given slot; the other component is the judge default.
+    Limiters run elementwise and fluxes row-wise, so the candidate never sees the whole batch."""
     if slot == "limiter":
-        return muscl(fn), hllc
+        return muscl(elementwise(fn)), hllc
     if slot == "flux":
-        return muscl(zoo.load("limiter", "van_leer")), fn
+        return muscl(zoo.load("limiter", "van_leer")), rowwise(fn)
     if slot == "reconstruction":
         return fn, hllc
     raise ValueError(f"slot {slot!r} is not evaluated in Arena 1 yet")

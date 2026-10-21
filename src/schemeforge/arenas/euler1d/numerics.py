@@ -25,6 +25,25 @@ Reconstruction = Callable[[Array, float], tuple[Array, Array]]
 Flux = Callable[[Array, Array, float], Array]
 
 
+def elementwise(phi: Limiter) -> Limiter:
+    """phi applied to one slope ratio at a time (vmap over the flattened input), so a candidate cannot see the
+    batch: no case detection from its size or statistics, no position dependence (red team s01, s02, s06)."""
+
+    def wrapped(r: Array) -> Array:
+        return jax.vmap(phi)(r.reshape(-1)).reshape(r.shape)
+
+    return wrapped
+
+
+def rowwise(flux: Flux) -> Flux:
+    """flux applied to one interface at a time: each call sees a (1, 3) batch (red team f01)."""
+
+    def wrapped(UL: Array, UR: Array, g: float) -> Array:
+        return jax.vmap(lambda a, b: flux(a[None], b[None], g)[0])(UL, UR)
+
+    return wrapped
+
+
 def prim_to_cons(W: Array, g: float) -> Array:
     rho, u, p = W[..., 0], W[..., 1], W[..., 2]
     return jnp.stack([rho, rho * u, p / (g - 1.0) + 0.5 * rho * u * u], axis=-1)

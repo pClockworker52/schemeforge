@@ -5,7 +5,11 @@ defines the slot's function. All arrays are float64. Use only `jax.numpy`, `jax.
 (`import jax.numpy as jnp`, `from jax import lax`, `import math`), no I/O, no hidden state, no Python loops over
 cells, deterministic. Module-level values must be numeric constants (or tuples of them); helper functions are
 allowed; decorators, classes, `global`, mutable default arguments and attribute assignment are rejected.
-Size limit: 150 lines.
+Size limit: 150 lines. `lax.stop_gradient` is rejected.
+
+Since judge v1.1 the judge calls a limiter with one slope ratio at a time (a 0-d array) and a flux with one
+interface at a time ((1, 3) arrays), so code must not depend on the batch: its size, shape, order or statistics.
+The hard constraints reject code whose batch output differs from its one-at-a-time output.
 
 Phase 1 implements `limiter` and `flux`. The other contracts are fixed but built when a target needs them.
 

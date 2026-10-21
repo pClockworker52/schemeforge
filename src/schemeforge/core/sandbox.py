@@ -27,6 +27,7 @@ FORBIDDEN_NAMES: frozenset[str] = frozenset({
 FORBIDDEN_ATTRS: frozenset[str] = frozenset({
     "load", "save", "savez", "savez_compressed", "loadtxt", "savetxt", "genfromtxt", "fromfile", "tofile",
     "fromregex", "memmap", "infeed", "outfeed", "format", "format_map",
+    "stop_gradient",  # decouples the derivative the Newton solver sees from the scheme (red team s08)
 })
 
 # Plain functions allowed in module-level constant expressions, besides math.<name>.
