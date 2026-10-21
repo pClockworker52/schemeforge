@@ -1,0 +1,23 @@
+arena: euler1d
+slot: limiter
+lens: contrarian
+statement: >-
+  Contact sharpness comes from the compressive branch r < 1 (phi = 2r), stalling from the branch r > 1 (phi > 1):
+  a limiter that is compressive below r = 1 and flat (phi -> 1) above, smoothly, is as sharp on contacts as MC
+  and converges like van Albada.
+mechanism: >-
+  At a steady shock the ratios on the upstream side are large (r >> 1) and switch as the shock moves by a cell;
+  phi > 1 there amplifies the slope and couples neighbouring cells, which is where the limit cycle lives. Contacts
+  are steepened by phi = 2r for small r (the foot of the profile). Contrarian to the usual view that superbee's
+  sharpness needs phi up to 2.
+predicted_effect:
+  - {metric: R1.contact_width, direction: down, size: "<= 6.5 cells"}
+  - {metric: N1.converged_expl, direction: up, size: "1"}
+  - {metric: N1.newton_iters, direction: down, size: "< 100"}
+kill_criterion: >-
+  Refuted if the smooth lower-branch limiter (k in {5, 10, 20}) either stalls on N1 (explicit) or has
+  R1.contact_width > 7.0.
+known_relatives:
+  - superbee's lower branch min(2r, 1)
+  - minmod, Koren (phi = 2r for small r)
+author: orchestrator/contrarian

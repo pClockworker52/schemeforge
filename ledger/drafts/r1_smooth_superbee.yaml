@@ -1,0 +1,21 @@
+arena: euler1d
+slot: limiter
+lens: approximation theory
+statement: >-
+  A C-infinity approximation of superbee (log-sum-exp soft min/max with sharpness k) keeps most of superbee's
+  contact sharpness while making the explicit and Newton nozzle solvers converge.
+mechanism: >-
+  Superbee's stall comes from its kinks (phi' jumps at r = 1/2, 1, 2): the residual is non-differentiable there,
+  so Newton's Jacobian changes discontinuously when a cell near the shock crosses a kink, and explicit
+  pseudo-time iterations chatter between branches. A soft min/max at scale 1/k replaces each kink by a smooth
+  turn of width ~1/k, bounding |phi''| by ~k, while phi stays within ~log(2)/k of superbee elsewhere.
+predicted_effect:
+  - {metric: N1.converged_expl, direction: up, size: "0 -> 1 for some k <= 20"}
+  - {metric: N1.newton_iters, direction: down, size: "300 -> < 100"}
+  - {metric: R1.contact_width, direction: same, size: "<= 6.5 cells (superbee 3.1, van Albada 7.36)"}
+kill_criterion: >-
+  Refuted if no k in {2, 5, 10, 20} gives N1.converged_expl = 1 with R1.contact_width <= 6.5 on dev.
+known_relatives:
+  - superbee (Roe 1985)
+  - smooth limiter approximations (e.g. van Albada; smoothed min/max in Venkatakrishnan 1993)
+author: orchestrator/approximation theory

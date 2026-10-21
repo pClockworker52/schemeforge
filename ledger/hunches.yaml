@@ -1,2 +1,119 @@
 # The hunch ledger: the only source of truth for hunches (PLAN §6). Edited through `sforge hunch ...` only.
-[]
+- id: H-0001
+  arena: euler1d
+  slot: limiter
+  lens: approximation theory
+  statement: A C-infinity approximation of superbee (log-sum-exp soft min/max with sharpness k) keeps most of superbee's
+    contact sharpness while making the explicit and Newton nozzle solvers converge.
+  mechanism: 'Superbee''s stall comes from its kinks (phi'' jumps at r = 1/2, 1, 2): the residual is non-differentiable
+    there, so Newton''s Jacobian changes discontinuously when a cell near the shock crosses a kink, and explicit
+    pseudo-time iterations chatter between branches. A soft min/max at scale 1/k replaces each kink by a smooth
+    turn of width ~1/k, bounding |phi''''| by ~k, while phi stays within ~log(2)/k of superbee elsewhere.'
+  predicted_effect:
+  - metric: N1.converged_expl
+    direction: up
+    size: 0 -> 1 for some k <= 20
+  - metric: N1.newton_iters
+    direction: down
+    size: 300 -> < 100
+  - metric: R1.contact_width
+    direction: same
+    size: <= 6.5 cells (superbee 3.1, van Albada 7.36)
+  kill_criterion: Refuted if no k in {2, 5, 10, 20} gives N1.converged_expl = 1 with R1.contact_width <= 6.5 on
+    dev.
+  known_relatives:
+  - superbee (Roe 1985)
+  - smooth limiter approximations (e.g. van Albada; smoothed min/max in Venkatakrishnan 1993)
+  author: orchestrator/approximation theory
+  status: refuted
+  verdict_note: 'Round 1 (docs/rounds/2026-10-21-euler1d-limiter.md), judge v1.1 dev: no k converges explicitly
+    on N1. k=10 r-20261021-043623-9008 and k=20 r-20261021-043907-3df4: N1 1.1/1.0 orders, Newton 300 (contact 2.90/2.98).
+    k=2 r-20261021-043803-96ce and k=5 r-20261021-044028-93d6 rejected (R3 non-finite): the soft max adds ~log2/k
+    at r=0+, above the TVD bound 2r. Smoothing superbee''s kinks does not remove the stall.'
+- id: H-0002
+  arena: euler1d
+  slot: limiter
+  lens: steady-convergence
+  statement: Smoothing only MC's kinks (soft min of 2r, (1+r)/2 and 2, sharpness k) restores explicit and Newton
+    convergence on the nozzle at MC-level shock and contact widths, because MC's stall is caused by the kinks and
+    not by its compressiveness.
+  mechanism: MC is less compressive than superbee (phi = (1+r)/2 near r = 1, no plateau) but still stalls (N1 1.6
+    orders, Newton 300). If the stall is a kink effect, a soft min removes it at little cost in width; if it is
+    a compressiveness effect, smoothing will not help until phi is close to van Leer.
+  predicted_effect:
+  - metric: N1.converged_expl
+    direction: up
+    size: 0 -> 1 for some k <= 20
+  - metric: R1.contact_width
+    direction: same
+    size: <= 6.0 cells (MC 5.42)
+  kill_criterion: Refuted if every k in {2, 5, 10, 20} that converges on N1 (explicit) has R1.contact_width > 6.29
+    (van Leer's dev value), i.e. the smoothing only works once the limiter is no sharper than van Leer.
+  known_relatives:
+  - MC (van Leer 1977)
+  - van Leer, van Albada
+  author: orchestrator/steady-convergence
+  status: refuted
+  verdict_note: 'Round 1, judge v1.1 dev: no k in {2,5,10,20} converges explicitly on N1 (k=2 r-20261021-044247-9ac2:
+    2.9 orders, contact 9.18; k=5/10/20 r-20261021-044452-3bd2, r-20261021-044136-6433, r-20261021-044347-ed73:
+    1.7-1.8 orders). MC''s stall is not only a kink effect.'
+- id: H-0003
+  arena: euler1d
+  slot: limiter
+  lens: contrarian
+  statement: 'Contact sharpness comes from the compressive branch r < 1 (phi = 2r), stalling from the branch r >
+    1 (phi > 1): a limiter that is compressive below r = 1 and flat (phi -> 1) above, smoothly, is as sharp on contacts
+    as MC and converges like van Albada.'
+  mechanism: At a steady shock the ratios on the upstream side are large (r >> 1) and switch as the shock moves
+    by a cell; phi > 1 there amplifies the slope and couples neighbouring cells, which is where the limit cycle
+    lives. Contacts are steepened by phi = 2r for small r (the foot of the profile). Contrarian to the usual view
+    that superbee's sharpness needs phi up to 2.
+  predicted_effect:
+  - metric: R1.contact_width
+    direction: down
+    size: <= 6.5 cells
+  - metric: N1.converged_expl
+    direction: up
+    size: '1'
+  - metric: N1.newton_iters
+    direction: down
+    size: < 100
+  kill_criterion: Refuted if the smooth lower-branch limiter (k in {5, 10, 20}) either stalls on N1 (explicit) or
+    has R1.contact_width > 7.0.
+  known_relatives:
+  - superbee's lower branch min(2r, 1)
+  - minmod, Koren (phi = 2r for small r)
+  author: orchestrator/contrarian
+  status: inconclusive
+  verdict_note: 'Round 1, judge v1.1. Kill criterion not met: all k converge on N1 dev (k=10 r-20261021-044552-4b53:
+    12 orders, Newton 61, contact 6.60, N4 roughness 4.5e-4), but the predicted contact <= 6.5 was not reached (6.58-6.72).
+    Island child c-44f8015f87 (tanh cap to 1.5; dev r-20261021-045513-032a contact 5.46) on promo r-20261021-050453-0b6a:
+    RF1 contact 6.60 / shock 2.99, NF1 implicit 1.00, NF3 roughness p90 0.0018, but NF1 explicit only 0.60 -> Target
+    A not met. Dev N1 alone overstates explicit convergence.'
+- id: H-0004
+  arena: euler1d
+  slot: limiter
+  lens: structure preservation
+  statement: Along the symmetric rational family phi = (1 + g/2) r (r + 1) / (r^2 + g r + 1), which keeps phi(r)
+    = r phi(1/r) and phi(1) = 1 and runs from van Albada (g = 0) to van Leer (g = 2), there is a g where the explicit
+    nozzle solver still converges but contacts are sharper than van Albada by at least one cell.
+  mechanism: Every member is C-infinity for r > 0 and mirror-symmetric; only phi'(0+) = 1 + g/2 and the limit 1
+    + g/2 at large r change. Van Albada converges and van Leer stalls (N1 12 vs 2.5 orders) although both are smooth
+    for r > 0, so the stall must come from phi'(0+) or the large-r limit. Mapping g locates the transition.
+  predicted_effect:
+  - metric: R1.contact_width
+    direction: down
+    size: <= 6.4 cells at the largest converging g
+  - metric: N1.converged_expl
+    direction: same
+    size: 1 up to some g* > 0.5
+  kill_criterion: Refuted if every g in {0.5, 1.0, 1.5} that converges on N1 (explicit) has R1.contact_width > 6.4
+    (van Albada 7.36 minus about one cell).
+  known_relatives:
+  - van Albada (1982), van Leer (1974) — this family interpolates between them
+  author: orchestrator/structure preservation
+  status: refuted
+  verdict_note: 'Round 1, judge v1.1 dev (second implementation; the first had an infinite derivative at r=0 that
+    broke the Newton Jacobian, runs r-20261021-044806-2b08 etc.): every g converges (g=1.5 r-20261021-045245-da8a:
+    12 orders, Newton 54) but the sharpest, g=1.5, has contact 6.438 > 6.4 (pre-registered bound), narrowly. Island
+    child c-5d9d00d656 promo r-20261021-050743-741e: NF1 explicit 0.95, implicit 1.00, but RF1 contact 7.87.'

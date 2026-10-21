@@ -1,0 +1,20 @@
+arena: euler1d
+slot: limiter
+lens: structure preservation
+statement: >-
+  Along the symmetric rational family phi = (1 + g/2) r (r + 1) / (r^2 + g r + 1), which keeps
+  phi(r) = r phi(1/r) and phi(1) = 1 and runs from van Albada (g = 0) to van Leer (g = 2), there is a g where
+  the explicit nozzle solver still converges but contacts are sharper than van Albada by at least one cell.
+mechanism: >-
+  Every member is C-infinity for r > 0 and mirror-symmetric; only phi'(0+) = 1 + g/2 and the limit 1 + g/2 at
+  large r change. Van Albada converges and van Leer stalls (N1 12 vs 2.5 orders) although both are smooth for
+  r > 0, so the stall must come from phi'(0+) or the large-r limit. Mapping g locates the transition.
+predicted_effect:
+  - {metric: R1.contact_width, direction: down, size: "<= 6.4 cells at the largest converging g"}
+  - {metric: N1.converged_expl, direction: same, size: "1 up to some g* > 0.5"}
+kill_criterion: >-
+  Refuted if every g in {0.5, 1.0, 1.5} that converges on N1 (explicit) has R1.contact_width > 6.4 (van Albada
+  7.36 minus about one cell).
+known_relatives:
+  - van Albada (1982), van Leer (1974) — this family interpolates between them
+author: orchestrator/structure preservation

@@ -1,0 +1,21 @@
+arena: euler1d
+slot: limiter
+lens: steady-convergence
+statement: >-
+  Smoothing only MC's kinks (soft min of 2r, (1+r)/2 and 2, sharpness k) restores explicit and Newton
+  convergence on the nozzle at MC-level shock and contact widths, because MC's stall is caused by the kinks and
+  not by its compressiveness.
+mechanism: >-
+  MC is less compressive than superbee (phi = (1+r)/2 near r = 1, no plateau) but still stalls (N1 1.6 orders,
+  Newton 300). If the stall is a kink effect, a soft min removes it at little cost in width; if it is a
+  compressiveness effect, smoothing will not help until phi is close to van Leer.
+predicted_effect:
+  - {metric: N1.converged_expl, direction: up, size: "0 -> 1 for some k <= 20"}
+  - {metric: R1.contact_width, direction: same, size: "<= 6.0 cells (MC 5.42)"}
+kill_criterion: >-
+  Refuted if every k in {2, 5, 10, 20} that converges on N1 (explicit) has R1.contact_width > 6.29 (van Leer's
+  dev value), i.e. the smoothing only works once the limiter is no sharper than van Leer.
+known_relatives:
+  - MC (van Leer 1977)
+  - van Leer, van Albada
+author: orchestrator/steady-convergence

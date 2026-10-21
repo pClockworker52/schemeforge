@@ -3,7 +3,11 @@ name: hunch-round
 description: Run one schemeforge hunch round (PLAN Appendix D) — hunch drafts, registration, proposers, engine islands, breakers, round summary. Use when asked to run a hunch round for an arena and slot.
 ---
 
-# Hunch round (draft until the first round confirms it)
+# Hunch round (confirmed by round 1, 2026-10-21: docs/rounds/2026-10-21-euler1d-limiter.md)
+
+If subagents cannot be started (no headless sessions, or no `sforge` MCP tools in this session), the main session
+does steps 1, 2 and 4 itself with `sforge hunch add`, `sforge submit` + `sforge eval`, and promo runs; say so in
+the round summary. Register every hunch before evaluating any of its candidates.
 
 Arguments (from the request; defaults in brackets): arena [euler1d], slot [limiter], n_hunches [4], lenses
 [steady-convergence, approximation theory, contrarian], evals_per_proposer [8], islands [2], gens [4],
@@ -25,6 +29,9 @@ Rules: the judge decides — every claim cites a run id. Never edit src/schemefo
 ## 3. Evolve
 - From the proposer results and `uv run sforge leaderboard --arena {arena} --slot {slot} --vs-zoo`, pick the
   {islands} most promising hunches (best Pareto rank of their candidates; mechanism still plausible).
+  Dev has one nozzle instance: before seeding, check the best 2–3 candidates on promo
+  (`sforge eval <id> --suite promo`, `sforge promote <id> --target A`); round 1's leader converged on dev N1 but
+  on only 60 % of held-out NF1.
 - Run `uv run sforge evolve --arena {arena} --slot {slot} --hunch H-a --hunch H-b --gens {gens}
   --children {children} --backend claude-cli --model sonnet --seed <best proposer file of each hunch>`
   (long: run it in the background and wait). Note the evolve run id.

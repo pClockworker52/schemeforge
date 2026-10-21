@@ -58,7 +58,10 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
       orchestrator, not an independent cheater agent; a cheater run against v1.1 from WSL is still advisable).
 - [ ] Cost per 100 candidates measured and the Phase 3 budget agreed — from the C1 run; Peter agrees the budget.
 - [x] Proposer, breaker and hunch-generator run without Bash, through the `sforge` MCP server (.mcp.json).
-- [ ] First hunch round with ledger verdicts and a docs/rounds/ summary — WSL session.
+- [x] First hunch round with ledger verdicts and a docs/rounds/ summary — 2026-10-21,
+      docs/rounds/2026-10-21-euler1d-limiter.md: H-0001, H-0002, H-0004 refuted, H-0003 inconclusive; evolve
+      e-20261021-045407-c003 (48 children, $2.70); best candidate c-44f8015f87 not promoted for Target A (promo
+      r-20261021-050453-0b6a). Run by the orchestrator without subagents (see the summary).
 
 ## Done in Phase 2
 - Build-or-adopt: own engine (OpenEvolve and ShinkaEvolve reviewed; DECISIONS.md).
@@ -74,8 +77,8 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 1. Finish the dummy 208-candidate run; record it for Gate 2.
 2. C1 with the real backend (96 calls), calibration report, cost per 100 candidates.
 3. ~~C2 (flux slot)~~ done 2026-10-21 (see Latest results); descriptor grids re-binned the same day.
-4. ~~Red team~~ done (orchestrator). First hunch round (Appendix D) — needs subagents with the sforge MCP tools,
-   i.e. a WSL Claude Code session (Peter), or permission for headless runs from the desktop session.
+4. ~~Red team~~ and ~~first hunch round~~ done (orchestrator, 2026-10-21).
+5. **Gate 2 with Peter** — all work items are done; open decisions under "Blockers / questions".
 
 ## Blockers / questions for Peter
 - LLM budget (proposal for Gate 2, not agreed): measured list price per 100 single-shot candidates is $4.34
@@ -89,9 +92,13 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - Selection objectives (open): with 7 objectives, 40 of C2's 48 children are non-dominated, so the "no new
   non-dominated candidate for 8 generations" stop never fires. Options: stop on archive progress (new cell or
   better elite) instead, or select on 2–3 target objectives. Not changed — it alters PLAN §5.9 behaviour.
-- Red team and the first hunch round need subagents with hooks, i.e. a Claude Code session inside WSL.
-  2026-10-21: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
-  classifier ("Create Unsafe Agents"). Peter: run it yourself in WSL, or allow it for this session.
+- Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
+  classifier ("Create Unsafe Agents"), and the desktop session has no sforge MCP tools. The red team and round 1
+  were therefore run by the orchestrator itself. Recommended before Phase 3: one cheater-agent run against v1.1
+  from WSL (independent attacker), and proposer/breaker agents for round 2.
+- Round 1 questions (docs/rounds/2026-10-21-euler1d-limiter.md): continue H-0003's tanh-cap family or move to
+  `limiter_stateful`; add more nozzle instances to dev (judge v1.2), since one N1 instance overstated explicit
+  convergence.
 
 ## Notes
 - Run everything in WSL; the venv lives at ~/.venvs/schemeforge behind the `.venv` symlink (DECISIONS.md).
