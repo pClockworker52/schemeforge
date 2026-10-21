@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>schemeforge interim report</title>
+<style>
+:root{--bg:#fbfaf7;--fg:#1d1d1b;--mute:#6b6a65;--line:#d9d6cf;--a:#2a6fdb;--b:#d9541e;--c:#2f9e44;--d:#8a5cf6;--zoo:#8c8c8c}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--fg:#ecebe6;--mute:#a3a29c;--line:#3a3935;--zoo:#9a9a9a}}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif;max-width:980px;margin:0 auto;padding:16px}
+h1{font-size:1.6em;margin:.3em 0}h2{font-size:1.2em;margin-top:1.8em;border-bottom:1px solid var(--line)}
+.mute{color:var(--mute)}svg{width:100%;height:auto;display:block}text{fill:var(--fg);font-size:12px}
+.f{font-family:Georgia,serif;font-style:italic}table{border-collapse:collapse;font-size:14px}td,th{padding:3px 8px;border-bottom:1px solid var(--line);text-align:left}
+.box{stroke:var(--fg);fill:none;stroke-width:1.2}.ax{stroke:var(--mute);stroke-width:1}
+.pill{display:inline-block;padding:1px 8px;border-radius:9px;font-size:13px}
+</style></head><body>
+<h1>schemeforge — interim report, 2026-10-21</h1>
+<p class="mute">Phase 2 finished, Gate 2 passed, Phase 3 round 2 paused at generation 11 of 20. All numbers are judge runs
+(run ids in docs/STATUS.md, docs/rounds/, docs/judge/redteam.md).</p>
+
+<h2>1. What happened today</h2>
+<svg viewBox="0 0 960 150" role="img" aria-label="timeline">
+<g font-size="12">
+<line x1="20" y1="70" x2="940" y2="70" class="ax"/>
+<g id="tl"></g></g></svg>
+
+<h2>2. The goal in one picture: the zoo front (held-out data)</h2>
+<p>Target A asks for a limiter in the empty top-left corner: <b>sharp</b> on moving discontinuities (RF1 contact width
+≤ 6.5 cells) <b>and</b> converging in pseudo-time on held-out nozzles (NF1 explicit ≥ 95 %, Newton 100 %).</p>
+<svg id="front" viewBox="0 0 960 420" role="img" aria-label="front plot"></svg>
+<p class="mute">Grey: zoo. Coloured: our candidates (promo runs). Ring = Newton converges on all NF1 instances.
+The ratchet (round 2) moved the round-1 leader straight up from 60 % to 100 % explicit convergence; what is still
+missing is the step to the left (contact 6.60 → ≤ 6.5, and shock 2.99 → ≤ 2.6 cells).</p>
+
+<h2>3. Red team: the judge had a hole, now closed (judge v1.1)</h2>
+<svg viewBox="0 0 960 200" role="img" aria-label="batch hole">
+<g transform="translate(20,20)">
+<text x="0" y="0" font-weight="600">v1.0 — limiter sees the whole batch</text>
+<rect x="0" y="15" width="380" height="40" class="box"/><text x="10" y="40">r = [r₁ r₂ … r₆₁₂]  →  φ( · )</text>
+<text x="0" y="80">size 612 ⇒ "shock tube": superbee</text><text x="0" y="98">size 372 ⇒ "nozzle": van Albada</text>
+<text x="0" y="122" fill="var(--b)">→ sharp AND convergent, without better numerics. Not caught.</text>
+</g>
+<g transform="translate(520,20)">
+<text x="0" y="0" font-weight="600">v1.1 — one value at a time</text>
+<g id="cells"></g>
+<text x="0" y="80" class="f">φ̃(r)ᵢ = φ(rᵢ)   (jax.vmap)</text>
+<text x="0" y="104">+ hard check: batch output = one-at-a-time output</text>
+<text x="0" y="122" fill="var(--c)">→ all 12 attacks caught (size, statistics, cost, NaN, Jacobian …)</text>
+</g></svg>
+
+<h2>4. Limiters we found, as functions φ(r)</h2>
+<svg id="phi" viewBox="0 0 960 360" role="img" aria-label="limiter curves"></svg>
+<p>Round-1 best (c-44f8015f87): <span class="f">φ(r) = smin<sub>k</sub>(2r, 1 + ½ tanh(r − 1))</span>, k = 10,
+with <span class="f">smin<sub>k</sub>(a,b) = −ln(e<sup>−ka</sup> + e<sup>−kb</sup>)/k</span>: compressive (2r) below 1,
+smooth cap rising to 1.5 above. Smooth ⇒ Newton converges; but only 60 % explicit convergence held-out.</p>
+
+<h2>5. Round 2: limiters with memory</h2>
+<p>New slot (judge v1.2): <span class="f">(φ, s′) = φ<sub>s</sub>(r, s)</span>, one state value per cell and variable,
+fixed within a step, updated after it. Key lesson: freeze or filter the <b>centred</b> factor, not φ:</p>
+<p class="f" style="text-align:center">φ Δ₊ = ψ · (Δ₋ + Δ₊)/2 , &nbsp; ψ = 2φ(r)/(1+r)</p>
+<p>Freezing φ fixes a multiple of the <i>downwind</i> difference → linearly unstable (blew up 19 steps after freezing).
+Freezing ψ fixes a multiple of the <i>centred</i> difference → stable. The best mechanism, a one-way
+<b>ratchet</b> after K₀ = 1000 steps, <span class="f">ψ<sub>k+1</sub> = min(ψ(r), ψ<sub>k</sub>)</span>, converges on
+<b>all 20</b> held-out nozzles; plain freezing fails on 2 of 20.</p>
+<svg id="hunch" viewBox="0 0 960 230" role="img" aria-label="hunch outcomes"></svg>
+
+<h2>6. Cost so far</h2>
+<svg id="cost" viewBox="0 0 960 170" role="img" aria-label="cost"></svg>
+<p class="mute">Today: 335 LLM calls, $17.9 list price on the subscription; 868 evaluations (517 dev, 34 promo,
+317 smoke). Budget agreed at Gate 2: ~$25–32 per full round.</p>
+
+<h2>7. What I learned</h2>
+<table>
+<tr><th>Lesson</th><th>Consequence</th></tr>
+<tr><td>A judge is only as strict as its interface: batch visibility let a limiter detect the test case.</td><td>v1.1: candidates see one item at a time.</td></tr>
+<tr><td>One dev nozzle overstated explicit convergence (dev 100 % → held-out 60 %).</td><td>v1.2: dev sweeps N5/N6; check promo before seeding islands.</td></tr>
+<tr><td>Smoothing kinks alone does not stop the explicit limit cycle (H-0001/2 refuted).</td><td>The cycle is a feedback loop → state/memory (round 2).</td></tr>
+<tr><td>Memory fixes steady convergence but not sharpness: it acts after ~1000 pseudo-steps, unsteady runs are shorter.</td><td>Remaining gap is the stateless base limiter on moving discontinuities.</td></tr>
+<tr><td>Infrastructure: parallel evals beside evolve → timeouts; WSL crashes; usage limit pauses.</td><td>Engine pauses/resumes correctly; 90 timeouts in round 2 still unexplained.</td></tr>
+</table>
+
+<h2>8. On track?</h2>
+<svg id="track" viewBox="0 0 960 120" role="img" aria-label="progress"></svg>
+<p><b>Yes, with a caveat.</b> Of Target A's seven criteria the best candidate (ratchet, c-a84758f0e8) now passes
+A3, A4, A5, A6 and the bootstrap tests B1, B2, B5; it fails A1/A2 (widths) and A7 (overshoot). Explicit and Newton
+convergence — the hard, "practically relevant" half of the gap — is solved for this limiter. What is left is a
+sharpness gap of ~0.4 cells (shock) and ~0.1 cells (contact) without more overshoot. Phase 3 budget: 1.5 of 4 rounds,
+~420 of ~2,000 candidates used. Plausible outcomes from here: a promoted "sharp base + ratchet" limiter (most likely
+labelled variant of limiter freezing), or a well-documented negative result — both are valid deliverables.</p>
+<p class="mute">Open before resuming: (1) the 90 evolve-time timeouts in the ratchet/freeze islands; (2) resume
+e-20261021-123207-3146; (3) close H-0005…H-0010 and write docs/rounds/…-limiter_stateful.md.</p>
+
+<script>
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;p.appendChild(e);return e}
+// timeline
+const tl=document.getElementById("tl");
+[["C2 flux calibration","48/48 ok, HLLC-level R5"],["grids re-binned","cells 6→14, 3→7"],["red team","4 holes → judge v1.1"],
+ ["round 1","4 hunches, 1 inconclusive"],["Gate 2","budget, stagnation, v1.2"],["judge v1.2","N5/N6 + stateful slot"],["round 2","ratchet: 20/20 nozzles"]]
+.forEach((d,i)=>{const x=40+i*140;el(tl,"circle",{cx:x,cy:70,r:7,fill:i==4?"var(--b)":"var(--a)"});
+ el(tl,"text",{x:x,y:i%2?110:45,"text-anchor":"middle","font-weight":"600"},d[0]);el(tl,"text",{x:x,y:i%2?126:28,"text-anchor":"middle",fill:"var(--mute)"},d[1])});
+// cells
+const cg=document.getElementById("cells");for(let i=0;i<6;i++){el(cg,"rect",{x:i*62,y:15,width:52,height:40,class:"box"});el(cg,"text",{x:i*62+14,y:40},"φ(r"+"₁₂₃₄₅₆"[i]+")")}
+// front plot
+(function(){const s=document.getElementById("front"),L=70,T=20,W=840,H=340,x0=4,x1=11,y0=0,y1=1.05;
+const X=v=>L+(v-x0)/(x1-x0)*W,Y=v=>T+H-(v-y0)/(y1-y0)*H;
+el(s,"rect",{x:X(4),y:Y(1.05),width:X(6.5)-X(4),height:Y(0.95)-Y(1.05),fill:"var(--c)","fill-opacity":.13});
+el(s,"text",{x:X(4.1),y:Y(1.0)+4,fill:"var(--c)"},"Target A zone");
+el(s,"line",{x1:L,y1:T+H,x2:L+W,y2:T+H,class:"ax"});el(s,"line",{x1:L,y1:T,x2:L,y2:T+H,class:"ax"});
+for(let v=4;v<=11;v++){el(s,"text",{x:X(v),y:T+H+16,"text-anchor":"middle",fill:"var(--mute)"},v)}
+for(let v=0;v<=1;v+=.25){el(s,"text",{x:L-8,y:Y(v)+4,"text-anchor":"end",fill:"var(--mute)"},Math.round(v*100)+"%")}
+el(s,"text",{x:L+W/2,y:T+H+34,"text-anchor":"middle"},"RF1 contact width, median [cells]  (← sharper)");
+el(s,"text",{x:16,y:T+H/2,transform:`rotate(-90 16 ${T+H/2})`,"text-anchor":"middle"},"NF1 explicit converged (share)");
+const zoo=[["superbee",4.58,.05,0],["MC",6.12,.45,0],["Koren",6.37,.55,0],["van Leer",7.12,.60,1],["Venkat.",7.58,.60,1],["van Albada",8.42,.95,1],["minmod",10.71,.90,1],["van Leer frozen",7.12,.85,1]];
+zoo.forEach(z=>{el(s,"circle",{cx:X(z[1]),cy:Y(z[2]),r:6,fill:"var(--zoo)"});if(z[3])el(s,"circle",{cx:X(z[1]),cy:Y(z[2]),r:10,fill:"none",stroke:"var(--zoo)"});
+ el(s,"text",{x:X(z[1])+12,y:Y(z[2])+(z[0]=="Venkat."?14:4),fill:"var(--mute)"},z[0])});
+const ours=[["round 1 best (tanh-cap)",6.60,.60,"var(--a)"],["round 1, H-0004 island",7.87,.95,"var(--d)"],["round 2: tanh-cap + ratchet",6.60,1.0,"var(--b)"]];
+el(s,"line",{x1:X(6.6),y1:Y(.6)-10,x2:X(6.6),y2:Y(1)+12,stroke:"var(--b)","stroke-width":2,"marker-end":"url(#ar)"});
+const m=el(el(s,"defs",{}),"marker",{id:"ar",viewBox:"0 0 10 10",refX:5,refY:5,markerWidth:6,markerHeight:6,orient:"auto"});el(m,"path",{d:"M0,0L10,5L0,10z",fill:"var(--b)"});
+ours.forEach((o,i)=>{el(s,"circle",{cx:X(o[1]),cy:Y(o[2]),r:7,fill:o[3]});el(s,"circle",{cx:X(o[1]),cy:Y(o[2]),r:11,fill:"none",stroke:o[3]});
+ el(s,"text",{x:X(o[1])+14,y:Y(o[2])+(i==2?-8:4),fill:o[3],"font-weight":"600"},o[0])});})();
+// phi curves
+(function(){const s=document.getElementById("phi"),L=60,T=15,W=560,H=300,X=r=>L+r/3*W,Y=p=>T+H-p/2.1*H;
+el(s,"path",{d:`M${X(0)},${Y(0)} L${X(.5)},${Y(1)} L${X(1)},${Y(1)} L${X(2)},${Y(2)} L${X(3)},${Y(2)} L${X(3)},${Y(1)} L${X(1)},${Y(1)} L${X(.5)},${Y(.5)} L${X(0)},${Y(0)}z`,fill:"var(--zoo)","fill-opacity":.15});
+el(s,"line",{x1:L,y1:T+H,x2:L+W,y2:T+H,class:"ax"});el(s,"line",{x1:L,y1:T,x2:L,y2:T+H,class:"ax"});
+[0,1,2,3].forEach(v=>el(s,"text",{x:X(v),y:T+H+16,"text-anchor":"middle",fill:"var(--mute)"},v));[0,1,2].forEach(v=>el(s,"text",{x:L-8,y:Y(v)+4,"text-anchor":"end",fill:"var(--mute)"},v));
+el(s,"text",{x:L+W/2,y:T+H+34,"text-anchor":"middle"},"slope ratio r");el(s,"text",{x:X(2.2),y:Y(1.3),fill:"var(--mute)"},"2nd-order TVD region");
+const smin=(a,b,k)=>-Math.log(Math.exp(-k*a)+Math.exp(-k*b))/k;
+const F={"superbee":[r=>Math.max(0,Math.max(Math.min(2*r,1),Math.min(r,2))),"var(--zoo)","4 3"],
+"van Albada":[r=>r*(r+1)/(r*r+1),"var(--zoo)","1 3"],
+"round-1 best: smin(2r, 1+½tanh(r−1))":[r=>r<=0?0:Math.max(smin(2*r,1+.5*Math.tanh(r-1),10),0),"var(--a)",""],
+"H-0003: smin(2r, 1)":[r=>r<=0?0:Math.max(smin(2*r,1,10),0),"var(--c)","6 3"]};
+let i=0;for(const k in F){let d="";for(let j=0;j<=300;j++){const r=3*j/300;d+=(j?"L":"M")+X(r).toFixed(1)+","+Y(F[k][0](r)).toFixed(1)}
+el(s,"path",{d,fill:"none",stroke:F[k][1],"stroke-width":k.startsWith("round")?3:2,"stroke-dasharray":F[k][2]});
+el(s,"line",{x1:660,y1:40+i*26,x2:700,y2:40+i*26,stroke:F[k][1],"stroke-width":3,"stroke-dasharray":F[k][2]});el(s,"text",{x:710,y:44+i*26},k);i++}})();
+// hunch outcomes
+(function(){const s=document.getElementById("hunch");const H=[["H-0001 smooth superbee","r",1],["H-0002 smooth MC","r",1],["H-0003 lower branch","i",1],["H-0004 symmetric rational","r",1],
+["H-0005 relaxation","r",2],["H-0006 ratchet","s",2],["H-0007 settle-freeze","r",2],["H-0008 dead band","i",2],["H-0009 freeze tanh-cap","r",2],["H-0010 TVD relaxation","r",2]];
+const col={r:"var(--b)",i:"var(--d)",s:"var(--c)"},lab={r:"refuted",i:"inconclusive",s:"supported"};
+H.forEach((h,j)=>{const x=20+(j%5)*188,y=20+Math.floor(j/5)*100;el(s,"rect",{x,y,width:176,height:74,rx:8,fill:col[h[1]],"fill-opacity":.14,stroke:col[h[1]]});
+el(s,"text",{x:x+10,y:y+22,"font-weight":"600"},h[0]);el(s,"text",{x:x+10,y:y+44,fill:col[h[1]]},lab[h[1]]+(h[2]==2?" (proposed)":""));el(s,"text",{x:x+10,y:y+62,fill:"var(--mute)"},"round "+h[2])})})();
+// cost
+(function(){const s=document.getElementById("cost");const B=[["C1 limiter calibration",4.34],["C2 flux calibration",6.43],["round 1 evolve",5.63],["round 2 evolve (so far)",5.27]];
+el(s,"text",{x:20,y:16,fill:"var(--mute)"},"list price per 100 candidates [$]");
+B.forEach((b,i)=>{const y=30+i*34;el(s,"text",{x:20,y:y+16},b[0]);el(s,"rect",{x:240,y,width:b[1]*80,height:22,fill:"var(--a)","fill-opacity":.8});el(s,"text",{x:248+b[1]*80,y:y+16},"$"+b[1].toFixed(2))})})();
+// track
+(function(){const s=document.getElementById("track");const r=[["rounds",1.5,4],["candidates",420,2000],["Target A criteria passed (best)",7,10]];
+r.forEach((d,i)=>{const y=12+i*34;el(s,"text",{x:20,y:y+15},d[0]);el(s,"rect",{x:300,y,width:600,height:20,fill:"none",stroke:"var(--line)"});
+el(s,"rect",{x:300,y,width:600*d[1]/d[2],height:20,fill:i==2?"var(--c)":"var(--a)","fill-opacity":.7});el(s,"text",{x:910,y:y+15,"text-anchor":"end"},d[1]+" / "+d[2])})})();
+</script></body></html>

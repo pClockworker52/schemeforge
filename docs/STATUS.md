@@ -95,6 +95,10 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - Run everything in WSL; the venv lives at ~/.venvs/schemeforge behind the `.venv` symlink (DECISIONS.md).
 - Calibration runs use their own working directory (own registry, ledger, candidates): scripts/e2e_evolve.py.
 - Use `set -o pipefail` when chaining tests with `| tail` before a commit.
+- Never run other evaluations next to `sforge evolve`: on 2026-10-21 evolve + a 6-way rescore + promo runs pushed
+  dev evaluations from ~40 s to > 600 s (45 children rejected as timeouts, all ok when re-evaluated alone) and
+  the WSL service crashed. A resumed run keeps such false rejections in its archive; re-evaluate them by id.
+- Long WSL jobs need an attached `wsl.exe` client; processes started with setsid/nohup die when it exits.
 
 ## Numbers to remember (run ids, best candidates, costs)
 - Machine: 16 physical cores / 32 threads, 15 GB RAM in WSL → evaluation lock default K = 15.
