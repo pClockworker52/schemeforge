@@ -32,11 +32,11 @@ from .cases import (
 )
 from .exact_nozzle import solve_nozzle
 from .exact_riemann import solve_riemann
-from .numerics import elementwise, hllc, muscl, rowwise
+from .numerics import elementwise, elementwise_stateful, hllc, muscl, muscl_stateful, rowwise
 from .steady import default_operator, make_grid, solve_explicit, solve_implicit
 from .unsteady import solve_unsteady
 
-SLOTS = ("limiter", "flux", "reconstruction")
+SLOTS = ("limiter", "limiter_stateful", "flux", "reconstruction")
 SUITES = ("smoke", "dev", "promo")
 
 
@@ -45,6 +45,8 @@ def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
     Limiters run elementwise and fluxes row-wise, so the candidate never sees the whole batch."""
     if slot == "limiter":
         return muscl(elementwise(fn)), hllc
+    if slot == "limiter_stateful":
+        return muscl_stateful(elementwise_stateful(fn)), hllc
     if slot == "flux":
         return muscl(zoo.load("limiter", "van_leer")), rowwise(fn)
     if slot == "reconstruction":
@@ -55,6 +57,8 @@ def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
 def slot_constraints(fn: Callable, slot: str) -> list[str]:
     if slot == "limiter":
         return constraints.check_limiter(fn)
+    if slot == "limiter_stateful":
+        return constraints.check_limiter_stateful(fn)
     if slot == "flux":
         return constraints.check_flux(fn)
     return []  # reconstruction: only run-level constraints (zoo use only in Phase 1)
@@ -151,7 +155,20 @@ def run_nozzle_sweep(case: NozzleSweepCase, reconstruct, flux) -> tuple[dict[str
     op = default_operator(reconstruct, flux)
     x_from = grid.x_face[int(np.argmax(grid.x > nz.x_throat))]
     J_num, J_ex, iters, conv = [], [], [], []
+    e_conv, e_orders, e_cycle = [], [], []
     for pb in case.pbs:
+        if "explicit" in case.solvers:
+            e = solve_explicit(grid, pb, case.gamma, op)
+            v = constraints.check_run(e.W)
+            if e.failed:
+                v.insert(0, "explicit pseudo-time solver failed (non-physical state)")
+            if v:
+                return {}, [f"explicit: {m}" for m in v]
+            e_conv.append(e.converged)
+            e_orders.append(e.orders)
+            e_cycle.append(e.limit_cycle)
+        if "implicit" not in case.solvers:
+            continue
         r = solve_implicit(grid, pb, case.gamma, op)
         v = constraints.check_run(r.W)
         if r.failed:
@@ -162,11 +179,14 @@ def run_nozzle_sweep(case: NozzleSweepCase, reconstruct, flux) -> tuple[dict[str
         J_ex.append(metrics.wall_force_exact(solve_nozzle(nz, pb, case.gamma), nz, x_from))
         iters.append(r.iterations if r.converged else 300)
         conv.append(r.converged)
-    return {
-        "roughness_J": metrics.roughness(np.array(J_num), np.array(J_ex)),
-        "newton_iters": float(np.mean(iters)),
-        "converged_impl": float(np.mean(conv)),
-    }, []
+    out: dict[str, float] = {}
+    if J_num:
+        out.update(roughness_J=metrics.roughness(np.array(J_num), np.array(J_ex)),
+                   newton_iters=float(np.mean(iters)), converged_impl=float(np.mean(conv)))
+    if e_conv:  # share of back pressures converged; worst residual drop; share with a limit cycle
+        out.update(converged_expl=float(np.mean(e_conv)), res_orders_expl=float(np.min(e_orders)),
+                   limit_cycle=float(np.mean(e_cycle)))
+    return out, []
 
 
 # --- evaluate -----------------------------------------------------------------------------------------------

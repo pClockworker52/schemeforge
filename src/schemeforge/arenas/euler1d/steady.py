@@ -27,7 +27,16 @@ from .exact_nozzle import (
     p_over_p0,
     solve_nozzle,
 )
-from .numerics import NG, Flux, Reconstruction, cons_to_prim, hllc, prim_to_cons
+from .numerics import (
+    NG,
+    Flux,
+    Reconstruction,
+    cons_to_prim,
+    hllc,
+    initial_limiter_state,
+    prim_to_cons,
+    reconstruct_with_state,
+)
 
 CONVERGED = 1e-12
 EXPLICIT_CFL = 0.8
@@ -37,8 +46,9 @@ IMPLICIT_CFL_MAX = 1e8
 IMPLICIT_MAX_ITERS = 300
 SUBSONIC_GUESS_MACH = 0.5  # throat Mach of the initial guess for unchoked cases
 
-# operator(U, A_face, dx, gamma, W_padded) -> (F_face * A_face: (n + 1, 3), S_mom: (n,)); see euler1d_slots.md
-Operator = Callable[[jax.Array, jax.Array, float, float, jax.Array], tuple[jax.Array, jax.Array]]
+# operator(U, A_face, dx, gamma, W_padded, S) -> (F_face * A_face: (n + 1, 3), S_mom: (n,), S_new); S is the limiter
+# state (n + 4, 3) of a stateful reconstruction, passed through unchanged otherwise; see euler1d_slots.md
+Operator = Callable[..., tuple[jax.Array, jax.Array, jax.Array]]
 
 
 @dataclass(frozen=True)
@@ -102,19 +112,25 @@ def pad_nozzle(W: jax.Array, pb, g, force_pb=False) -> jax.Array:
 def default_operator(reconstruct: Reconstruction, flux: Flux = hllc) -> Operator:
     """Reconstruction + flux at faces (times A_face), and the simple source p_i (A_{i+1/2} - A_{i-1/2}) / dx."""
 
-    def operator(U, A_face, dx, gamma, W_pad):
-        WL, WR = reconstruct(W_pad, gamma)
+    def operator(U, A_face, dx, gamma, W_pad, S):
+        WL, WR, S_new = reconstruct_with_state(reconstruct, W_pad, gamma, S)
         F = flux(prim_to_cons(WL, gamma), prim_to_cons(WR, gamma), gamma) * A_face[:, None]
-        return F, W_pad[NG:-NG, 2] * (A_face[1:] - A_face[:-1]) / dx
+        return F, W_pad[NG:-NG, 2] * (A_face[1:] - A_face[:-1]) / dx, S_new
 
     return operator
 
 
-def rhs(U, A, A_face, dx, pb, g, operator: Operator, force_pb=False) -> jax.Array:
-    """dU/dt = -(F[1:] - F[:-1]) / dx + [0, S_mom, 0], shape (n, 3), for U = (rho A, rho u A, E A)."""
+def rhs_with_state(U, S, A, A_face, dx, pb, g, operator: Operator, force_pb=False):
+    """(dU/dt, S_new): dU/dt = -(F[1:] - F[:-1]) / dx + [0, S_mom, 0], shape (n, 3), for U = (rho A, rho u A, E A),
+    with limiter state S (n + 4, 3)."""
     W = cons_to_prim(U / A[:, None], g)
-    F, S = operator(U, A_face, dx, g, pad_nozzle(W, pb, g, force_pb))
-    return (-(F[1:] - F[:-1]) / dx).at[:, 1].add(S)
+    F, S_mom, S_new = operator(U, A_face, dx, g, pad_nozzle(W, pb, g, force_pb), S)
+    return (-(F[1:] - F[:-1]) / dx).at[:, 1].add(S_mom), S_new
+
+
+def rhs(U, A, A_face, dx, pb, g, operator: Operator, force_pb=False) -> jax.Array:
+    """dU/dt with zero limiter state, shape (n, 3)."""
+    return rhs_with_state(U, initial_limiter_state(U.shape[0] + 2 * NG), A, A_face, dx, pb, g, operator, force_pb)[0]
 
 
 def initial_state(grid: Grid, pb: float, g: float) -> jax.Array:
@@ -190,24 +206,26 @@ def _local_dt(U, A, dx, g, cfl):
 # --- explicit pseudo-time ----------------------------------------------------------------------------------
 @partial(jax.jit, static_argnames=("operator", "max_iters"))
 def _explicit_loop(U0, A, A_face, dx, pb, g, cfl, force_pb, operator, max_iters):
-    L = partial(rhs, A=A, A_face=A_face, dx=dx, pb=pb, g=g, operator=operator, force_pb=force_pb)
-    R0 = residual_norm(L(U0))
+    L = partial(rhs_with_state, A=A, A_face=A_face, dx=dx, pb=pb, g=g, operator=operator, force_pb=force_pb)
+    S0 = initial_limiter_state(U0.shape[0] + 2 * NG)
+    R0 = residual_norm(L(U0, S0)[0])
     hist = jnp.full(max_iters + 1, jnp.nan).at[0].set(R0)
 
     def body(state):
-        U, k, hist, _ = state
+        U, S, k, hist, _ = state
         dt = _local_dt(U, A, dx, g, cfl)[:, None]
-        U1 = U + dt * L(U)
-        U2 = 0.75 * U + 0.25 * (U1 + dt * L(U1))
-        U3 = U / 3.0 + 2.0 / 3.0 * (U2 + dt * L(U2))
-        R = residual_norm(L(U3))
-        return U3, k + 1, hist.at[k + 1].set(R), _physical(U3, A, g) & jnp.isfinite(R)
+        dU, S_next = L(U, S)  # limiter state: fixed within the iteration, updated from its first stage
+        U1 = U + dt * dU
+        U2 = 0.75 * U + 0.25 * (U1 + dt * L(U1, S)[0])
+        U3 = U / 3.0 + 2.0 / 3.0 * (U2 + dt * L(U2, S)[0])
+        R = residual_norm(L(U3, S_next)[0])
+        return U3, S_next, k + 1, hist.at[k + 1].set(R), _physical(U3, A, g) & jnp.isfinite(R)
 
     def cond(state):
-        _, k, hist, ok = state
+        _, _, k, hist, ok = state
         return ok & (k < max_iters) & (hist[k] > CONVERGED * R0)
 
-    U, k, hist, ok = jax.lax.while_loop(cond, body, (U0, jnp.asarray(0), hist, jnp.asarray(True)))
+    U, _, k, hist, ok = jax.lax.while_loop(cond, body, (U0, S0, jnp.asarray(0), hist, jnp.asarray(True)))
     return U, k, hist, ok
 
 
@@ -253,14 +271,20 @@ def colored_jacobian(f, u: jax.Array, n: int) -> jax.Array:
 
 
 @partial(jax.jit, static_argnames=("operator",))
-def _implicit_step(U, A, A_face, dx, pb, g, cfl, force_pb, operator):
+def _implicit_step(U, S, A, A_face, dx, pb, g, cfl, force_pb, operator):
+    """One backward-Euler step with the limiter state S held fixed (the Jacobian differentiates through U only).
+    Returns (U_new, S_next, residual of U_new under S_next); S_next is computed at U."""
     n = U.shape[0]
-    flat = lambda v: rhs(v.reshape(n, 3), A, A_face, dx, pb, g, operator, force_pb).reshape(-1)  # noqa: E731
+
+    def flat(v, state):
+        return rhs_with_state(v.reshape(n, 3), state, A, A_face, dx, pb, g, operator, force_pb)[0].reshape(-1)
+
     u = U.reshape(-1)
-    J = colored_jacobian(flat, u, n)
+    J = colored_jacobian(lambda v: flat(v, S), u, n)
     dt = jnp.repeat(_local_dt(U, A, dx, g, cfl), 3)
-    U_new = (u + jnp.linalg.solve(jnp.diag(1.0 / dt) - J, flat(u))).reshape(n, 3)
-    return U_new, residual_norm(flat(U_new.reshape(-1)))
+    U_new = (u + jnp.linalg.solve(jnp.diag(1.0 / dt) - J, flat(u, S))).reshape(n, 3)
+    S_next = rhs_with_state(U, S, A, A_face, dx, pb, g, operator, force_pb)[1]
+    return U_new, S_next, residual_norm(flat(U_new.reshape(-1), S_next))
 
 
 IMPLICIT_BACKTRACK = 0.25  # CFL factor after a rejected (non-physical) step
@@ -277,12 +301,13 @@ def solve_implicit(grid: Grid, pb: float, g: float, operator: Operator, U0=None,
     A, A_face = jnp.asarray(grid.A), jnp.asarray(grid.A_face)
     U = initial_state(grid, pb, g) if U0 is None else U0
     force = pressure_outlet(grid.nozzle, pb, g)
+    S = initial_limiter_state(U.shape[0] + 2 * NG)
     R0 = float(residual_norm(rhs(U, A, A_face, grid.dx, pb, g, operator, force)))
     res = [1.0]
     scale, rejects, solves, failed = 1.0, 0, 0, False
     while solves < max_iters and res[-1] > CONVERGED:
         cfl = min(cfl_max, scale * cfl0 / res[-1])
-        U_new, R_new = _implicit_step(U, A, A_face, grid.dx, float(pb), float(g), cfl, force, operator)
+        U_new, S_next, R_new = _implicit_step(U, S, A, A_face, grid.dx, float(pb), float(g), cfl, force, operator)
         solves += 1
         if not bool(_physical(U_new, A, g)) or not np.isfinite(float(R_new)):
             rejects += 1
@@ -293,7 +318,7 @@ def solve_implicit(grid: Grid, pb: float, g: float, operator: Operator, U0=None,
             continue
         rejects = 0
         scale = min(1.0, 2.0 * scale)
-        U = U_new
+        U, S = U_new, S_next
         res.append(float(R_new) / R0)
     res_arr = np.asarray(res)
     converged = bool(res_arr[-1] <= CONVERGED)

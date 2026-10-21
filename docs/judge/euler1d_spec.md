@@ -181,6 +181,12 @@ higher is better), and the pass rate (share of instances without a hard-constrai
   interface at a time);
 - every run: finite output, ρ > 0, p > 0, and no solver failure.
 
+**Stateful limiters (since v1.2).** The `limiter_stateful` slot carries a state S of the shape of the slope ratios
+((n + 4, 3) on a grid of n cells) through every solver, starting at 0. Unsteady SSP-RK3 and explicit pseudo-time:
+the three stages use S_k; S_{k+1} is the new state returned at the first stage (at U_k). Implicit: the residual and
+its Jacobian use S_k (the Jacobian differentiates through U only); S_{k+1} is evaluated at U_k and replaces S_k
+when the step is accepted; the convergence residual of U_{k+1} uses S_{k+1}. Stateless slots pass S through.
+
 **In runs (since v1.1)** a candidate limiter is applied one slope ratio at a time and a candidate flux one
 interface at a time (`numerics.elementwise`, `numerics.rowwise`, both `jax.vmap`), so a candidate never sees the
 batch, its size or its statistics. Red-team log: docs/judge/redteam.md.

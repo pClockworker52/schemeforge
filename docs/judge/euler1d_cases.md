@@ -80,3 +80,5 @@ takes a single case.
 | N2 | Anderson nozzle, p_b = 0.995 (unchoked, exit Mach 0.085), N = 120 |
 | N3 | Anderson nozzle, p_b = 0.01 (supersonic exit), N = 120 |
 | N4 | Anderson nozzle, 11 back pressures moving the shock over 30 cells around x = 2.1, implicit only, N = 120 |
+| N5 | (since v1.2) parabolic nozzle, area ratio 4, length 1.5, inlet ratio 2.5; 3 back pressures putting the shock at 30 / 50 / 70 % of the divergent length (p_b = 0.8692, 0.6790, 0.4982); explicit and implicit, N = 120. Metrics: share converged (explicit, implicit), worst explicit residual drop, share with a limit cycle, mean Newton steps, roughness_J |
+| N6 | (since v1.2) smoothed-conical nozzle, area ratio 3, length 1.2, inlet ratio 2; shock at 30 / 50 / 70 % (p_b = 0.8283, 0.6713, 0.5365); as N5 |

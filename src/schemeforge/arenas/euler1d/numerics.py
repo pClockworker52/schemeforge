@@ -21,6 +21,7 @@ R_CLIP = 1e10  # slope ratios are clipped to [-R_CLIP, R_CLIP] before the limite
 
 Array = jax.Array
 Limiter = Callable[[Array], Array]
+StatefulLimiter = Callable[[Array, Array], tuple[Array, Array]]
 Reconstruction = Callable[[Array, float], tuple[Array, Array]]
 Flux = Callable[[Array, Array, float], Array]
 
@@ -90,6 +91,46 @@ def muscl(phi: Limiter) -> Reconstruction:
         return left, right
 
     return reconstruct
+
+
+def muscl_stateful(phi_s: StatefulLimiter) -> Reconstruction:
+    """MUSCL with a stateful limiter (slot `limiter_stateful`): phi, S_new = phi_s(r, S), S of the shape of r,
+    (n + 4, 3). Returns reconstruct(W, gamma, S) -> (WL, WR, S_new); marked `stateful` for the solvers, which
+    hold S fixed within a step and replace it by S_new after an accepted step (docs/judge/euler1d_spec.md)."""
+
+    def reconstruct(W: Array, gamma: float, S: Array) -> tuple[Array, Array, Array]:
+        dm = W[1:-1] - W[:-2]
+        dp = W[2:] - W[1:-1]
+        phi, S_new = phi_s(slope_ratio(dm, dp), S)
+        sigma = phi * dp
+        Wc = W[1:-1]
+        return (Wc + 0.5 * sigma)[1:-2], (Wc - 0.5 * sigma)[2:-1], S_new
+
+    reconstruct.stateful = True  # type: ignore[attr-defined]
+    return reconstruct
+
+
+def elementwise_stateful(phi_s: StatefulLimiter) -> StatefulLimiter:
+    """phi_s applied to one (r, state) pair at a time, like `elementwise`."""
+
+    def wrapped(r: Array, S: Array) -> tuple[Array, Array]:
+        phi, S_new = jax.vmap(phi_s)(r.reshape(-1), S.reshape(-1))
+        return phi.reshape(r.shape), S_new.reshape(r.shape)
+
+    return wrapped
+
+
+def initial_limiter_state(n_padded: int) -> Array:
+    """Zero state for a padded grid of n_padded cells: one value per slope ratio, (n_padded - 2, 3)."""
+    return jnp.zeros((n_padded - 2, 3))
+
+
+def reconstruct_with_state(reconstruct: Reconstruction, W: Array, gamma: float, S: Array):
+    """(WL, WR, S_new) for stateful and stateless reconstructions alike (a stateless one keeps S)."""
+    if getattr(reconstruct, "stateful", False):
+        return reconstruct(W, gamma, S)
+    WL, WR = reconstruct(W, gamma)
+    return WL, WR, S
 
 
 def first_order(W: Array, gamma: float) -> tuple[Array, Array]:

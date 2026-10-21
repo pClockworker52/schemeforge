@@ -8,7 +8,18 @@ from functools import partial
 import jax
 import jax.numpy as jnp
 
-from .numerics import Flux, Reconstruction, cons_to_prim, hllc, max_wave_speed, pad, prim_to_cons
+from .numerics import (
+    NG,
+    Flux,
+    Reconstruction,
+    cons_to_prim,
+    hllc,
+    initial_limiter_state,
+    max_wave_speed,
+    pad,
+    prim_to_cons,
+    reconstruct_with_state,
+)
 
 
 @dataclass(frozen=True)
@@ -17,30 +28,38 @@ class UnsteadyResult:
     steps: int
 
 
-def rhs(U: jax.Array, dx: float, gamma: float, reconstruct: Reconstruction, flux: Flux, bc: str) -> jax.Array:
-    """dU/dt = -(F_{i+1/2} - F_{i-1/2}) / dx for U: (n, 3)."""
+def rhs_with_state(U, S, dx, gamma, reconstruct: Reconstruction, flux: Flux, bc: str):
+    """(dU/dt, S_new) for U: (n, 3) and limiter state S: (n + 4, 3) (unused by stateless reconstructions)."""
     W = pad(cons_to_prim(U, gamma), bc)
-    WL, WR = reconstruct(W, gamma)
+    WL, WR, S_new = reconstruct_with_state(reconstruct, W, gamma, S)
     F = flux(prim_to_cons(WL, gamma), prim_to_cons(WR, gamma), gamma)
-    return -(F[1:] - F[:-1]) / dx
+    return -(F[1:] - F[:-1]) / dx, S_new
+
+
+def rhs(U: jax.Array, dx: float, gamma: float, reconstruct: Reconstruction, flux: Flux, bc: str) -> jax.Array:
+    """dU/dt = -(F_{i+1/2} - F_{i-1/2}) / dx for U: (n, 3) (zero limiter state)."""
+    return rhs_with_state(U, initial_limiter_state(U.shape[0] + 2 * NG), dx, gamma, reconstruct, flux, bc)[0]
 
 
 @partial(jax.jit, static_argnames=("reconstruct", "flux", "bc", "max_steps"))
 def _run(U0, dx, t_end, gamma, cfl, reconstruct, flux, bc, max_steps):
+    L = partial(rhs_with_state, dx=dx, gamma=gamma, reconstruct=reconstruct, flux=flux, bc=bc)
+
     def body(state):
-        U, t, k = state
+        U, S, t, k = state
         dt = jnp.minimum(cfl * dx / max_wave_speed(U, gamma), t_end - t)
-        L = partial(rhs, dx=dx, gamma=gamma, reconstruct=reconstruct, flux=flux, bc=bc)
-        U1 = U + dt * L(U)
-        U2 = 0.75 * U + 0.25 * (U1 + dt * L(U1))
-        U3 = U / 3.0 + 2.0 / 3.0 * (U2 + dt * L(U2))
-        return U3, t + dt, k + 1
+        dU, S_next = L(U, S)  # the limiter state is updated once per step, from the step's first stage
+        U1 = U + dt * dU
+        U2 = 0.75 * U + 0.25 * (U1 + dt * L(U1, S)[0])
+        U3 = U / 3.0 + 2.0 / 3.0 * (U2 + dt * L(U2, S)[0])
+        return U3, S_next, t + dt, k + 1
 
     def cond(state):
-        _, t, k = state
+        _, _, t, k = state
         return (t < t_end) & (k < max_steps)
 
-    U, _, k = jax.lax.while_loop(cond, body, (U0, jnp.asarray(0.0), jnp.asarray(0)))
+    S0 = initial_limiter_state(U0.shape[0] + 2 * NG)
+    U, _, _, k = jax.lax.while_loop(cond, body, (U0, S0, jnp.asarray(0.0), jnp.asarray(0)))
     return U, k
 
 

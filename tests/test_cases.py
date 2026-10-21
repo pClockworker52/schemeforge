@@ -19,7 +19,8 @@ from schemeforge.arenas.euler1d.gas import sound_speed
 
 def test_dev_suite_ids_and_admissibility() -> None:
     suite = dev_suite()
-    assert [c.id for c in suite] == ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "S1", "N1", "N2", "N3", "N4"]
+    assert [c.id for c in suite] == ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "S1", "N1", "N2", "N3", "N4", "N5",
+                                     "N6"]
     for case in suite:
         validate_case(case)
 

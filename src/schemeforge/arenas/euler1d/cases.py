@@ -175,6 +175,16 @@ def _n4_back_pressures(n_points: int = 11, n_cells: int = 120, cells_crossed: fl
     return tuple(float(back_pressure_for_shock(nz, x, 1.4)) for x in xs)
 
 
+N5_NOZZLE = NozzleSpec("parabolic", area_ratio=4.0, length=1.5, inlet_ratio=2.5)
+N6_NOZZLE = NozzleSpec("conical", area_ratio=3.0, length=1.2, inlet_ratio=2.0)
+
+
+def _divergent_shock_pbs(spec: NozzleSpec, fractions: tuple[float, ...] = (0.3, 0.5, 0.7)) -> tuple[float, ...]:
+    """Back pressures that put the normal shock at the given fractions of the divergent length."""
+    nz = spec.build()
+    return tuple(float(back_pressure_for_shock(nz, 1.0 + f * spec.length, 1.4)) for f in fractions)
+
+
 def dev_suite() -> list[Case]:
     """The fixed dev suite of PLAN §9.5."""
     r6_left, r6_right, _ = slowly_moving_shock()
@@ -191,6 +201,11 @@ def dev_suite() -> list[Case]:
         NozzleCase("N2", 0.995, 120),
         NozzleCase("N3", 0.01, 120),
         NozzleSweepCase("N4", _n4_back_pressures(), 120),
+        # since v1.2: explicit convergence on more than one geometry (round 1: dev N1 alone overstated it)
+        NozzleSweepCase("N5", _divergent_shock_pbs(N5_NOZZLE), 120, nozzle=N5_NOZZLE,
+                        solvers=("explicit", "implicit")),
+        NozzleSweepCase("N6", _divergent_shock_pbs(N6_NOZZLE), 120, nozzle=N6_NOZZLE,
+                        solvers=("explicit", "implicit")),
     ]
 
 

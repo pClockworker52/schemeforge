@@ -11,7 +11,7 @@ from collections.abc import Callable
 import jax.numpy as jnp
 import numpy as np
 
-from .numerics import elementwise, physical_flux, prim_to_cons, rowwise
+from .numerics import elementwise, elementwise_stateful, physical_flux, prim_to_cons, rowwise
 
 CONSISTENCY_TOL = 1e-12  # relative to max |F|
 MIRROR_TOL = 1e-12
@@ -105,6 +105,49 @@ def check_limiter(phi: Callable) -> list[str]:
                      "time: it depends on the batch size or statistics)")
     except Exception as exc:  # noqa: BLE001
         v.append(f"phi fails on a single slope ratio: {type(exc).__name__}: {exc}")
+    return v
+
+
+def limiter_state_probes(r: np.ndarray) -> list[np.ndarray]:
+    """States to pair with the slope-ratio probes: zero (the initial state), order-one and large values."""
+    rng = np.random.default_rng(3)
+    return [np.zeros_like(r), rng.uniform(-2.0, 2.0, r.shape), 10.0 ** rng.uniform(-6, 6, r.shape)]
+
+
+def check_limiter_stateful(phi_s: Callable) -> list[str]:
+    """limiter_stateful: (phi, S_new) = phi_s(r, S). Same checks as the limiter on phi, plus a finite state, for
+    every probe state; elementwise in (r, S) pairs."""
+    r = limiter_probes()
+    v: list[str] = []
+    for S in limiter_state_probes(r):
+        try:
+            phi, S_new = (np.asarray(x) for x in phi_s(jnp.asarray(r), jnp.asarray(S)))
+        except Exception as exc:  # noqa: BLE001
+            return [f"phi_s raised {type(exc).__name__}: {exc}"]
+        if phi.shape != r.shape or S_new.shape != r.shape:
+            return [f"phi_s returned shapes {phi.shape}, {S_new.shape}, expected {r.shape} twice"]
+        if phi.dtype != np.float64 or S_new.dtype != np.float64:
+            v.append(f"phi_s returned dtypes {phi.dtype}, {S_new.dtype}, expected float64")
+        if not (np.all(np.isfinite(phi)) and np.all(np.isfinite(S_new))):
+            v.append("phi_s is not finite (phi or new state) on the probes")
+        again = [np.asarray(x) for x in phi_s(jnp.asarray(r), jnp.asarray(S))]
+        if not (_bitwise_equal(phi, again[0]) and _bitwise_equal(S_new, again[1])):
+            v.append("phi_s is not deterministic")
+        perm = np.random.default_rng(1).permutation(r.size)
+        p = [np.asarray(x) for x in phi_s(jnp.asarray(r[perm]), jnp.asarray(S[perm]))]
+        if not (_bitwise_equal(p[0], phi[perm]) and _bitwise_equal(p[1], S_new[perm])):
+            v.append("phi_s is not pointwise (a permuted input does not give the permuted output)")
+        if v:
+            return sorted(set(v))
+    one = elementwise_stateful(phi_s)
+    for rows in BATCH_ROWS:
+        a = np.resize(r, (rows, 3))
+        for S in (np.zeros_like(a), np.resize(limiter_state_probes(r)[1], (rows, 3))):
+            b = [np.asarray(x) for x in phi_s(jnp.asarray(a), jnp.asarray(S))]
+            o = [np.asarray(x) for x in one(jnp.asarray(a), jnp.asarray(S))]
+            if not (_close(b[0], o[0]) and _close(b[1], o[1])):
+                return ["phi_s is not elementwise (on a run-sized batch it differs from phi_s applied to one "
+                        "(ratio, state) pair at a time)"]
     return v
 
 

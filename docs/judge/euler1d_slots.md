@@ -39,12 +39,21 @@ def flux(UL, UR, gamma):
 Hard constraints: consistency flux(U, U) = F(U) to 1e-12 and mirror symmetry
 flux(R·U_R, R·U_L) = −R·flux(U_L, U_R) with R = diag(1, −1, 1). Reconstruction: MUSCL with the van Leer limiter.
 
-## `limiter_stateful` (planned, seed hunch 2)
+## `limiter_stateful` — MUSCL slope limiter with memory (active since judge v1.2)
 
 ```python
-def phi_s(r, state):
-    """state has the same shape as r and starts at 0. Return (phi, new_state)."""
+def phi_s(r, s):
+    """r: slope ratios, s: limiter state, same shape (one value per slope ratio), s = 0 at the start.
+    Return (phi, s_new), both of r's shape, finite for every finite r and s."""
 ```
+
+How the judge uses it: as the `limiter` slot (σ = φ Δ₊, HLLC, SSP-RK3), with one state value per cell and primitive
+variable. Within a step the state is fixed: all three RK stages, and the Newton Jacobian, use the state from the
+start of the step; s_new from the step's first evaluation replaces it once the step is accepted. Steps are time
+steps (unsteady cases), explicit pseudo-time iterations and accepted Newton steps (at most 300); a rejected Newton
+step keeps the old state. Hard constraints as for `limiter`, on (r, s) pairs with s = 0, s of order one and s up to
+1e6, plus a finite s_new; elementwise in (r, s) pairs. Zoo: stateless limiters with the state passed through, and
+limiter freezing (`superbee_frozen`, `van_leer_frozen`: the centred factor ψ = 2φ/(1+r) is fixed after 1000 steps).
 
 ## `reconstruction` (planned, seed hunches 3–5)
 
