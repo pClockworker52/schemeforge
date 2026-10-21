@@ -18,4 +18,4 @@ for (cid,) in c.execute("SELECT id FROM candidates WHERE slot = ? AND origin != 
 PY
 echo "rescoring $(wc -l < runs/rescore_ids.txt) candidates"
 xargs -P "$P" -I{} sh -c "$S eval {} --arena euler1d --slot $slot --suite dev > /dev/null 2>&1; echo {} \$?" \
-    < runs/rescore_ids.txt | sort | uniq -c -f1 | tail -5
+    < runs/rescore_ids.txt | awk '{n[$2]++} END {for (k in n) print "exit " k ": " n[k]}'
