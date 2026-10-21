@@ -18,13 +18,18 @@ DUPLICATE_DISTANCE = 1e-3  # fingerprints closer than this are the same method
 
 # per (arena, slot): descriptor name -> (bin edges); values outside fall into the first / last bin
 GRIDS: dict[tuple[str, str], dict[str, np.ndarray]] = {
+    # Edges fitted to where the zoo and the C1/C2 calibration children actually lie (DECISIONS.md, 2026-10-21):
+    # the first grids spread 7 zoo limiters over 5 cells and C2's 48 fluxes over 3.
     ("euler1d", "limiter"): {
-        "compressiveness": np.linspace(0.0, 2.0, 9),
-        # max |phi''| on [0.05, 3] with h = 0.01: a kink shows up as ~1/h = 100, so >= 50 means kinked
-        "smoothness": np.array([0.0, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 50.0]),
+        # mean phi on [0, 3]: minmod 0.83, van Albada 0.97, van Leer 1.07, MC 1.22, Koren 1.29, superbee 1.42
+        "compressiveness": np.array([0.0, 0.85, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45]),
+        # max |phi''| on [0.05, 3] with h = 0.01: a kink of size k shows up as ~k/h, so >= 30 means kinked;
+        # the kinked bins separate kink size 1 (minmod, MC: 100), 4/3 (Koren) and 2 (superbee)
+        "smoothness": np.array([0.0, 0.3, 1.0, 3.0, 10.0, 30.0, 75.0, 115.0, 150.0]),
     },
     ("euler1d", "flux"): {
-        "dissipation": np.geomspace(1e-3, 10.0, 9),
+        # median |central - F| / |jump| on the probes: HLLC 2.13, HLL 2.69, Rusanov 4.42
+        "dissipation": np.array([0.0, 0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5, 3.0, 3.5, 4.0, 4.5]),
         "contact_dissipation": np.concatenate([[0.0], np.geomspace(1e-12, 1.0, 5)]),
     },
 }

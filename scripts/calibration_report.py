@@ -32,7 +32,7 @@ def main() -> int:
     print(f"operators: {dict(ops)}")
     print(f"archive cells occupied: {len(arch['elites'])}  cells: {sorted(arch['elites'])}")
     print(f"duplicates: {sum(dups.values())} total; of zoo members: {zoo_dups} "
-          f"({len(zoo_dups)} distinct zoo limiters rediscovered)")
+          f"({len(zoo_dups)} distinct zoo members rediscovered)")
     print(f"Pareto front size: {len(state['front'])}")
     for h in state["history"]:
         print(f"  gen {h['generation']}: ok {h['ok']}, rejected {h['rejected']}, llm errors {h['llm_errors']}, "

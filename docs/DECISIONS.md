@@ -86,3 +86,17 @@ numeric constants, tuples of them, `math.*` expressions or lambdas. "No Python l
 cost metric.
 *Consequences:* The engine prompt (Appendix E) should mention these rules once the first rejections show which
 ones models trip over.
+
+## 2026-10-21 — MAP-Elites grids fitted to the populated descriptor range
+*Context:* C1 filled 6 archive cells and C2 3. The descriptors were fine but the bins were not: limiter
+compressiveness spans 0.83–1.42 over the whole zoo and 80 % of C1 children lie in 0.97–1.33 (about two of the
+eight 0.25-wide bins); every kinked limiter (max |φ''| ≥ 50) shared one smoothness bin; flux dissipation spans
+1.85–4.42, two of eight log bins over 1e-3–10. Superbee and Koren shared a cell.
+*Decision:* (1) Limiter: compressiveness edges 0, 0.85, 0.95, …, 1.45 (0.1 wide); smoothness edges 0, 0.3, 1, 3,
+10, 30, 75, 115, 150, which split the kinked limiters by kink size (minmod/MC 100, Koren 133, superbee 200).
+(2) Flux: dissipation edges 0, 0.5, 1, 1.5, then 0.25 wide up to 2.5, then 0.5 wide up to 4.5. contact_dissipation
+unchanged. (3) A test requires every zoo member of a slot to have its own cell. Proposed by the orchestrator
+without Peter (session goal "continue without my help"); search policy only, judge untouched.
+*Consequences:* Re-binning the existing children: C1 6 → 14 cells, C2 3 → 7. Old run states keep their old cell
+keys; do not resume a pre-change run, start a new one. The 7-objective selection issue (STATUS) is separate and
+still open.

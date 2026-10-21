@@ -24,6 +24,19 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   (6,0 / 6,3 / 7,0) — same clustering as C1; Pareto front 40 of 48 (the 7-objective issue again).
   Cost $3.09 list = $6.43 per 100 candidates (longer outputs than limiters: ~20.8k/2.1k tokens per call),
   16.0 s mean latency, 516 candidates/h. Run took 8 min.
+  PLAN task 4 (HLLC-level contact on R5 without losing robustness) — reached on dev:
+  c-edd6d69254 (run r-20261021-032658-20c4; gen-2 crossover, HLLC star states with Rusanov speeds ±max(|u|+a))
+  has R5 contact_width 0.90 cells and l1_smooth 0 (= zoo HLLC, r-20261020-194829-470b; Rusanov 10.5 cells) and
+  converges explicitly on N1 like Rusanov/HLL (res_orders_expl 12.0, no limit cycle; HLLC: 2.5 orders, limit
+  cycle), Newton 44 steps (HLLC 60, HLL 61, Rusanov 35). R1 contact 6.56 (HLLC 6.29, HLL 6.72), R7 l1_ref 0.0064
+  (HLLC 0.0058). Label: variant of HLLC (wave-speed choice; Rusanov/Davis bounds are textbook options). Dev
+  only, one instance per case — no held-out evidence. The leading c-6d6bcaf064 (r-20261021-032702-c051) is
+  HLLC-like and inherits HLLC's N1 limit cycle.
+  Caveat: in an isolated workdir `leaderboard --vs-zoo` compares against the seed only (no zoo in that
+  registry), so its "best zoo member" ratios there are ratios to Rusanov.
+- Archive grids re-binned 2026-10-21 (DECISIONS.md): every zoo member now has its own cell; re-binning the
+  existing children gives C1 6 → 14 cells, C2 3 → 7. Gate 2's "spread over the descriptor grid" should be
+  re-checked on the next real run.
 - Next: red team and first hunch round via
   bash scripts/headless/run.sh scripts/headless/redteam.txt redteam; then Gate 2 with Peter (budget).
   All three use the subscription — wait until the usage limit has reset.
@@ -52,13 +65,14 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 ## Next (ordered)
 1. Finish the dummy 208-candidate run; record it for Gate 2.
 2. C1 with the real backend (96 calls), calibration report, cost per 100 candidates.
-3. ~~C2 (flux slot)~~ done 2026-10-21 (see Latest results). Descriptor grid for flux and limiter needs a look
-   before Phase 3: 3–6 occupied cells is too little spread for MAP-Elites.
+3. ~~C2 (flux slot)~~ done 2026-10-21 (see Latest results); descriptor grids re-binned the same day.
 4. Peter, in a WSL session: red team with the cheater agent; first hunch round (Appendix D).
 
 ## Blockers / questions for Peter
 - LLM budget: C1 at 96 calls is about $5 list price on the subscription. Full C1 (360 calls) and C2 need your OK.
 - Red team and the first hunch round need subagents with hooks, i.e. a Claude Code session inside WSL.
+  2026-10-21: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
+  classifier ("Create Unsafe Agents"). Peter: run it yourself in WSL, or allow it for this session.
 - Observation for Phase 3: with 7 objectives almost every distinct candidate is Pareto-optimal, so the
   "8 generations without a new non-dominated candidate" stop rarely fires; consider fewer selection objectives.
 

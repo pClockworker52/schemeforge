@@ -31,6 +31,16 @@ def test_flux_probes() -> None:
     assert hllc["descriptors"]["contact_dissipation"] < 1e-12 < rus["descriptors"]["contact_dissipation"]
 
 
+@pytest.mark.parametrize("slot, names", [
+    ("limiter", ["minmod", "van_albada", "van_leer", "venkatakrishnan", "mc", "koren", "superbee"]),
+    ("flux", ["rusanov", "hll", "hllc"]),
+])
+def test_zoo_members_occupy_distinct_cells(slot: str, names: list[str]) -> None:
+    # the grid must at least tell the known methods apart, or MAP-Elites has nothing to spread over
+    cells = {arch.cell_of("euler1d", slot, probe(zoo.load(slot, n), "euler1d", slot)["descriptors"]) for n in names}
+    assert len(cells) == len(names)
+
+
 def test_archive_cells_duplicates_and_replacement() -> None:
     a = arch.Archive("euler1d", "limiter")
     mm = probe(zoo.load("limiter", "minmod"), "euler1d", "limiter")
