@@ -27,6 +27,10 @@ GRIDS: dict[tuple[str, str], dict[str, np.ndarray]] = {
         # the kinked bins separate kink size 1 (minmod, MC: 100), 4/3 (Koren) and 2 (superbee)
         "smoothness": np.array([0.0, 0.3, 1.0, 3.0, 10.0, 30.0, 75.0, 115.0, 150.0]),
     },
+    ("euler1d", "limiter_stateful"): {  # descriptors of phi at the initial state, same edges as the limiter
+        "compressiveness": np.array([0.0, 0.85, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45]),
+        "smoothness": np.array([0.0, 0.3, 1.0, 3.0, 10.0, 30.0, 75.0, 115.0, 150.0]),
+    },
     ("euler1d", "flux"): {
         # median |central - F| / |jump| on the probes: HLLC 2.13, HLL 2.69, Rusanov 4.42
         "dissipation": np.array([0.0, 0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5, 3.0, 3.5, 4.0, 4.5]),

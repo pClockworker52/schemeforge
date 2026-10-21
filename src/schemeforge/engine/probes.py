@@ -20,6 +20,8 @@ LIMITER_FINGERPRINT_R = np.concatenate(
 def probe(fn, arena: str, slot: str) -> dict[str, Any]:
     if arena == "euler1d" and slot == "limiter":
         return _limiter(fn)
+    if arena == "euler1d" and slot == "limiter_stateful":
+        return _limiter_stateful(fn)
     if arena == "euler1d" and slot == "flux":
         return _flux(fn)
     return {"descriptors": {}, "fingerprint": []}
@@ -39,6 +41,21 @@ def _limiter(phi) -> dict[str, Any]:
         },
         "fingerprint": np.asarray(phi(jnp.asarray(LIMITER_FINGERPRINT_R)), dtype=float).tolist(),
     }
+
+
+def _limiter_stateful(phi_s) -> dict[str, Any]:
+    """Descriptors of phi at the initial state 0; the fingerprint adds the new state at 0 and phi at a later state
+    (s = 1e4), so a frozen limiter differs from its plain version."""
+    import jax.numpy as jnp
+
+    def at(s):
+        return lambda r: phi_s(r, jnp.full_like(r, s))
+
+    out = _limiter(lambda r: at(0.0)(r)[0])
+    rf = jnp.asarray(LIMITER_FINGERPRINT_R)
+    out["fingerprint"] += [*np.asarray(at(0.0)(rf)[1], dtype=float).tolist(),
+                           *np.asarray(at(1e4)(rf)[0], dtype=float).tolist()]
+    return out
 
 
 def _flux(flux) -> dict[str, Any]:
