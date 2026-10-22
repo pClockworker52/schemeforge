@@ -92,7 +92,8 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
-State: judge euler1d-v1.3 on main (a2bb5eb, tagged); round 2 closed; no open hunch. Evaluation slots K = 7.
+State: judge euler1d-v1.3 on main (a2bb5eb, tagged); round 2 closed; H-0011 closed; no open hunch. **Stopped
+before round 3: Peter reviews the red-team halt, quarantined cases B-0001..B-0015 and H-0011.** Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
 (reconstruction) 1.80 GiB / 160 s, muscl_van_leer_frozen (reconstruction_stateful) 1.76 GiB / 68 s, so the 2 GB
 per-worker cap (K = 7, 12.6 of 15.5 GiB) still fits. Zoo v1.3: dev r-20261022-065926-0314 .. r-20261022-070148-7b30
@@ -111,10 +112,16 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
    pressure in the Anderson nozzle (B-0005, B-0011..B-0013); K0 = 600 hits before the frozen zoo freezes
    (B-0007, B-0008, c-b5cb82a0ef only). B-0011/B-0012 may be merged (same stall, γ 1.2 vs 5/3). Side note:
    c-a84758f0e8 R1 mirror error 0.0188 vs ~1e-15 for the zoo. **Awaiting Peter's review; no case accepted.**
-2. 3c: register H-0011 and run the A1 + A7 feasibility sweep for φ(r) (~30 dev points, promo on 3); include the
-   bases of c-b5cb82a0ef and c-fb8db52bca as points. Prepared: ledger/drafts/r3_feasibility_a1a7.yaml (register
-   before running) and scripts/feasibility_a1a7.py (`run --extra <file>` adds the two bases once written as
-   stateless `limiter` files).
+2. 3c done 2026-10-22 16:16–17:06: **H-0011 supported (for this family only)**. Dev sweep of
+   phi = max(0, smin_10(s0 r, 1 + (c-1) tanh(r-1))), 30 points + the stateless bases of c-b5cb82a0ef and
+   c-fb8db52bca (judge v1.3, r-20261022-141618-00a7 .. r-20261022-145146-bcea): no point meets R1 shock <= 2.6 and
+   R1/R6 overshoot <= 1.1 x van Leer together (best corner ratio 1.22, s0 2 c 1.8); the family's sharpest shock is
+   2.80 cells; the two round-2 bases are sharp (2.69 / 2.71) but overshoot ~3 x on R6. Promo + promote --target A
+   on the three points nearest the corner, all not promoted: c-6711291203 r-20261022-145321-e725 (RF1 shock 2.72,
+   A7a 0.049), c-b3897b3f5e r-20261022-145609-942b (2.85, 0.035), c-c04b63eb05 r-20261022-145855-58d9 (3.04, 0.032;
+   A7b passes). None meets A1 or A7a; all three also miss A3 (NF1 explicit 0.50–0.55). Table, plot, promo output
+   and the two base files: docs/rounds/2026-10-22-h0011/. Supports PLAN step 3d: sharpness has to come from a
+   richer slot than phi(r).
 3. 3d: judge v1.3, red team, then round 3 on `reconstruction` with agent-written hunches. Measure worker RSS for
    the new slot first. Done on the branch (`euler1d-v1.3.dev`): reconstruction constraints (one 6-cell interface
    window per call; locality, grid size, position, constant state), THINC/BVD zoo member, the
