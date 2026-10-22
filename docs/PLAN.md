@@ -646,7 +646,7 @@ Stop after 4 rounds or about 2,000 evaluated candidates without a promotion on T
 
 *Why.* After Gate 2, round 1 and half of round 2 (docs/reports/2026-10-21-big-picture.html): the judge works; the swarm thesis is untested, because the hunch-generator, proposer, breaker and cheater agents never ran (the orchestrator did their jobs); and Target A may be out of reach for a φ(r) limiter. The best candidate so far, the round-2 ratchet c-a84758f0e8 (a variant of limiter freezing), passes the convergence criteria A3–A6 and fails the sharpness and overshoot criteria A1, A2, A7. Instead of repeating §11.3 until §11.4's limit, Phase 3 runs these steps in order. §11.1–11.4 still apply; step 3e is a checkpoint before the kill criterion.
 
-**3a. Close round 2** (1 session in WSL; about $5 to finish the run)
+**3a. Close round 2** (1 session in WSL; about $5 to finish the run) — *done 2026-10-22: docs/rounds/2026-10-21-euler1d-limiter_stateful.md (finishing cost $11.81).*
 1. Re-evaluate the ~90 children that timed out during evolve, one at a time by id, with nothing else running next to them.
 2. Resume `e-20261021-123207-3146` to generation 20, or let the stagnation stop end it.
 3. Promo and `sforge promote --target A` for the top 2–3 archive entries.
@@ -1286,6 +1286,9 @@ held-out cases are drawn from families you have not seen.
 {statement}
 Mechanism: {mechanism}
 Predicted effect: {predicted_effect}
+
+## Known traps (from earlier rounds)
+{the "All slots" section and the slot's own section of docs/judge/{arena}_traps.md}
 
 ## Parent(s)
 {for each parent: the code, then the dev report summary — per-case metrics vs zoo, hard-constraint notes,

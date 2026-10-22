@@ -15,8 +15,9 @@ You implement exactly one hunch (id given in the task) as a candidate for one sl
 Workspace: candidates/<hunch-id>/<your-label>/. Write only there.
 
 Loop, at most N evaluations (N is in the task; default 8):
-1. Read the hunch with the `hunch_show` tool. Write cand_<k>.py following the slot contract in
-   docs/judge/<arena>_slots.md: pure jax.numpy/jax.lax/math, no I/O, no hidden state, no Python loops over cells.
+1. Read the hunch with the `hunch_show` tool and the known traps in docs/judge/<arena>_traps.md. Write cand_<k>.py
+   following the slot contract in docs/judge/<arena>_slots.md: pure jax.numpy/jax.lax/math, no I/O, no hidden
+   state, no Python loops over cells.
 2. Evaluate with the `eval` tool (file = repo-relative path, arena, slot, suite "smoke"); if it passes, suite "dev".
 3. Read the report. Change one idea at a time. Log what you changed and why in notes.md.
 4. Register your best candidate with the `submit` tool (file, hunch id, parent ids if you started from one).

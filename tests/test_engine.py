@@ -86,6 +86,11 @@ def test_prompt_contains_contract_hunch_and_task() -> None:
                             ["c-9: rank 0"], "refine")
     assert "def phi(r):" in p and "## `limiter`" in p and "## `flux`" not in p
     assert "## Task: refine" in p and "c-9: rank 0" in p
+    # known traps: the shared section and the slot's own, not other slots'
+    assert "## Known traps" in p and "### All slots" in p and "soft max breaks the TVD bound" in p
+    assert "6-cell window" not in p
+    r = prompts.user_prompt("euler1d", "reconstruction", hunch, [], [], "explore")
+    assert "6-cell window" in r and "soft max" not in r
 
 
 def test_dummy_backend_writes_valid_candidates() -> None:

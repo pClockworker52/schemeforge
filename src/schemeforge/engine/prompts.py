@@ -45,6 +45,17 @@ def contract_text(arena: str, slot: str) -> str:
     return preamble.strip() + "\n\n" + (m.group(0).strip() if m else f"(no contract found for slot {slot})")
 
 
+def traps_text(arena: str, slot: str) -> str:
+    """The "All slots" section and the slot's own section of docs/judge/<arena>_traps.md (mistakes from earlier
+    rounds), headings demoted to ###; '' if the file is absent."""
+    path = Path(REPO_ROOT) / "docs" / "judge" / f"{arena}_traps.md"
+    if not path.is_file():
+        return ""
+    sections = path.read_text(encoding="utf-8").split("\n## ")[1:]
+    keep = [sec for sec in sections if sec.startswith("All slots") or f"`{slot}`" in sec.split("\n", 1)[0]]
+    return "\n\n".join("### " + sec.strip() for sec in keep)
+
+
 def report_summary(values: dict[str, float], vs_zoo: dict[str, float], keys: list[str]) -> str:
     """One line per objective; the two worst (largest vs-zoo ratio) are marked."""
     worst = sorted((k for k in keys if k in vs_zoo), key=lambda k: -vs_zoo[k])[:2]
@@ -64,6 +75,9 @@ def user_prompt(arena: str, slot: str, hunch: dict[str, Any], parents: list[dict
              f"## Hunch {hunch['id']}\n{' '.join(str(hunch['statement']).split())}\n"
              f"Mechanism: {' '.join(str(hunch['mechanism']).split())}\n"
              f"Predicted effect: {hunch['predicted_effect']}"]
+    traps = traps_text(arena, slot)
+    if traps:
+        parts.append("## Known traps (from earlier rounds)\n" + traps)
     for i, p in enumerate(parents):
         label = "Parent" if len(parents) == 1 else f"Parent {'AB'[i]}"
         parts.append(f"## {label} ({p['id']})\n```python\n{p['code']}\n```\nDev report (lower ratio is better):\n"

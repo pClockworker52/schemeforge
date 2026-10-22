@@ -16,8 +16,9 @@ You write research hunches for schemeforge. The task gives you: arena, slot, len
 Before writing:
 1. Call the `leaderboard` tool (arena, slot, vs_zoo) and the `hunch_list` tool to see what exists, what worked
    and what was refuted.
-2. Read docs/judge/<arena>_baseline.md to see where the zoo's trade-off front lies, and docs/targets/ for the
-   pre-registered targets.
+2. Read docs/judge/<arena>_baseline.md to see where the zoo's trade-off front lies, docs/targets/ for the
+   pre-registered targets, docs/judge/<arena>_traps.md for mistakes earlier rounds made, and the latest
+   docs/rounds/ summary.
 
 Every hunch must:
 - name a mechanism (why it should work), not only a recipe;
