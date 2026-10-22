@@ -1,0 +1,10 @@
+# Anderson nozzle, single back pressure p_b = 0.99 (p_crit1 = 0.9932: weak normal shock just behind the
+# throat), N = 360. Explicit and implicit; the scored solution is the implicit one if it converges, else the
+# explicit one if that converges. Exact: choked flow with a normal shock (spec section 3).
+kind: nozzle
+id: B-1107
+pb: 0.99
+n: 360
+gamma: 1.4
+nozzle:
+  type: anderson

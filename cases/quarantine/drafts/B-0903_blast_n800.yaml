@@ -1,0 +1,12 @@
+# Toro's left blast (R3 states) on N = 800: ~ 860 steps (max |u| + a ~ 45), shock and contact ~ 37 cells
+# apart at t_end, so both are resolved jumps. After step 600 (t ~ 0.0084) both cross ~ 60 cells of
+# ratcheted psi = 0. Exact Riemann solution.
+kind: riemann
+id: B-0903
+left: [1.0, 0.0, 1000.0]
+right: [1.0, 0.0, 0.01]
+t_end: 0.012
+n: 800
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

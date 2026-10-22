@@ -1,0 +1,11 @@
+# Anderson nozzle at N = 240, back pressures 0.985 and 0.99 (p_crit1 = 0.9932): weak normal shock just behind
+# the throat. Explicit and implicit. Exact: choked flow with a normal shock (spec section 3).
+# Target: does the explicit near-critical stall (B-0005, N = 120) persist or worsen on a finer grid, where the
+# transient takes more pseudo-time steps beyond K0 = 1000?
+kind: nozzle_sweep
+id: B-1102
+pbs: [0.985, 0.99]
+n: 240
+solvers: [explicit, implicit]
+nozzle:
+  type: anderson

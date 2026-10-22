@@ -1,0 +1,12 @@
+kind: nozzle_sweep
+id: B-0005
+pbs:
+- 0.215
+- 0.985
+- 0.99
+n: 120
+solvers:
+- explicit
+- implicit
+nozzle:
+  type: anderson

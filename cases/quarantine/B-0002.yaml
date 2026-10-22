@@ -1,0 +1,10 @@
+kind: smooth
+id: B-0002
+ns:
+- 50
+- 100
+- 200
+t_end: 2.5
+amp: 0.2
+u0: 1.0
+gamma: 1.4

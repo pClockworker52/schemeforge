@@ -1,0 +1,7 @@
+kind: nozzle
+id: B-0014
+pb: 0.99
+n: 360
+gamma: 1.4
+nozzle:
+  type: anderson

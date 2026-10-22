@@ -1,0 +1,10 @@
+# Anderson nozzle on a coarse grid, N = 60, back pressures 0.98, 0.985, 0.99 (p_crit1 = 0.9932): the weak
+# shock sits within one or two cells of the throat. Explicit and implicit. Exact: choked flow with a normal
+# shock (spec section 3).
+kind: nozzle_sweep
+id: B-1104
+pbs: [0.98, 0.985, 0.99]
+n: 60
+solvers: [explicit, implicit]
+nozzle:
+  type: anderson

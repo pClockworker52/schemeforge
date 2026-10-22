@@ -1,0 +1,6 @@
+# diagnostic split of B-0608: weak shock just behind the throat
+kind: nozzle
+id: D-0990
+pb: 0.99
+n: 120
+gamma: 1.4

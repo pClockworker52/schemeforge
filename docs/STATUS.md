@@ -101,10 +101,16 @@ NF1 as under v1.2); limiter, stateful and flux scores unchanged from v1.2 (runs/
 Rescore (scripts/rescore.sh, SKIP_ZOO=1 for the second slot): limiter 64 → 59 ok / 5 rejected, limiter_stateful
 493 → 489 ok / 4 rejected; all 9 rejections were rejected under v1.2 too. 15 stateful candidates whose latest v1.2
 run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the timeout reproduction.
-1. 3b: swarm test from WSL: check that the sforge MCP server connects; cheater against v1.2; breaker against
-   c-a84758f0e8, c-b5cb82a0ef and c-fb8db52bca (Peter 2026-10-22); the swarm criterion is fixed before round 3.
-   Prepared: docs/targets/swarm.md (pre-registered swarm criterion), scripts/headless/README.md (WSL checklist),
-   breaker_ratchet.txt (all three candidates), redteam_v13.txt.
+1. 3b: swarm test from WSL. (i) Red team: halted, see Blockers. (ii) Breaker done 2026-10-22 11:51–16:15
+   (`run.sh breaker_ratchet.txt breaker-round2`, opus orchestrator + 3 breaker subagents, $16.03, judge v1.3).
+   **15 cases quarantined, B-0001..B-0015** (cases/quarantine/, plus drafts/ with the probes they were cut from);
+   none breaks every zoo member, so none is a hard case. Reports verbatim in docs/rounds/2026-10-22-breaker-round2/.
+   Shared cause in all three reports: constant-state cells get r = 0 → φ = ψ = 0, the ratchet stores ψ = 0 at
+   K0 there and at extrema, so those cells stay first order for the rest of the run. Main findings: smooth wave past
+   K0 drops to order 0.31 / negative (B-0001, B-0002, all three candidates); explicit stall near critical back
+   pressure in the Anderson nozzle (B-0005, B-0011..B-0013); K0 = 600 hits before the frozen zoo freezes
+   (B-0007, B-0008, c-b5cb82a0ef only). B-0011/B-0012 may be merged (same stall, γ 1.2 vs 5/3). Side note:
+   c-a84758f0e8 R1 mirror error 0.0188 vs ~1e-15 for the zoo. **Awaiting Peter's review; no case accepted.**
 2. 3c: register H-0011 and run the A1 + A7 feasibility sweep for φ(r) (~30 dev points, promo on 3); include the
    bases of c-b5cb82a0ef and c-fb8db52bca as points. Prepared: ledger/drafts/r3_feasibility_a1a7.yaml (register
    before running) and scripts/feasibility_a1a7.py (`run --extra <file>` adds the two bases once written as

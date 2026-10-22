@@ -1,0 +1,8 @@
+# Anderson nozzle on N = 240 (twice N1), explicit pseudo-time only: the ratchet starts at iteration 600, while
+# the shock (N1's p_b, and a weak shock near the throat at 0.95) is still settling. Exact nozzle solution.
+kind: nozzle_sweep
+id: B-0907
+pbs: [0.6784, 0.95]
+n: 240
+solvers: [explicit]
+nozzle: {type: anderson}

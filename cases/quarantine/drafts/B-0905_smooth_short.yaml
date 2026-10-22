@@ -1,0 +1,9 @@
+# Smooth wave as S1 but t_end = 0.6: N = 200 takes ~ 556 steps < K0 = 600, so this isolates the base limiter's
+# order at smooth extrema from the ratchet. Exact: pure translation.
+kind: smooth
+id: B-0905
+ns: [50, 100, 200]
+t_end: 0.6
+amp: 0.2
+u0: 1.0
+gamma: 1.4

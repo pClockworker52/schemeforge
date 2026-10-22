@@ -1,0 +1,17 @@
+kind: riemann
+id: B-0006
+left:
+- 1.0
+- -2.0
+- 0.4
+right:
+- 1.0
+- 2.0
+- 0.4
+t_end: 0.6
+n: 2000
+gamma: 1.4
+x0: 2.0
+domain:
+- 0.0
+- 4.0

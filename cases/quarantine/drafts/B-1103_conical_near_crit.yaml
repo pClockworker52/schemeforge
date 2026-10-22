@@ -1,0 +1,13 @@
+# Smoothed-conical nozzle (N6 geometry: area ratio 3, length 1.2, inlet ratio 2), back pressures just below
+# p_crit1 (~0.973 for A_e/A_t = 3, gamma 1.4): weak normal shock close to the throat. Explicit and implicit,
+# N = 120. Exact: choked flow with a normal shock (spec section 3).
+kind: nozzle_sweep
+id: B-1103
+pbs: [0.96, 0.965, 0.97]
+n: 120
+solvers: [explicit, implicit]
+nozzle:
+  type: conical
+  area_ratio: 3.0
+  length: 1.2
+  inlet_ratio: 2.0

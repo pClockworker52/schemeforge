@@ -1,0 +1,12 @@
+# Isolated contact moving at u = 1 (0.23 cells per step): N = 400 on [0, 2], dt = 0.5*0.005/2.183 ~ 1.15e-3,
+# ~ 870 steps to t = 1. After step 600 (t ~ 0.69) the contact crosses ~ 60 cells. Fewer than 1000 steps, so
+# the frozen zoo members are plain limiters here. Exact: translation of the density jump, p and u constant.
+kind: riemann
+id: B-0902
+left: [1.4, 1.0, 1.0]
+right: [1.0, 1.0, 1.0]
+t_end: 1.0
+n: 400
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 2.0]

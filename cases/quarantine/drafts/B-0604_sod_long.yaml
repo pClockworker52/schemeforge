@@ -1,0 +1,11 @@
+# Sod states on a long domain and fine grid: ~1450 steps (dx = 0.002, max |u| + a ~ 1.93), so all waves keep
+# entering fresh cells for ~450 steps after step 1000. Exact Riemann solution.
+kind: riemann
+id: B-0604
+left: [1.0, 0.0, 1.0]
+right: [0.125, 0.0, 0.1]
+t_end: 0.75
+n: 1250
+gamma: 1.4
+x0: 1.0
+domain: [0.0, 2.5]

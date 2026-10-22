@@ -1,0 +1,15 @@
+kind: nozzle_sweep
+id: B-0015
+pbs:
+- 0.96
+- 0.965
+- 0.97
+n: 120
+solvers:
+- explicit
+- implicit
+nozzle:
+  type: conical
+  area_ratio: 3.0
+  length: 1.2
+  inlet_ratio: 2.0
