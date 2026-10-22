@@ -1,0 +1,15 @@
+# Mirror image of B-0010 (slowly moving Mach-10 shock, gamma 1.4): x -> 1 - x, u -> -u, so the shock now moves
+# slowly to the left into the left state. Exact: a single shock (the other waves have zero strength), the
+# mirror of B-0010's solution. N = 200, about 420 steps (ratchet K0 = 1000 inactive).
+# Target: the base limiter is not symmetric (phi(r) != r phi(1/r), e.g. phi(2) = 1.56 vs 2 phi(1/2) = 1.78),
+# so the post-shock oscillation of a slow strong shock depends on its direction; symmetric zoo limiters give
+# B-0010's numbers to round-off.
+kind: riemann
+id: B-1108
+left: [1.4, 9.45, 1.0]
+right: [8.0, 1.2, 116.5]
+t_end: 0.1
+n: 200
+gamma: 1.4
+x0: 0.6
+domain: [0.0, 1.0]

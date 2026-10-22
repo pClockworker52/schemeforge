@@ -1,0 +1,13 @@
+# Slowly moving Mach-10 shock (gamma = 1.4), fewer than 600 steps (tests the sharp superbee-relaxed base).
+# Shock frame: pre-shock rho = 1.4, p = 1 (a = 1), w = -10; Rankine-Hugoniot: rho2 = 8, p2 = 116.5, w2 = -1.75.
+# Lab frame shock speed s = 0.55 (5.3 % of max |u| + a = 10.45). Exact: a single shock, the other waves have
+# zero strength. N = 200, dt ~ 2.4e-4, ~ 420 steps, shock moves ~ 11 cells.
+kind: riemann
+id: B-0904
+left: [8.0, -1.2, 116.5]
+right: [1.4, -9.45, 1.0]
+t_end: 0.1
+n: 200
+gamma: 1.4
+x0: 0.4
+domain: [0.0, 1.0]

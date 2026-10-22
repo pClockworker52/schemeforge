@@ -1,0 +1,12 @@
+# Toro's 123 problem (two strong rarefactions, near-vacuum centre) on N = 1000, standard domain and time:
+# dt = 0.5e-3/2.75 ~ 1.8e-4, ~ 825 steps, between K0 = 600 and the frozen zoo's K = 1000. After step 600
+# (t ~ 0.11) the rarefaction heads run ~ 100 cells into ratcheted psi = 0 cells. Heads at 0.09 and 0.91 at t_end.
+kind: riemann
+id: B-0906
+left: [1.0, -2.0, 0.4]
+right: [1.0, 2.0, 0.4]
+t_end: 0.15
+n: 1000
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

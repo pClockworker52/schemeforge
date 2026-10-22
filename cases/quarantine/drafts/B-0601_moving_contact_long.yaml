@@ -1,0 +1,11 @@
+# Isolated contact moving at u = 0.2 for about 3300 steps (N = 400, dt ~ 1.8e-3): the contact crosses
+# ~240 cells after step 1000. Exact: pure translation of the density jump, p and u constant.
+kind: riemann
+id: B-0601
+left: [1.4, 0.2, 1.0]
+right: [1.0, 0.2, 1.0]
+t_end: 6.0
+n: 400
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 2.0]

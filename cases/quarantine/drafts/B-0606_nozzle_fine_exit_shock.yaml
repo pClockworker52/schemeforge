@@ -1,0 +1,8 @@
+# Anderson nozzle, fine grid, shock close to the exit (p_b = 0.25, between p_crit2 ~ 0.21 and N1's 0.68):
+# long explicit transient on N = 400, so the shock is still moving after pseudo-time step 1000.
+kind: nozzle_sweep
+id: B-0606
+pbs: [0.25, 0.30]
+n: 400
+solvers: [explicit, implicit]
+nozzle: {type: anderson}

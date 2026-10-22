@@ -1,0 +1,9 @@
+# Smooth periodic entropy wave advected for 10 periods (S1 with t_end = 10): every grid takes > 2000 steps,
+# so every cell sees the extremum (r <= 0) after step 1000. Exact: pure translation.
+kind: smooth
+id: B-0602
+ns: [50, 100, 200]
+t_end: 10.0
+amp: 0.2
+u0: 1.0
+gamma: 1.4

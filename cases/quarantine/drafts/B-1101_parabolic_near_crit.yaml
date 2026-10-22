@@ -1,0 +1,14 @@
+# Parabolic nozzle (N5 geometry: area ratio 4, length 1.5, inlet ratio 2.5), back pressures just below
+# p_crit1 (~0.985 for A_e/A_t = 4, gamma 1.4): weak normal shock a few % of the divergent length behind the
+# throat. Explicit and implicit, N = 120. Exact: choked flow with a normal shock (spec section 3).
+# Target: explicit stall of the ratchet limiter near p_crit1 (cf. B-0005 on the Anderson nozzle).
+kind: nozzle_sweep
+id: B-1101
+pbs: [0.975, 0.98, 0.984]
+n: 120
+solvers: [explicit, implicit]
+nozzle:
+  type: parabolic
+  area_ratio: 4.0
+  length: 1.5
+  inlet_ratio: 2.5

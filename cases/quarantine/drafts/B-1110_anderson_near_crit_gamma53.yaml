@@ -1,0 +1,11 @@
+# Anderson nozzle with gamma = 5/3, N = 120, back pressures 0.985 and 0.99, just below p_crit1 (~0.9925 for
+# A_e/A_t = 5.95 at gamma 5/3): weak normal shock just behind the throat. Explicit and implicit.
+# Exact: choked flow with a normal shock (spec section 3).
+kind: nozzle_sweep
+id: B-1110
+pbs: [0.985, 0.99]
+n: 120
+gamma: 1.6666666666666667
+solvers: [explicit, implicit]
+nozzle:
+  type: anderson

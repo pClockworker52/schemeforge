@@ -1,0 +1,8 @@
+# Anderson nozzle, back pressures near both critical pressures (p_crit2 ~ 0.21: shock at the exit;
+# p_crit1 ~ 0.993: weak shock at the throat). Explicit and implicit, N = 120.
+kind: nozzle_sweep
+id: B-0608
+pbs: [0.215, 0.985, 0.99]
+n: 120
+solvers: [explicit, implicit]
+nozzle: {type: anderson}

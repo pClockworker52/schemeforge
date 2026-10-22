@@ -1,0 +1,10 @@
+# Anderson nozzle at N = 240 with the standard mid-divergent shock (p_b = 0.6784, x_s ~ 2.25; dev N1 at
+# N = 120) and p_b = 0.8 (shock closer to the throat). Explicit only. Exact: choked flow with a normal shock.
+# Target: explicit convergence of the ratchet limiter away from p_crit1 on a finer grid.
+kind: nozzle_sweep
+id: B-1109
+pbs: [0.6784, 0.8]
+n: 240
+solvers: [explicit]
+nozzle:
+  type: anderson

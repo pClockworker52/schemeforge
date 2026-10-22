@@ -1,0 +1,6 @@
+# diagnostic split of B-0608: shock near the exit
+kind: nozzle
+id: D-0215
+pb: 0.215
+n: 120
+gamma: 1.4

@@ -1,0 +1,11 @@
+# Toro's 123 problem (two strong rarefactions, near-vacuum centre) on a fine grid: ~1650 steps
+# (dx = 0.002, max |u| + a = 2.75), heads at 2 -+ 1.65 at t_end. Exact Riemann solution.
+kind: riemann
+id: B-0607
+left: [1.0, -2.0, 0.4]
+right: [1.0, 2.0, 0.4]
+t_end: 0.6
+n: 2000
+gamma: 1.4
+x0: 2.0
+domain: [0.0, 4.0]
