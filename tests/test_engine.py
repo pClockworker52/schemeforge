@@ -25,6 +25,23 @@ def test_limiter_probes_separate_smooth_and_kinked() -> None:
     assert len(mm["fingerprint"]) == 64 and fingerprint_distance(mm["fingerprint"], va["fingerprint"]) > 1e-2
 
 
+def test_reconstruction_probes() -> None:
+    from schemeforge.arenas.euler1d.numerics import muscl
+
+    d = {n: probe(f, "euler1d", "reconstruction")["descriptors"] for n, f in [
+        ("first", zoo.load("reconstruction", "first_order")), ("weno", zoo.load("reconstruction", "weno5z")),
+        ("thinc", zoo.load("reconstruction", "thinc_bvd")), ("minmod", muscl(zoo.load("limiter", "minmod"))),
+        ("superbee", muscl(zoo.load("limiter", "superbee")))]}
+    assert d["first"]["compressiveness"] == 0.0
+    assert d["minmod"]["compressiveness"] < d["superbee"]["compressiveness"] < d["thinc"]["compressiveness"]
+    assert d["weno"]["smooth_error"] < -4 < -3 < d["superbee"]["smooth_error"] < d["first"]["smooth_error"]
+    # a frozen reconstruction differs from its plain version in the fingerprint, not in the descriptors
+    plain, frozen = (probe(zoo.load("reconstruction_stateful", n), "euler1d", "reconstruction_stateful")
+                     for n in ("muscl_van_leer", "muscl_van_leer_frozen"))
+    assert plain["descriptors"] == frozen["descriptors"]
+    assert fingerprint_distance(plain["fingerprint"], frozen["fingerprint"]) > 1e-2
+
+
 def test_flux_probes() -> None:
     hllc = probe(zoo.load("flux", "hllc"), "euler1d", "flux")
     rus = probe(zoo.load("flux", "rusanov"), "euler1d", "flux")
@@ -34,6 +51,7 @@ def test_flux_probes() -> None:
 @pytest.mark.parametrize("slot, names", [
     ("limiter", ["minmod", "van_albada", "van_leer", "venkatakrishnan", "mc", "koren", "superbee"]),
     ("flux", ["rusanov", "hll", "hllc"]),
+    ("reconstruction", ["first_order", "weno5z", "thinc_bvd"]),
 ])
 def test_zoo_members_occupy_distinct_cells(slot: str, names: list[str]) -> None:
     # the grid must at least tell the known methods apart, or MAP-Elites has nothing to spread over

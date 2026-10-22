@@ -24,6 +24,10 @@ def probe(fn, arena: str, slot: str) -> dict[str, Any]:
         return _limiter_stateful(fn)
     if arena == "euler1d" and slot == "flux":
         return _flux(fn)
+    if arena == "euler1d" and slot == "reconstruction":
+        return _reconstruction(lambda W: fn(W, 1.4))
+    if arena == "euler1d" and slot == "reconstruction_stateful":
+        return _reconstruction_stateful(fn)
     return {"descriptors": {}, "fingerprint": []}
 
 
@@ -79,6 +83,62 @@ def _flux(flux) -> dict[str, Any]:
         },
         "fingerprint": (F / (np.abs(central) + 1.0)).ravel()[:192].tolist(),
     }
+
+
+# reconstruction: smeared steps (tanh, widths 0.5-2 cells, sub-cell offsets) and a smooth wave, 16 interfaces each
+RECON_CELLS = 21  # padded cells: 16 interfaces
+RECON_STEPS = [(w, x0) for w in (0.5, 1.0, 2.0) for x0 in (0.0, 0.25, 0.5)]
+RECON_WAVE = 16.0  # cells per wavelength
+
+
+def _recon_profiles() -> tuple[list[np.ndarray], np.ndarray, np.ndarray]:
+    """Padded grids (RECON_CELLS, 3), the same profile in rho, u and p (offset to stay positive): the smeared steps,
+    then the wave as cell averages, plus the wave's exact values at the 16 interfaces."""
+    i = np.arange(RECON_CELLS) - RECON_CELLS / 2 + 0.5  # cell centres, the middle interface at 0
+    grids = [np.repeat((1.0 + 0.5 * (1.0 + np.tanh((i - x0) / w)))[:, None], 3, axis=1) for w, x0 in RECON_STEPS]
+    k = 2.0 * np.pi / RECON_WAVE
+    avg = 1.0 + 0.2 * np.sin(k * i) * np.sin(k / 2) / (k / 2)  # exact cell averages
+    faces = i[2:-3] + 0.5  # interfaces between padded cells j + 2 and j + 3
+    return grids, np.repeat(avg[:, None], 3, axis=1), 1.0 + 0.2 * np.sin(k * faces)
+
+
+def _reconstruction(rec) -> dict[str, Any]:
+    """rec(W) -> (WL, WR). compressiveness: on the steps of width <= 1 cell, the share of the jump between
+    neighbouring cells that the faces take up, sum((WL - W_left) + (W_right - WR)) / sum(W_right - W_left) over the
+    interfaces (first order 0; THINC/BVD 0.85, WENO5-Z 0.78, MUSCL-superbee 0.76, MUSCL-minmod 0.47).
+    smooth_error: log10 of the mean face error on the wave (WENO5-Z -4.7, MUSCL -2.3 to -2.8, first order -1.6)."""
+    import jax.numpy as jnp
+
+    steps, wave, exact = _recon_profiles()
+    taken, total, prints = 0.0, 0.0, []
+    for (width, _), W in zip(RECON_STEPS, steps, strict=True):
+        WL, WR = (np.asarray(x, dtype=float)[:, 0] for x in rec(jnp.asarray(W)))
+        left, right = W[2:-3, 0], W[3:-2, 0]
+        if width <= 1.0:
+            taken += float(np.sum((WL - left) + (right - WR)))
+            total += float(np.sum(right - left))
+        prints += [*WL, *WR]
+    WL, WR = (np.asarray(x, dtype=float)[:, 0] for x in rec(jnp.asarray(wave)))
+    err = 0.5 * (np.mean(np.abs(WL - exact)) + np.mean(np.abs(WR - exact)))
+    return {
+        "descriptors": {"compressiveness": taken / total, "smooth_error": float(np.log10(err + 1e-16))},
+        "fingerprint": [*prints, *WL, *WR],
+    }
+
+
+def _reconstruction_stateful(rec_s) -> dict[str, Any]:
+    """Descriptors at the initial state 0; the fingerprint adds the new state at 0 and the faces at a late state
+    (s = 1e4), as for limiter_stateful."""
+    import jax.numpy as jnp
+
+    def at(s):
+        return lambda W: rec_s(W, 1.4, jnp.full((W.shape[0] - 2, 3), s))
+
+    out = _reconstruction(lambda W: at(0.0)(W)[:2])
+    late = _reconstruction(lambda W: at(1e4)(W)[:2])
+    W = jnp.asarray(_recon_profiles()[0][4])
+    out["fingerprint"] += [*np.asarray(at(0.0)(W)[2], dtype=float)[:, 0].tolist(), *late["fingerprint"]]
+    return out
 
 
 def fingerprint_distance(a: list[float], b: list[float]) -> float:

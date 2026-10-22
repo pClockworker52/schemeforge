@@ -21,6 +21,7 @@ OBJECTIVES: dict[str, dict[str, list[tuple[str, str, str]]]] = {
         "limiter": _SHOCK_CAPTURING,
         "limiter_stateful": _SHOCK_CAPTURING,
         "reconstruction": _SHOCK_CAPTURING,
+        "reconstruction_stateful": _SHOCK_CAPTURING,
         "flux": [
             ("R1", "contact_width", MIN),
             ("R5", "l1_smooth", MIN),

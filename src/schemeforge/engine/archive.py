@@ -31,6 +31,17 @@ GRIDS: dict[tuple[str, str], dict[str, np.ndarray]] = {
         "compressiveness": np.array([0.0, 0.85, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45]),
         "smoothness": np.array([0.0, 0.3, 1.0, 3.0, 10.0, 30.0, 75.0, 115.0, 150.0]),
     },
+    ("euler1d", "reconstruction"): {
+        # engine/probes.py _reconstruction: first order 0, MUSCL minmod 0.47, van Albada 0.52, van Leer 0.62,
+        # Koren 0.69, MC 0.70, superbee 0.76, WENO5-Z 0.78, THINC/BVD 0.85
+        "compressiveness": np.array([0.0, 0.3, 0.5, 0.6, 0.66, 0.72, 0.8, 0.9]),
+        # log10 face error on the smooth wave: WENO5-Z -4.7, MUSCL -2.8 to -2.3, THINC/BVD -2.7, first order -1.6
+        "smooth_error": np.array([-16.0, -6.0, -5.0, -4.0, -3.0, -2.5, -2.0, -1.0]),
+    },
+    ("euler1d", "reconstruction_stateful"): {  # descriptors at the initial state, same edges
+        "compressiveness": np.array([0.0, 0.3, 0.5, 0.6, 0.66, 0.72, 0.8, 0.9]),
+        "smooth_error": np.array([-16.0, -6.0, -5.0, -4.0, -3.0, -2.5, -2.0, -1.0]),
+    },
     ("euler1d", "flux"): {
         # median |central - F| / |jump| on the probes: HLLC 2.13, HLL 2.69, Rusanov 4.42
         "dissipation": np.array([0.0, 0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5, 3.0, 3.5, 4.0, 4.5]),

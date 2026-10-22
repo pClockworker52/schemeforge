@@ -93,9 +93,16 @@ still open in the ledger. The round-2 findings so far are in docs/reports/2026-1
    reconstruction constraints done (one 6-cell interface window per call, locality/size/position/constant-state
    checks; docs/judge/euler1d_slots.md, redteam.md; 252 tests green). Dev smoke check in the cloud registry only
    (not in the WSL registry): weno5z r-20261022-051745-85a6, first_order r-20261022-051852-a268, both OK.
-   **Do not merge this branch into the WSL checkout until round 2 is closed** (iron rule 2). Still open for v1.3:
-   stateful variant, THINC/BVD zoo member, archive descriptors, tag, zoo eval, rescore, cheater pass.
-5. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
+   **Do not merge this branch into the WSL checkout until round 2 is closed** (iron rule 2).
+   Also done in the cloud session: THINC/BVD zoo member; the `reconstruction_stateful` slot (state layout of
+   `limiter_stateful`, windowed, zoo `muscl_van_leer` and `muscl_van_leer_frozen`); probes, archive grids and
+   objectives for both reconstruction slots (every zoo member has its own cell). Still open for v1.3, on the WSL
+   machine: bump JUDGE_VERSION to `euler1d-v1.3`, tag, `sforge zoo eval` dev + promo, archive rescore
+   (scripts/rescore.sh), cheater pass (scripts/headless/redteam_v13.txt).
+5. Prepared for 3b and 3c (cloud session, 2026-10-22): docs/targets/swarm.md (pre-registered swarm criterion),
+   scripts/headless/README.md (WSL checklist), breaker_ratchet.txt, redteam_v13.txt; H-0011 draft
+   (ledger/drafts/r3_feasibility_a1a7.yaml, register before running) and scripts/feasibility_a1a7.py.
+6. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
 - Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
