@@ -18,7 +18,7 @@ rounds 1 and 2 (docs/STATUS.md). Run everything below from `/mnt/c/Users/peter/s
 
 | Step | Command | Output |
 |---|---|---|
-| 3b(i), 3d | `bash scripts/headless/run.sh scripts/headless/redteam_v13.txt redteam-v13` | candidates/redteam-v13/REPORT.md |
+| 3b(i), 3d | `bash scripts/headless/run.sh scripts/headless/redteam_v13.txt redteam-v13` | candidates/redteam/v13/REPORT.md |
 | 3b(ii) | `bash scripts/headless/run.sh scripts/headless/breaker_ratchet.txt breaker-round2` | candidates/breaker-round2/, cases/quarantine/ |
 | 3c | see `scripts/feasibility_a1a7.py --help` | runs/feasibility-a1a7/ |
 | 3d round | `bash scripts/headless/run.sh scripts/headless/round3.txt round3`, or paste round3.txt into an interactive WSL session | docs/rounds/…-reconstruction_stateful.md |
