@@ -50,3 +50,15 @@ rule already scores a jump that never completes as the full window width.
 
 Zoo scores are unchanged by v1.1 to the printed precision (`sforge zoo eval`, dev and promo, 2026-10-21), as are
 C2's c-edd6d69254 (r-20261021-042913-251b) and `sforge judge verify` (49 of 49).
+
+## Reconstruction slot (judge v1.3.dev, 2026-10-22)
+
+A `reconstruction` candidate receives the whole padded grid, so the v1.0 hole (case detection from the batch
+size or statistics, s01/s02; position dependence, s05) was open for this slot, and a wider stencil than the
+implicit solver's ±3 cells was possible too. Fixed before any search on the slot, in the same two layers as
+v1.1: runs call the reconstruction on one 6-cell interface window at a time (`numerics.stencilwise`), and a hard
+constraint rejects code whose full-grid output differs from its windowed output. Regression tests in
+tests/test_reconstruction_slot.py: grid-size switch, statistics switch, position band, a 7-cell stencil, a
+broken constant state. Written by the orchestrator, not by the cheater agent; PLAN §11.5 step 3d asks for a
+cheater pass on this slot once the slot is complete.
+

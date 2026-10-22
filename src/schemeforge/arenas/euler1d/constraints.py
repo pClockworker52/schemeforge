@@ -11,7 +11,7 @@ from collections.abc import Callable
 import jax.numpy as jnp
 import numpy as np
 
-from .numerics import elementwise, elementwise_stateful, physical_flux, prim_to_cons, rowwise
+from .numerics import NG, elementwise, elementwise_stateful, physical_flux, prim_to_cons, rowwise, stencilwise
 
 CONSISTENCY_TOL = 1e-12  # relative to max |F|
 MIRROR_TOL = 1e-12
@@ -187,6 +187,75 @@ def check_flux(flux: Callable, gamma: float = 1.4) -> list[str]:
                      "a time: it depends on the batch size or statistics)")
     except Exception as exc:  # noqa: BLE001
         v.append(f"flux fails on a single interface: {type(exc).__name__}: {exc}")
+    return v
+
+
+def reconstruction_probes(seed: int = 20261022) -> list[np.ndarray]:
+    """Padded primitive grids (m + 5, 3) for the run-like interface counts m of BATCH_ROWS: random admissible cell
+    values (log-uniform rho in [1e-2, 1e2], p in [1e-3, 1e3], u in [-5, 5]), and a jump between two such states
+    (a shock-tube profile) or a smooth wave for every other size."""
+    rng = np.random.default_rng(seed)
+
+    def cells(k: int) -> np.ndarray:
+        return np.stack([10.0 ** rng.uniform(-2, 2, k), rng.uniform(-5, 5, k), 10.0 ** rng.uniform(-3, 3, k)], axis=1)
+
+    grids = []
+    for i, m in enumerate(BATCH_ROWS):
+        k = m + 2 * NG - 1
+        grids.append(cells(k))
+        if i % 2 == 0:
+            a, b = cells(2)
+            grids.append(np.where((np.arange(k) < k // 2)[:, None], a, b))
+        else:
+            x = np.linspace(0.0, 1.0, k)[:, None]
+            grids.append(np.array([1.0, 0.5, 1.0]) * (1.0 + 0.3 * np.sin(2 * np.pi * x + np.array([0.0, 1.0, 2.0]))))
+    return grids
+
+
+def check_reconstruction(reconstruct: Callable, gamma: float = 1.4) -> list[str]:
+    """reconstruction: (WL, WR) = reconstruct(W, gamma), W (n + 6, 3) -> (n + 1, 3) twice. Finite, float64 and
+    deterministic on the probes; a constant state is reproduced; and on every probe grid the result equals the
+    reconstruction applied one interface window (the 2 * NG cells around it) at a time, which is what runs use.
+    The last check rejects any dependence on cells further than NG away, on the grid size or statistics, or on the
+    position of the interface."""
+    grids = reconstruction_probes()
+    v: list[str] = []
+    for W in grids:
+        m = W.shape[0] - 2 * NG + 1
+        try:
+            WL, WR = (np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma))
+        except Exception as exc:  # noqa: BLE001
+            return [f"reconstruct raised {type(exc).__name__}: {exc}"]
+        if WL.shape != (m, 3) or WR.shape != (m, 3):
+            return [f"reconstruct returned shapes {WL.shape}, {WR.shape}, expected {(m, 3)} twice"]
+        if WL.dtype != np.float64 or WR.dtype != np.float64:
+            v.append(f"reconstruct returned dtypes {WL.dtype}, {WR.dtype}, expected float64")
+        if not (np.all(np.isfinite(WL)) and np.all(np.isfinite(WR))):
+            v.append("reconstruct is not finite on admissible cell values")
+        again = [np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma)]
+        if not (_bitwise_equal(WL, again[0]) and _bitwise_equal(WR, again[1])):
+            v.append("reconstruct is not deterministic")
+        if v:
+            return sorted(set(v))
+    for state in reconstruction_probes(seed=7)[0][:8]:  # 8 random admissible states, each as a constant grid
+        W = np.tile(state, (2 * NG + 4, 1))
+        WL, WR = (np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma))
+        if not (np.allclose(WL, W[: WL.shape[0]], rtol=CONSISTENCY_TOL, atol=0.0)
+                and np.allclose(WR, W[: WR.shape[0]], rtol=CONSISTENCY_TOL, atol=0.0)):
+            v.append("reconstruct does not reproduce a constant state")
+            break
+    one = stencilwise(reconstruct)
+    try:
+        for W in grids:
+            full = [np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma)]
+            local = [np.asarray(x) for x in one(jnp.asarray(W), gamma)]
+            if not (_close(full[0], local[0]) and _close(full[1], local[1])):
+                v.append(f"reconstruct is not local (on a run-sized grid it differs from reconstruct applied to the "
+                         f"{2 * NG} cells around one interface at a time: it reaches further than {NG} cells or "
+                         f"depends on the grid size, its statistics or the position)")
+                break
+    except Exception as exc:  # noqa: BLE001
+        v.append(f"reconstruct fails on a single interface window of {2 * NG} cells: {type(exc).__name__}: {exc}")
     return v
 
 

@@ -32,7 +32,7 @@ from .cases import (
 )
 from .exact_nozzle import solve_nozzle
 from .exact_riemann import solve_riemann
-from .numerics import elementwise, elementwise_stateful, hllc, muscl, muscl_stateful, rowwise
+from .numerics import elementwise, elementwise_stateful, hllc, muscl, muscl_stateful, rowwise, stencilwise
 from .steady import default_operator, make_grid, solve_explicit, solve_implicit
 from .unsteady import solve_unsteady
 
@@ -42,7 +42,8 @@ SUITES = ("smoke", "dev", "promo")
 
 def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
     """(reconstruct, flux) for a candidate in the given slot; the other component is the judge default.
-    Limiters run elementwise and fluxes row-wise, so the candidate never sees the whole batch."""
+    Limiters run elementwise, fluxes row-wise and reconstructions one interface window at a time, so the
+    candidate never sees the whole batch."""
     if slot == "limiter":
         return muscl(elementwise(fn)), hllc
     if slot == "limiter_stateful":
@@ -50,7 +51,7 @@ def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
     if slot == "flux":
         return muscl(zoo.load("limiter", "van_leer")), rowwise(fn)
     if slot == "reconstruction":
-        return fn, hllc
+        return stencilwise(fn), hllc
     raise ValueError(f"slot {slot!r} is not evaluated in Arena 1 yet")
 
 
@@ -61,7 +62,9 @@ def slot_constraints(fn: Callable, slot: str) -> list[str]:
         return constraints.check_limiter_stateful(fn)
     if slot == "flux":
         return constraints.check_flux(fn)
-    return []  # reconstruction: only run-level constraints (zoo use only in Phase 1)
+    if slot == "reconstruction":
+        return constraints.check_reconstruction(fn)
+    return []
 
 
 def smoke_suite() -> list[Case]:

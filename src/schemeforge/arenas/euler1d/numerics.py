@@ -133,6 +133,21 @@ def reconstruct_with_state(reconstruct: Reconstruction, W: Array, gamma: float, 
     return WL, WR, S
 
 
+def stencilwise(reconstruct: Reconstruction) -> Reconstruction:
+    """reconstruct applied to one interface at a time: each call sees only the 2 * NG cells k .. k + 5 around
+    interface k (a padded grid with n = 0) and returns its (1, 3) states. The dependence stays within ±NG cells
+    (the stencil the Newton Jacobian assumes), and the candidate never sees the grid size or the position of the
+    interface (the reconstruction analogue of red team s01, s02 and s05)."""
+
+    def wrapped(W: Array, gamma: float) -> tuple[Array, Array]:
+        m = W.shape[0] - 2 * NG + 1  # interfaces
+        windows = W[jnp.arange(m)[:, None] + jnp.arange(2 * NG)[None, :]]  # (m, 2 NG, 3)
+        WL, WR = jax.vmap(lambda w: reconstruct(w, gamma))(windows)
+        return WL[:, 0], WR[:, 0]
+
+    return wrapped
+
+
 def first_order(W: Array, gamma: float) -> tuple[Array, Array]:
     return W[NG - 1 : -NG], W[NG : -NG + 1]
 

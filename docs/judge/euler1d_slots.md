@@ -55,7 +55,7 @@ step keeps the old state. Hard constraints as for `limiter`, on (r, s) pairs wit
 1e6, plus a finite s_new; elementwise in (r, s) pairs. Zoo: stateless limiters with the state passed through, and
 limiter freezing (`superbee_frozen`, `van_leer_frozen`: the centred factor ψ = 2φ/(1+r) is fixed after 1000 steps).
 
-## `reconstruction` (planned, seed hunches 3–5)
+## `reconstruction` (hard constraints since judge v1.3.dev; seed hunches 3–5)
 
 ```python
 def reconstruct(W, gamma):
@@ -63,8 +63,16 @@ def reconstruct(W, gamma):
     Return (WL, WR), each (n + 1, 3): the states left and right of interfaces 0..n."""
 ```
 
-The implicit nozzle solver assumes that a cell's residual depends only on cells within ±3; a reconstruction
-that reaches further gets a less accurate Newton Jacobian (slower convergence, same converged solution).
+Interface k separates padded cells k + 2 and k + 3. Since judge v1.3 runs call the reconstruction one interface
+at a time: each call gets the 6 cells k..k+5 around one interface (a (6, 3) array, i.e. n = 0) and returns
+(1, 3) arrays (`numerics.stencilwise`). So code must work for n = 0, may use only those 6 cells, and must not
+depend on the grid size, its statistics or the position of the interface. This also keeps a cell's residual
+within ±3 cells, the stencil the implicit solver's Jacobian assumes.
+
+Hard constraints (`constraints.check_reconstruction`): the right shapes, float64, finite and deterministic on
+random admissible grids, step profiles and smooth waves of run-like sizes (1–404 interfaces); a constant state
+is reproduced to 1e-12 relative; and the output on those grids equals the one-interface-at-a-time output to
+1e-13 relative ("not local" otherwise). Zoo: `first_order`, `weno5z`; MUSCL with any zoo limiter also passes.
 
 ## `operator` (planned, Target B)
 
