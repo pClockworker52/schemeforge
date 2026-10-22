@@ -59,6 +59,17 @@ def test_core_locks_are_exclusive(tmp_path, monkeypatch) -> None:
                 pass
 
 
+def test_max_parallel_is_capped_by_memory(monkeypatch) -> None:
+    monkeypatch.delenv("SFORGE_MAX_PARALLEL", raising=False)
+    monkeypatch.setattr(locks.os, "sched_getaffinity", lambda _: set(range(32)))
+    monkeypatch.setattr(locks, "mem_total_bytes", lambda: 15 * 1024**3)
+    assert locks.max_parallel() == 7
+    monkeypatch.setattr(locks, "mem_total_bytes", lambda: None)
+    assert locks.max_parallel() == 15
+    monkeypatch.setattr(locks, "mem_total_bytes", lambda: 1024**3)
+    assert locks.max_parallel() == 1
+
+
 @pytest.fixture
 def in_tmp(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
