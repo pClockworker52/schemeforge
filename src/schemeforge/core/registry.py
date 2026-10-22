@@ -9,7 +9,7 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 BUSY_TIMEOUT = 120.0  # seconds to wait for a lock held by another writer
 DEFAULT_PATH = Path("runs") / "registry.sqlite"
 
@@ -54,6 +54,10 @@ CREATE TABLE IF NOT EXISTS scores (
     judge_hash    TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS scores_by_candidate ON scores (candidate_id, metric);
+-- schema v2: the leaderboard looks up a candidate's latest run and that run's scores for every candidate; without
+-- these, each lookup scanned the whole scores table (a 30-min leaderboard on the round-2 registry on /mnt/c)
+CREATE INDEX IF NOT EXISTS scores_by_run ON scores (run_id);
+CREATE INDEX IF NOT EXISTS runs_by_candidate ON runs (candidate_id, suite, judge_version, status, started_at);
 
 CREATE TABLE IF NOT EXISTS cases (
     id                     TEXT PRIMARY KEY,

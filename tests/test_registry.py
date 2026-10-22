@@ -67,3 +67,22 @@ def test_newer_schema_is_refused() -> None:
     conn.execute(f"PRAGMA user_version = {registry.SCHEMA_VERSION + 1}")
     with pytest.raises(RuntimeError):
         registry.init_db(conn)
+
+
+def test_v1_registry_gains_the_leaderboard_indexes(tmp_path) -> None:
+    # a registry created before schema v2 has no index on scores.run_id or runs.candidate_id; opening it adds them,
+    # so the leaderboard's per-candidate lookups stop scanning the whole scores table
+    path = tmp_path / "old.sqlite"
+    conn = registry.connect(path)
+    conn.execute("DROP INDEX scores_by_run")
+    conn.execute("DROP INDEX runs_by_candidate")
+    conn.execute("PRAGMA user_version = 1")
+    conn.commit()
+    conn.close()
+    conn = registry.connect(path)
+    assert conn.execute("PRAGMA user_version").fetchone()[0] == registry.SCHEMA_VERSION
+    plans = [conn.execute(f"EXPLAIN QUERY PLAN {q}").fetchone()[3] for q in (
+        "SELECT id FROM runs WHERE candidate_id = 'c' AND suite = 'dev' AND status = 'ok' AND judge_version = 'v' "
+        "ORDER BY started_at DESC LIMIT 1",
+        "SELECT metric, value FROM scores WHERE run_id = 'r'")]
+    assert "runs_by_candidate" in plans[0] and "scores_by_run" in plans[1]
