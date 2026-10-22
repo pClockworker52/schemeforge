@@ -116,10 +116,18 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
    `muscl_van_leer_frozen`), probes, archive grids and objectives for both reconstruction slots. Cloud-registry
    dev checks only (not in the WSL registry): thinc_bvd r-20261022-054308-f275 (R1 shock 2.47, contact 2.65; N5/N6
    stall), muscl_van_leer_frozen r-20261022-054646-b2c7 = limiter_stateful van_leer_frozen r-20261022-054759-f751.
-   Version bump, tag, zoo eval and rescore done (see State). Still open: cheater pass (redteam_v13.txt).
+   Version bump, tag, zoo eval and rescore done (see State). Cheater pass (redteam_v13.txt) **not run**, see
+   Blockers.
 4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
+- **Red team v1.3 did not run** (2026-10-22 11:17–11:50, `run.sh redteam_v13.txt redteam-v13`, $1.10, 4 turns).
+  A safety classifier stopped the cheater subagent before it wrote any file: 0 candidates, 0 eval runs, no
+  LOG.md. All 12 planned attempts are "not attempted" (candidates/redteam-v13/REPORT.md, gitignored;
+  runs/headless/redteam-v13.json). Not resent with reworded instructions. v1.3 is therefore not red-teamed. Options:
+  resend unchanged, split by slot/idea, or run the cheater interactively. Side finding: the cheater's MCP
+  `leaderboard` query for `limiter_stateful` timed out after 1800 s (the reconstruction one returned). The
+  registry on /mnt/c is slow and needs a look before round 3.
 - Round 2 questions answered 2026-10-22 (DECISIONS.md): A7 stays as written; breaker on all three candidates.
 - Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
   classifier ("Create Unsafe Agents"), and the desktop session has no sforge MCP tools. The red team and round 1
