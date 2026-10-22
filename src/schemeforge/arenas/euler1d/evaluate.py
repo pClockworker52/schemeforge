@@ -32,11 +32,20 @@ from .cases import (
 )
 from .exact_nozzle import solve_nozzle
 from .exact_riemann import solve_riemann
-from .numerics import elementwise, elementwise_stateful, hllc, muscl, muscl_stateful, rowwise, stencilwise
+from .numerics import (
+    elementwise,
+    elementwise_stateful,
+    hllc,
+    muscl,
+    muscl_stateful,
+    rowwise,
+    stencilwise,
+    stencilwise_stateful,
+)
 from .steady import default_operator, make_grid, solve_explicit, solve_implicit
 from .unsteady import solve_unsteady
 
-SLOTS = ("limiter", "limiter_stateful", "flux", "reconstruction")
+SLOTS = ("limiter", "limiter_stateful", "flux", "reconstruction", "reconstruction_stateful")
 SUITES = ("smoke", "dev", "promo")
 
 
@@ -52,6 +61,8 @@ def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
         return muscl(zoo.load("limiter", "van_leer")), rowwise(fn)
     if slot == "reconstruction":
         return stencilwise(fn), hllc
+    if slot == "reconstruction_stateful":
+        return stencilwise_stateful(fn), hllc
     raise ValueError(f"slot {slot!r} is not evaluated in Arena 1 yet")
 
 
@@ -64,6 +75,8 @@ def slot_constraints(fn: Callable, slot: str) -> list[str]:
         return constraints.check_flux(fn)
     if slot == "reconstruction":
         return constraints.check_reconstruction(fn)
+    if slot == "reconstruction_stateful":
+        return constraints.check_reconstruction_stateful(fn)
     return []
 
 

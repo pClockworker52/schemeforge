@@ -18,7 +18,8 @@ G = 1.4
 def test_expected_members() -> None:
     assert LIMITERS == ["koren", "mc", "minmod", "superbee", "van_albada", "van_leer", "venkatakrishnan"]
     assert FLUXES == ["hll", "hllc", "rusanov"]  # Roe dropped at Gate 1 (fails positivity on R2)
-    assert RECONSTRUCTIONS == ["first_order", "weno5z"]
+    assert RECONSTRUCTIONS == ["first_order", "thinc_bvd", "weno5z"]
+    assert sorted(zoo.members("reconstruction_stateful")) == ["muscl_van_leer", "muscl_van_leer_frozen"]
 
 
 @pytest.mark.parametrize("name", LIMITERS)

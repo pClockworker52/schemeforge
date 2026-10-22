@@ -18,6 +18,7 @@ SLOT_FUNCTIONS = {
     "limiter_stateful": "phi_s",
     "flux": "flux",
     "reconstruction": "reconstruct",
+    "reconstruction_stateful": "reconstruct_s",
     "operator": "fluxes_and_source",
 }
 

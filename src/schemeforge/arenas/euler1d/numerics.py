@@ -148,6 +148,30 @@ def stencilwise(reconstruct: Reconstruction) -> Reconstruction:
     return wrapped
 
 
+STATE_WINDOW = 2 * NG - 2  # state rows a window sees: padded cells k + 1 .. k + 4, the cells with a slope ratio
+
+
+def stencilwise_stateful(reconstruct_s: Callable) -> Reconstruction:
+    """A stateful reconstruction (slot `reconstruction_stateful`) applied one interface at a time, like
+    `stencilwise`. reconstruct_s(W, gamma, S) -> (WL, WR, S_new) with S (n + 4, 3), one value per padded cell
+    1 .. n + 4 (the layout of `limiter_stateful`). The window of interface k gets cells k .. k + 5 and the state of
+    cells k + 1 .. k + 4 ((6, 3) and (4, 3)). A cell's new state comes from the window in which it is the left cell
+    of the interface (cells 2 .. n + 2), the last cell n + 3 from the last window; the states of cells 1 and n + 4,
+    whose slopes no interface uses, keep their values. Marked `stateful` for the solvers, which hold S fixed within
+    a step (see `muscl_stateful`)."""
+
+    def wrapped(W: Array, gamma: float, S: Array) -> tuple[Array, Array, Array]:
+        m = W.shape[0] - 2 * NG + 1  # interfaces
+        windows = W[jnp.arange(m)[:, None] + jnp.arange(2 * NG)[None, :]]  # (m, 6, 3)
+        states = S[jnp.arange(m)[:, None] + jnp.arange(STATE_WINDOW)[None, :]]  # (m, 4, 3)
+        WL, WR, S_win = jax.vmap(lambda w, s: reconstruct_s(w, gamma, s))(windows, states)
+        new = jnp.concatenate([S_win[:, 1], S_win[-1:, 2]])  # cells 2 .. n + 3
+        return WL[:, 0], WR[:, 0], S.at[1 : m + 2].set(new)
+
+    wrapped.stateful = True  # type: ignore[attr-defined]
+    return wrapped
+
+
 def first_order(W: Array, gamma: float) -> tuple[Array, Array]:
     return W[NG - 1 : -NG], W[NG : -NG + 1]
 

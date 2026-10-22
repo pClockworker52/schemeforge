@@ -72,7 +72,29 @@ within ±3 cells, the stencil the implicit solver's Jacobian assumes.
 Hard constraints (`constraints.check_reconstruction`): the right shapes, float64, finite and deterministic on
 random admissible grids, step profiles and smooth waves of run-like sizes (1–404 interfaces); a constant state
 is reproduced to 1e-12 relative; and the output on those grids equals the one-interface-at-a-time output to
-1e-13 relative ("not local" otherwise). Zoo: `first_order`, `weno5z`; MUSCL with any zoo limiter also passes.
+1e-13 relative ("not local" otherwise). Zoo: `first_order`, `weno5z`, `thinc_bvd` (THINC/BVD, Sun, Inaba,
+Xiao 2016: MUSCL-van Leer or a tanh jump per cell, chosen by the smaller boundary variation; the known relative of
+seed hunch 4); MUSCL with any zoo limiter also passes.
+
+## `reconstruction_stateful` (since judge v1.3.dev)
+
+```python
+def reconstruct_s(W, gamma, s):
+    """W: (n + 6, 3) primitive [rho, u, p] with 3 ghost cells per side; s: (n + 4, 3), one state value per padded
+    cell 1 .. n + 4 (the cells with a slope ratio) and variable, s = 0 at the start.
+    Return (WL, WR, s_new): WL, WR (n + 1, 3) as for `reconstruction`, s_new of s's shape."""
+```
+
+The reconstruction counterpart of `limiter_stateful`, so a memory mechanism such as the round-2 ratchet can be
+combined with a richer reconstruction. State timing as for `limiter_stateful` (fixed within a step, replaced after
+an accepted step). Runs call it one interface at a time (`numerics.stencilwise_stateful`): the window of interface
+k gets cells k..k+5 ((6, 3)) and the state of cells k+1..k+4 ((4, 3)), and returns (1, 3), (1, 3) and (4, 3)
+arrays. The judge keeps a cell's new state from the window in which the cell is left of the interface (cells
+2..n+2) and the last cell n+3 from the last window; the states of cells 1 and n+4 (no interface uses their slopes)
+never change. Hard constraints (`constraints.check_reconstruction_stateful`): those of `reconstruction` for states
+0, of order one and up to 1e6, a finite s_new of the right shape, and the local comparison on WL, WR and the kept
+states. Zoo: `muscl_van_leer` (state passed through) and `muscl_van_leer_frozen` (limiter freezing, identical to
+the `limiter_stateful` member `van_leer_frozen`).
 
 ## `operator` (planned, Target B)
 

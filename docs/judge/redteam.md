@@ -60,5 +60,7 @@ v1.1: runs call the reconstruction on one 6-cell interface window at a time (`nu
 constraint rejects code whose full-grid output differs from its windowed output. Regression tests in
 tests/test_reconstruction_slot.py: grid-size switch, statistics switch, position band, a 7-cell stencil, a
 broken constant state. Written by the orchestrator, not by the cheater agent; PLAN §11.5 step 3d asks for a
-cheater pass on this slot once the slot is complete.
+cheater pass on this slot once the slot is complete. The `reconstruction_stateful` slot (same day) has the same
+two layers (`numerics.stencilwise_stateful`, `constraints.check_reconstruction_stateful`); its regression tests
+cover a grid-size switch and a state copied from cells outside the window.
 
