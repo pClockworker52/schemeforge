@@ -1,13 +1,26 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.2 (2026-10-21, c9f21da)  Plan: v1.2
-Last session: 2026-10-20 — Gate 1 passed; Phase 2 engine, MCP server and calibration runs
+Last session: 2026-10-22 — step 3a done: round 2 closed (docs/rounds/2026-10-21-euler1d-limiter_stateful.md)
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
 
-## Latest results (2026-10-20, evening)
+## Latest results (2026-10-22): round 2 closed (PLAN §11.5 step 3a)
+- e-20261021-123207-3146 finished: 20 generations, 480 children, $25.71 list ($11.81 for gens 11–19 against the
+  plan's ~$5 estimate; ~$1.3 and ~35 min per generation of 24 at K = 7). Stagnation stop never fired.
+- The 90 evolve-time timeouts were memory, not CPU: a `limiter_stateful` dev worker peaks at ~1.45 GB, and 15 of them
+  thrash a 15.6 GB machine (reproduced: 15/15 timed out at ~606 s). Fix 2fc0fa7: K is capped at one worker per 2 GB of
+  RAM (K = 7 here). All 90 were ok when re-evaluated alone. `scripts/readmit_timeouts.py` put them back into the
+  archive (26 duplicates; 64 returned to islands = 5 new cells + 3 replaced elites + 56 declined by the archive;
+  backup state.before-readmit.json). Gens 11–19: 0 timeouts.
+- Verdicts: H-0006 (ratchet) supported; H-0005, H-0007, H-0009, H-0010 refuted; H-0008 inconclusive. No open hunch.
+- Target A: nothing promoted. Near misses on held-out data: c-b5cb82a0ef passes A1–A5, B1, B2, B5 and fails A6
+  (S1 order 0.13) and A7 (r-20261022-060255-0a90); c-fb8db52bca passes A1, A2, A4–A6, B1, B2, B5 and fails A3 (0.90)
+  and A7 (r-20261022-060626-894c). A7 (overshoot ≤ 1.1 × van Leer) is now the binding criterion.
+
+## Earlier results (2026-10-20, evening)
 - Reports 2026-10-21: docs/reports/2026-10-21-interim.html (the day's work, round 2 so far) and
   docs/reports/2026-10-21-big-picture.html (what was built, what it found, whether to continue → plan v1.2).
 - Dummy engine run (runs/e2e-dummy): 208 children, all ok on dev; survived a kill, a SQLite lock crash (fixed:
@@ -79,32 +92,30 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
-State: judge euler1d-v1.2 is in use (dev nozzle sweeps N5/N6 and the `limiter_stateful` slot, c9f21da).
-Round 2 (`limiter_stateful`) is paused at generation 11 of 20 (e-20261021-123207-3146), and H-0005…H-0010 are
-still open in the ledger. The round-2 findings so far are in docs/reports/2026-10-21-interim.html.
-1. 3a: close round 2: re-evaluate the ~90 timed-out children alone, resume or stop the run, promo +
-   `sforge promote --target A` for the top 2–3, close H-0005…H-0010, write the round summary.
-2. 3b: swarm test from WSL: check that the sforge MCP server connects; cheater against v1.2; breaker against
-   c-a84758f0e8; the swarm criterion is fixed before round 3.
-3. 3c: register H-0011 and run the A1 + A7 feasibility sweep for φ(r) (~30 dev points, promo on 3).
-4. 3d: judge v1.3 (reconstruction constraints, stateful variant, zoo incl. THINC/BVD, descriptors), zoo eval,
-   red team, then round 3 on `reconstruction` with agent-written hunches.
-   Started 2026-10-22 in a cloud session on branch claude/exciting-fermi-qy077p (judge `euler1d-v1.3.dev`):
-   reconstruction constraints done (one 6-cell interface window per call, locality/size/position/constant-state
-   checks; docs/judge/euler1d_slots.md, redteam.md; 252 tests green). Dev smoke check in the cloud registry only
-   (not in the WSL registry): weno5z r-20261022-051745-85a6, first_order r-20261022-051852-a268, both OK.
-   **Do not merge this branch into the WSL checkout until round 2 is closed** (iron rule 2).
-   Also done in the cloud session: THINC/BVD zoo member; the `reconstruction_stateful` slot (state layout of
-   `limiter_stateful`, windowed, zoo `muscl_van_leer` and `muscl_van_leer_frozen`); probes, archive grids and
-   objectives for both reconstruction slots (every zoo member has its own cell). Still open for v1.3, on the WSL
-   machine: bump JUDGE_VERSION to `euler1d-v1.3`, tag, `sforge zoo eval` dev + promo, archive rescore
-   (scripts/rescore.sh), cheater pass (scripts/headless/redteam_v13.txt).
-5. Prepared for 3b and 3c (cloud session, 2026-10-22): docs/targets/swarm.md (pre-registered swarm criterion),
-   scripts/headless/README.md (WSL checklist), breaker_ratchet.txt, redteam_v13.txt; H-0011 draft
-   (ledger/drafts/r3_feasibility_a1a7.yaml, register before running) and scripts/feasibility_a1a7.py.
-6. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
+State: judge euler1d-v1.2 on main; round 2 closed; no open hunch. Evaluation slots K = 7 (memory cap).
+Branch claude/exciting-fermi-qy077p (cloud session 2026-10-22, merged with main after round 2) carries judge
+`euler1d-v1.3.dev` and the prepared kits below; 263 tests green there.
+1. 3b: swarm test from WSL: check that the sforge MCP server connects; cheater against v1.2; breaker against
+   c-a84758f0e8, c-b5cb82a0ef and c-fb8db52bca (Peter 2026-10-22); the swarm criterion is fixed before round 3.
+   Prepared: docs/targets/swarm.md (pre-registered swarm criterion), scripts/headless/README.md (WSL checklist),
+   breaker_ratchet.txt (all three candidates), redteam_v13.txt.
+2. 3c: register H-0011 and run the A1 + A7 feasibility sweep for φ(r) (~30 dev points, promo on 3); include the
+   bases of c-b5cb82a0ef and c-fb8db52bca as points. Prepared: ledger/drafts/r3_feasibility_a1a7.yaml (register
+   before running) and scripts/feasibility_a1a7.py (`run --extra <file>` adds the two bases once written as
+   stateless `limiter` files).
+3. 3d: judge v1.3, red team, then round 3 on `reconstruction` with agent-written hunches. Measure worker RSS for
+   the new slot first. Done on the branch (`euler1d-v1.3.dev`): reconstruction constraints (one 6-cell interface
+   window per call; locality, grid size, position, constant state), THINC/BVD zoo member, the
+   `reconstruction_stateful` slot (state layout of `limiter_stateful`; zoo `muscl_van_leer`,
+   `muscl_van_leer_frozen`), probes, archive grids and objectives for both reconstruction slots. Cloud-registry
+   dev checks only (not in the WSL registry): thinc_bvd r-20261022-054308-f275 (R1 shock 2.47, contact 2.65; N5/N6
+   stall), muscl_van_leer_frozen r-20261022-054646-b2c7 = limiter_stateful van_leer_frozen r-20261022-054759-f751.
+   Still open on the WSL machine: bump JUDGE_VERSION to `euler1d-v1.3`, tag, `sforge zoo eval` dev + promo,
+   archive rescore (scripts/rescore.sh), cheater pass (scripts/headless/redteam_v13.txt).
+4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
+- Round 2 questions answered 2026-10-22 (DECISIONS.md): A7 stays as written; breaker on all three candidates.
 - Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
   classifier ("Create Unsafe Agents"), and the desktop session has no sforge MCP tools. The red team and round 1
   were therefore run by the orchestrator itself. Recommended: one cheater-agent run against v1.1 from WSL
@@ -120,7 +131,9 @@ still open in the ledger. The round-2 findings so far are in docs/reports/2026-1
 - Long WSL jobs need an attached `wsl.exe` client; processes started with setsid/nohup die when it exits.
 
 ## Numbers to remember (run ids, best candidates, costs)
-- Machine: 16 physical cores / 32 threads, 15 GB RAM in WSL → evaluation lock default K = 15.
+- Machine: 16 physical cores / 32 threads, 15.6 GB RAM in WSL → evaluation lock K = 7 (memory cap, 2 GB per worker;
+  was 15). `limiter_stateful` dev worker: ~1.45 GB peak RSS, ~70 s alone; promo ~2.5–4.5 min alone.
+- Round 2: 480 children, $25.71 list ($5.36 per 100); best held-out: c-b5cb82a0ef (RF1 2.58 / 5.11, NF1 expl 0.95).
 - Dev suite 25.7 s per candidate alone; zoo dev ~70 s, zoo promo ~5 min wall (12 members in parallel).
 - Engine (dummy backend): ~1.5 min per generation of 16 children on the dev suite.
 - Zoo results: docs/judge/euler1d_baseline.md; Target A: docs/targets/A.md.

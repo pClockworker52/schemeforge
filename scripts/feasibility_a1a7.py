@@ -6,6 +6,8 @@ c-44f8015f87 is the family member s0 = 2, c = 1.5, between grid points. Run insi
 
     uv run python scripts/feasibility_a1a7.py write                # candidate files, no evaluation
     uv run python scripts/feasibility_a1a7.py run --hunch H-0011   # dev evaluations, one at a time (~30 x 30 s)
+    uv run python scripts/feasibility_a1a7.py run --hunch H-0011 --extra <file> ...   # extra points (stateless
+                                                                   # limiter files, e.g. round-2 candidates' bases)
     uv run python scripts/feasibility_a1a7.py report               # table, plot, promo commands for the top 3
 
 Dev values are proxies only: A1 and A7 are judged on promo (docs/targets/A.md). Results go to
@@ -90,7 +92,7 @@ def run(args: argparse.Namespace) -> int:
         return 2
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     results = _load()
-    files = sorted(CAND_DIR.glob("s0_*.py"))[: args.limit or None]
+    files = sorted(CAND_DIR.glob("s0_*.py"))[: args.limit or None] + [Path(f).resolve() for f in args.extra]
     if not files:
         print("no candidate files: run `write` first", file=sys.stderr)
         return 2
@@ -172,10 +174,16 @@ def report(args: argparse.Namespace) -> int:
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), sharex=True)
     for ax, case in zip(axes, ("R1", "R6"), strict=True):
         key = f"{case}.overshoot"
-        xs = [v["metrics"]["R1.shock_width"] for v in results.values()]
-        ys = [v["metrics"][key] for v in results.values()]
-        cs = [float(k.split("_")[1].replace("p", ".")) for k in results]
+        family = {k: v for k, v in results.items() if k.startswith("s0_")}
+        xs = [v["metrics"]["R1.shock_width"] for v in family.values()]
+        ys = [v["metrics"][key] for v in family.values()]
+        cs = [float(k.split("_")[1].replace("p", ".")) for k in family]
         sc = ax.scatter(xs, ys, c=cs, cmap="viridis", s=28, label="family (colour: s0)")
+        for k, v in results.items():
+            if k not in family:  # --extra points
+                ax.scatter(v["metrics"]["R1.shock_width"], v["metrics"][key], marker="*", color="tab:red", s=60)
+                ax.annotate(k, (v["metrics"]["R1.shock_width"], v["metrics"][key]), fontsize=8, xytext=(4, -8),
+                            textcoords="offset points", color="tab:red")
         for zname, zm in zoo.items():
             if "R1.shock_width" in zm and key in zm:
                 ax.scatter(zm["R1.shock_width"], zm[key], marker="s", color="0.4", s=30)
@@ -202,6 +210,7 @@ def main() -> int:
     r.add_argument("--suite", default="dev", choices=["smoke", "dev"])
     r.add_argument("--limit", type=int, default=0, help="evaluate only the first N files (testing)")
     r.add_argument("--registry", help="registry path (testing; default runs/registry.sqlite)")
+    r.add_argument("--extra", nargs="*", default=[], help="more limiter files to evaluate as points")
     rep = sub.add_parser("report", help="table, plot and promo commands")
     rep.add_argument("--registry", help="registry path (default runs/registry.sqlite)")
     args = p.parse_args()

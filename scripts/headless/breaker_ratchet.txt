@@ -1,19 +1,21 @@
-PLAN §11.5 step 3b(ii): break the round-2 ratchet. You are the orchestrator; delegate the attack to the breaker
-subagent and do not edit candidates or judge code.
+PLAN §11.5 step 3b(ii): break the round-2 candidates (Peter 2026-10-22, DECISIONS.md: all three). You are the
+orchestrator; delegate the attacks to the breaker subagent, one candidate at a time, and do not edit candidates or
+judge code.
 
-1. Find the ratchet's file: `uv run python -c "import sqlite3; print(sqlite3.connect('runs/registry.sqlite')
-   .execute(\"select path from candidates where id = 'c-a84758f0e8'\").fetchone()[0])"`. If it is missing, take
-   the best H-0006 entry from `uv run sforge leaderboard --arena euler1d --slot limiter_stateful --pareto --json`
-   and say so.
-2. Use the breaker subagent with this task:
-   "Break candidate c-a84758f0e8 (file <path>), arena euler1d, slot limiter_stateful (pass slot
-   limiter_stateful to the eval tool). It is a smooth tanh-cap limiter whose centred factor psi = 2 phi / (1 + r)
-   may only decrease after K0 = 1000 pseudo-time steps (a ratchet). It converges on all 20 held-out NF1 nozzles.
-   Look for admissible cases where it fails: nozzles whose shock settles late or moves after K0 (low CFL, strong
-   shocks, shocks near the throat or the exit, very fine or coarse grids), back pressures near the critical ones,
-   cases where the ratchet locks in a dissipative factor that then smears a steady shock, unsteady runs longer
-   than K0 steps (slowly moving shocks over long times), extreme gamma. At most 10 cases. Run the zoo members
-   in src/schemeforge/arenas/euler1d/zoo/limiter_stateful/ (including van_leer_frozen and superbee_frozen) on
-   every case: a case that breaks all of them is a hard case, not a weakness of the ratchet."
-3. Write the breaker's final message verbatim to candidates/breaker-ratchet/REPORT.md, then list the quarantined
+1. Find each candidate's file: `uv run python -c "import sqlite3; c = sqlite3.connect('runs/registry.sqlite');
+   [print(i, c.execute('select path from candidates where id = ?', (i,)).fetchone()[0]) for i in
+   ('c-a84758f0e8', 'c-b5cb82a0ef', 'c-fb8db52bca')]"`. All three are `limiter_stateful` candidates
+   (docs/rounds/2026-10-21-euler1d-limiter_stateful.md): a smooth sharp base limiter whose centred factor
+   psi = 2 phi / (1 + r) may only decrease after K0 pseudo-time steps (a ratchet; K0 = 1000, 600 and 1000).
+2. For each candidate, use the breaker subagent with this task:
+   "Break candidate <id> (file <path>), arena euler1d, slot limiter_stateful (pass slot limiter_stateful to the
+   eval tool). <one line from step 1 on what it is>. Look for admissible cases where it fails: nozzles whose
+   shock settles late or moves after K0 (low CFL, strong shocks, shocks near the throat or the exit, very fine or
+   coarse grids), back pressures near the critical ones, cases where the ratchet locks in a dissipative factor
+   that then smears a steady shock, unsteady runs longer than K0 steps (slowly moving shocks over long times),
+   strong shocks where the sharp base overshoots, smooth extrema (c-b5cb82a0ef has S1 order 0.13), extreme gamma.
+   At most 10 cases. Run the zoo members in src/schemeforge/arenas/euler1d/zoo/limiter_stateful/ (including
+   van_leer_frozen and superbee_frozen) on every case: a case that breaks all of them is a hard case, not a
+   weakness of the candidate."
+3. Write each breaker's final message verbatim to candidates/breaker-round2/<id>.md, then list the quarantined
    case ids (`ls cases/quarantine`). Peter reviews them; do not accept cases yourself.

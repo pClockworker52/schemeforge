@@ -19,11 +19,11 @@ rounds 1 and 2 (docs/STATUS.md). Run everything below from `/mnt/c/Users/peter/s
 | Step | Command | Output |
 |---|---|---|
 | 3b(i), 3d | `bash scripts/headless/run.sh scripts/headless/redteam_v13.txt redteam-v13` | candidates/redteam-v13/REPORT.md |
-| 3b(ii) | `bash scripts/headless/run.sh scripts/headless/breaker_ratchet.txt breaker-ratchet` | candidates/breaker-ratchet/REPORT.md, cases/quarantine/ |
+| 3b(ii) | `bash scripts/headless/run.sh scripts/headless/breaker_ratchet.txt breaker-round2` | candidates/breaker-round2/, cases/quarantine/ |
 | 3c | see `scripts/feasibility_a1a7.py --help` | runs/feasibility-a1a7/ |
 | 3d round | `/hunch-round` skill with `slot: reconstruction` | docs/rounds/… |
 
 `run.sh` logs to runs/headless/<name>.json and prints turns and cost. One agent run at a time, never next to
-`evolve`: parallel evaluations caused false timeouts on 2026-10-21.
+`evolve`: parallel evaluations caused false timeouts on 2026-10-21 (memory; K is now capped at one worker per 2 GB).
 
 Round 3's swarm criterion is fixed in docs/targets/swarm.md; read it before the round starts.
