@@ -21,7 +21,7 @@ rounds 1 and 2 (docs/STATUS.md). Run everything below from `/mnt/c/Users/peter/s
 | 3b(i), 3d | `bash scripts/headless/run.sh scripts/headless/redteam_v13.txt redteam-v13` | candidates/redteam-v13/REPORT.md |
 | 3b(ii) | `bash scripts/headless/run.sh scripts/headless/breaker_ratchet.txt breaker-round2` | candidates/breaker-round2/, cases/quarantine/ |
 | 3c | see `scripts/feasibility_a1a7.py --help` | runs/feasibility-a1a7/ |
-| 3d round | `/hunch-round` skill with `slot: reconstruction` | docs/rounds/… |
+| 3d round | `bash scripts/headless/run.sh scripts/headless/round3.txt round3`, or paste round3.txt into an interactive WSL session | docs/rounds/…-reconstruction_stateful.md |
 
 `run.sh` logs to runs/headless/<name>.json and prints turns and cost. One agent run at a time, never next to
 `evolve`: parallel evaluations caused false timeouts on 2026-10-21 (memory; K is now capped at one worker per 2 GB).

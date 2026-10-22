@@ -1,0 +1,36 @@
+PLAN §11.5 step 3d: round 3 on `reconstruction_stateful`, run by the agents. This round is also the swarm test of
+step 3b: read docs/targets/swarm.md first; its criterion is fixed and must not be changed during the round.
+
+Before anything else (stop and report if one fails):
+- git fetch origin && git merge origin/claude/exciting-fermi-qy077p (Target A8 and the round-3 prompt);
+  uv run pytest -q passes; `uv run sforge judge version --arena euler1d` prints euler1d-v1.4 and integrity: ok.
+- The checklist in scripts/headless/README.md: the sforge MCP server is connected and /agents lists the agents.
+- Nothing else is evaluating. K = 7 (memory cap) stays.
+- Read docs/STATUS.md, docs/targets/A.md (A1–A8), docs/judge/euler1d_traps.md, the latest docs/literature/ note,
+  and docs/rounds/2026-10-21-euler1d-limiter_stateful.md plus docs/rounds/2026-10-22-breaker-round2/.
+
+Run the round with the /hunch-round skill, arena euler1d, slot reconstruction_stateful, and these settings:
+- n_hunches 6 from the **hunch-generator** agent, lenses spread over: shock physics, steady-convergence,
+  structure preservation, contrarian, transfer, approximation theory (one each). Give it this context and nothing
+  more specific: Target A including A8; the zoo of this slot and of `reconstruction` (thinc_bvd, weno5z,
+  muscl_van_leer, muscl_van_leer_frozen); PLAN seed hunches 3 and 4 as directions; and that a stateless candidate
+  in this slot simply passes its state through. Do not suggest mechanisms yourself: hunches written or edited by
+  the orchestrator do not count for the swarm criterion (S1). Register every draft as written (`sforge hunch add`);
+  if one is invalid, send it back to the hunch-generator instead of fixing it.
+- evals_per_proposer 8, one **proposer** agent per hunch; no orchestrator edits to their candidates.
+- Before choosing islands: promo + `sforge promote --target A --slot reconstruction_stateful` on the best 2–3
+  proposer candidates (dev overstates held-out success, traps file). Pick the 3 hunches for islands from promo.
+- islands 3, gens 20, children 8, budget 480, backend claude-cli, model sonnet (haiku for wild), seeds = the best
+  proposer file of each island's hunch. Expect ~$1.3 per generation and long dev evaluations (a reconstruction dev
+  worker took 160 s alone); run evolve in the background and wait, nothing next to it. If requests stop reaching
+  the model (usage limit), the engine pauses; resume with --resume.
+- After evolve: promo + promote on the top 5 by leaderboard (`sforge leaderboard --arena euler1d --slot
+  reconstruction_stateful --pareto --vs-zoo`), then the **breaker** agent on the top 5 (at most 10 cases each, into
+  quarantine; I review them).
+
+Write docs/rounds/<date>-euler1d-reconstruction_stateful.md: hunches with suggested verdicts and run ids, the
+proposer and engine results, promo and promote output for A1–A8 per candidate, quarantined cases, cost, and the
+"Numbers to report" table from docs/targets/swarm.md filled in for round 3, with S1 and S2 each marked met / not
+met and the evidence. Every number cites a run id. Do not close hunches; propose verdicts. Update STATUS, commit
+and push after the hunches are registered, after the proposers, after evolve, and at the end. Then stop: I decide
+at gate 3e.
