@@ -197,8 +197,9 @@ def run_nozzle_sweep(case: NozzleSweepCase, reconstruct, flux) -> tuple[dict[str
         conv.append(r.converged)
     out: dict[str, float] = {}
     if J_num:
-        out.update(roughness_J=metrics.roughness(np.array(J_num), np.array(J_ex)),
-                   newton_iters=float(np.mean(iters)), converged_impl=float(np.mean(conv)))
+        out.update(newton_iters=float(np.mean(iters)), converged_impl=float(np.mean(conv)))
+        if len(J_num) >= 3:  # roughness uses second differences over the sweep
+            out["roughness_J"] = metrics.roughness(np.array(J_num), np.array(J_ex))
     if e_conv:  # share of back pressures converged; worst residual drop; share with a limit cycle
         out.update(converged_expl=float(np.mean(e_conv)), res_orders_expl=float(np.min(e_orders)),
                    limit_cycle=float(np.mean(e_cycle)))

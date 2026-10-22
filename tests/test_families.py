@@ -77,3 +77,19 @@ def test_geometries_have_a_single_throat(kind) -> None:
     assert A[np.argmin(np.abs(x - 1.0))] == pytest.approx(1.0) and np.argmin(A) == np.argmin(np.abs(x - 1.0))
     assert nz.A_exit == pytest.approx(6.0)
     assert np.all(np.diff(A[x > 1.0]) > 0) and np.all(np.diff(A[x < 1.0]) < 0)
+
+
+def test_long_run_families() -> None:
+    # LF1: RF1's states on a 10-16 times longer domain at the same cell size; LF2: the S1 wave run 1500-3000 steps
+    for i in range(10):
+        c = families.lf1(SEED, i)
+        length = c.domain[1]
+        assert 10.0 <= length <= 16.0 and c.n == round(families.N_RIEMANN * length) and c.x0 == 0.5 * length
+        s = families.lf2(SEED, i)
+        assert s.ns == (100, 200) and 0.05 <= s.amp <= 0.3 and 0.5 <= abs(s.u0) <= 1.5
+        speed = abs(s.u0) + np.sqrt(s.gamma / (1.0 - s.amp))
+        steps = s.t_end * speed / (families.UNSTEADY_CFL / 200)
+        assert 1500 * (1 - 1e-9) <= steps <= 3000 * (1 + 1e-9)
+    assert families.FAMILY_SIZES["LF1"] == families.FAMILY_SIZES["LF2"] == 5
+    suite = families.promo_suite(SEED)
+    assert {f for f, _ in suite} == {"RF1", "RF2", "NF1", "NF2", "NF3", "LF1", "LF2"}

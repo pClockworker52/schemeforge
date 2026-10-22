@@ -14,6 +14,10 @@ _SHOCK_CAPTURING = [
     ("N4", "roughness_J", MIN),
     ("S1", "order_smooth", MAX),
     ("R7", "l1_ref", MIN),
+    # since judge v1.4 (accepted breaker cases): strong slow shock, the dev proxy for Target A's A7b overshoot,
+    # and the smooth wave run past ~1000 steps, which exposes state that acts late (round-2 ratchets)
+    ("B-0010", "overshoot", MIN),
+    ("B-0002", "order_smooth", MAX),
 ]
 
 OBJECTIVES: dict[str, dict[str, list[tuple[str, str, str]]]] = {

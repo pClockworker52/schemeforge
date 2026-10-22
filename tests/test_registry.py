@@ -86,3 +86,24 @@ def test_v1_registry_gains_the_leaderboard_indexes(tmp_path) -> None:
         "ORDER BY started_at DESC LIMIT 1",
         "SELECT metric, value FROM scores WHERE run_id = 'r'")]
     assert "runs_by_candidate" in plans[0] and "scores_by_run" in plans[1]
+
+
+def test_accept_records_a_case_already_moved_by_a_judge_commit(tmp_path, monkeypatch) -> None:
+    # judge v1.4 moved accepted cases in a commit made in another checkout; `sforge case accept` on the machine
+    # that holds the registry must then only record the acceptance
+    from schemeforge.core import quarantine
+
+    monkeypatch.setattr(quarantine, "ARENAS_DIR", tmp_path / "arenas")
+    reg = tmp_path / "reg.sqlite"
+    conn = registry.connect(reg)
+    conn.execute("INSERT INTO cases (id, arena, family, status, path, proposed_by, created_at) VALUES "
+                 "('B-0099', 'euler1d', 'riemann', 'quarantine', ?, 'breaker', 'now')",
+                 (str(tmp_path / "quarantine" / "B-0099.yaml"),))
+    conn.commit()
+    dest = tmp_path / "arenas" / "euler1d" / "cases" / "accepted" / "B-0099.yaml"
+    dest.parent.mkdir(parents=True)
+    dest.write_text("kind: riemann\n")
+    assert quarantine.accept("B-0099", registry_path=reg) == dest
+    assert registry.connect(reg).execute("SELECT status FROM cases WHERE id = 'B-0099'").fetchone()[0] == "accepted"
+    with pytest.raises(ValueError):
+        quarantine.accept("B-0099", registry_path=reg)  # no longer quarantined

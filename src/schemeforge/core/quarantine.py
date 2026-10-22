@@ -67,7 +67,10 @@ def accept(case_id: str, registry_path: Path = registry.DEFAULT_PATH) -> Path:
     dest_dir = ARENAS_DIR / row["arena"] / "cases" / "accepted"
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / src.name
-    shutil.move(str(src), dest)
+    if src.is_file():
+        shutil.move(str(src), dest)
+    elif not dest.is_file():  # already moved by a judge commit made elsewhere: only the registry is updated
+        raise ValueError(f"{case_id}: neither {src} nor {dest} exists")
     conn.execute("UPDATE cases SET status = 'accepted', path = ? WHERE id = ?",
                  (_rel(dest), case_id))
     conn.commit()

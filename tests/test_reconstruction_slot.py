@@ -185,3 +185,22 @@ def test_stateful_slot_wiring() -> None:
     assert WL.shape == (W.shape[0] - 2 * NG + 1, 3) and S_new.shape == S.shape
     # one step counted on the cells the judge keeps, untouched elsewhere
     assert float(S_new[1, 0]) == 1.0 and float(S_new[0, 0]) == 0.0 and float(S_new[-1, 0]) == 0.0
+
+
+# --- judge v1.4: accepted breaker cases --------------------------------------------------------------------------
+def test_accepted_cases_join_the_dev_suite() -> None:
+    from schemeforge.arenas.euler1d.cases import accepted_cases, dev_suite
+
+    ids = [c.id for c in dev_suite()]
+    assert [c.id for c in accepted_cases()] == ["B-0002", "B-0004", "B-0010", "B-0011"]
+    assert ids[-4:] == ["B-0002", "B-0004", "B-0010", "B-0011"] and len(ids) == len(set(ids))
+
+
+def test_two_point_sweep_has_no_roughness() -> None:
+    # roughness needs second differences over at least 3 back pressures; B-0011 has 2 and gave NaN under v1.3
+    from schemeforge.arenas.euler1d.cases import accepted_cases
+    from schemeforge.arenas.euler1d.evaluate import run_case
+
+    case = next(c for c in accepted_cases() if c.id == "B-0011")
+    m, v = run_case(case, muscl(zoo.load("limiter", "van_leer")), zoo.load("flux", "hllc"))
+    assert v == [] and "roughness_J" not in m and m["converged_expl"] == 1.0

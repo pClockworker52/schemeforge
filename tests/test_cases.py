@@ -20,7 +20,7 @@ from schemeforge.arenas.euler1d.gas import sound_speed
 def test_dev_suite_ids_and_admissibility() -> None:
     suite = dev_suite()
     assert [c.id for c in suite] == ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "S1", "N1", "N2", "N3", "N4", "N5",
-                                     "N6"]
+                                     "N6", "B-0002", "B-0004", "B-0010", "B-0011"]  # accepted breaker cases (v1.4)
     for case in suite:
         validate_case(case)
 

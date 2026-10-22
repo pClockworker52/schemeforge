@@ -206,7 +206,16 @@ def dev_suite() -> list[Case]:
                         solvers=("explicit", "implicit")),
         NozzleSweepCase("N6", _divergent_shock_pbs(N6_NOZZLE), 120, nozzle=N6_NOZZLE,
                         solvers=("explicit", "implicit")),
+        *accepted_cases(),
     ]
+
+
+ACCEPTED_DIR = Path(__file__).parent / "cases" / "accepted"
+
+
+def accepted_cases() -> list[Case]:
+    """Breaker cases Peter accepted (PLAN §11.3 step 5), in id order; part of the dev suite since judge v1.4."""
+    return [case_from_dict(yaml.safe_load(p.read_text(encoding="utf-8"))) for p in sorted(ACCEPTED_DIR.glob("*.yaml"))]
 
 
 # --- YAML -------------------------------------------------------------------------------------------------

@@ -13,13 +13,22 @@ from pathlib import Path
 
 import numpy as np
 
-from .cases import Case, NozzleCase, NozzleSpec, NozzleSweepCase, RiemannCase, slowly_moving_shock, validate_case
+from .cases import (
+    Case,
+    NozzleCase,
+    NozzleSpec,
+    NozzleSweepCase,
+    RiemannCase,
+    SmoothCase,
+    slowly_moving_shock,
+    validate_case,
+)
 from .exact_nozzle import area_ratio, back_pressure_for_shock, critical_pressures, mach_from_area_ratio, p_over_p0
 from .exact_riemann import VacuumError, solve_riemann
 from .gas import GAMMA_STRESS, GAMMAS, sound_speed
 
 SEED_FILE = Path.home() / ".schemeforge" / "heldout_seed"
-FAMILY_SIZES = {"RF1": 20, "RF2": 10, "NF1": 20, "NF2": 10, "NF3": 5}
+FAMILY_SIZES = {"RF1": 20, "RF2": 10, "NF1": 20, "NF2": 10, "NF3": 5, "LF1": 5, "LF2": 5}
 ALL_GAMMAS = (*GAMMAS, GAMMA_STRESS)
 N_RIEMANN = 200
 N_NOZZLE = 120
@@ -52,9 +61,9 @@ def _riemann_t_end(left, right, g, x0: float, room: float) -> float:
     return room / max(max(speeds), 1e-12)
 
 
-def rf1(seed: str, i: int) -> RiemannCase:
-    """Random Riemann problems: pressure ratio 10^0.5..10^5, density ratio 0.1..10, no vacuum, gamma from §9.1."""
-    rng = _rng(seed, "RF1", i)
+def _random_riemann(rng: np.random.Generator, family: str, i: int, length: float = 1.0) -> RiemannCase:
+    """Random Riemann problem on [0, length] with N_RIEMANN cells per unit length: pressure ratio 10^0.5..10^5,
+    density ratio 0.1..10, no vacuum, gamma from §9.1; t_end lets the fastest wave travel 0.45 length."""
     for _ in range(1000):
         g = float(rng.choice(ALL_GAMMAS))
         rp = 10.0 ** rng.uniform(0.5, 5.0)
@@ -64,13 +73,19 @@ def rf1(seed: str, i: int) -> RiemannCase:
         a_ref = max(float(sound_speed(rhoL, pL, g)), float(sound_speed(rhoR, pR, g)))
         uL, uR = (float(v) for v in rng.uniform(-1.0, 1.0, 2) * a_ref)
         try:
-            t_end = _riemann_t_end((rhoL, uL, pL), (rhoR, uR, pR), g, 0.5, 0.45)
+            t_end = _riemann_t_end((rhoL, uL, pL), (rhoR, uR, pR), g, 0.5, 0.45 * length)
         except VacuumError:
             continue
-        case = RiemannCase(f"RF1-{i:03d}", (rhoL, uL, pL), (rhoR, uR, pR), t_end, N_RIEMANN, gamma=g)
+        case = RiemannCase(f"{family}-{i:03d}", (rhoL, uL, pL), (rhoR, uR, pR), t_end,
+                           round(N_RIEMANN * length), gamma=g, x0=0.5 * length, domain=(0.0, length))
         validate_case(case)
         return case
-    raise RuntimeError("RF1: could not draw an admissible instance")
+    raise RuntimeError(f"{family}: could not draw an admissible instance")
+
+
+def rf1(seed: str, i: int) -> RiemannCase:
+    """Random Riemann problems: pressure ratio 10^0.5..10^5, density ratio 0.1..10, no vacuum, gamma from §9.1."""
+    return _random_riemann(_rng(seed, "RF1", i), "RF1", i)
 
 
 def rf2(seed: str, i: int) -> RiemannCase:
@@ -150,7 +165,34 @@ def nf3(seed: str, i: int, n_points: int = 11, cells_crossed: float = 30.0) -> N
     return case
 
 
-GENERATORS = {"RF1": rf1, "RF2": rf2, "NF1": nf1, "NF2": nf2, "NF3": nf3}
+# Long runs (judge v1.4, round-2 breaker): every dev and RF case ends within a few hundred time steps, so a candidate
+# whose state changes its behaviour after ~1000 steps (limiter freezing, the round-2 ratchet) was never tested on an
+# unsteady flow it acts in. LF1 and LF2 run past 1500 steps.
+LF_LENGTH = (10.0, 16.0)  # LF1 domain length in units of RF1's: same cells per unit length, longer runs
+LF_STEPS = (1500.0, 3000.0)  # LF2: time steps on the finest grid
+UNSTEADY_CFL = 0.5  # solve_unsteady's default
+
+
+def lf1(seed: str, i: int) -> RiemannCase:
+    """Long Riemann runs: RF1's distribution on a domain 10..16 times longer at the same cell size, so the waves
+    travel 10..16 times further (about 1100..1800 time steps for typical states)."""
+    rng = _rng(seed, "LF1", i)
+    return _random_riemann(rng, "LF1", i, length=float(rng.uniform(*LF_LENGTH)))
+
+
+def lf2(seed: str, i: int) -> SmoothCase:
+    """Long smooth runs: the S1 density wave (amplitude 0.05..0.3, speed 0.5..1.5 either way) run for 1500..3000
+    time steps on N = 200 (half that on N = 100); order between N = 100 and 200."""
+    rng = _rng(seed, "LF2", i)
+    g = float(rng.choice(ALL_GAMMAS))
+    amp = float(rng.uniform(0.05, 0.3))
+    u0 = float(rng.uniform(0.5, 1.5)) * (1.0 if rng.random() < 0.5 else -1.0)
+    speed = abs(u0) + float(sound_speed(1.0 - amp, 1.0, g))  # largest wave speed of the initial state
+    t_end = float(rng.uniform(*LF_STEPS)) * UNSTEADY_CFL * (1.0 / 200) / speed
+    return SmoothCase(f"LF2-{i:03d}", (100, 200), t_end=t_end, amp=amp, u0=u0, gamma=g)
+
+
+GENERATORS = {"RF1": rf1, "RF2": rf2, "NF1": nf1, "NF2": nf2, "NF3": nf3, "LF1": lf1, "LF2": lf2}
 
 
 def promo_suite(seed: str, sizes: dict[str, int] | None = None) -> list[tuple[str, Case]]:

@@ -473,6 +473,7 @@ Held-out families, with instances drawn from the secret seed:
   - The grid is shifted so the exact shock lands at a uniformly random fraction of a cell.
 - **NF2: shock-free nozzles**, subsonic and supersonic.
 - **NF3: p_b sweeps** for the smoothness metrics.
+- **LF1, LF2: long runs** (since judge v1.4, DECISIONS.md 2026-10-22). LF1: RF1's distribution on a domain 10–16 times longer at the same cell size; LF2: the S1 wave with random amplitude, speed and γ run for 1,500–3,000 time steps. Every other unsteady case ends within a few hundred steps, so state that changes behaviour after ~1,000 steps (limiter freezing, the round-2 ratchet) was untested on unsteady flow.
 
 Document the case YAML format in `docs/judge/euler1d_cases.md`. Breakers write their cases in this format, and `--case` reads it.
 

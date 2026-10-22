@@ -7,10 +7,12 @@ hunch-generators read it before writing code or hunches. Each line names its sou
 
 - **Dev overstates held-out success.** Dev has one nozzle per family; c-44f8015f87 converged on dev N1 but on 60 %
   of held-out NF1 nozzles, c-fb8db52bca on dev N5/N6 but on 90 % of NF1 (rounds 1 and 2). Do not claim held-out
-  convergence from dev.
-- **Dev is lenient on overshoot.** Dev scores overshoot on Sod (R1); Target A's A7 also uses strong held-out shocks
-  (RF2). Every round-2 candidate sharp enough for A1/A2 overshot 2–3× van Leer there and was not promoted. A sharper
-  profile is only progress if the overshoot stays near van Leer's.
+  convergence from dev. Dev R1 shock widths also run ~0.1 cell above the RF1 median (c-b5cb82a0ef: 2.69 vs 2.58),
+  so A1's 2.6 is too strict as a dev threshold (H-0011's sweep used it).
+- **Dev is lenient on overshoot.** R1 (Sod) is mild; Target A's A7 also uses strong held-out shocks (RF2). Every
+  round-2 candidate sharp enough for A1/A2 overshot 2–3× van Leer there and was not promoted. Since judge v1.4 dev
+  has B-0010 (slowly moving Mach-10 shock) as the proxy for A7b. A sharper profile is only progress if the overshoot
+  stays near van Leer's.
 - **Newton needs finite derivatives.** The implicit solver differentiates the scheme (`jax.jacfwd`). A branch inside
   `jnp.where` is differentiated even where it is not selected: `1 / r`, `log`, `sqrt` or a division by a difference
   that can be 0 puts inf · 0 = NaN into the Jacobian (round 1, H-0004's first implementation). Make every branch
@@ -25,13 +27,22 @@ hunch-generators read it before writing code or hunches. Each line names its sou
   blew up (round 1, H-0001 with k = 2, 5). Use a soft min against 2r, or clip to Sweby's region.
 - **Smoothing kinks alone does not stop the explicit limit cycle** (round 1, H-0001, H-0002 refuted). The cycle is a
   feedback loop between the limiter and the shock position; memory (`limiter_stateful`) addresses it.
+- **Blending towards superbee costs smooth accuracy.** c-b5cb82a0ef reached A1/A2 but its S1 order fell to 0.13
+  (A6 fails): flat-topped φ at smooth extrema clips them. Keep φ(1) = 1 smooth and test S1.
+
+## `limiter_stateful`, `reconstruction_stateful`
+
 - **Freeze or filter the centred factor ψ = 2φ / (1 + r), not φ.** Freezing φ fixes a multiple of the downwind
   difference and is linearly unstable; freezing ψ is stable (round 2). The one-way ratchet ψ = min(ψ(r), s) after
   K0 steps converged on all 20 held-out nozzles (H-0006, c-a84758f0e8).
-- **Blending towards superbee costs smooth accuracy.** c-b5cb82a0ef reached A1/A2 but its S1 order fell to 0.13
-  (A6 fails): flat-topped φ at smooth extrema clips them. Keep φ(1) = 1 smooth and test S1.
-- **Memory acts late.** A state that only changes after K0 ≈ 1000 steps does nothing in unsteady runs (all shorter),
-  so it cannot improve shock or contact width. Sharpness has to come from the stateless part.
+- **A one-way ratchet locks constant regions at first order.** Where the solution is flat the judge sets r = 0, so
+  φ = ψ = 0 there; a ratchet that stores min(ψ) at step K0 keeps every such cell (and every extremum) at ψ = 0 for
+  the rest of the run, and waves that arrive later are computed first order (round-2 breakers, B-0001..B-0008:
+  S1 run past K0 drops to order −0.8 to −1.3). Since judge v1.4 the dev suite (B-0002, B-0004) and the held-out
+  LF1/LF2 runs go past 1,500 steps. Memory has to let go again where the flow changes.
+- **Memory acts late.** A state that only changes after K0 ≈ 1000 steps does nothing in the short unsteady runs
+  (dev R1–R7, RF1, RF2), so it cannot improve shock or contact width there. Sharpness has to come from the stateless
+  part; and in the long runs (B-0002, B-0004, LF1, LF2) the memory must not cost accuracy.
 
 ## `reconstruction`, `reconstruction_stateful`
 

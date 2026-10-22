@@ -92,8 +92,10 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
-State: judge euler1d-v1.3 on main (a2bb5eb, tagged); round 2 closed; H-0011 closed; no open hunch. **Stopped
-before round 3: Peter reviews the red-team halt, quarantined cases B-0001..B-0015 and H-0011.** Evaluation slots K = 7.
+State: judge euler1d-v1.3 on main (a2bb5eb, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
+2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
+LF2. **Judge v1.4 prepared on branch claude/exciting-fermi-qy077p as `euler1d-v1.4.dev`; next is step 0 below.**
+Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
 (reconstruction) 1.80 GiB / 160 s, muscl_van_leer_frozen (reconstruction_stateful) 1.76 GiB / 68 s, so the 2 GB
 per-worker cap (K = 7, 12.6 of 15.5 GiB) still fits. Zoo v1.3: dev r-20261022-065926-0314 .. r-20261022-070148-7b30
@@ -102,6 +104,12 @@ NF1 as under v1.2); limiter, stateful and flux scores unchanged from v1.2 (runs/
 Rescore (scripts/rescore.sh, SKIP_ZOO=1 for the second slot): limiter 64 → 59 ok / 5 rejected, limiter_stateful
 493 → 489 ok / 4 rejected; all 9 rejections were rejected under v1.2 too. 15 stateful candidates whose latest v1.2
 run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the timeout reproduction.
+0. Judge v1.4 (WSL, nothing else running): merge the branch; `uv run pytest -q`; open the registry once
+   (`uv run sforge leaderboard --arena euler1d --slot limiter_stateful --top 3`, adds the schema-v2 indexes);
+   `sforge case accept` B-0002, B-0004, B-0010, B-0011 (records them; the files are already in the judge tree);
+   bump JUDGE_VERSION to `euler1d-v1.4`, commit, tag; `sforge zoo eval` dev + promo (expect the frozen members to
+   degrade on LF1/LF2); rescore limiter, limiter_stateful, reconstruction, reconstruction_stateful. Then the
+   interactive cheater run (3b(i)) against v1.4, then round 3.
 1. 3b: swarm test from WSL. (i) Red team: halted, see Blockers. (ii) Breaker done 2026-10-22 11:51–16:15
    (`run.sh breaker_ratchet.txt breaker-round2`, opus orchestrator + 3 breaker subagents, $16.03, judge v1.3).
    **15 cases quarantined, B-0001..B-0015** (cases/quarantine/, plus drafts/ with the probes they were cut from);
@@ -111,7 +119,8 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
    K0 drops to order 0.31 / negative (B-0001, B-0002, all three candidates); explicit stall near critical back
    pressure in the Anderson nozzle (B-0005, B-0011..B-0013); K0 = 600 hits before the frozen zoo freezes
    (B-0007, B-0008, c-b5cb82a0ef only). B-0011/B-0012 may be merged (same stall, γ 1.2 vs 5/3). Side note:
-   c-a84758f0e8 R1 mirror error 0.0188 vs ~1e-15 for the zoo. **Awaiting Peter's review; no case accepted.**
+   c-a84758f0e8 R1 mirror error 0.0188 vs ~1e-15 for the zoo. Peter accepted B-0002, B-0004, B-0010, B-0011
+   (judge v1.4); B-0001, B-0003, B-0005..B-0009, B-0012..B-0015 stay in quarantine.
 2. 3c done 2026-10-22 16:16–17:06: **H-0011 supported (for this family only)**. Dev sweep of
    phi = max(0, smin_10(s0 r, 1 + (c-1) tanh(r-1))), 30 points + the stateless bases of c-b5cb82a0ef and
    c-fb8db52bca (judge v1.3, r-20261022-141618-00a7 .. r-20261022-145146-bcea): no point meets R1 shock <= 2.6 and
@@ -121,7 +130,9 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
    A7a 0.049), c-b3897b3f5e r-20261022-145609-942b (2.85, 0.035), c-c04b63eb05 r-20261022-145855-58d9 (3.04, 0.032;
    A7b passes). None meets A1 or A7a; all three also miss A3 (NF1 explicit 0.50–0.55). Table, plot, promo output
    and the two base files: docs/rounds/2026-10-22-h0011/. Supports PLAN step 3d: sharpness has to come from a
-   richer slot than phi(r).
+   richer slot than phi(r). Caveat (cloud review): the dev threshold R1 shock <= 2.6 was too strict (dev R1 runs
+   ~0.1 cell above the RF1 median; superbee itself is ~2.67 on dev), so the family never reached A1 on dev and
+   the evidence rests on the three promo points and the two round-2 bases.
 3. 3d: judge v1.3, red team, then round 3 on `reconstruction` with agent-written hunches. Measure worker RSS for
    the new slot first. Done on the branch (`euler1d-v1.3.dev`): reconstruction constraints (one 6-cell interface
    window per call; locality, grid size, position, constant state), THINC/BVD zoo member, the

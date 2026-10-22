@@ -137,3 +137,21 @@ data but overshoot 2–3× van Leer.
 (2) **Breaker in step 3b attacks all three:** c-a84758f0e8, c-b5cb82a0ef and c-fb8db52bca (at most 10 cases each,
 to quarantine, reviewed by Peter).
 *Consequences:* Target A stays fixed for round 3 and the 3c sweep. 3b's breaker step covers three candidates.
+
+## 2026-10-22 — Judge v1.4: accepted breaker cases and long-run families (Peter)
+*Context:* The 3b breakers (docs/rounds/2026-10-22-breaker-round2/) found that the round-2 ratchets store ψ = 0 at
+step K0 in every constant-state cell (r = 0 there) and at extrema, so waves that arrive later are computed first
+order: dev S1 run 2.5 times longer gives order −0.8 to −1.3. No dev or promo unsteady case reached K0, so the judge
+never saw it. Plain limiter freezing fails long runs too (B-0003, B-0004).
+*Decision:* (1) Accept **B-0002** (S1 to t = 2.5), **B-0004** (Sod on [0, 2.5], N = 1250, ~1450 steps), **B-0010**
+(slowly moving Mach-10 shock; dev proxy for A7b) and **B-0011** (Anderson nozzle near p_crit1, γ 1.2) into the dev
+suite; the other 11 stay in quarantine. (2) Two held-out families, **LF1** (RF1 states on a 10–16 times longer
+domain, same cell size) and **LF2** (S1-type wave, 1,500–3,000 steps), 5 instances each. (3) Engine objectives for
+the shock-capturing slots gain B-0010 overshoot and B-0002 order_smooth.
+*Consequences:* Judge v1.4 (prepared in the cloud session as `euler1d-v1.4.dev`): accepted cases now load into the
+dev suite (they were never read before), a 2-point sweep no longer reports a NaN roughness, the promo suite grows
+from 65 to 75 instances (~16–26 s more per promo run). On a test seed the frozen zoo members degrade on LF (LF2 order
+0.9–1.5, one LF1 instance non-finite), so they may be rejected on promo under v1.4. Target A is unchanged; whether
+LF results become a promotion criterion is a separate decision. In the WSL registry the four cases are recorded as
+accepted with `sforge case accept`, which now accepts a case a judge commit already moved.
+
