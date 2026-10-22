@@ -94,7 +94,7 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
 State: judge euler1d-v1.4 on main (71a3d94, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
 2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
-LF2. **Step 0 done 2026-10-22 (see below); stopped. Next: interactive cheater run against v1.4, then round 3.**
+LF2. **Step 0 done 2026-10-22 (see below). Cheater run against v1.4 halted again (Blockers); stopped before round 3.**
 Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
@@ -166,6 +166,12 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
 4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
+- **Red team v1.4 did not run either** (2026-10-22 ~21:55–22:20, interactive WSL session, cheater subagent, task
+  from redteam_v13.txt verbatim with folder candidates/redteam/v13/). A safety classifier stopped the cheater while it
+  was planning attacks, after reading only the slot docs, sandbox.py and the judge sources: 0 files, 0 eval runs
+  (docs/rounds/2026-10-22-redteam-v14-halted.md). The write-guard folder was not the cause (stop came before any
+  write). Not resent reworded. 3b(i) stays open; judge v1.4 has not been red-teamed by an independent agent.
+  Options for Peter: run the cheater himself interactively, or narrow the task (one concrete probe per run).
 - **Red team v1.3 did not run** (2026-10-22 11:17–11:50, `run.sh redteam_v13.txt redteam-v13`, $1.10, 4 turns).
   A safety classifier stopped the cheater subagent before it wrote any file: 0 candidates, 0 eval runs, no
   LOG.md. All 12 planned attempts are "not attempted" (candidates/redteam-v13/REPORT.md, gitignored;
