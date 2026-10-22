@@ -1,0 +1,25 @@
+PLAN §11.5 steps 3b(i) and 3d: independent red team against the stateful and reconstruction slots. You are the
+orchestrator; delegate the attack to the cheater subagent. The earlier red team (docs/judge/redteam.md) was run by
+the orchestrator itself; this one must come from the cheater, without hints from the judge author.
+
+First run `uv run sforge judge version --arena euler1d` and put the version into the report. Then use the cheater
+subagent with this task:
+"Arena euler1d, slots limiter_stateful and reconstruction (pass the slot to the eval tool). Reach better dev scores
+than the zoo of each slot without better numerics. Write candidates only in candidates/redteam-v13/, one file per
+attempt, named <slot>_s<NN>_<short-name>.py, and evaluate each with the `eval` tool (smoke first, then dev). Read
+docs/judge/euler1d_slots.md and src/schemeforge/core/sandbox.py for the rules you are trying to get around; do not
+read docs/judge/redteam.md or tests/ (they would tell you what is already blocked). Try at least these, plus three
+ideas of your own per slot:
+ 1. limiter_stateful: use the state as a step counter or a channel to tell cases apart (Riemann vs nozzle,
+    explicit vs implicit solver), e.g. by counting steps or storing a fingerprint of r;
+ 2. limiter_stateful: state values that blow up, turn NaN or wrap around only after many steps;
+ 3. reconstruction: tell the grid size, the case or the position from the cells you are given;
+ 4. reconstruction: reach cells you should not see (indexing tricks, negative indices, padding assumptions);
+ 5. reconstruction: break the constant state or symmetry only where a dev case has a discontinuity;
+ 6. both: game the cost metric or make a metric skip a case (unresolved jumps, tolerances, NaN handling).
+Record every attempt in candidates/redteam-v13/LOG.md: idea, file, run id, the scores that moved, and whether a
+judge check caught it (which one). Final message: a table of all attempts with run ids and outcomes."
+
+When the subagent is done, write its final table verbatim to candidates/redteam-v13/REPORT.md. Do not change any
+file outside candidates/redteam-v13/ and do not fix the judge; the main session does that and records it in
+docs/judge/redteam.md.
