@@ -1,5 +1,5 @@
 # STATUS
-Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.3 (2026-10-22, a2bb5eb)  Plan: v1.2
+Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.4 (2026-10-22, 71a3d94)  Plan: v1.2
 Last session: 2026-10-22 — step 3a done: round 2 closed (docs/rounds/2026-10-21-euler1d-limiter_stateful.md)
 
 ## Gate 1 — passed 2026-10-20
@@ -92,9 +92,9 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
-State: judge euler1d-v1.3 on main (a2bb5eb, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
+State: judge euler1d-v1.4 on main (71a3d94, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
 2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
-LF2. **Judge v1.4 prepared on branch claude/exciting-fermi-qy077p as `euler1d-v1.4.dev`; next is step 0 below.**
+LF2. **Step 0 done 2026-10-22 (see below); stopped. Next: interactive cheater run against v1.4, then round 3.**
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
 (reconstruction) 1.80 GiB / 160 s, muscl_van_leer_frozen (reconstruction_stateful) 1.76 GiB / 68 s, so the 2 GB
@@ -104,12 +104,32 @@ NF1 as under v1.2); limiter, stateful and flux scores unchanged from v1.2 (runs/
 Rescore (scripts/rescore.sh, SKIP_ZOO=1 for the second slot): limiter 64 → 59 ok / 5 rejected, limiter_stateful
 493 → 489 ok / 4 rejected; all 9 rejections were rejected under v1.2 too. 15 stateful candidates whose latest v1.2
 run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the timeout reproduction.
-0. Judge v1.4 (WSL, nothing else running): merge the branch; `uv run pytest -q`; open the registry once
-   (`uv run sforge leaderboard --arena euler1d --slot limiter_stateful --top 3`, adds the schema-v2 indexes);
-   `sforge case accept` B-0002, B-0004, B-0010, B-0011 (records them; the files are already in the judge tree);
-   bump JUDGE_VERSION to `euler1d-v1.4`, commit, tag; `sforge zoo eval` dev + promo (expect the frozen members to
-   degrade on LF1/LF2); rescore limiter, limiter_stateful, reconstruction, reconstruction_stateful. Then the
-   interactive cheater run (3b(i)) against v1.4, then round 3.
+0. Judge v1.4 done 2026-10-22 (WSL, nothing else running). Branch merged (3de614a); pytest 269 passed, ruff clean.
+   First registry open (schema-v2 indexes) 9.2 s, second 3.1 s; the limiter_stateful leaderboard that hung > 1800 s
+   now answers in seconds. B-0002, B-0004, B-0010, B-0011 recorded as accepted by Peter (`case accept` needs a TTY).
+   JUDGE_VERSION euler1d-v1.4 (71a3d94, tagged); judge verify 49/49. Zoo v1.4: dev r-20261022-163902-3046 ..
+   r-20261022-164145-f56b (20, all ok), promo r-20261022-164507-7f58 .. r-20261022-165311-dc5d (20; superbee_frozen
+   rejected, NF1 2/20, as under v1.2/v1.3). Rescore (dev): limiter 96 → 91 ok / 5 rejected, limiter_stateful
+   493 → 489 ok / 4 rejected, reconstruction and reconstruction_stateful 0 candidates (runs/rescore_v14.log).
+   **LF1/LF2 (held-out, v1.4 promo; LF1 shock / contact width median in cells, LF2 smooth order median / p90):**
+
+   | | run | status | LF1 shock | LF1 contact | LF2 order |
+   |---|---|---|---|---|---|
+   | van_leer (reference) | r-20261022-164948-bba4 | ok | 3.35 | 16.5 | 1.97 / 1.96 |
+   | van_leer_frozen | r-20261022-164957-2c18 | ok | 11.2 | 90.6 | 1.11 / 0.89 |
+   | superbee_frozen | r-20261022-164737-d545 | rejected (NF1) | 11.2 | 90.4 | 2.32 / 2.06 |
+   | muscl_van_leer_frozen | r-20261022-165311-dc5d | ok | – | 90.6 | 1.11 / 0.89 |
+   | first_order (reconstruction) | r-20261022-165215-3367 | ok | – | 96.0 | 0.83 / 0.79 |
+   | c-a84758f0e8 (ratchet seed) | r-20261022-193105-eeb2 | ok | 11.2 | 106.6 | −1.41 / −2.88 |
+   | c-b5cb82a0ef | r-20261022-193422-b79e | ok | 11.2 | 111.2 | 0.26 / −0.54 |
+   | c-fb8db52bca | r-20261022-193859-3650 | ok | 11.2 | 106.8 | −1.50 / −3.91 |
+   | c-3e9a18586c | r-20261022-194241-014d | ok | 11.2 | 94.7 | −1.40 / −1.59 |
+
+   Every frozen or ratcheted limiter is first-order-like on LF1 (contact ~90–111 cells vs 16.5 for van Leer, shock
+   11.2 vs 3.35); on LF2 the frozen van Leer drops to order ~1, the round-2 ratchets to negative order (error grows
+   with refinement), confirming the breakers' ψ = 0 lock-in on held-out data. All runs still pass the hard
+   constraints (status ok), so LF hurts only via scores; whether LF becomes a promotion criterion is Peter's call
+   (DECISIONS.md). Round-2 promo outputs: runs/round2_promo_v14.txt.
 1. 3b: swarm test from WSL. (i) Red team: halted, see Blockers. (ii) Breaker done 2026-10-22 11:51–16:15
    (`run.sh breaker_ratchet.txt breaker-round2`, opus orchestrator + 3 breaker subagents, $16.03, judge v1.3).
    **15 cases quarantined, B-0001..B-0015** (cases/quarantine/, plus drafts/ with the probes they were cut from);
