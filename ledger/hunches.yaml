@@ -142,8 +142,10 @@
   - limiter freezing (Venkatakrishnan 1995)
   - residual smoothing / relaxation in pseudo-time
   author: orchestrator/steady-convergence
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'No w reaches N5 and N6 explicit convergence within 0.5 cells of the base contact width (base c-44f8015f87
+    R1 contact 5.46, r-20261021-123016-c10a): w=0.03 contact 12.4 (r-20261021-121337-aa4c), w=0.1 8.51 (r-20261021-121336-1d7f),
+    w=0.3 6.56 (r-20261021-121337-964d); all three also lose Newton on N1 (300 its).'
 - id: H-0006
   arena: euler1d
   slot: limiter_stateful
@@ -169,8 +171,12 @@
   known_relatives:
   - limiter freezing (Venkatakrishnan 1995)
   author: orchestrator/contrarian
-  status: open
-  verdict_note: ''
+  status: supported
+  verdict_note: 'Kill criterion not met: ratchet K0=500/1000 converges explicitly on all N5/N6 like the centred
+    freeze (dev r-20261021-121442-ae91, r-20261021-121336-d8d5 vs r-20261021-121826-9bcf), contact unchanged 5.46,
+    Newton 62. Held-out: ratchet NF1 explicit 20/20 (promo r-20261021-122840-1c71) vs freeze 18/20 with 2 hard violations
+    (r-20261021-122541-ac84). Not promoted for Target A (A1, A2, A7 fail). Label: variant of limiter freezing (Venkatakrishnan
+    1995).'
 - id: H-0007
   arena: euler1d
   slot: limiter_stateful
@@ -197,8 +203,10 @@
   known_relatives:
   - limiter freezing (Venkatakrishnan 1995)
   author: orchestrator/practitioner
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'All four variants (superbee/MC x tol 1e-3/1e-2) rejected on dev: non-physical state in the explicit
+    solver on N1 and N5, R1 contact ~21 cells (r-20261021-121517-62f1, r-20261021-121519-766b, r-20261021-121523-25a8,
+    r-20261021-121547-1b09). Newton never reached.'
 - id: H-0008
   arena: euler1d
   slot: limiter_stateful
@@ -223,8 +231,11 @@
   - hysteresis in limiter switching; relay systems
   - limiter freezing (Venkatakrishnan 1995)
   author: orchestrator/approximation theory
-  status: open
-  verdict_note: ''
+  status: inconclusive
+  verdict_note: 'Kill criterion not met (d=0.1 gives N5=N6 explicit 1, r-20261021-121713-2521), but the prediction
+    missed: contact 5.90 vs base 5.46 (> 0.3 cells), N1 explicit convergence lost for d=0.1 and 0.3, N4 roughness
+    up 6-14x; d=0.02 N6 2/3 (r-20261021-121711-dd8f); d=0.3 contact 8.36 (r-20261021-121717-fd0f). Dominated by
+    the ratchet (H-0006).'
 - id: H-0009
   arena: euler1d
   slot: limiter_stateful
@@ -252,8 +263,11 @@
   - limiter freezing (Venkatakrishnan 1995)
   - c-44f8015f87 (round 1)
   author: orchestrator/transfer
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Dev N5/N6 explicit = 1 for K=1000/2000 (r-20261021-121826-9bcf, r-20261021-121838-0370; K=500 N6
+    2/3, r-20261021-121843-de33), but held-out NF1 explicit share below 0.95 for both: K=1000 promo rejected, 2
+    of 20 hard violations, 17/20 converge (r-20261021-122541-ac84); K=2000 promo rejected, 2 of 20 hard violations
+    (r-20261022-060927-dc65). The island''s best children switched to the H-0006 ratchet.'
 - id: H-0010
   arena: euler1d
   slot: limiter_stateful
@@ -280,5 +294,7 @@
   - superbee (Roe 1985), Sweby's TVD region (1984)
   - limiter freezing (Venkatakrishnan 1995)
   author: orchestrator/structure preservation
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'N5 explicit 0 for w=0.05 and w=0.2 (superbee 1/3): r-20261021-121845-f1c8, r-20261021-122231-2562;
+    Newton fails on N1 (300). The island''s best child c-3e9a18586c is a crossover that hands over to the H-0006
+    ratchet after 1000 steps (promo r-20261022-055754-c173, not promoted).'
