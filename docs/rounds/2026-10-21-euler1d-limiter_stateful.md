@@ -105,3 +105,6 @@ freezing on a superbee/MC-family base. Nothing here is a novelty claim.
   A6 or A3. Changing it is a target change and would be decided before any further promotion test, not after.
 - Step 3b next (swarm test from a WSL session, with breaker on c-b5cb82a0ef and c-fb8db52bca instead of only
   c-a84758f0e8)?
+
+*Answered 2026-10-22 (DECISIONS.md):* A7 stays as written; the 3b breaker attacks all three (c-a84758f0e8,
+c-b5cb82a0ef, c-fb8db52bca).

@@ -128,3 +128,12 @@ after judge v1.3 (3d); a decision point after round 3 (3e).
 translation and constant-state checks, a stateful variant, a zoo with THINC/BVD), a zoo re-evaluation and a red-team pass.
 Agent runs happen from WSL only. The §11.4 kill criterion still applies; 3e can end Phase 3 earlier with the
 negative-result note.
+
+## 2026-10-22 — After round 2 (Peter)
+*Context:* Round 2 closed (docs/rounds/2026-10-21-euler1d-limiter_stateful.md). Nothing promoted for Target A. The
+two near misses c-b5cb82a0ef (fails A6, A7) and c-fb8db52bca (fails A3, A7) are sharp enough for A1/A2 on held-out
+data but overshoot 2–3× van Leer.
+*Decision:* (1) **A7 stays as written** (RF1 and RF2 overshoot p90 ≤ 1.1 × van Leer); no target change.
+(2) **Breaker in step 3b attacks all three:** c-a84758f0e8, c-b5cb82a0ef and c-fb8db52bca (at most 10 cases each,
+to quarantine, reviewed by Peter).
+*Consequences:* Target A stays fixed for round 3 and the 3c sweep. 3b's breaker step covers three candidates.

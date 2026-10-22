@@ -94,8 +94,7 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
 State: judge euler1d-v1.2; round 2 closed; no open hunch. Evaluation slots K = 7 (memory cap).
 1. 3b: swarm test from WSL: check that the sforge MCP server connects; cheater against v1.2; breaker against
-   c-a84758f0e8 (and the round-2 near misses c-b5cb82a0ef, c-fb8db52bca, if Peter agrees); the swarm criterion is
-   fixed before round 3.
+   c-a84758f0e8, c-b5cb82a0ef and c-fb8db52bca (Peter 2026-10-22); the swarm criterion is fixed before round 3.
 2. 3c: register H-0011 and run the A1 + A7 feasibility sweep for φ(r) (~30 dev points, promo on 3); include the
    bases of c-b5cb82a0ef and c-fb8db52bca as points.
 3. 3d: judge v1.3 (reconstruction constraints, stateful variant, zoo incl. THINC/BVD, descriptors), zoo eval,
@@ -103,8 +102,7 @@ State: judge euler1d-v1.2; round 2 closed; no open hunch. Evaluation slots K = 7
 4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
-- Round 2 open questions (docs/rounds/2026-10-21-euler1d-limiter_stateful.md): keep A7 as written? Breaker on the
-  round-2 near misses in 3b?
+- Round 2 questions answered 2026-10-22 (DECISIONS.md): A7 stays as written; breaker on all three candidates.
 - Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
   classifier ("Create Unsafe Agents"), and the desktop session has no sforge MCP tools. The red team and round 1
   were therefore run by the orchestrator itself. Recommended: one cheater-agent run against v1.1 from WSL
