@@ -4,4 +4,4 @@ JUDGE_VERSION names the git tag of this judge. A version ending in ".dev" has no
 scores computed under it are marked as such. Bump it in the same commit as any judge change (PLAN §2 rule 2).
 """
 
-JUDGE_VERSION = "euler1d-v1.3.dev"
+JUDGE_VERSION = "euler1d-v1.3"
