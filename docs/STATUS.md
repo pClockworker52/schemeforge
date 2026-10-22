@@ -89,6 +89,12 @@ still open in the ledger. The round-2 findings so far are in docs/reports/2026-1
 3. 3c: register H-0011 and run the A1 + A7 feasibility sweep for φ(r) (~30 dev points, promo on 3).
 4. 3d: judge v1.3 (reconstruction constraints, stateful variant, zoo incl. THINC/BVD, descriptors), zoo eval,
    red team, then round 3 on `reconstruction` with agent-written hunches.
+   Started 2026-10-22 in a cloud session on branch claude/exciting-fermi-qy077p (judge `euler1d-v1.3.dev`):
+   reconstruction constraints done (one 6-cell interface window per call, locality/size/position/constant-state
+   checks; docs/judge/euler1d_slots.md, redteam.md; 252 tests green). Dev smoke check in the cloud registry only
+   (not in the WSL registry): weno5z r-20261022-051745-85a6, first_order r-20261022-051852-a268, both OK.
+   **Do not merge this branch into the WSL checkout until round 2 is closed** (iron rule 2). Still open for v1.3:
+   stateful variant, THINC/BVD zoo member, archive descriptors, tag, zoo eval, rescore, cheater pass.
 5. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
