@@ -164,3 +164,13 @@ median ≥ 1.8) to Target A (docs/targets/A.md, `core/promotion.py`).
 *Consequences:* Pre-registered before any round-3 candidate exists (PLAN §2 rule 5). Promotion needs a promo run
 under judge v1.4 or later. None of the round-2 candidates would pass A8.
 
+
+## 2026-10-22 — Step 3b(i) closed without an independent cheater (Peter)
+*Context:* Two runs of the independent red team (scripts/headless/redteam_v13.txt) halted before any attempt:
+judge v1.3 (headless, 11:17–11:50) and judge v1.4 (interactive cheater subagent, ~21:55–22:20). Both times a safety
+classifier stopped the cheater; 0 candidate files, 0 eval runs (docs/rounds/2026-10-22-redteam-v14-halted.md).
+*Decision:* Close 3b(i) as **"independent cheater agent not available (two classifier halts, v1.3 and v1.4)"**.
+Covered by the structural defenses (sandbox validator, slot constraints, held-out suites), the regression tests,
+Target A8 and the breakers. **Residual gaps:** metric skipping and unanticipated attacks. Revisit at gate 3e.
+*Consequences:* Round 3 starts without an independent red-team pass against v1.4; the two residual gaps stay open
+and are listed in STATUS.

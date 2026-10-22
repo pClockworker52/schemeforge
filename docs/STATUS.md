@@ -94,7 +94,7 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
 State: judge euler1d-v1.4 on main (71a3d94, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
 2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
-LF2. **Step 0 done 2026-10-22 (see below). Cheater run against v1.4 halted again (Blockers); stopped before round 3.**
+LF2. **Step 0 done 2026-10-22 (see below). 3b(i) closed without an independent cheater (DECISIONS.md). Round 3 next.**
 Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
@@ -131,7 +131,9 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
    with refinement), confirming the breakers' ψ = 0 lock-in on held-out data. All runs still pass the hard
    constraints (status ok), so LF hurts only via scores; whether LF becomes a promotion criterion is Peter's call
    (DECISIONS.md). Round-2 promo outputs: runs/round2_promo_v14.txt.
-1. 3b: swarm test from WSL. (i) Red team: halted, see Blockers. (ii) Breaker done 2026-10-22 11:51–16:15
+1. 3b: swarm test from WSL. (i) Red team: **closed 2026-10-22 (Peter, DECISIONS.md)** as "independent cheater
+   agent not available (two classifier halts, v1.3 and v1.4)"; covered by structural defenses, regression tests,
+   Target A8 and breakers; residual gaps: metric skipping and unanticipated attacks; revisit at gate 3e. (ii) Breaker done 2026-10-22 11:51–16:15
    (`run.sh breaker_ratchet.txt breaker-round2`, opus orchestrator + 3 breaker subagents, $16.03, judge v1.3).
    **15 cases quarantined, B-0001..B-0015** (cases/quarantine/, plus drafts/ with the probes they were cut from);
    none breaks every zoo member, so none is a hard case. Reports verbatim in docs/rounds/2026-10-22-breaker-round2/.
@@ -166,6 +168,7 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
 4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
+- *(3b(i) closed by Peter 2026-10-22, see DECISIONS.md; the two halts below are kept for the record.)*
 - **Red team v1.4 did not run either** (2026-10-22 ~21:55–22:20, interactive WSL session, cheater subagent, task
   from redteam_v13.txt verbatim with folder candidates/redteam/v13/). A safety classifier stopped the cheater while it
   was planning attacks, after reading only the slot docs, sandbox.py and the judge sources: 0 files, 0 eval runs
