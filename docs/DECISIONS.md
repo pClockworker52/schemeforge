@@ -155,3 +155,12 @@ from 65 to 75 instances (~16–26 s more per promo run). On a test seed the froz
 LF results become a promotion criterion is a separate decision. In the WSL registry the four cases are recorded as
 accepted with `sforge case accept`, which now accepts a case a judge commit already moved.
 
+## 2026-10-22 — Target A gains A8 (long runs) (Peter)
+*Context:* Judge v1.4's held-out long-run families (STATUS step 0: van Leer LF1 contact 16.5 cells, LF2 order 1.97;
+van Leer frozen 90.6 / 1.11; the round-2 ratchets 107–111 / −1.5 to 0.26) confirmed the breakers' finding: state
+that acts after ~1000 steps passes A1–A7 and is still close to first order on long unsteady runs.
+*Decision:* Before round 3, add **A8a** (LF1 contact_width median ≤ 1.5 × van Leer's) and **A8b** (LF2 order_smooth
+median ≥ 1.8) to Target A (docs/targets/A.md, `core/promotion.py`).
+*Consequences:* Pre-registered before any round-3 candidate exists (PLAN §2 rule 5). Promotion needs a promo run
+under judge v1.4 or later. None of the round-2 candidates would pass A8.
+

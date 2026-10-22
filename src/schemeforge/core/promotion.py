@@ -38,10 +38,12 @@ TARGET_A: dict[str, Any] = {
         ("A3", "NF1", "converged_expl", "mean", ">=", 0.95),
         ("A4", "NF1", "converged_impl", "mean", ">=", 1.0),
         ("A5", "NF3", "roughness_J", "p90", "<=", 0.002),
+        ("A8b", "LF2", "order_smooth", "median", ">=", 1.8),  # since 2026-10-22 (judge v1.4 long runs)
     ],
     "relative": [  # (id, family, metric, stat, factor x reference member's value)
         ("A7a", "RF1", "overshoot", "p90", 1.1, "van_leer"),
         ("A7b", "RF2", "overshoot", "p90", 1.1, "van_leer"),
+        ("A8a", "LF1", "contact_width", "median", 1.5, "van_leer"),  # since 2026-10-22 (judge v1.4 long runs)
     ],
     "bootstrap": [  # (id, family, metric, reference zoo member): 95 % CI of log(cand/ref) entirely below 0
         ("B1", "RF1", "shock_width", "van_albada"),

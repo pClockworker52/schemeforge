@@ -21,6 +21,12 @@ smooth limiters converge but pay 0.5–1.4 cells of shock width and 2–6 cells 
 | A5 | NF3 roughness_J, p90 | ≤ 0.002 | minmod 0.0009, van Albada 0.0015, van Leer 0.0018; superbee 21 |
 | A6 | S1 order_smooth (dev) | ≥ 1.9 | van Albada 2.00, van Leer 1.98 |
 | A7 | RF1 overshoot p90 and RF2 overshoot p90 | ≤ 1.1 × van Leer's | van Leer RF1 0.0219, RF2 0.0233 |
+| A8a | LF1 contact_width, median | ≤ 1.5 × van Leer's | van Leer 16.5 cells; van Leer frozen 90.6, round-2 ratchets 107–111 (judge v1.4) |
+| A8b | LF2 order_smooth, median | ≥ 1.8 | van Leer 1.97; van Leer frozen 1.11, round-2 ratchets −1.5 to 0.26 (judge v1.4) |
+
+A8 was added on 2026-10-22, before round 3 (Peter; DECISIONS.md "Target A gains A8"): the long-run families LF1
+and LF2 of judge v1.4 showed that state acting after ~1000 steps (limiter freezing, the round-2 ratchets) is close to
+first order on long unsteady runs while passing A1–A7. A promo run from before v1.4 has no LF families and fails A8.
 
 No zoo member meets A1–A5 together: the sharp limiters fail A3–A5, the convergent ones fail A1–A2.
 
@@ -32,7 +38,7 @@ NF2 mdot_var, NF2 converged_impl. Hard constraints and all dev cases must pass.
 Per PLAN §5.8: paired bootstrap (10,000 resamples) of log(candidate / zoo reference) on the held-out
 instances; the 95 % interval must lie entirely below 0. "Best qualifying zoo member" is made concrete as the
 member on the other side of the front: B1, B2 — RF1 shock and contact width against **van Albada** (the
-convergent, smooth member); B5 — NF3 roughness_J against **MC** (the sharp member). A1–A5 and A7 are checked
+convergent, smooth member); B5 — NF3 roughness_J against **MC** (the sharp member). A1–A5, A7 and A8 are checked
 as stated, A6 on the dev suite. Implemented in `src/schemeforge/core/promotion.py`; run
 `sforge promote <candidate> --target A` after promo runs of the candidate and the zoo. The tool reads the
 per-instance values from ~/.schemeforge/heldout_runs/ and prints only verdicts and confidence intervals.
