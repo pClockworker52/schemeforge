@@ -1,0 +1,29 @@
+arena: euler1d
+slot: limiter
+lens: contrarian
+statement: >-
+  No limiter phi(r) inside Sweby's TVD region meets Target A's sharpness and overshoot criteria together: an RF1
+  shock width of at most 2.6 cells (A1) forces an overshoot p90 above 1.1 x van Leer's on RF1 or RF2 (A7).
+mechanism: >-
+  On the held-out Riemann problems the limiters that reach A1 (superbee 2.49, Koren 2.53, MC 2.54) all overshoot
+  3-5 times more than van Leer at the 90th percentile (0.060-0.107 vs 0.022), and the smooth ones that keep the
+  overshoot down (van Leer 2.95, van Albada 3.42) miss A1 (docs/judge/euler1d_baseline.md). Shock width falls with
+  the compressive slope phi'(0) and the plateau height; both also steepen the profile at the foot of the shock,
+  where the overshoot is made, so a single function of r cannot trade one against the other. If true, Target A is
+  infeasible in the limiter slot and sharpness has to come from a richer slot (reconstruction), which PLAN 11.5
+  step 3d assumes.
+predicted_effect:
+  - {metric: R1.shock_width, direction: down, size: "<= 2.6 cells only for the most compressive points (slope at 0 >= 1.75, cap >= 1.6)"}
+  - {metric: R1.overshoot, direction: up, size: "every point with R1.shock_width <= 2.6 has R1 or R6 overshoot > 1.1 x van Leer's dev value"}
+kill_criterion: >-
+  Refuted if any member of the two-parameter family phi = max(0, smin_10(s0 r, 1 + (c - 1) tanh(r - 1))),
+  s0 in {1, 1.25, 1.5, 1.75, 2}, c in {1, 1.2, 1.4, 1.6, 1.8, 2}, meets A1 and A7 on promo (RF1 shock width
+  median <= 2.6, RF1 and RF2 overshoot p90 <= 1.1 x van Leer's), or meets both dev proxies (R1 shock width
+  <= 2.6, R1 and R6 overshoot <= 1.1 x van Leer's dev values) and is then confirmed on promo. The three points
+  closest to the corner on dev go to promo whatever their dev values. Supported otherwise, with the label
+  "for this family"; it does not prove infeasibility for every phi.
+known_relatives:
+  - Sweby's TVD region (Sweby 1984)
+  - superbee (Roe 1985), Koren (1993), van Leer (1974), van Albada (1982)
+  - round-1 tanh-cap limiter c-44f8015f87 (the family member s0 = 2, c = 1.5, between grid points)
+author: orchestrator/contrarian
