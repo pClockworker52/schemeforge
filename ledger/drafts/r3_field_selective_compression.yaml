@@ -1,0 +1,47 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: shock physics
+statement: >-
+  Compressing only the linearly degenerate (entropy) characteristic field, i.e. THINC/BVD on the field-2 amplitude
+  and van Leer MUSCL on the two acoustic fields, in local characteristic variables, makes contacts as sharp as
+  thinc_bvd's and keeps them sharp on long runs. Shock width, shock overshoot and nozzle convergence stay at the
+  level of the acoustic base (van Leer), because contacts do not self-steepen and a steady nozzle flow carries
+  almost no field-2 signal.
+mechanism: >-
+  Contacts are linearly degenerate. No physical compression opposes numerical diffusion there, so their width grows
+  with time (van Leer: RF1 contact 7.1 cells, LF1 16.5 cells), and anti-diffusion is the only way to hold them.
+  Shocks are genuinely nonlinear. Converging characteristics bound their width independently of time, and extra
+  compression in these fields is what made every round-2 candidate sharp enough for A1 overshoot 2-3 x van Leer
+  (A7; H-0011) and what drives the limit cycle at the steady shock. So the compression should be applied per wave
+  family, not per primitive variable. Recipe: at each cell of the window, project the primitive differences onto
+  the left eigenvectors at that cell's state, giving alpha1 = (dp - rho a du) / (2 a^2), alpha2 = drho - dp / a^2 and
+  alpha3 = (dp + rho a du) / (2 a^2). Reconstruct alpha2 with THINC/BVD (beta 1.6, as in the zoo member) and alpha1
+  and alpha3 with the van Leer limiter, then map the face increments back with the right eigenvectors. A zero
+  difference then gives a zero increment, so a constant state comes back exactly. Why convergence should survive:
+  in a steady quasi-1D nozzle the flow is isentropic away from the shock, so alpha2 = O(dx^2) there. Across the shock
+  the entropy jump is third order in shock strength; for nozzle shock Mach numbers of 1.3-1.6, drho and dp / a^2
+  at the mean state nearly cancel. THINC then carries only a small part of the steady shock's jump, the residual map
+  near the shock is close to van Leer's, and van Leer does not stall in the way thinc_bvd stalls on N5/N6. Widths
+  and overshoots of shocks are measured in p, which has no alpha2 component, so the shock metrics should be van
+  Leer's. The candidate is stateless and passes s through unchanged.
+predicted_effect:
+  - {metric: R1.contact_width, direction: down, size: "from 6.29 (muscl_van_leer, r-20261022-070148-4069) to <= 3.5 cells; thinc_bvd has 2.65 (r-20261022-070144-7e03)"}
+  - {metric: LF1.contact_width, direction: down, size: "median <= 8 cells, against van Leer's 16.5 (A8a needs <= 24.75)"}
+  - {metric: R1.shock_width, direction: same, size: "within +-0.1 cell of muscl_van_leer's 2.92; A1 is NOT addressed by this mechanism"}
+  - {metric: B-0010.overshoot, direction: same, size: "within 10 % of muscl_van_leer's dev value (also R6.overshoot); A7 holds"}
+  - {metric: N5.converged_expl, direction: same, size: "equal to muscl_van_leer's dev share (also N6), strictly above thinc_bvd's 1/3 (N5) and 0 (N6) from r-20261022-054308-f275"}
+  - {metric: S1.order_smooth, direction: same, size: ">= 1.9 (S1 is a pure entropy wave, so BVD, not THINC, must pick MUSCL there; thinc_bvd 1.96); B-0002.order_smooth >= 1.9"}
+kill_criterion: >-
+  Refuted if, on dev, every variant (THINC/BVD or THINC-where-monotone on alpha2; beta 1.6 and 2.0) fails at least one
+  of the following: R1 contact width <= 4.0 cells; N5 + N6 explicit converged share at least that of muscl_van_leer;
+  R6 and B-0010 overshoot <= 1.1 x muscl_van_leer's dev values; S1 order >= 1.9. The claim is also refuted if the
+  best dev variant goes to promo and has an LF1 contact width median above 1.5 x van Leer's (A8a). Missing A1 or A3
+  does not refute this hunch, because it predicts both stay at van Leer's level; those need another mechanism.
+known_relatives:
+  - "Known method, stated plainly: THINC only for the contact/entropy wave in characteristic space (Chamarthi, arXiv 2410.22127, 2024) and a hybrid of WENO on genuinely nonlinear fields with BVD on linearly degenerate fields (Zhang and Shen, Adv. Appl. Math. Mech. 2025; read from the abstract only). New here is only the claim that it removes thinc_bvd's steady-state stall, which those papers do not test as far as one search shows."
+  - Harten, artificial compression method (1977/1978), including its self-adjusting hybrid form with compression on the linearly degenerate field
+  - Yang (1990), artificial compression for ENO schemes (slope modification at contacts)
+  - THINC/BVD (Sun, Inaba, Xiao 2016), zoo member thinc_bvd
+  - local characteristic reconstruction (Harten, Engquist, Osher, Chakravarthy 1987; Qiu and Shu 2002)
+  - PLAN seed hunch 4
+author: hunch-generator/shock physics

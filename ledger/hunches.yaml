@@ -339,3 +339,357 @@
     (A1 2.72, A7a 0.049, A7b 0.032 vs 0.024 / 0.026); s0 2 c 1.6 c-b3897b3f5e r-20261022-145609-942b (A1 2.85, A7a
     0.035, A7b 0.052); s0 1.25 c 1.6 c-c04b63eb05 r-20261022-145855-58d9 (A1 3.04, A7a 0.032, A7b passes 0.021).
     None meets A1, and none meets A7a.'
+- id: H-0012
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: shock physics
+  statement: Compressing only the linearly degenerate (entropy) characteristic field, i.e. THINC/BVD on the field-2
+    amplitude and van Leer MUSCL on the two acoustic fields, in local characteristic variables, makes contacts as
+    sharp as thinc_bvd's and keeps them sharp on long runs. Shock width, shock overshoot and nozzle convergence
+    stay at the level of the acoustic base (van Leer), because contacts do not self-steepen and a steady nozzle
+    flow carries almost no field-2 signal.
+  mechanism: 'Contacts are linearly degenerate. No physical compression opposes numerical diffusion there, so their
+    width grows with time (van Leer: RF1 contact 7.1 cells, LF1 16.5 cells), and anti-diffusion is the only way
+    to hold them. Shocks are genuinely nonlinear. Converging characteristics bound their width independently of
+    time, and extra compression in these fields is what made every round-2 candidate sharp enough for A1 overshoot
+    2-3 x van Leer (A7; H-0011) and what drives the limit cycle at the steady shock. So the compression should be
+    applied per wave family, not per primitive variable. Recipe: at each cell of the window, project the primitive
+    differences onto the left eigenvectors at that cell''s state, giving alpha1 = (dp - rho a du) / (2 a^2), alpha2
+    = drho - dp / a^2 and alpha3 = (dp + rho a du) / (2 a^2). Reconstruct alpha2 with THINC/BVD (beta 1.6, as in
+    the zoo member) and alpha1 and alpha3 with the van Leer limiter, then map the face increments back with the
+    right eigenvectors. A zero difference then gives a zero increment, so a constant state comes back exactly. Why
+    convergence should survive: in a steady quasi-1D nozzle the flow is isentropic away from the shock, so alpha2
+    = O(dx^2) there. Across the shock the entropy jump is third order in shock strength; for nozzle shock Mach numbers
+    of 1.3-1.6, drho and dp / a^2 at the mean state nearly cancel. THINC then carries only a small part of the steady
+    shock''s jump, the residual map near the shock is close to van Leer''s, and van Leer does not stall in the way
+    thinc_bvd stalls on N5/N6. Widths and overshoots of shocks are measured in p, which has no alpha2 component,
+    so the shock metrics should be van Leer''s. The candidate is stateless and passes s through unchanged.'
+  predicted_effect:
+  - metric: R1.contact_width
+    direction: down
+    size: from 6.29 (muscl_van_leer, r-20261022-070148-4069) to <= 3.5 cells; thinc_bvd has 2.65 (r-20261022-070144-7e03)
+  - metric: LF1.contact_width
+    direction: down
+    size: median <= 8 cells, against van Leer's 16.5 (A8a needs <= 24.75)
+  - metric: R1.shock_width
+    direction: same
+    size: within +-0.1 cell of muscl_van_leer's 2.92; A1 is NOT addressed by this mechanism
+  - metric: B-0010.overshoot
+    direction: same
+    size: within 10 % of muscl_van_leer's dev value (also R6.overshoot); A7 holds
+  - metric: N5.converged_expl
+    direction: same
+    size: equal to muscl_van_leer's dev share (also N6), strictly above thinc_bvd's 1/3 (N5) and 0 (N6) from r-20261022-054308-f275
+  - metric: S1.order_smooth
+    direction: same
+    size: '>= 1.9 (S1 is a pure entropy wave, so BVD, not THINC, must pick MUSCL there; thinc_bvd 1.96); B-0002.order_smooth
+      >= 1.9'
+  kill_criterion: 'Refuted if, on dev, every variant (THINC/BVD or THINC-where-monotone on alpha2; beta 1.6 and
+    2.0) fails at least one of the following: R1 contact width <= 4.0 cells; N5 + N6 explicit converged share at
+    least that of muscl_van_leer; R6 and B-0010 overshoot <= 1.1 x muscl_van_leer''s dev values; S1 order >= 1.9.
+    The claim is also refuted if the best dev variant goes to promo and has an LF1 contact width median above 1.5
+    x van Leer''s (A8a). Missing A1 or A3 does not refute this hunch, because it predicts both stay at van Leer''s
+    level; those need another mechanism.'
+  known_relatives:
+  - 'Known method, stated plainly: THINC only for the contact/entropy wave in characteristic space (Chamarthi, arXiv
+    2410.22127, 2024) and a hybrid of WENO on genuinely nonlinear fields with BVD on linearly degenerate fields
+    (Zhang and Shen, Adv. Appl. Math. Mech. 2025; read from the abstract only). New here is only the claim that
+    it removes thinc_bvd''s steady-state stall, which those papers do not test as far as one search shows.'
+  - Harten, artificial compression method (1977/1978), including its self-adjusting hybrid form with compression
+    on the linearly degenerate field
+  - Yang (1990), artificial compression for ENO schemes (slope modification at contacts)
+  - THINC/BVD (Sun, Inaba, Xiao 2016), zoo member thinc_bvd
+  - local characteristic reconstruction (Harten, Engquist, Osher, Chakravarthy 1987; Qiu and Shu 2002)
+  - PLAN seed hunch 4
+  author: hunch-generator/shock physics
+  status: open
+  verdict_note: ''
+- id: H-0013
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: steady-convergence
+  statement: thinc_bvd's explicit stall on N5/N6 comes from the per-cell BVD choice chattering at near-ties. A state
+    that counts how often a cell's choice alternates, locks the cell to MUSCL once it has flipped often enough within
+    a decaying window, and releases it only when the BVD margin becomes decisive again converges on the nozzles
+    like MUSCL. At the same time it leaves moving discontinuities and long runs at thinc_bvd's sharpness, because
+    transport flips a choice a few times and a limit cycle flips it indefinitely.
+  mechanism: 'BVD picks, per cell and variable, the candidate with the smaller total boundary variation, a discontinuous
+    function of the data. Near a tie (TBV_THINC close to TBV_MUSCL), a small change of the intermediate shock cell
+    flips the choice and moves the face values by O(jump). This is a relay without hysteresis, the textbook source
+    of chattering in switched systems (sliding-mode control) and a plausible source of the N5/N6 limit cycle. The
+    stall signature is frequency, not time. A passing wave flips a cell''s choice once or twice (into THINC and
+    back out); a limit cycle flips it every period. The state stores, per cell and variable, s = sign(m_prev) (1
+    + c), where m is the normalised BVD margin (TBV_M - TBV_T) / (TBV_M + TBV_T + tiny), m_prev is its sign at the
+    last step, and c is a flip score updated as c <- lambda c + [sign(m) != sign(m_prev), both non-zero]. s = 0
+    at the start means no history. When c >= S* the cell is locked: it uses MUSCL (van Leer) and c stops decaying.
+    It is released only when |m| > mu, a decisive preference that an oscillating near-tie does not reach and an
+    arriving wave does. Two traps are avoided by construction. First, flat cells have TBV_M = TBV_T = 0, so m =
+    0 and they never count as flipping; the round-2 lock-in of constant regions (traps file, B-0001..B-0008) cannot
+    occur. Second, nothing is triggered by a step count K0, so the memory acts from the first steps of a stall and
+    does nothing in runs that do not chatter. The candidate differs from earlier memory hunches. H-0006 is time-triggered,
+    one-way and takes a minimum. H-0007 freezes cells that have settled, the opposite trigger. H-0008 is a dead
+    band on a continuous factor. H-0005 is relaxation. None of them counts alternations or releases on a decisive
+    margin.'
+  predicted_effect:
+  - metric: N5.converged_expl
+    direction: up
+    size: from 1/3 (thinc_bvd, cloud r-20261022-054308-f275) to 1; N6 from 0 to 1
+  - metric: N5.converged_impl
+    direction: same
+    size: 1 (N6 too); Newton steps within 20 % of thinc_bvd's N1 value 64
+  - metric: R1.contact_width
+    direction: same
+    size: within 0.1 cell of thinc_bvd's 2.65 (r-20261022-070144-7e03); R1.shock_width within 0.1 of 2.47
+  - metric: B-0002.order_smooth
+    direction: same
+    size: within 0.05 of thinc_bvd's dev value; LF2 median >= 1.8 (A8b) if thinc_bvd meets it
+  - metric: N4.roughness_J
+    direction: same
+    size: <= 2 x thinc_bvd's 4.6e-4
+  - metric: B-0010.overshoot
+    direction: same
+    size: within 10 % of thinc_bvd's dev value; A7 is inherited from the base, not addressed
+  kill_criterion: Refuted if no point of the grid lambda in {0.7, 0.9}, S* in {2, 4}, mu in {0.1, 0.3} reaches N5
+    = N6 = 1 explicit on dev. Also refuted if every point that does reach it loses more than 0.3 cell of R1 contact
+    width against thinc_bvd, has B-0002 order below 1.8, or has fewer Newton-converged N5/N6 back pressures than
+    thinc_bvd. If only a lock that never releases (mu = infinity) converges, the release part is refuted and the
+    result is a variant of limiter freezing.
+  known_relatives:
+  - limiter freezing (Venkatakrishnan 1993/1995); the zoo member muscl_van_leer_frozen
+  - H-0006 (one-way ratchet), H-0007 (settle-freeze), H-0008 (dead-band hysteresis), H-0005 (relaxation)
+  - chattering of switched / relay systems and its hysteresis remedies (sliding-mode control, Utkin)
+  - THINC/BVD (Sun, Inaba, Xiao 2016), zoo member thinc_bvd
+  - No hit in one web search for counting limiter or BVD switches to detect limit cycles; this is not evidence of
+    novelty.
+  author: hunch-generator/steady-convergence
+  status: open
+  verdict_note: ''
+- id: H-0014
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: structure preservation
+  statement: Blend the sharp thinc_bvd reconstruction towards MUSCL-van Albada with a weight given by the entropy
+    production of the local Riemann problem. That production is exactly zero for smooth isentropic flow, contacts
+    and rarefactions, and third order in shock strength at compressive jumps. The blend should cut post-shock overshoot
+    to van Leer's level and let the steady shock converge, while contacts and smooth waves keep thinc_bvd's accuracy.
+  mechanism: 'The entropy inequality is what tells physical dissipation apart from numerical artefact. The exact
+    solution produces entropy only inside shocks; contacts and smooth waves carry entropy without producing it.
+    So dissipation should go only where the local Riemann problem would produce entropy. Recipe (stateless, s passed
+    through): for each pair of neighbouring cells in the window, take the relative pressure jump pi = |p_R - p_L|
+    / min(p_L, p_R). Gate it by compression with g = smooth step of (u_L - u_R) / a_mean, which is 1 for converging
+    flow and 0 for diverging flow. The weak-shock law gives the entropy jump, ds / c_v ~ (gamma^2 - 1) / (12 gamma^2)
+    pi^3. The cell weight is theta = P / (P + kappa^3), with P = g pi^3 the largest such value over the cell''s
+    two interfaces. Faces are (1 - theta) THINC/BVD + theta MUSCL-van Albada. This cubic sensor separates the cases
+    by orders of magnitude: in smooth flow pi = O(dx), so theta = O(dx^3 / kappa^3) and S1, B-0002 and LF2 are untouched.
+    S1 even has pi = 0 exactly, because only rho varies. At a contact pi = 0, so contacts stay THINC-sharp (A2,
+    A8a). Rarefactions are expanding (g = 0). Only shocks get theta near 1. There the blend removes thinc_bvd''s
+    compression from the 1-2 cells whose intermediate states produce the post-shock oscillation (A7), and replaces
+    the discrete BVD switch at the steady shock with a smooth limiter (A3, A4). The cost is a wider shock, partly
+    offset by self-steepening (A1 is at risk).'
+  predicted_effect:
+  - metric: B-0010.overshoot
+    direction: down
+    size: by >= 40 % against thinc_bvd's dev value, to <= 1.1 x muscl_van_leer's (also R6.overshoot)
+  - metric: R1.shock_width
+    direction: up
+    size: +0.1 to +0.4 cell against thinc_bvd's 2.47 (r-20261022-070144-7e03), i.e. 2.6-2.9 on dev
+  - metric: R1.contact_width
+    direction: same
+    size: within 0.2 cell of thinc_bvd's 2.65
+  - metric: S1.order_smooth
+    direction: same
+    size: within 0.05 of thinc_bvd's 1.96; B-0002.order_smooth the same
+  - metric: N5.converged_expl
+    direction: up
+    size: from 1/3 (thinc_bvd, r-20261022-054308-f275) to >= 2/3; N6 from 0 to >= 2/3
+  - metric: N4.roughness_J
+    direction: same
+    size: <= thinc_bvd's 4.6e-4
+  kill_criterion: 'Refuted if no kappa in {0.03, 0.1, 0.3} gives, on dev, R6 and B-0010 overshoot <= 1.1 x muscl_van_leer''s
+    dev values together with R1 shock width <= 2.75 cells and R1 contact width <= 3.0 cells. Also refuted if the
+    sensor fails its structural claim: S1 order drops by more than 0.1 against thinc_bvd, or R1 contact width rises
+    by more than 0.3 cell (the sensor fires on contacts). The convergence prediction (N5/N6 >= 2/3) is reported
+    separately and does not by itself refute the hunch.'
+  known_relatives:
+  - entropy viscosity (Guermond, Pasquetti, Popov 2011); PLAN seed hunch 3
+  - entropy-based switching between high- and low-order fluxes (Puppo, central schemes with entropy production as
+    an indicator, 2003-2004; entropy-limited schemes, arXiv 2202.08839)
+  - convex blending of a high-order and a low-order subcell operator by a troubled-cell indicator (Hennemann et
+    al., arXiv 2008.12044)
+  - pressure-based shock sensors (Jameson, Schmidt, Turkel 1981; Ducros et al. 1999)
+  - flux-corrected transport (Boris and Book 1973; Zalesak 1979), the general high/low-order blend
+  - weak-shock entropy law (Lax 1957; textbook, e.g. Toro ch. 3)
+  author: hunch-generator/structure preservation
+  status: open
+  verdict_note: ''
+- id: H-0015
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: contrarian
+  statement: Contrary to the textbook remedy (more dissipation at the shock) and to the round-2 / H-0011 pattern
+    (sharper means more overshoot), a steeper step-like THINC reconstruction makes moving shocks both narrower and
+    less oscillatory. For the THINC/BVD family, R6 and B-0010 overshoot falls as the THINC steepness beta rises
+    from 1.6 to 3, and some beta reaches van Leer's overshoot with a shock narrower than 2.5 cells.
+  mechanism: 'The broken assumption: post-shock overshoot is the price of sharpness, so the cure is added dissipation
+    (Roberts 1990; Jin and Liu 1996; round-2 lesson 1; H-0011). The contrarian reading: the overshoot behind a moving
+    or slowly moving shock is generated by the intermediate cells inside the numerical shock. Their states lie off
+    the physical Hugoniot (Zaide and Roe: on the non-physical branch for Godunov- and Roe-type solvers), and their
+    fluxes pulse each time the shock crosses a cell (Arora and Roe 1997; Stiriba and Donat 2003). The oscillation
+    therefore scales with how many intermediate states the shock holds and how much they move per crossing. A TVD
+    limiter sharpens by a compressive plateau. That keeps 2-3 intermediate cells and steepens their pulsation, hence
+    H-0011''s coupling of A1 and A7. A THINC profile with large beta represents the jump as a step at a sub-cell
+    position set by the cell average. Both face values of the shock cell are then close to the pre- and post-shock
+    states, the shock holds about one intermediate cell, and that cell''s flux varies smoothly as the step crosses
+    it. Fewer and better-behaved intermediate states should give a smaller overshoot. Test family (stateless, s
+    passed through): thinc_bvd with beta in {1.6, 2.2, 3.0}, plus THINC wherever the cell is monotone between its
+    neighbours (no BVD) at the same betas. The face formulas already clip frac away from 0 and 1, which keeps the
+    derivatives Newton needs finite.'
+  predicted_effect:
+  - metric: B-0010.overshoot
+    direction: down
+    size: decreasing in beta across {1.6, 2.2, 3.0}; at beta >= 2.2 <= 1.1 x muscl_van_leer's dev value (same for
+      R6.overshoot)
+  - metric: R1.shock_width
+    direction: down
+    size: <= thinc_bvd's 2.47 (r-20261022-070144-7e03), i.e. <= 2.5 at every beta
+  - metric: R1.contact_width
+    direction: down
+    size: <= 2.65 (thinc_bvd) and falling with beta
+  - metric: RF2.overshoot
+    direction: down
+    size: p90 <= 1.1 x van Leer's 0.0233 on promo for the best dev beta (A7b)
+  - metric: N5.converged_expl
+    direction: same
+    size: stays at thinc_bvd's stall level (1/3, N6 0) or worse; convergence is not addressed
+  - metric: S1.order_smooth
+    direction: down
+    size: may fall below 1.9 at beta 3.0 if BVD picks THINC on smooth extrema; reported, not predicted to pass
+  kill_criterion: Refuted if, on dev and in both sub-families (with and without BVD), the larger of R6 and B-0010
+    overshoot does not fall from beta 1.6 to beta 3.0. Also refuted if no beta gives both overshoots <= 1.1 x muscl_van_leer's
+    dev values with R1 shock width <= 2.5 cells. If a dev point passes, the claim is refuted on held-out data when
+    its promo run misses A1 (RF1 shock width median <= 2.6) or A7 (RF1 and RF2 overshoot p90 <= 1.1 x van Leer's).
+    A refutation extends H-0011's finding from TVD limiters to THINC profiles.
+  known_relatives:
+  - THINC/BVD (Sun, Inaba, Xiao 2016), zoo member thinc_bvd; P4T2-BVD with two THINC steepnesses (arXiv 2106.01872)
+  - subcell resolution (Harten 1989)
+  - post-shock oscillations of slowly moving shocks (Roberts 1990; Jin and Liu 1996; Arora and Roe 1997; Stiriba
+    and Donat 2003)
+  - shock-capturing anomalies and intermediate states off the Hugoniot (Zaide and Roe 2011-2012)
+  - H-0011 (sharpness forces overshoot for TVD limiters), the claim this hunch contradicts outside the TVD family
+  author: hunch-generator/contrarian
+  status: open
+  verdict_note: ''
+- id: H-0016
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: transfer
+  statement: MOOD's a posteriori admissibility check, carried over into a single-pass scheme with the state as a
+    one-step memory, lets WENO5-Z keep its sharpness and smooth accuracy while cutting its shock overshoot to van
+    Leer's level. The state stores each cell's previous primitive values. A cell whose current value breaks the
+    relaxed discrete maximum principle of its previous 3-cell neighbourhood, and is not a smooth extremum, is reconstructed
+    with a dissipative MUSCL for this step.
+  mechanism: 'Transfer from a posteriori limiting (MOOD, Clain, Diot, Loubere 2011; DG subcell limiting, Dumbser
+    et al. 2014). An a priori limiter must limit everywhere an oscillation might arise, judged from slope ratios,
+    and so pays sharpness at every jump (H-0011). An a posteriori check limits only where a new extremum has actually
+    appeared. MOOD recomputes the step; a reconstruction slot cannot. Its state can, however, hold q^(n-1), so the
+    check runs one step late: at step n, cell i is troubled in variable q if q_i^n lies outside [min, max] of q_(i-1..i+1)^(n-1)
+    by more than delta (max - min) + 1e-12 |q_i| (relaxed DMP). The flag is cleared if the cell passes MOOD''s smooth-extremum
+    test (u2 detection: the neighbouring second differences have the same sign and their ratio is above 1/2). Troubled
+    cells use MUSCL-minmod faces; all others use WENO5-Z. Why one step late is enough: the post-shock oscillation
+    of a moving or slowly moving shock builds up over many steps as the shock crosses cells (Roberts 1990). Damping
+    each new extremum one step after it appears holds the amplitude near one step''s growth, not the accumulated
+    one. Stencil: the check for cell k+2 needs the states of cells k+1..k+3 and for cell k+3 those of k+2..k+4,
+    all inside the window''s (4, 3) state. s_new is the current window value of the cell, and s_rho = 0 (rho > 0
+    always) marks no history at the first step. At a converged steady state q^n = q^(n-1), so no cell is flagged
+    and the scheme reduces to WENO5-Z: convergence is inherited, not improved.'
+  predicted_effect:
+  - metric: B-0010.overshoot
+    direction: down
+    size: by >= 50 % against plain weno5z's dev value, to <= 1.1 x muscl_van_leer's (also R6.overshoot)
+  - metric: R1.shock_width
+    direction: same
+    size: <= weno5z's 2.56 + 0.1 (r-20261022-070145-f53c)
+  - metric: R1.contact_width
+    direction: same
+    size: <= 4.2 cells (weno5z 3.90)
+  - metric: S1.order_smooth
+    direction: down
+    size: from weno5z's 3.33 to no lower than 2.5; B-0002.order_smooth >= 2.3; LF2 median >= 1.8 (A8b)
+  - metric: N1.newton_iters
+    direction: same
+    size: within 10 % of weno5z's 83; N5/N6 convergence equal to weno5z's (inherited)
+  - metric: RF2.overshoot
+    direction: down
+    size: p90 <= 1.1 x van Leer's 0.0233 on promo (A7b), where plain WENO5-Z oscillates (RF2 tv_increase median
+      1.3, baseline)
+  kill_criterion: 'Refuted if no delta in {1e-3, 1e-2} gives, on dev, R6 and B-0010 overshoot <= 1.1 x muscl_van_leer''s
+    dev values while keeping R1 shock width <= 2.7 cells and S1 order >= 1.9. Also refuted if the flagged-cell fallback
+    is what does all the work, i.e. a variant that flags every cell next to a jump of more than 5 % gives the same
+    overshoot with no worse widths: the a posteriori detection would then add nothing over a jump detector.'
+  known_relatives:
+  - MOOD (Clain, Diot, Loubere 2011, J. Comput. Phys. 230); relaxed DMP and u2 smooth-extremum detection (Diot,
+    Loubere, Clain 2013)
+  - a posteriori subcell finite-volume limiting of DG (Dumbser, Zanotti, Loubere, Diot 2014, J. Comput. Phys. 278)
+  - WENO5-Z (Borges, Carmona, Costa, Don 2008), zoo member weno5z
+  - troubled-cell indicators (Qiu and Shu 2005)
+  - One search found no MOOD variant that carries the flag to the next step instead of recomputing; that is not
+    evidence of novelty, and the method is at most a variant of MOOD.
+  author: hunch-generator/transfer
+  status: open
+  verdict_note: ''
+- id: H-0017
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: approximation theory
+  statement: Adding an unlimited third-order (kappa = 1/3) quadratic candidate to thinc_bvd's BVD choice, which
+    then picks the smallest total boundary variation among {quadratic, THINC, van Leer MUSCL}, raises the smooth-wave
+    order to about 3 on S1, B-0002 and LF2. It keeps thinc_bvd's shock and contact widths and does not add overshoot,
+    because an oscillating polynomial has the larger boundary variation and loses the selection.
+  mechanism: 'View BVD as a nonlinear approximation scheme: per cell it picks, from a small dictionary of profiles,
+    the one whose face values best match the neighbours'' (minimal TBV). Accuracy in a function class is then set
+    by the best dictionary member for that class. thinc_bvd''s dictionary has a step (THINC, exact for a jump at
+    any sub-cell position) but only a TVD-limited linear profile for smooth data. Its face values are second-order
+    accurate, and at smooth extrema the limiter sets the slope to 0, so the scheme drops to first order locally.
+    Both effects keep the L1 order at or below 2 (thinc_bvd S1 1.96; c-b5cb82a0ef 0.13 with a flatter limiter).
+    The 6-cell window rules out a larger stencil: the TBV of cell k+2 needs the faces of cells k+1 and k+3, so each
+    candidate may use only 3 cells. Within it, the unlimited kappa = 1/3 quadratic, q_(i+1/2) = q_i + (2 (q_(i+1)
+    - q_i) + (q_i - q_(i-1))) / 6 and q_(i-1/2) = q_i - (2 (q_i - q_(i-1)) + (q_(i+1) - q_i)) / 6, gives third-order
+    face values with no clipping at extrema. On smooth data its boundary jumps are O(dx^3), against O(dx^2) for
+    the linear MUSCL profile, so BVD selects it there. At a jump its overshooting faces give a TBV of O(jump), while
+    THINC''s TBV is near zero, so THINC is selected. van Leer MUSCL stays as a third candidate, so each cell''s
+    selected TBV, computed as in thinc_bvd with the same candidate in the neighbours, is no larger than thinc_bvd''s.
+    That limits the room for new overshoot. Constant data give zero increments for all three candidates. The candidate
+    is stateless and passes s through.'
+  predicted_effect:
+  - metric: S1.order_smooth
+    direction: up
+    size: from 1.96 (thinc_bvd, r-20261022-070144-7e03) to >= 2.6
+  - metric: B-0002.order_smooth
+    direction: up
+    size: '>= 2.5; LF2 median >= 2.5 on promo (A8b with margin)'
+  - metric: R7.l1_ref
+    direction: down
+    size: by >= 20 % against thinc_bvd's 0.0039 (Shu-Osher entropy waves)
+  - metric: R1.contact_width
+    direction: same
+    size: within 0.1 cell of thinc_bvd's 2.65; R1.shock_width within 0.1 of 2.47
+  - metric: B-0010.overshoot
+    direction: same
+    size: <= 1.1 x thinc_bvd's dev value (also R6.overshoot)
+  - metric: N5.converged_expl
+    direction: same
+    size: thinc_bvd's stall level (1/3; N6 0); convergence not addressed
+  kill_criterion: Refuted if, on dev, S1 order stays below 2.3, or R1 contact width rises by more than 0.3 cell
+    against thinc_bvd, or R6 or B-0010 overshoot exceeds 1.2 x thinc_bvd's dev value. The prediction that BVD does
+    not pick the polynomial at jumps is refuted by the overshoot clause alone.
+  known_relatives:
+  - 'Known method family, stated plainly: P_nT_m-BVD, polynomial plus THINC candidates chosen by boundary variation
+    (Deng, Shimizu, Xiao, fifth-order and two-stage BVD, arXiv 1811.01379; P4T2-BVD, arXiv 2106.01872). This hunch
+    is the third-order version that the 6-cell window allows; label at best ''variant of P_nT_m-BVD''.'
+  - MUSCL-THINC-BVD (Sun, Inaba, Xiao 2016), zoo member thinc_bvd
+  - kappa-schemes (van Leer 1985; kappa = 1/3 third-order upwind-biased)
+  - accuracy loss of TVD limiters at smooth extrema and its remedies (Shu 1987 TVB; Suresh and Huynh 1997 MP; Colella
+    and Sekora 2008)
+  author: hunch-generator/approximation theory
+  status: open
+  verdict_note: ''

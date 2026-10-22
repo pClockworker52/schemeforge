@@ -1,0 +1,43 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: transfer
+statement: >-
+  MOOD's a posteriori admissibility check, carried over into a single-pass scheme with the state as a one-step
+  memory, lets WENO5-Z keep its sharpness and smooth accuracy while cutting its shock overshoot to van Leer's level.
+  The state stores each cell's previous primitive values. A cell whose current value breaks the relaxed discrete
+  maximum principle of its previous 3-cell neighbourhood, and is not a smooth extremum, is reconstructed with a
+  dissipative MUSCL for this step.
+mechanism: >-
+  Transfer from a posteriori limiting (MOOD, Clain, Diot, Loubere 2011; DG subcell limiting, Dumbser et al. 2014).
+  An a priori limiter must limit everywhere an oscillation might arise, judged from slope ratios, and so pays
+  sharpness at every jump (H-0011). An a posteriori check limits only where a new extremum has actually appeared.
+  MOOD recomputes the step; a reconstruction slot cannot. Its state can, however, hold q^(n-1), so the check runs
+  one step late: at step n, cell i is troubled in variable q if q_i^n lies outside [min, max] of q_(i-1..i+1)^(n-1)
+  by more than delta (max - min) + 1e-12 |q_i| (relaxed DMP). The flag is cleared if the cell passes MOOD's
+  smooth-extremum test (u2 detection: the neighbouring second differences have the same sign and their ratio is
+  above 1/2). Troubled cells use MUSCL-minmod faces; all others use WENO5-Z. Why one step late is enough: the
+  post-shock oscillation of a moving or slowly moving shock builds up over many steps as the shock crosses cells
+  (Roberts 1990). Damping each new extremum one step after it appears holds the amplitude near one step's growth,
+  not the accumulated one. Stencil: the check for cell k+2 needs the states of cells k+1..k+3 and for cell k+3 those
+  of k+2..k+4, all inside the window's (4, 3) state. s_new is the current window value of the cell, and s_rho = 0
+  (rho > 0 always) marks no history at the first step. At a converged steady state q^n = q^(n-1), so no cell is
+  flagged and the scheme reduces to WENO5-Z: convergence is inherited, not improved.
+predicted_effect:
+  - {metric: B-0010.overshoot, direction: down, size: "by >= 50 % against plain weno5z's dev value, to <= 1.1 x muscl_van_leer's (also R6.overshoot)"}
+  - {metric: R1.shock_width, direction: same, size: "<= weno5z's 2.56 + 0.1 (r-20261022-070145-f53c)"}
+  - {metric: R1.contact_width, direction: same, size: "<= 4.2 cells (weno5z 3.90)"}
+  - {metric: S1.order_smooth, direction: down, size: "from weno5z's 3.33 to no lower than 2.5; B-0002.order_smooth >= 2.3; LF2 median >= 1.8 (A8b)"}
+  - {metric: N1.newton_iters, direction: same, size: "within 10 % of weno5z's 83; N5/N6 convergence equal to weno5z's (inherited)"}
+  - {metric: RF2.overshoot, direction: down, size: "p90 <= 1.1 x van Leer's 0.0233 on promo (A7b), where plain WENO5-Z oscillates (RF2 tv_increase median 1.3, baseline)"}
+kill_criterion: >-
+  Refuted if no delta in {1e-3, 1e-2} gives, on dev, R6 and B-0010 overshoot <= 1.1 x muscl_van_leer's dev values
+  while keeping R1 shock width <= 2.7 cells and S1 order >= 1.9. Also refuted if the flagged-cell fallback is what
+  does all the work, i.e. a variant that flags every cell next to a jump of more than 5 % gives the same overshoot
+  with no worse widths: the a posteriori detection would then add nothing over a jump detector.
+known_relatives:
+  - MOOD (Clain, Diot, Loubere 2011, J. Comput. Phys. 230); relaxed DMP and u2 smooth-extremum detection (Diot, Loubere, Clain 2013)
+  - a posteriori subcell finite-volume limiting of DG (Dumbser, Zanotti, Loubere, Diot 2014, J. Comput. Phys. 278)
+  - WENO5-Z (Borges, Carmona, Costa, Don 2008), zoo member weno5z
+  - troubled-cell indicators (Qiu and Shu 2005)
+  - "One search found no MOOD variant that carries the flag to the next step instead of recomputing; that is not evidence of novelty, and the method is at most a variant of MOOD."
+author: hunch-generator/transfer

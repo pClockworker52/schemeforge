@@ -1,0 +1,44 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: structure preservation
+statement: >-
+  Blend the sharp thinc_bvd reconstruction towards MUSCL-van Albada with a weight given by the entropy production of
+  the local Riemann problem. That production is exactly zero for smooth isentropic flow, contacts and rarefactions,
+  and third order in shock strength at compressive jumps. The blend should cut post-shock overshoot to van Leer's
+  level and let the steady shock converge, while contacts and smooth waves keep thinc_bvd's accuracy.
+mechanism: >-
+  The entropy inequality is what tells physical dissipation apart from numerical artefact. The exact solution
+  produces entropy only inside shocks; contacts and smooth waves carry entropy without producing it. So
+  dissipation should go only where the local Riemann problem would produce entropy. Recipe (stateless, s passed
+  through): for each pair of neighbouring cells in the window, take the relative pressure jump pi = |p_R - p_L| /
+  min(p_L, p_R). Gate it by compression with g = smooth step of (u_L - u_R) / a_mean, which is 1 for converging flow
+  and 0 for diverging flow. The weak-shock law gives the entropy jump, ds / c_v ~ (gamma^2 - 1) / (12 gamma^2) pi^3.
+  The cell weight is theta = P / (P + kappa^3), with P = g pi^3 the largest such value over the cell's two
+  interfaces. Faces are (1 - theta) THINC/BVD + theta MUSCL-van Albada. This cubic sensor separates the cases by
+  orders of magnitude: in smooth flow pi = O(dx), so theta = O(dx^3 / kappa^3) and S1, B-0002 and LF2 are untouched.
+  S1 even has pi = 0 exactly, because only rho varies. At a contact pi = 0, so contacts stay THINC-sharp (A2, A8a).
+  Rarefactions are expanding (g = 0). Only shocks get theta near 1. There the blend removes thinc_bvd's
+  compression from the 1-2 cells whose intermediate states produce the post-shock oscillation (A7), and replaces the
+  discrete BVD switch at the steady shock with a smooth limiter (A3, A4). The cost is a wider shock, partly offset
+  by self-steepening (A1 is at risk).
+predicted_effect:
+  - {metric: B-0010.overshoot, direction: down, size: "by >= 40 % against thinc_bvd's dev value, to <= 1.1 x muscl_van_leer's (also R6.overshoot)"}
+  - {metric: R1.shock_width, direction: up, size: "+0.1 to +0.4 cell against thinc_bvd's 2.47 (r-20261022-070144-7e03), i.e. 2.6-2.9 on dev"}
+  - {metric: R1.contact_width, direction: same, size: "within 0.2 cell of thinc_bvd's 2.65"}
+  - {metric: S1.order_smooth, direction: same, size: "within 0.05 of thinc_bvd's 1.96; B-0002.order_smooth the same"}
+  - {metric: N5.converged_expl, direction: up, size: "from 1/3 (thinc_bvd, r-20261022-054308-f275) to >= 2/3; N6 from 0 to >= 2/3"}
+  - {metric: N4.roughness_J, direction: same, size: "<= thinc_bvd's 4.6e-4"}
+kill_criterion: >-
+  Refuted if no kappa in {0.03, 0.1, 0.3} gives, on dev, R6 and B-0010 overshoot <= 1.1 x muscl_van_leer's dev
+  values together with R1 shock width <= 2.75 cells and R1 contact width <= 3.0 cells. Also refuted if the sensor
+  fails its structural claim: S1 order drops by more than 0.1 against thinc_bvd, or R1 contact width rises by more
+  than 0.3 cell (the sensor fires on contacts). The convergence prediction (N5/N6 >= 2/3) is reported separately and
+  does not by itself refute the hunch.
+known_relatives:
+  - entropy viscosity (Guermond, Pasquetti, Popov 2011); PLAN seed hunch 3
+  - entropy-based switching between high- and low-order fluxes (Puppo, central schemes with entropy production as an indicator, 2003-2004; entropy-limited schemes, arXiv 2202.08839)
+  - convex blending of a high-order and a low-order subcell operator by a troubled-cell indicator (Hennemann et al., arXiv 2008.12044)
+  - pressure-based shock sensors (Jameson, Schmidt, Turkel 1981; Ducros et al. 1999)
+  - flux-corrected transport (Boris and Book 1973; Zalesak 1979), the general high/low-order blend
+  - weak-shock entropy law (Lax 1957; textbook, e.g. Toro ch. 3)
+author: hunch-generator/structure preservation

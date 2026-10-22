@@ -1,0 +1,41 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: approximation theory
+statement: >-
+  Adding an unlimited third-order (kappa = 1/3) quadratic candidate to thinc_bvd's BVD choice, which then picks the
+  smallest total boundary variation among {quadratic, THINC, van Leer MUSCL}, raises the smooth-wave order to about
+  3 on S1, B-0002 and LF2. It keeps thinc_bvd's shock and contact widths and does not add overshoot, because an
+  oscillating polynomial has the larger boundary variation and loses the selection.
+mechanism: >-
+  View BVD as a nonlinear approximation scheme: per cell it picks, from a small dictionary of profiles, the one
+  whose face values best match the neighbours' (minimal TBV). Accuracy in a function class is then set by the best
+  dictionary member for that class. thinc_bvd's dictionary has a step (THINC, exact for a jump at any sub-cell
+  position) but only a TVD-limited linear profile for smooth data. Its face values are second-order accurate, and
+  at smooth extrema the limiter sets the slope to 0, so the scheme drops to first order locally. Both effects keep
+  the L1 order at or below 2 (thinc_bvd S1 1.96; c-b5cb82a0ef 0.13 with a flatter limiter). The 6-cell window rules
+  out a larger stencil: the TBV of cell k+2 needs the faces of cells k+1 and k+3, so each candidate may use only 3
+  cells. Within it, the unlimited kappa = 1/3 quadratic, q_(i+1/2) = q_i + (2 (q_(i+1) - q_i) + (q_i - q_(i-1))) / 6
+  and q_(i-1/2) = q_i - (2 (q_i - q_(i-1)) + (q_(i+1) - q_i)) / 6, gives third-order face values with no clipping at
+  extrema. On smooth data its boundary jumps are O(dx^3), against O(dx^2) for the linear MUSCL profile, so BVD
+  selects it there. At a jump its overshooting faces give a TBV of O(jump), while THINC's TBV is near zero, so
+  THINC is selected. van Leer MUSCL stays as a third candidate, so each cell's selected TBV, computed as in
+  thinc_bvd with the same candidate in the neighbours, is no larger than thinc_bvd's. That limits the room for new
+  overshoot. Constant data give zero increments for all three candidates. The candidate is stateless and passes s
+  through.
+predicted_effect:
+  - {metric: S1.order_smooth, direction: up, size: "from 1.96 (thinc_bvd, r-20261022-070144-7e03) to >= 2.6"}
+  - {metric: B-0002.order_smooth, direction: up, size: ">= 2.5; LF2 median >= 2.5 on promo (A8b with margin)"}
+  - {metric: R7.l1_ref, direction: down, size: "by >= 20 % against thinc_bvd's 0.0039 (Shu-Osher entropy waves)"}
+  - {metric: R1.contact_width, direction: same, size: "within 0.1 cell of thinc_bvd's 2.65; R1.shock_width within 0.1 of 2.47"}
+  - {metric: B-0010.overshoot, direction: same, size: "<= 1.1 x thinc_bvd's dev value (also R6.overshoot)"}
+  - {metric: N5.converged_expl, direction: same, size: "thinc_bvd's stall level (1/3; N6 0); convergence not addressed"}
+kill_criterion: >-
+  Refuted if, on dev, S1 order stays below 2.3, or R1 contact width rises by more than 0.3 cell against thinc_bvd, or
+  R6 or B-0010 overshoot exceeds 1.2 x thinc_bvd's dev value. The prediction that BVD does not pick the polynomial at
+  jumps is refuted by the overshoot clause alone.
+known_relatives:
+  - "Known method family, stated plainly: P_nT_m-BVD, polynomial plus THINC candidates chosen by boundary variation (Deng, Shimizu, Xiao, fifth-order and two-stage BVD, arXiv 1811.01379; P4T2-BVD, arXiv 2106.01872). This hunch is the third-order version that the 6-cell window allows; label at best 'variant of P_nT_m-BVD'."
+  - MUSCL-THINC-BVD (Sun, Inaba, Xiao 2016), zoo member thinc_bvd
+  - kappa-schemes (van Leer 1985; kappa = 1/3 third-order upwind-biased)
+  - accuracy loss of TVD limiters at smooth extrema and its remedies (Shu 1987 TVB; Suresh and Huynh 1997 MP; Colella and Sekora 2008)
+author: hunch-generator/approximation theory

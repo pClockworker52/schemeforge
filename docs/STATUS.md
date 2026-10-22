@@ -94,7 +94,12 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
 State: judge euler1d-v1.4 on main (71a3d94, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
 2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
-LF2. **Step 0 done 2026-10-22 (see below). 3b(i) closed without an independent cheater (DECISIONS.md). Round 3 next.**
+LF2. **Step 0 done 2026-10-22 (see below). 3b(i) closed without an independent cheater (DECISIONS.md).**
+**Round 3 running** (reconstruction_stateful, scripts/headless/round3.txt, run from the interactive WSL session
+because the headless run.sh session could not use the shell). Hunches registered 2026-10-22 from the
+hunch-generator, as written: H-0012 field-selective compression (shock physics), H-0013 chatter lock
+(steady-convergence), H-0014 entropy-production blend (structure preservation), H-0015 steep shock less overshoot
+(contrarian), H-0016 delayed MOOD (transfer), H-0017 dictionary BVD (approximation theory). Next: 6 proposers.
 Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
