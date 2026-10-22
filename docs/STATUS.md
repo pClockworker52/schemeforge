@@ -1,5 +1,5 @@
 # STATUS
-Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.2 (2026-10-21, c9f21da)  Plan: v1.2
+Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.3 (2026-10-22, a2bb5eb)  Plan: v1.2
 Last session: 2026-10-22 — step 3a done: round 2 closed (docs/rounds/2026-10-21-euler1d-limiter_stateful.md)
 
 ## Gate 1 — passed 2026-10-20
@@ -92,9 +92,15 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
-State: judge euler1d-v1.2 on main; round 2 closed; no open hunch. Evaluation slots K = 7 (memory cap).
-Branch claude/exciting-fermi-qy077p (cloud session 2026-10-22, merged with main after round 2) carries judge
-`euler1d-v1.3.dev` and the prepared kits below; 263 tests green there.
+State: judge euler1d-v1.3 on main (a2bb5eb, tagged); round 2 closed; no open hunch. Evaluation slots K = 7.
+Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
+(reconstruction) 1.80 GiB / 160 s, muscl_van_leer_frozen (reconstruction_stateful) 1.76 GiB / 68 s, so the 2 GB
+per-worker cap (K = 7, 12.6 of 15.5 GiB) still fits. Zoo v1.3: dev r-20261022-065926-0314 .. r-20261022-070148-7b30
+(20 runs, all ok), promo r-20261022-070434-1135 .. r-20261022-071140-e7de (20 runs; superbee_frozen rejected 2/20
+NF1 as under v1.2); limiter, stateful and flux scores unchanged from v1.2 (runs/zoo_dev_v13.txt, zoo_promo_v13.txt).
+Rescore (scripts/rescore.sh, SKIP_ZOO=1 for the second slot): limiter 64 → 59 ok / 5 rejected, limiter_stateful
+493 → 489 ok / 4 rejected; all 9 rejections were rejected under v1.2 too. 15 stateful candidates whose latest v1.2
+run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the timeout reproduction.
 1. 3b: swarm test from WSL: check that the sforge MCP server connects; cheater against v1.2; breaker against
    c-a84758f0e8, c-b5cb82a0ef and c-fb8db52bca (Peter 2026-10-22); the swarm criterion is fixed before round 3.
    Prepared: docs/targets/swarm.md (pre-registered swarm criterion), scripts/headless/README.md (WSL checklist),
@@ -110,11 +116,18 @@ Branch claude/exciting-fermi-qy077p (cloud session 2026-10-22, merged with main 
    `muscl_van_leer_frozen`), probes, archive grids and objectives for both reconstruction slots. Cloud-registry
    dev checks only (not in the WSL registry): thinc_bvd r-20261022-054308-f275 (R1 shock 2.47, contact 2.65; N5/N6
    stall), muscl_van_leer_frozen r-20261022-054646-b2c7 = limiter_stateful van_leer_frozen r-20261022-054759-f751.
-   Still open on the WSL machine: bump JUDGE_VERSION to `euler1d-v1.3`, tag, `sforge zoo eval` dev + promo,
-   archive rescore (scripts/rescore.sh), cheater pass (scripts/headless/redteam_v13.txt).
+   Version bump, tag, zoo eval and rescore done (see State). Cheater pass (redteam_v13.txt) **not run**, see
+   Blockers.
 4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
+- **Red team v1.3 did not run** (2026-10-22 11:17–11:50, `run.sh redteam_v13.txt redteam-v13`, $1.10, 4 turns).
+  A safety classifier stopped the cheater subagent before it wrote any file: 0 candidates, 0 eval runs, no
+  LOG.md. All 12 planned attempts are "not attempted" (candidates/redteam-v13/REPORT.md, gitignored;
+  runs/headless/redteam-v13.json). Not resent with reworded instructions. v1.3 is therefore not red-teamed. Options:
+  resend unchanged, split by slot/idea, or run the cheater interactively. Side finding: the cheater's MCP
+  `leaderboard` query for `limiter_stateful` timed out after 1800 s (the reconstruction one returned). The
+  registry on /mnt/c is slow and needs a look before round 3.
 - Round 2 questions answered 2026-10-22 (DECISIONS.md): A7 stays as written; breaker on all three candidates.
 - Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
   classifier ("Create Unsafe Agents"), and the desktop session has no sforge MCP tools. The red team and round 1
