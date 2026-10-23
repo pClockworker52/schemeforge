@@ -109,10 +109,17 @@ c-7246c9ff18 κ 0.3); H-0015 refuted (overshoot rises with THINC β: B-0010 0.02
 Promo (docs/rounds/2026-10-23-round3/proposer_promo.txt): c-975db22244 **rejected** (LF1 1/5 hard constraints,
 r-20261023-040031-554c); **c-2ca8842812 r-20261023-040314-a528 passes A1 (2.18), A2, A4, A6, A7a/b, A8a/b, B1, B2,
 B5; fails only A3 (0.90) and A5 (NF3 roughness 0.077)**; c-920a251254 r-20261023-040946-4698 fails A1 (2.80), A5,
-A7b. Tool gap: `promote --slot reconstruction_stateful` finds no zoo references (van_leer, van_albada, mc are
-`limiter` members); promote was run with `--slot limiter` (same reference schemes). Open check for Peter: limiter
-van_leer LF1 contact median 24.76 vs limiter_stateful van_leer 16.5 under v1.4 (A8a reference; no verdict changes).
-Islands: H-0013, H-0014, H-0012 (seeds = the three promo candidates). Next: evolve.
+A7b. Tool gap: `promote --slot reconstruction_stateful` found no zoo references; fixed on the branch (0e9586b, merged:
+Target A references always come from the limiter zoo, and promote prints them). Re-run without --slot gives the same
+verdicts for c-2ca8842812; references: limiter/mc r-20261022-164508-76ad, limiter/van_albada r-20261022-164507-b391,
+limiter/van_leer r-20261022-164508-7c66. **Van Leer check (2026-10-23): no inconsistency.** limiter/van_leer
+r-20261022-164508-7c66 and limiter_stateful/van_leer r-20261022-164948-bba4 agree exactly: LF1 n = 5, contact_width
+median 16.507, mean 15.723, p90 18.255 (n 5); per family LF1 5, LF2 5, NF1 20, NF2 10, NF3 5, RF1 20, RF2 10
+instances, all pass rate 1.00, no violations. The "24.76" was the orchestrator's misreading: promote prints the A8a
+threshold 1.5 × 16.507 = 24.76, not van Leer's value.
+Islands: H-0013, H-0014, H-0012 (seeds = the three promo candidates). Evolve e-20261023-041826-802c started
+06:18: gens 0–6 done (168 children, ~9 min per generation, $11.77), then paused on the usage limit in gen 6
+(19 LLM errors); resumed with --resume.
 Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
