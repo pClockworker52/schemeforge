@@ -99,7 +99,20 @@ LF2. **Step 0 done 2026-10-22 (see below). 3b(i) closed without an independent c
 because the headless run.sh session could not use the shell). Hunches registered 2026-10-22 from the
 hunch-generator, as written: H-0012 field-selective compression (shock physics), H-0013 chatter lock
 (steady-convergence), H-0014 entropy-production blend (structure preservation), H-0015 steep shock less overshoot
-(contrarian), H-0016 delayed MOOD (transfer), H-0017 dictionary BVD (approximation theory). Next: 6 proposers.
+(contrarian), H-0016 delayed MOOD (transfer), H-0017 dictionary BVD (approximation theory).
+Proposers done 2026-10-23 (first launch got 0 evals: the sforge MCP server was stale since 2026-10-21 and failed
+every `eval`; Peter restarted it, proposers resumed with full budget). Suggested (agents' own, dev, judge v1.4):
+H-0012 partly (c-975db22244 r-20261023-034330-2669: R1 contact 3.06 vs van Leer 6.29, shock 2.92, N5/N6 converge);
+H-0013 partly (c-2ca8842812 r-20261023-034337-d53f); H-0014 partly (c-920a251254 κ 0.6 r-20261023-035305-d9f5,
+c-7246c9ff18 κ 0.3); H-0015 refuted (overshoot rises with THINC β: B-0010 0.026 / 0.058 / 0.087 at β 1.6 / 2.2 /
+3.0); H-0016 refuted (B-0010 overshoot only −35 %, nozzle convergence lost); H-0017 partly (c-a4173db23e, S1 2.31).
+Promo (docs/rounds/2026-10-23-round3/proposer_promo.txt): c-975db22244 **rejected** (LF1 1/5 hard constraints,
+r-20261023-040031-554c); **c-2ca8842812 r-20261023-040314-a528 passes A1 (2.18), A2, A4, A6, A7a/b, A8a/b, B1, B2,
+B5; fails only A3 (0.90) and A5 (NF3 roughness 0.077)**; c-920a251254 r-20261023-040946-4698 fails A1 (2.80), A5,
+A7b. Tool gap: `promote --slot reconstruction_stateful` finds no zoo references (van_leer, van_albada, mc are
+`limiter` members); promote was run with `--slot limiter` (same reference schemes). Open check for Peter: limiter
+van_leer LF1 contact median 24.76 vs limiter_stateful van_leer 16.5 under v1.4 (A8a reference; no verdict changes).
+Islands: H-0013, H-0014, H-0012 (seeds = the three promo candidates). Next: evolve.
 Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd

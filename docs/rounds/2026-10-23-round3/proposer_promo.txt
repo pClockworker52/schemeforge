@@ -1,0 +1,43 @@
+== c-975db22244
+run r-20261023-040031-554c  candidate c-975db22244  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  133.6 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== promote c-975db22244
+sforge: c-975db22244 has no ok promo run under euler1d-v1.4: run `sforge eval c-975db22244 --suite promo` first
+== c-2ca8842812
+run r-20261023-040314-a528  candidate c-2ca8842812  judge euler1d-v1.4 (72b1b8daddcf)  status OK  361.2 s
+== promote c-2ca8842812
+sforge: zoo member mc has no promo run under euler1d-v1.4: run `sforge zoo eval --suite promo`
+== c-920a251254
+run r-20261023-040946-4698  candidate c-920a251254  judge euler1d-v1.4 (72b1b8daddcf)  status OK  399.6 s
+== promote c-920a251254
+sforge: zoo member mc has no promo run under euler1d-v1.4: run `sforge zoo eval --suite promo`
+== promote c-2ca8842812 (zoo refs from slot limiter)
+PASS  A1   RF1 shock_width median <= 2.6: 2.182
+PASS  A2   RF1 contact_width median <= 6.5: 2.917
+FAIL  A3   NF1 converged_expl mean >= 0.95: 0.9
+PASS  A4   NF1 converged_impl mean >= 1.0: 1
+FAIL  A5   NF3 roughness_J p90 <= 0.002: 0.0765
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.964
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.02156 vs 0.02411
+PASS  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02389 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 2.953 vs 24.76
+PASS  B1   bootstrap RF1 shock_width vs van_albada: 95 % CI of log ratio < 0: mean -0.537 [-0.650, -0.434] over n = 6 (ratio 0.584)
+PASS  B2   bootstrap RF1 contact_width vs van_albada: 95 % CI of log ratio < 0: mean -1.030 [-1.214, -0.775] over n = 5 (ratio 0.357)
+PASS  B5   bootstrap NF3 roughness_J vs mc: 95 % CI of log ratio < 0: mean -5.581 [-6.348, -4.983] over n = 5 (ratio 0.004)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.956
+c-2ca8842812: not promoted for Target A (promo run r-20261023-040314-a528, judge euler1d-v1.4)
+== promote c-920a251254 (zoo refs from slot limiter)
+FAIL  A1   RF1 shock_width median <= 2.6: 2.795
+PASS  A2   RF1 contact_width median <= 6.5: 3.103
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+PASS  A4   NF1 converged_impl mean >= 1.0: 1
+FAIL  A5   NF3 roughness_J p90 <= 0.002: 0.01904
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.967
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.0176 vs 0.02411
+FAIL  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.03136 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 2.771 vs 24.76
+PASS  B1   bootstrap RF1 shock_width vs van_albada: 95 % CI of log ratio < 0: mean -0.378 [-0.566, -0.222] over n = 6 (ratio 0.685)
+PASS  B2   bootstrap RF1 contact_width vs van_albada: 95 % CI of log ratio < 0: mean -1.032 [-1.164, -0.847] over n = 5 (ratio 0.356)
+PASS  B5   bootstrap NF3 roughness_J vs mc: 95 % CI of log ratio < 0: mean -9.323 [-11.370, -7.120] over n = 5 (ratio 0.000)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.958
+c-920a251254: not promoted for Target A (promo run r-20261023-040946-4698, judge euler1d-v1.4)
