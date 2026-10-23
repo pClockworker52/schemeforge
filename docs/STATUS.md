@@ -119,7 +119,12 @@ instances, all pass rate 1.00, no violations. The "24.76" was the orchestrator's
 threshold 1.5 × 16.507 = 24.76, not van Leer's value.
 Islands: H-0013, H-0014, H-0012 (seeds = the three promo candidates). Evolve e-20261023-041826-802c started
 06:18: gens 0–6 done (168 children, ~9 min per generation, $11.77), then paused on the usage limit in gen 6
-(19 LLM errors); resumed with --resume.
+(19 LLM errors); resumed with --resume. **Evolve finished 2026-10-24 00:29:** 20 generations, 480 children, archive
+front 289; 29 rejected, 70 duplicates, 62 LLM errors (usage-limit pauses in gens 6, 12, 18; gen 18 lost all 24 to the
+limit and still counts against the budget); cost $33.99 list (runs/round3-evolve.log). Leaderboard top 5
+(`--pareto --vs-zoo`): c-58306b67e7 (H-0014 island, dev r-20261023-171400-1476, 0.489 × zoo), c-2637af56a6,
+c-b799935c6b, c-954f644254 (H-0014, same dev numbers to 1e-9: R1 contact 3.16, shock 3.64, S1 1.94), c-140c60abbe
+(H-0013). Next: promo + promote on these five, then breakers.
 Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
