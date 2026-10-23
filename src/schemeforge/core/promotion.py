@@ -51,6 +51,9 @@ TARGET_A: dict[str, Any] = {
         ("B5", "NF3", "roughness_J", "mc"),
     ],
     "dev": [("A6", "S1", "order_smooth", ">=", 1.9)],
+    # the zoo slot the reference members come from, whatever the candidate's slot (docs/targets/A.md: the references
+    # are the zoo limiters; a reconstruction_stateful candidate is compared with the same van Leer, van Albada, MC)
+    "reference_slot": "limiter",
 }
 TARGETS = {"A": TARGET_A}
 

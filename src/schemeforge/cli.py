@@ -165,7 +165,8 @@ def promote(
     candidate: Annotated[str, typer.Argument(help="Candidate id.")],
     target: Annotated[str, typer.Option("--target", help="Pre-registered target (docs/targets/).")] = "A",
     arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
-    slot: Annotated[str, typer.Option("--slot", help="Slot.")] = "limiter",
+    slot: Annotated[str | None, typer.Option("--slot", help="Zoo slot of the references (default: the target's).")]
+    = None,
 ) -> None:
     """Promotion test (PLAN §5.8): thresholds and paired bootstraps on the held-out suite. Needs promo runs of the
     candidate and of the zoo references under the current judge version; prints verdicts only."""
@@ -185,14 +186,17 @@ def promote(
         _fail(f"{candidate} has no ok promo run under {version}: run `sforge eval {candidate} --suite promo` first", 2)
     spec = promotion.TARGETS[target]
     members = {m for _, _, _, m in spec["bootstrap"]} | {m for *_, m in spec["relative"]}
+    ref_slot = slot or spec.get("reference_slot", "limiter")
     zoo_runs = {}
     for m in sorted(members):
         row = conn.execute("SELECT id FROM candidates WHERE path = ?",
-                           (f"src/schemeforge/arenas/{arena}/zoo/{slot}/{m}.py",)).fetchone()
+                           (f"src/schemeforge/arenas/{arena}/zoo/{ref_slot}/{m}.py",)).fetchone()
         run = latest(row["id"], "promo") if row else None
         if run is None:
-            _fail(f"zoo member {m} has no promo run under {version}: run `sforge zoo eval --suite promo`", 2)
+            _fail(f"zoo member {m} ({ref_slot}) has no promo run under {version}: run `sforge zoo eval --suite promo`",
+                  2)
         zoo_runs[m] = run
+    typer.echo("references: " + ", ".join(f"{ref_slot}/{m} {r}" for m, r in sorted(zoo_runs.items())))
     dev_run = latest(candidate, "dev")
     dev = {f"{r['case_id']}.{r['metric']}": r["value"] for r in conn.execute(
         "SELECT case_id, metric, value FROM scores WHERE run_id = ?", (dev_run,))} if dev_run else {}

@@ -71,3 +71,10 @@ def test_target_a8_long_runs(tmp_path) -> None:
     _write(tmp_path, "old", {k: v for k, v in rows.items() if not k.startswith("LF")})
     old = {c.id: c.ok for c in promotion.check_target("A", "old", zoo, {"S1.order_smooth": 1.95}, heldout_dir=tmp_path)}
     assert old["A1"] and not old["A8a"] and not old["A8b"]
+
+
+def test_target_a_references_are_the_zoo_limiters() -> None:
+    # promote compares a candidate of any slot with the limiter zoo's van Leer, van Albada and MC
+    spec = promotion.TARGETS["A"]
+    assert spec["reference_slot"] == "limiter"
+    assert {m for *_, m in spec["relative"]} | {m for *_, m in spec["bootstrap"]} == {"van_leer", "van_albada", "mc"}
