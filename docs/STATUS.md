@@ -20,11 +20,12 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   waits out BUSY_TIMEOUT (120 s), and the command dies. Only this member has an unregistered hash. Needs a code fix
   (and a decision how a changed zoo member is registered); not fixed here. 18 v1.5 runs are left in status `running`.
 - Zoo check so far (members whose runs finished; per-case wall times and the wall-time `cost` excepted): **dev**
-  identical to v1.4 on the 18 old cases for 13 members (hll, mc, minmod, superbee, van_albada, venkatakrishnan,
-  limiter_stateful mc / superbee / superbee_frozen / van_albada / van_leer / van_leer_frozen, limiter/van_leer
-  c-38addf805f r-20261024-121315-8a79); koren rejected (B-0030) as expected. **promo** all 168 aggregates identical
-  for 14 members (e.g. limiter/van_leer… see runs r-20261024-131526-*, limiter_stateful/van_leer
-  r-20261024-132307-0d5c = v1.4 r-20261022-164948-bba4). **Not run under v1.5:** flux/hllc, flux/rusanov,
+  identical to v1.4 on the 18 old cases for 14 members (flux/hll, limiter mc / minmod / superbee / van_albada /
+  venkatakrishnan / van_leer (c-38addf805f, r-20261024-130848-15f4), limiter_stateful mc / superbee / superbee_frozen /
+  van_albada / van_leer / van_leer_frozen); limiter/koren rejected (B-0030) as expected (r-20261024-130734-3d95).
+  **promo** all 168 aggregates identical for 15 members (the 14 plus koren; e.g. limiter/van_leer
+  r-20261024-131911-4b5c = v1.4 r-20261022-164508-7c66, limiter_stateful/van_leer r-20261024-132307-0d5c = v1.4
+  r-20261022-164948-bba4; superbee_frozen rejected in both, as under v1.4). **Not run under v1.5:** flux/hllc, flux/rusanov,
   reconstruction first_order / thinc_bvd / weno5z, reconstruction_stateful muscl_van_leer / muscl_van_leer_frozen.
 - Rescore reconstruction_stateful (runs/rescore_v15.log; candidate runs are unaffected by the lock): 376 candidates,
   **0 ok**: 360 rejected for the new scaling constraint alone, 4 scaling + another violation, 3 TypeError, 2 shape,
