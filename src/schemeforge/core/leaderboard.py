@@ -21,6 +21,13 @@ class Row:
     rank: int = -1
     vs_zoo: dict[str, float] = field(default_factory=dict)  # lower is better; 1.0 = best zoo member
     score: float = math.inf  # geometric mean of vs_zoo ratios (sorts within a Pareto rank)
+    fails: int = 0  # failed checks of the slot's target screen (engine/objectives.py SCREENS); sorts first
+    duplicate_of: str | None = None  # an earlier row with the same objective values to 3 digits
+
+    @property
+    def key(self) -> tuple[int, int, float]:
+        """Selection order: fewest failed screen checks, then Pareto rank, then score (lower is better)."""
+        return self.fails, self.rank, self.score
 
     @property
     def is_zoo(self) -> bool:
@@ -71,5 +78,14 @@ def build(conn: sqlite3.Connection, arena: str, slot: str, version: str | None =
     for r in rows:
         ratios = [v for v in r.vs_zoo.values() if v > 0]
         r.score = math.exp(sum(math.log(v) for v in ratios) / len(ratios)) if ratios else math.inf
-    rows.sort(key=lambda r: (r.rank, r.score))
+    from schemeforge.engine.objectives import screen_fails
+
+    for r in rows:
+        r.fails = screen_fails(arena, slot, r.values)
+    rows.sort(key=lambda r: r.key)
+    seen: dict[tuple, str] = {}
+    for r in rows:  # behaviourally identical candidates (round 3: one scheme in four spellings) are marked
+        sig = tuple(f"{r.values.get(k, math.nan):.3g}" for k in keys)
+        r.duplicate_of = seen.get(sig)
+        seen.setdefault(sig, r.candidate_id)
     return rows

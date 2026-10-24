@@ -163,3 +163,15 @@ def test_evolve_end_to_end_with_dummy_backend_and_resume(sandbox_env) -> None:
     assert len(rows) >= 1 and all(r["hunch_id"] == hid and json.loads(r["parents"]) for r in rows)
     assert conn.execute("SELECT COUNT(*) FROM llm_calls WHERE backend = 'dummy'").fetchone()[0] == 6
     assert os.path.isdir(tmp_path / "candidates" / hid / state.run_id)
+
+
+def test_unreached_requests_do_not_use_the_budget(sandbox_env, monkeypatch) -> None:
+    # round 3, gen 18: all 24 requests hit the usage limit and still counted against --budget
+    tmp_path, hid = sandbox_env
+    seeds = [str(zoo.members("limiter")[n]) for n in ("minmod", "van_leer")]
+    cfg = evolve.Config("euler1d", "limiter", [hid], gens=1, children=3, backend="dummy", seeds=seeds,
+                        suite="smoke", rng_seed=1)
+    monkeypatch.setattr(evolve, "make_child", lambda state, hunch, op, *a, **k: {
+        "status": "llm_error", "unreached": True, "error": "usage limit", "operator": op, "hunch": hunch["id"]})
+    state = evolve.evolve(cfg, log=lambda *_: None)
+    assert state.history[-1]["unreached"] == 3 and state.children_made == 0

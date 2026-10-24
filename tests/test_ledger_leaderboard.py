@@ -79,6 +79,28 @@ def test_leaderboard_ranks_and_vs_zoo(tmp_path) -> None:
     assert rows[0].candidate_id == "c-better"
 
 
+def test_leaderboard_screen_ranks_first_and_marks_duplicates(tmp_path) -> None:
+    # round 3: the scalar score ranked a contact gain above an A1 loss, and four of five top picks were one scheme
+    from schemeforge.engine.objectives import SCREENS
+
+    conn = registry.connect(tmp_path / "reg.sqlite")
+    passing = {f"{case}.{metric}": (thr * 0.9 if op == "<=" else thr) for case, metric, op, thr
+               in SCREENS["euler1d"]["limiter"]}
+    zoo = "src/schemeforge/arenas/euler1d/zoo/limiter/z.py"
+    _fake_run(conn, "zoo-z", "r0", {**passing, "R1.contact_width": 6.4}, origin="zoo", path=zoo)
+    _fake_run(conn, "c-sharp", "r1", passing)  # passes every screen check
+    _fake_run(conn, "c-wide", "r2", {**passing, "R1.shock_width": 3.4, "R1.contact_width": 1.0})  # fails A1 only
+    _fake_run(conn, "c-wide2", "r3", {**passing, "R1.shock_width": 3.4, "R1.contact_width": 1.0})  # same scheme
+    rows = leaderboard.build(conn, "euler1d", "limiter", version="v-test")
+    by_id = {r.candidate_id: r for r in rows}
+    assert by_id["c-sharp"].fails == 0 and by_id["c-wide"].fails == 1
+    # the scalar score prefers c-wide (its contact gain outweighs the wider shock) ...
+    assert by_id["c-wide"].rank == by_id["c-sharp"].rank == 0 and by_id["c-wide"].score < by_id["c-sharp"].score
+    # ... but the screen puts c-sharp first, and c-wide2 is marked as c-wide's duplicate
+    assert rows.index(by_id["c-sharp"]) < rows.index(by_id["c-wide"])
+    assert by_id["c-wide2"].duplicate_of == "c-wide" and by_id["c-wide"].duplicate_of is None
+
+
 def test_submit_attaches_hunch_and_lineage(tmp_ledger, tmp_path) -> None:
     hid = ledger.add(DRAFT)
     f = tmp_path / "cand.py"

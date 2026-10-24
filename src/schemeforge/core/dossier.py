@@ -116,7 +116,7 @@ def build(cid: str, target: str = "A") -> Path:
               "## Reproduce", "```bash",
               f"uv run sforge eval {cand['path']} --arena {arena} --slot {slot} --suite dev",
               f"uv run sforge eval {cid} --arena {arena} --slot {slot} --suite promo",
-              f"uv run sforge promote {cid} --target {target} --arena {arena} --slot {slot}",
+              f"uv run sforge promote {cid} --target {target} --arena {arena}",
               f"uv run sforge dossier build {cid}", "```", "",
               "## Code", "```python", source.rstrip(), "```", ""]
     (out / "README.md").write_text("\n".join(lines), encoding="utf-8")

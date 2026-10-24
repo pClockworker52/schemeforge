@@ -74,8 +74,10 @@ def leaderboard_tool(arena: str = "euler1d", slot: str = "limiter", pareto: bool
     if pareto:
         rows = [r for r in rows if r.rank == 0]
     keys = [f"{c}.{m}" for c, m, _ in leaderboard.objectives(arena, slot)]
+    rows = [r for r in rows if r.duplicate_of is None]
     return [{"candidate_id": r.candidate_id, "zoo": r.is_zoo, "hunch": r.hunch_id, "run_id": r.run_id,
-             "pareto_rank": r.rank, "score_vs_zoo": r.score, "values": {k: r.values.get(k) for k in keys},
+             "screen_fails": r.fails, "pareto_rank": r.rank, "score_vs_zoo": r.score,
+             "values": {k: r.values.get(k) for k in keys},
              **({"vs_zoo": r.vs_zoo} if vs_zoo else {})} for r in rows[: top or None]]
 
 
@@ -118,7 +120,8 @@ TOOLS = {
     "eval": (eval_tool, "Sandboxed evaluation of a candidate file (suite smoke or dev); stores scores, returns the "
                         "report and run id. Optional `case`: an extra case YAML (breakers)."),
     "submit": (submit_tool, "Register a candidate file under a hunch, with parent candidate ids."),
-    "leaderboard": (leaderboard_tool, "Rankings (Pareto rank, ratios to the best zoo member) for arena/slot."),
+    "leaderboard": (leaderboard_tool, "Rankings for arena/slot: fewest failed target-screen checks, then Pareto "
+                                      "rank and ratio to the best zoo member; duplicates left out."),
     "hunch_list": (hunch_list_tool, "List hunches in the ledger (open_only for open and testing)."),
     "hunch_show": (hunch_show_tool, "Show one hunch."),
     "hunch_add": (hunch_add_tool, "Register a hunch draft (YAML file in ledger/drafts/); returns its id."),

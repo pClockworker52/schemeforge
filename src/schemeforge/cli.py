@@ -165,8 +165,6 @@ def promote(
     candidate: Annotated[str, typer.Argument(help="Candidate id.")],
     target: Annotated[str, typer.Option("--target", help="Pre-registered target (docs/targets/).")] = "A",
     arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
-    slot: Annotated[str | None, typer.Option("--slot", help="Zoo slot of the references (default: the target's).")]
-    = None,
 ) -> None:
     """Promotion test (PLAN §5.8): thresholds and paired bootstraps on the held-out suite. Needs promo runs of the
     candidate and of the zoo references under the current judge version; prints verdicts only."""
@@ -186,7 +184,7 @@ def promote(
         _fail(f"{candidate} has no ok promo run under {version}: run `sforge eval {candidate} --suite promo` first", 2)
     spec = promotion.TARGETS[target]
     members = {m for _, _, _, m in spec["bootstrap"]} | {m for *_, m in spec["relative"]}
-    ref_slot = slot or spec.get("reference_slot", "limiter")
+    ref_slot = spec["reference_slot"]
     zoo_runs = {}
     for m in sorted(members):
         row = conn.execute("SELECT id FROM candidates WHERE path = ?",
@@ -215,10 +213,10 @@ def leaderboard(
     slot: Slot,
     pareto: Annotated[bool, typer.Option("--pareto", help="Show the Pareto set.")] = False,
     vs_zoo: Annotated[bool, typer.Option("--vs-zoo", help="Show ratios against the best zoo member.")] = False,
-    top: Annotated[int | None, typer.Option("--top", help="Show only the top K.")] = None,
+    top: Annotated[int | None, typer.Option("--top", help="Show only the top K, duplicates left out.")] = None,
     json_out: JsonOut = False,
 ) -> None:
-    """Show rankings and the Pareto set."""
+    """Show rankings and the Pareto set: fewest failed target-screen checks first, then Pareto rank and score."""
     import json
 
     from schemeforge.core import leaderboard as lb
@@ -228,21 +226,23 @@ def leaderboard(
     if pareto:
         rows = [r for r in rows if r.rank == 0]
     if top:
-        rows = rows[:top]
+        rows = [r for r in rows if r.duplicate_of is None][:top]
     keys = [f"{c}.{m}" for c, m, _ in lb.objectives(arena, slot)]
     if json_out:
         typer.echo(json.dumps([{"id": r.candidate_id, "zoo": r.is_zoo, "hunch": r.hunch_id, "run": r.run_id,
+                                "screen_fails": r.fails, "duplicate_of": r.duplicate_of,
                                 "pareto_rank": r.rank, "score_vs_zoo": r.score,
                                 "values": {k: r.values.get(k) for k in keys},
                                 "vs_zoo": r.vs_zoo if vs_zoo else None} for r in rows], indent=1))
         return
-    typer.echo(f"{'rank':>4s} {'candidate':22s} {'hunch':7s} {'vs zoo':>7s}  " + "  ".join(keys))
+    typer.echo(f"{'fail':>4s} {'rank':>4s} {'candidate':22s} {'hunch':7s} {'vs zoo':>7s}  " + "  ".join(keys))
     for r in rows:
         name = r.path.rsplit("/", 1)[-1][:-3] if r.is_zoo else r.candidate_id
         cells = [(r.vs_zoo.get(k) if vs_zoo else r.values.get(k)) for k in keys]
         body = "  ".join(f"{_fmt(v) if v is not None else '-':>{len(k)}s}" for v, k in zip(cells, keys, strict=True))
-        typer.echo(f"{r.rank:4d} {('zoo:' if r.is_zoo else '') + name:22s} {r.hunch_id or '-':7s} {r.score:7.3f}  "
-                   f"{body}")
+        dup = f"  (= {r.duplicate_of})" if r.duplicate_of else ""
+        typer.echo(f"{r.fails:4d} {r.rank:4d} {('zoo:' if r.is_zoo else '') + name:22s} {r.hunch_id or '-':7s} "
+                   f"{r.score:7.3f}  {body}{dup}")
     if vs_zoo:
         typer.echo("(values are ratios to the best zoo member per metric; < 1 is better than every zoo member)")
 

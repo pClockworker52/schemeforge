@@ -18,17 +18,8 @@ LIMITER_FINGERPRINT_R = np.concatenate(
 
 
 def probe(fn, arena: str, slot: str) -> dict[str, Any]:
-    if arena == "euler1d" and slot == "limiter":
-        return _limiter(fn)
-    if arena == "euler1d" and slot == "limiter_stateful":
-        return _limiter_stateful(fn)
-    if arena == "euler1d" and slot == "flux":
-        return _flux(fn)
-    if arena == "euler1d" and slot == "reconstruction":
-        return _reconstruction(lambda W: fn(W, 1.4))
-    if arena == "euler1d" and slot == "reconstruction_stateful":
-        return _reconstruction_stateful(fn)
-    return {"descriptors": {}, "fingerprint": []}
+    prober = PROBERS.get((arena, slot))
+    return prober(fn) if prober else {"descriptors": {}, "fingerprint": []}
 
 
 def _limiter(phi) -> dict[str, Any]:
@@ -139,6 +130,15 @@ def _reconstruction_stateful(rec_s) -> dict[str, Any]:
     W = jnp.asarray(_recon_profiles()[0][4])
     out["fingerprint"] += [*np.asarray(at(0.0)(W)[2], dtype=float)[:, 0].tolist(), *late["fingerprint"]]
     return out
+
+
+PROBERS = {  # (arena, slot) -> probe of the candidate's slot function
+    ("euler1d", "limiter"): _limiter,
+    ("euler1d", "limiter_stateful"): _limiter_stateful,
+    ("euler1d", "flux"): _flux,
+    ("euler1d", "reconstruction"): lambda fn: _reconstruction(lambda W: fn(W, 1.4)),
+    ("euler1d", "reconstruction_stateful"): _reconstruction_stateful,
+}
 
 
 def fingerprint_distance(a: list[float], b: list[float]) -> float:

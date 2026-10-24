@@ -147,7 +147,7 @@ def make_child(state: State, hunch: dict[str, Any], operator: str, parents: list
 def _tournament(rng: np.random.Generator, members: list[str], rows: dict[str, leaderboard.Row]) -> str:
     pool = [m for m in members if m in rows]
     pick = rng.choice(pool, size=min(TOURNAMENT, len(pool)), replace=False)
-    return min(pick, key=lambda c: (rows[c].rank, rows[c].score))
+    return min(pick, key=lambda c: rows[c].key)
 
 
 def _archive_context(archive: Archive, rows: dict[str, leaderboard.Row], rng: np.random.Generator) -> list[str]:
@@ -231,7 +231,8 @@ def run_generation(state: State, rng: np.random.Generator) -> dict[str, Any]:
             index += 1
     with ThreadPoolExecutor(max_workers=max_parallel()) as pool:
         results = list(pool.map(lambda j: _safe_child(state, rows, *j), jobs))
-    state.children_made += len(jobs)
+    # a request that never reached the model (usage limit) did not make a child (round 3: gen 18 lost all 24)
+    state.children_made += sum(not r.get("unreached") for r in results)
 
     conn = registry.connect()
     rows = {r.candidate_id: r for r in leaderboard.build(conn, cfg.arena, cfg.slot, suite=cfg.suite)}
@@ -247,7 +248,7 @@ def run_generation(state: State, rng: np.random.Generator) -> dict[str, Any]:
         if not outcome.startswith("duplicate"):
             island = state.islands[res["hunch"]]
             island.append(cid)
-            island.sort(key=lambda c: (rows[c].rank, rows[c].score) if c in rows else (math.inf, math.inf))
+            island.sort(key=lambda c: rows[c].key if c in rows else (math.inf, math.inf, math.inf))
             del island[ISLAND_CAP:]
             placed += 1
     front = sorted(c for c, r in rows.items() if r.rank == 0)
