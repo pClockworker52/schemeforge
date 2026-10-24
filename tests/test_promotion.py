@@ -78,3 +78,19 @@ def test_target_a_references_are_the_zoo_limiters() -> None:
     spec = promotion.TARGETS["A"]
     assert spec["reference_slot"] == "limiter"
     assert {m for *_, m in spec["relative"]} | {m for *_, m in spec["bootstrap"]} == {"van_leer", "van_albada", "mc"}
+
+
+def test_target_ac_contact_sharpening_without_regression(tmp_path) -> None:
+    # A-c (2026-10-24): contact <= 0.6 x van Leer, shock <= 1.1 x van Leer, the rest of Target A except A1/A2
+    rng = np.random.default_rng(3)
+    zoo = {"van_leer": "zoo-vl"}
+    _write(tmp_path, "zoo-vl", _instances(rng, 2.9, 7.1, 0.0012, over=0.02))
+    _write(tmp_path, "thinc", _instances(rng, 3.1, 3.9, 0.0010, over=0.015))
+    c = {c.id: c for c in promotion.check_target("Ac", "thinc", zoo, {"S1.order_smooth": 1.95}, heldout_dir=tmp_path)}
+    assert all(x.ok for x in c.values()), [x for x in c.values() if not x.ok]
+    assert {"A1", "A2"}.isdisjoint(c)
+    assert {"C1", "C2", "A3", "A4", "A5", "A6", "A7a", "A7b", "A8a", "A8b", "B2"} <= set(c)
+    _write(tmp_path, "smeared", _instances(rng, 3.4, 4.0, 0.0010, over=0.015))  # shock 3.4 > 1.1 x 2.9
+    c = {c.id: c.ok for c in promotion.check_target("Ac", "smeared", zoo, {"S1.order_smooth": 1.95},
+                                                     heldout_dir=tmp_path)}
+    assert c["C1"] and not c["C2"]

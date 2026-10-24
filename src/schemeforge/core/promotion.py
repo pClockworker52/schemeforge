@@ -55,7 +55,21 @@ TARGET_A: dict[str, Any] = {
     # are the zoo limiters; a reconstruction_stateful candidate is compared with the same van Leer, van Albada, MC)
     "reference_slot": "limiter",
 }
-TARGETS = {"A": TARGET_A}
+# Secondary target A-c (docs/targets/A-c.md, pre-registered 2026-10-24 in docs/plans/2026-10-24-round4.md): contact
+# sharpening without regression. C3–C8 are Target A's A3–A8; C9 (promo status ok) holds whenever `promote` runs,
+# since it needs an ok promo run.
+TARGET_AC: dict[str, Any] = {
+    "thresholds": [t for t in TARGET_A["thresholds"] if t[0] not in ("A1", "A2")],
+    "relative": [
+        ("C1", "RF1", "contact_width", "median", 0.6, "van_leer"),
+        ("C2", "RF1", "shock_width", "median", 1.1, "van_leer"),
+        *TARGET_A["relative"],
+    ],
+    "bootstrap": [("B2", "RF1", "contact_width", "van_leer")],
+    "dev": TARGET_A["dev"],
+    "reference_slot": "limiter",
+}
+TARGETS = {"A": TARGET_A, "Ac": TARGET_AC}
 
 
 def load_instances(run_id: str, heldout_dir: Path = HELDOUT_DIR) -> dict[str, dict[str, Any]]:

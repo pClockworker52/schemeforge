@@ -76,7 +76,7 @@ def build(cid: str, target: str = "A") -> Path:
         zoo_runs = {}
         for m in members:
             row = conn.execute("SELECT id FROM candidates WHERE path = ?",
-                               (f"src/schemeforge/arenas/{arena}/zoo/{slot}/{m}.py",)).fetchone()
+                               (f"src/schemeforge/arenas/{arena}/zoo/{spec['reference_slot']}/{m}.py",)).fetchone()
             run = _latest_run(conn, row["id"], "promo", version) if row else None
             if run is not None:
                 zoo_runs[m] = run["id"]

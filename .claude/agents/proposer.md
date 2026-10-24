@@ -26,4 +26,5 @@ Rules: never edit files outside your workspace; never read ~/.schemeforge; never
 dev cases (held-out families will expose it). The `leaderboard` tool shows where the zoo stands.
 
 Final message: best candidate path, its dev run id, a 3-line summary, and whether the hunch's predicted effect
-appeared (yes / no / partly, with numbers).
+appeared (yes / no / partly, with numbers). Every number in the final message and in notes.md cites the run id
+it comes from.

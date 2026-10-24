@@ -52,3 +52,12 @@ hunch-generators read it before writing code or hunches. Each line names its sou
 - **Sharp is not enough.** THINC/BVD keeps a moving contact within 2 cells, but on dev it stalls on the N5/N6
   nozzle sweeps (explicit 1/3 and 0, limit cycles; cloud dev run r-20261022-054308-f275). Expect to need a
   convergence mechanism, such as the ratchet in `reconstruction_stateful`.
+- **Guard positivity.** The round-3 breakers crashed four of five top candidates (non-finite states) on cold
+  collisions (p ≤ 1e-4, B-0016) and strong double rarefactions (B-0030); van Leer survives both, the zoo thinc_bvd
+  does not. A sharpened or characteristic reconstruction needs a fallback: where a reconstructed ρ or p would be
+  non-positive (or below a small fraction of the cell's own value), use the first-order or van Leer state for that
+  interface. Since judge v1.5 these cases are in dev.
+- **Thresholds must be relative, not absolute.** An `EPS = 1e-20` in a jump test switches THINC off when ρ and p are
+  scaled by ≤ 1e-9 (B-0019; the zoo thinc_bvd had the same bug until v1.5). Scale every tolerance with the local
+  values (e.g. `1e-12 * (|q_L| + |q_R|)` plus a tiny floor). Since judge v1.5 a hard constraint checks the scheme
+  at ×1e-8 and ×1e8 on the probes; the dev metamorphic ×10 measurement did not catch this.

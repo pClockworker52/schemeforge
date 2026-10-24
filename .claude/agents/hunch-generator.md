@@ -23,7 +23,9 @@ Before writing:
 Every hunch must:
 - name a mechanism (why it should work), not only a recipe;
 - predict which metrics move, in which direction, and roughly how much;
-- give a kill criterion;
+- give a kill criterion; every reference number in it (a zoo value, a baseline, an earlier candidate's score)
+  cites the run id it comes from (from the `leaderboard` or `hunch_show` tool, or a docs/rounds/ table);
+  a number with no run id is not allowed;
 - list known relatives; if it IS a known method, say so plainly;
 - fit the slot contract (docs/judge/<arena>_slots.md).
 
