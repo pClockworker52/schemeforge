@@ -221,53 +221,6 @@ def reconstruction_probes(seed: int = 20261022) -> list[np.ndarray]:
     return grids
 
 
-def check_reconstruction(reconstruct: Callable, gamma: float = 1.4) -> list[str]:
-    """reconstruction: (WL, WR) = reconstruct(W, gamma), W (n + 6, 3) -> (n + 1, 3) twice. Finite, float64 and
-    deterministic on the probes; a constant state is reproduced; and on every probe grid the result equals the
-    reconstruction applied one interface window (the 2 * NG cells around it) at a time, which is what runs use.
-    The last check rejects any dependence on cells further than NG away, on the grid size or statistics, or on the
-    position of the interface."""
-    grids = reconstruction_probes()
-    v: list[str] = []
-    for W in grids:
-        m = W.shape[0] - 2 * NG + 1
-        try:
-            WL, WR = (np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma))
-        except Exception as exc:  # noqa: BLE001
-            return [f"reconstruct raised {type(exc).__name__}: {exc}"]
-        if WL.shape != (m, 3) or WR.shape != (m, 3):
-            return [f"reconstruct returned shapes {WL.shape}, {WR.shape}, expected {(m, 3)} twice"]
-        if WL.dtype != np.float64 or WR.dtype != np.float64:
-            v.append(f"reconstruct returned dtypes {WL.dtype}, {WR.dtype}, expected float64")
-        if not (np.all(np.isfinite(WL)) and np.all(np.isfinite(WR))):
-            v.append("reconstruct is not finite on admissible cell values")
-        again = [np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma)]
-        if not (_bitwise_equal(WL, again[0]) and _bitwise_equal(WR, again[1])):
-            v.append("reconstruct is not deterministic")
-        if v:
-            return sorted(set(v))
-    for state in reconstruction_probes(seed=7)[0][:8]:  # 8 random admissible states, each as a constant grid
-        W = np.tile(state, (2 * NG + 4, 1))
-        WL, WR = (np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma))
-        if not (np.allclose(WL, W[: WL.shape[0]], rtol=CONSISTENCY_TOL, atol=0.0)
-                and np.allclose(WR, W[: WR.shape[0]], rtol=CONSISTENCY_TOL, atol=0.0)):
-            v.append("reconstruct does not reproduce a constant state")
-            break
-    one = stencilwise(reconstruct)
-    try:
-        for W in grids:
-            full = [np.asarray(x) for x in reconstruct(jnp.asarray(W), gamma)]
-            local = [np.asarray(x) for x in one(jnp.asarray(W), gamma)]
-            if not (_close(full[0], local[0]) and _close(full[1], local[1])):
-                v.append(f"reconstruct is not local (on a run-sized grid it differs from reconstruct applied to the "
-                         f"{2 * NG} cells around one interface at a time: it reaches further than {NG} cells or "
-                         f"depends on the grid size, its statistics or the position)")
-                break
-    except Exception as exc:  # noqa: BLE001
-        v.append(f"reconstruct fails on a single interface window of {2 * NG} cells: {type(exc).__name__}: {exc}")
-    return v
-
-
 def reconstruction_state_probes(W: np.ndarray) -> list[np.ndarray]:
     """States (n + 4, 3) for a padded grid W (n + 6, 3): zero (the initial state), order-one and large values."""
     rng = np.random.default_rng(4)
@@ -275,53 +228,83 @@ def reconstruction_state_probes(W: np.ndarray) -> list[np.ndarray]:
     return [np.zeros(shape), rng.uniform(-2.0, 2.0, shape), 10.0 ** rng.uniform(-6, 6, shape)]
 
 
+def check_reconstruction(reconstruct: Callable, gamma: float = 1.4) -> list[str]:
+    """reconstruction: (WL, WR) = reconstruct(W, gamma), W (n + 6, 3) -> (n + 1, 3) twice. Finite, float64 and
+    deterministic on the probes; a constant state is reproduced; and on every probe grid the result equals the
+    reconstruction applied one interface window (the 2 * NG cells around it) at a time, which is what runs use.
+    The last check rejects any dependence on cells further than NG away, on the grid size or statistics, or on the
+    position of the interface."""
+    return _check_window_scheme(reconstruct, gamma, stateful=False)
+
+
 def check_reconstruction_stateful(reconstruct_s: Callable, gamma: float = 1.4) -> list[str]:
     """reconstruction_stateful: (WL, WR, S_new) = reconstruct_s(W, gamma, S), S (n + 4, 3). The checks of
     `check_reconstruction` for every probe state, plus a finite S_new of S's shape; the local comparison covers
     WL, WR and the new state of the cells the judge keeps (2 .. n + 3, see `numerics.stencilwise_stateful`)."""
+    return _check_window_scheme(reconstruct_s, gamma, stateful=True)
+
+
+def _check_window_scheme(fn: Callable, gamma: float, stateful: bool) -> list[str]:
+    """The checks shared by both reconstruction slots. A stateless scheme is checked as a stateful one with no state
+    (one probe state, None); messages name the function as the slot contract does (reconstruct / reconstruct_s)."""
+    name = "reconstruct_s" if stateful else "reconstruct"
+    states = reconstruction_state_probes if stateful else (lambda W: [None])
+
+    def call(f: Callable, W: np.ndarray, S: np.ndarray | None) -> list[np.ndarray]:
+        out = f(jnp.asarray(W), gamma, jnp.asarray(S)) if stateful else f(jnp.asarray(W), gamma)
+        return [np.asarray(x) for x in out]
+
     grids = reconstruction_probes()
     v: list[str] = []
     for W in grids:
         m = W.shape[0] - 2 * NG + 1
-        for S in reconstruction_state_probes(W):
+        for S in states(W):
             try:
-                WL, WR, Sn = (np.asarray(x) for x in reconstruct_s(jnp.asarray(W), gamma, jnp.asarray(S)))
+                out = call(fn, W, S)
             except Exception as exc:  # noqa: BLE001
-                return [f"reconstruct_s raised {type(exc).__name__}: {exc}"]
-            if WL.shape != (m, 3) or WR.shape != (m, 3) or Sn.shape != S.shape:
-                return [f"reconstruct_s returned shapes {WL.shape}, {WR.shape}, {Sn.shape}, expected {(m, 3)} twice "
+                return [f"{name} raised {type(exc).__name__}: {exc}"]
+            if stateful and (len(out) != 3 or out[0].shape != (m, 3) or out[1].shape != (m, 3)
+                             or out[2].shape != S.shape):
+                return [f"{name} returned shapes {', '.join(str(x.shape) for x in out)}, expected {(m, 3)} twice "
                         f"and {S.shape}"]
-            if not all(x.dtype == np.float64 for x in (WL, WR, Sn)):
-                v.append("reconstruct_s returned a dtype other than float64")
-            if not all(np.all(np.isfinite(x)) for x in (WL, WR, Sn)):
-                v.append("reconstruct_s is not finite (states or new state) on the probes")
-            again = [np.asarray(x) for x in reconstruct_s(jnp.asarray(W), gamma, jnp.asarray(S))]
-            if not all(_bitwise_equal(a, b) for a, b in zip((WL, WR, Sn), again, strict=True)):
-                v.append("reconstruct_s is not deterministic")
+            if not stateful and (len(out) != 2 or out[0].shape != (m, 3) or out[1].shape != (m, 3)):
+                return [f"{name} returned shapes {', '.join(str(x.shape) for x in out)}, expected {(m, 3)} twice"]
+            if not all(x.dtype == np.float64 for x in out):
+                v.append(f"{name} returned a dtype other than float64" if stateful else
+                         f"{name} returned dtypes {out[0].dtype}, {out[1].dtype}, expected float64")
+            if not all(np.all(np.isfinite(x)) for x in out):
+                v.append(f"{name} is not finite (states or new state) on the probes" if stateful else
+                         f"{name} is not finite on admissible cell values")
+            if not all(_bitwise_equal(a, b) for a, b in zip(out, call(fn, W, S), strict=True)):
+                v.append(f"{name} is not deterministic")
             if v:
                 return sorted(set(v))
     for state in reconstruction_probes(seed=7)[0][:8]:  # 8 random admissible states, each as a constant grid
         W = np.tile(state, (2 * NG + 4, 1))
-        for S in reconstruction_state_probes(W):
-            WL, WR, _ = (np.asarray(x) for x in reconstruct_s(jnp.asarray(W), gamma, jnp.asarray(S)))
-            if not (np.allclose(WL, W[: WL.shape[0]], rtol=CONSISTENCY_TOL, atol=0.0)
-                    and np.allclose(WR, W[: WR.shape[0]], rtol=CONSISTENCY_TOL, atol=0.0)):
-                return [*v, "reconstruct_s does not reproduce a constant state"]
-    one = stencilwise_stateful(reconstruct_s)
-    try:
+        if not all(np.allclose(x, W[: x.shape[0]], rtol=CONSISTENCY_TOL, atol=0.0)
+                   for S in states(W) for x in call(fn, W, S)[:2]):
+            v.append(f"{name} does not reproduce a constant state")
+            break
+    one = stencilwise_stateful(fn) if stateful else stencilwise(fn)
+
+    def local() -> bool:
         for W in grids:
             m = W.shape[0] - 2 * NG + 1
-            for S in reconstruction_state_probes(W)[:2]:
-                full = [np.asarray(x) for x in reconstruct_s(jnp.asarray(W), gamma, jnp.asarray(S))]
-                local = [np.asarray(x) for x in one(jnp.asarray(W), gamma, jnp.asarray(S))]
-                kept = slice(1, m + 2)
-                if not (_close(full[0], local[0]) and _close(full[1], local[1])
-                        and _close(full[2][kept], local[2][kept])):
-                    return [*v, f"reconstruct_s is not local (on a run-sized grid it differs from reconstruct_s "
-                                f"applied to the {2 * NG} cells around one interface at a time: it reaches further "
-                                f"than {NG} cells or depends on the grid size, its statistics or the position)"]
+            kept = slice(1, m + 2)  # the new states the judge keeps (cells 2 .. n + 3)
+            for S in states(W)[:2]:
+                full, part = call(fn, W, S), call(one, W, S)
+                if not (_close(full[0], part[0]) and _close(full[1], part[1])
+                        and (not stateful or _close(full[2][kept], part[2][kept]))):
+                    return False
+        return True
+
+    try:
+        if not local():
+            v.append(f"{name} is not local (on a run-sized grid it differs from {name} applied to the "
+                     f"{2 * NG} cells around one interface at a time: it reaches further than {NG} cells or "
+                     f"depends on the grid size, its statistics or the position)")
     except Exception as exc:  # noqa: BLE001
-        v.append(f"reconstruct_s fails on a single interface window of {2 * NG} cells: {type(exc).__name__}: {exc}")
+        v.append(f"{name} fails on a single interface window of {2 * NG} cells: {type(exc).__name__}: {exc}")
     return v
 
 

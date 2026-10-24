@@ -45,39 +45,31 @@ from .numerics import (
 from .steady import default_operator, make_grid, solve_explicit, solve_implicit
 from .unsteady import solve_unsteady
 
-SLOTS = ("limiter", "limiter_stateful", "flux", "reconstruction", "reconstruction_stateful")
+# The one place that says how a slot is run and checked: slot -> (fn -> (reconstruct, flux), hard-constraint checker).
+# Limiters run elementwise, fluxes row-wise and reconstructions one interface window at a time, so the candidate never
+# sees the whole batch; the component a slot does not replace is the judge default (MUSCL/van Leer, HLLC).
+SLOT_TABLE: dict[str, tuple[Callable[[Callable], tuple[Callable, Callable]], Callable[[Callable], list[str]]]] = {
+    "limiter": (lambda fn: (muscl(elementwise(fn)), hllc), constraints.check_limiter),
+    "limiter_stateful": (lambda fn: (muscl_stateful(elementwise_stateful(fn)), hllc),
+                         constraints.check_limiter_stateful),
+    "flux": (lambda fn: (muscl(zoo.load("limiter", "van_leer")), rowwise(fn)), constraints.check_flux),
+    "reconstruction": (lambda fn: (stencilwise(fn), hllc), constraints.check_reconstruction),
+    "reconstruction_stateful": (lambda fn: (stencilwise_stateful(fn), hllc), constraints.check_reconstruction_stateful),
+}
+SLOTS = tuple(SLOT_TABLE)
 SUITES = ("smoke", "dev", "promo")
 
 
 def slot_scheme(fn: Callable, slot: str) -> tuple[Callable, Callable]:
-    """(reconstruct, flux) for a candidate in the given slot; the other component is the judge default.
-    Limiters run elementwise, fluxes row-wise and reconstructions one interface window at a time, so the
-    candidate never sees the whole batch."""
-    if slot == "limiter":
-        return muscl(elementwise(fn)), hllc
-    if slot == "limiter_stateful":
-        return muscl_stateful(elementwise_stateful(fn)), hllc
-    if slot == "flux":
-        return muscl(zoo.load("limiter", "van_leer")), rowwise(fn)
-    if slot == "reconstruction":
-        return stencilwise(fn), hllc
-    if slot == "reconstruction_stateful":
-        return stencilwise_stateful(fn), hllc
-    raise ValueError(f"slot {slot!r} is not evaluated in Arena 1 yet")
+    """(reconstruct, flux) for a candidate in the given slot (SLOT_TABLE)."""
+    if slot not in SLOT_TABLE:
+        raise ValueError(f"slot {slot!r} is not evaluated in Arena 1 yet")
+    return SLOT_TABLE[slot][0](fn)
 
 
 def slot_constraints(fn: Callable, slot: str) -> list[str]:
-    if slot == "limiter":
-        return constraints.check_limiter(fn)
-    if slot == "limiter_stateful":
-        return constraints.check_limiter_stateful(fn)
-    if slot == "flux":
-        return constraints.check_flux(fn)
-    if slot == "reconstruction":
-        return constraints.check_reconstruction(fn)
-    if slot == "reconstruction_stateful":
-        return constraints.check_reconstruction_stateful(fn)
-    return []
+    """Hard-constraint violations of a candidate in the given slot (SLOT_TABLE); none for an unknown slot."""
+    return SLOT_TABLE[slot][1](fn) if slot in SLOT_TABLE else []
 
 
 def smoke_suite() -> list[Case]:
