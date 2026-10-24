@@ -1,0 +1,20 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: practitioner
+statement: >-
+  The agent swarm adds value in round 3 (docs/targets/swarm.md, pre-registered 2026-10-22): S1, at least one agent
+  hunch is not a parameter sweep of H-0001..H-0011; and S2, at least one engine island ends with an elite that is
+  non-dominated against its seed on dev and within 2 % of the seed or better on promo for A1-A5 and A7.
+mechanism: >-
+  PLAN section 1 thesis: hunch-generator, proposer and breaker agents search a wider space of mechanisms than one
+  orchestrator session doing the same work by hand (rounds 1 and 2), and the engine improves on the agents' seeds.
+predicted_effect:
+  - {metric: "S1 (agent hunches that are not parameter sweeps)", direction: up, size: ">= 1 of the round-3 agent hunches"}
+  - {metric: "S2 (islands whose elite meets the seed comparison)", direction: up, size: ">= 1 of 3 islands"}
+kill_criterion: >-
+  Fails if S1 or S2 does not hold (docs/targets/swarm.md). Promotion on Target A, novelty labels and wall-clock time
+  are not part of the criterion.
+known_relatives:
+  - "docs/targets/swarm.md (the pre-registered criterion)"
+  - "rounds 1 and 2 (orchestrator only): docs/rounds/2026-10-21-euler1d-limiter.md, docs/rounds/2026-10-21-euler1d-limiter_stateful.md"
+author: orchestrator/method

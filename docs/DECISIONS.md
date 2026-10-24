@@ -174,3 +174,20 @@ Covered by the structural defenses (sandbox validator, slot constraints, held-ou
 Target A8 and the breakers. **Residual gaps:** metric skipping and unanticipated attacks. Revisit at gate 3e.
 *Consequences:* Round 3 starts without an independent red-team pass against v1.4; the two residual gaps stay open
 and are listed in STATUS.
+
+
+## 2026-10-24 — Gate 3e (Peter)
+*Context:* Round 3 done (docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md). Round-4 plan with
+pre-registration: docs/plans/2026-10-24-round4.md (commit 4880bc3). Peter approved the plan with its defaults D1–D5 (§2).
+*Decision:*
+- **D1** Round-3 hunches closed as suggested: H-0012 supported, H-0013 inconclusive, H-0014, H-0015, H-0016, H-0017
+  refuted (verdict notes with run ids in ledger/hunches.yaml).
+- **D2** Swarm outcome (docs/targets/swarm.md): S1 met, S2 met weakly (1 of 3 islands, ≤ 5 % on promo). Recorded as
+  H-0018 (author orchestrator/method), closed supported.
+- **D3** Quarantine B-0016..B-0036: accept one per mechanism into judge v1.5 — B-0016 (cold collision), B-0030 (double
+  rarefaction), B-0021 (LeBlanc at N 450), B-0019 (scaling); the rest stay in quarantine.
+- **D4** Zoo `thinc_bvd` absolute EPS = 1e-20: fixed in v1.5 to a threshold relative to the local jump (an
+  implementation bug in the zoo file, not part of the published method).
+- **D5** Continue: run round 4 as planned; Phase 3 ends after it whatever the outcome (plan §3.3).
+*Consequences:* H-SR registered as H-0019 before any round-4 work. D3 and D4 land with judge v1.5 (from the
+branch); no case is accepted before then. 3b(i) residual gaps (metric skipping, unanticipated attacks) stay open.

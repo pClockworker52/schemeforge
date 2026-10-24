@@ -402,8 +402,12 @@
   - local characteristic reconstruction (Harten, Engquist, Osher, Chakravarthy 1987; Qiu and Shu 2002)
   - PLAN seed hunch 4
   author: hunch-generator/shock physics
-  status: open
-  verdict_note: ''
+  status: supported
+  verdict_note: 'Gate 3e (Peter, D1). Dev c-975db22244 r-20261023-034330-2669: R1 contact 3.06 (<= 4.0), shock 2.91
+    (vL 2.92), B-0010 0.0203 / R6 0.0147 (<= 1.1 x vL 0.0274 / 0.0166, vL r-20261022-164139-960f), N5/N6 explicit
+    1/1, S1 1.958: no kill clause fires. Promo r-20261023-040031-554c LF1 contact median 2.89 (<= 24.76) but REJECTED,
+    LF1 1 of 5 hard-constraint violation. Miss: B-0002 order 1.8995. Label: rediscovery / variant of characteristic
+    THINC on the linearly degenerate field (Chamarthi 2024). docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md'
 - id: H-0013
   arena: euler1d
   slot: reconstruction_stateful
@@ -462,8 +466,12 @@
   - No hit in one web search for counting limiter or BVD switches to detect limit cycles; this is not evidence of
     novelty.
   author: hunch-generator/steady-convergence
-  status: open
-  verdict_note: ''
+  status: inconclusive
+  verdict_note: 'Gate 3e (Peter, D1). Only 2 of 8 grid points run: (0.9, 2, 0.3) c-2ca8842812 r-20261023-034337-d53f
+    N5/N6 explicit 2/3, 1; (mu 0.1) c-735e50fb20 r-20261023-034911-0443 1/3, 2/3; neither reaches N5 = N6 = 1, 6
+    points untested. Never-release c-5edfe0f663 r-20261023-034619-b52c worse. N4 roughness 0.0109 = ~24 x thinc_bvd
+    (r-20261023-035530-454a), prediction failed. Promo r-20261023-040314-a528 passes A1, A2, A4, A6, A7, A8; fails
+    A3 0.90, A5 0.077. docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md'
 - id: H-0014
   arena: euler1d
   slot: reconstruction_stateful
@@ -520,8 +528,10 @@
   - flux-corrected transport (Boris and Book 1973; Zalesak 1979), the general high/low-order blend
   - weak-shock entropy law (Lax 1957; textbook, e.g. Toro ch. 3)
   author: hunch-generator/structure preservation
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Gate 3e (Peter, D1). Overshoot clause fires at every kappa run: R6 0.0199 (kappa 0.1, r-20261023-034338-fe5a,
+    shock 3.48), 0.0196 (0.3, r-20261023-034637-3074, shock 2.90), 0.0190 (0.6 off-grid, r-20261023-035305-d9f5)
+    vs 1.1 x van Leer 0.0166 (r-20261022-164139-960f); kappa 0.03 not run. Structural claim held (S1 1.958). docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md'
 - id: H-0015
   arena: euler1d
   slot: reconstruction_stateful
@@ -577,8 +587,10 @@
   - shock-capturing anomalies and intermediate states off the Hugoniot (Zaide and Roe 2011-2012)
   - H-0011 (sharpness forces overshoot for TVD limiters), the claim this hunch contradicts outside the TVD family
   author: hunch-generator/contrarian
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Gate 3e (Peter, D1). B-0010 overshoot rises with beta: 0.0261 / 0.0580 / 0.0871 at beta 1.6 / 2.2
+    / 3.0 (r-20261023-035530-454a, r-20261023-034330-6b60, r-20261023-034731-4dee); R6 0.0164 / 0.0171 / 0.0327.
+    Extends H-0011 to THINC profiles. docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md'
 - id: H-0016
   arena: euler1d
   slot: reconstruction_stateful
@@ -635,8 +647,10 @@
   - One search found no MOOD variant that carries the flag to the next step instead of recomputing; that is not
     evidence of novelty, and the method is at most a variant of MOOD.
   author: hunch-generator/transfer
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Gate 3e (Peter, D1). c-0f73739944 r-20261023-034330-6cdf: B-0010 0.0448 (-35 % vs weno5z 0.0684,
+    1.8 x vL); N1 Newton 300, limit cycle (weno5z 83). cand_2 r-20261023-034700-8de8 the same. Flag-every-jump control
+    not run. docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md'
 - id: H-0017
   arena: euler1d
   slot: reconstruction_stateful
@@ -691,5 +705,71 @@
   - accuracy loss of TVD limiters at smooth extrema and its remedies (Shu 1987 TVB; Suresh and Huynh 1997 MP; Colella
     and Sekora 2008)
   author: hunch-generator/approximation theory
+  status: refuted
+  verdict_note: 'Gate 3e (Peter, D1). c-a4173db23e r-20261023-034424-bc55: S1 2.31 (prediction 2.6), B-0010 0.0367
+    > 1.2 x thinc_bvd 0.0261 = 0.0313 and R6 0.026 > 1.2 x 0.0164 (thinc_bvd r-20261023-035530-454a): overshoot
+    clause fires. Label: variant of P_nT_m-BVD. docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md'
+- id: H-0018
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: practitioner
+  statement: 'The agent swarm adds value in round 3 (docs/targets/swarm.md, pre-registered 2026-10-22): S1, at least
+    one agent hunch is not a parameter sweep of H-0001..H-0011; and S2, at least one engine island ends with an
+    elite that is non-dominated against its seed on dev and within 2 % of the seed or better on promo for A1-A5
+    and A7.'
+  mechanism: 'PLAN section 1 thesis: hunch-generator, proposer and breaker agents search a wider space of mechanisms
+    than one orchestrator session doing the same work by hand (rounds 1 and 2), and the engine improves on the agents''
+    seeds.'
+  predicted_effect:
+  - metric: S1 (agent hunches that are not parameter sweeps)
+    direction: up
+    size: '>= 1 of the round-3 agent hunches'
+  - metric: S2 (islands whose elite meets the seed comparison)
+    direction: up
+    size: '>= 1 of 3 islands'
+  kill_criterion: Fails if S1 or S2 does not hold (docs/targets/swarm.md). Promotion on Target A, novelty labels
+    and wall-clock time are not part of the criterion.
+  known_relatives:
+  - docs/targets/swarm.md (the pre-registered criterion)
+  - 'rounds 1 and 2 (orchestrator only): docs/rounds/2026-10-21-euler1d-limiter.md, docs/rounds/2026-10-21-euler1d-limiter_stateful.md'
+  author: orchestrator/method
+  status: supported
+  verdict_note: 'Gate 3e (Peter, D2): S1 met, S2 met weakly. S1: none of H-0012..H-0017 is a parameter sweep of
+    H-0001..H-0011. S2: 1 of 3 islands, gains <= 5 % on promo: H-0012 island c-a411e8accb promo r-20261023-232730-c8f5
+    (A4 1.00 vs 0.95, A7b 0.0236 vs 0.0250, rest within 0.1 % of seed c-975db22244 r-20261023-040031-554c), c-c0644880db
+    r-20261023-230405-e34b / c-0428b6020b r-20261023-232157-60f3; all REJECTED on promo (LF1 1/5) like the seed.
+    H-0013 and H-0014 islands lose A1 against their seeds (c-140c60abbe r-20261023-224257-ef55 3.41 vs 2.18; c-2637af56a6
+    r-20261023-223342-7d47 3.41 vs 2.79). Engine e-20261023-041826-802c. docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md'
+- id: H-0019
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: contrarian
+  statement: 'No Arena 1 scheme reaches both a sharp shock and a smooth steady objective: an RF1 shock-width median
+    <= 2.6 cells (Target A1) and an NF3 roughness_J p90 <= 0.002 (A5) are not met together by any candidate whose
+    NF1 Newton convergence is 1.00 (A4).'
+  mechanism: A reconstruction steep enough to put a shock into <= 2.6 cells resolves the shock position by snapping
+    it to a small set of sub-cell positions; as p_b moves the exact shock continuously, the discrete shock jumps
+    between those positions and J(p_b) acquires steps of the size of the sub-cell jump, which the second difference
+    in roughness_J amplifies. Smooth objectives so far (van Albada, minmod, the round-3 engine leaders) all come
+    from schemes with RF1 shock >= 3.4 cells; sharp ones (superbee, MC, Koren, c-2ca8842812, the round-2 near misses)
+    all have NF3 roughness >= 0.077 or fail Newton. Pre-registered in docs/plans/2026-10-24-round4.md before round
+    4.
+  predicted_effect:
+  - metric: NF3.roughness_J
+    direction: up
+    size: '> 0.002 (p90) for every round-4 candidate with RF1 shock median <= 2.6'
+  - metric: RF1.shock_width
+    direction: down
+    size: Spearman rho(RF1 shock median, NF3 roughness p90) <= -0.5 over all promo-evaluated Arena 1 candidates
+      and zoo members with NF1 converged_impl = 1.00 (reported, not deciding)
+  kill_criterion: Refuted if any candidate, in any Arena 1 slot, has an ok promo run under judge v1.5 or later with
+    RF1 shock_width median <= 2.6, NF3 roughness_J p90 <= 0.002 and NF1 converged_impl mean = 1.00. Otherwise supported
+    "for the families searched"; never a proof for all schemes.
+  known_relatives:
+  - subcell resolution (Harten 1989)
+  - staircase effects of shock capturing on steady objectives in adjoint shape optimisation (to be cited from the
+    literature note)
+  - H-0011 (A1 and A7 for phi(r), round 3c)
+  author: orchestrator/contrarian
   status: open
   verdict_note: ''

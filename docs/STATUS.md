@@ -1,13 +1,22 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.4 (2026-10-22, 71a3d94)  Plan: v1.2
-Last session: 2026-10-24 — round 3 done, stopped at gate 3e (docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md)
+Last session: 2026-10-24 — gate 3e recorded (DECISIONS.md), round-4 plan step 1 and step 3 done; H-SR = H-0019
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
 
-## Latest results (2026-10-24): round 3 done — **waiting for Peter at gate 3e**
+## Gate 3e passed 2026-10-24 (Peter: round-4 plan docs/plans/2026-10-24-round4.md approved with defaults D1–D5)
+- Step 1 done: round-3 hunches closed (D1): H-0012 supported, H-0013 inconclusive, H-0014..H-0017 refuted. Swarm
+  outcome (D2) recorded as **H-0018** (orchestrator/method), closed supported (S1 met, S2 weakly). DECISIONS.md
+  "2026-10-24 — Gate 3e (Peter)".
+- Step 3 done: pre-registered hunch H-SR registered as **H-0019** (ledger/drafts/r4_sharp_vs_smooth.yaml), open.
+- Not done yet: quarantine cases are **not** accepted (D3 lands with judge v1.5 from the branch); no evaluations.
+- Next: step 2 of the plan (judge v1.5 and engine changes, prepared on the branch; WSL tags, zoo eval, rescore), then
+  step 4 (round 4).
+
+## Round 3 results (2026-10-24)
 Summary: docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md (all run ids there).
 - Suggested verdicts (not closed): H-0012 supported; H-0013 inconclusive (2 of 8 grid points run); H-0014, H-0015,
   H-0016, H-0017 refuted. H-0014 and H-0017 are refuted by the overshoot clauses their proposers did not check (R6
@@ -108,10 +117,10 @@ Summary: docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md (all run ids 
 - `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
 
 ## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
-State: judge euler1d-v1.4 on main (71a3d94, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
+State: judge euler1d-v1.4 on main (71a3d94, tagged); rounds 2 and 3 closed; open hunch: H-0019 (H-SR). Peter's review
 2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
 LF2. **Step 0 done 2026-10-22 (see below). 3b(i) closed without an independent cheater (DECISIONS.md).**
-**Round 3 done 2026-10-24, waiting for gate 3e** (reconstruction_stateful, scripts/headless/round3.txt, run from the interactive WSL session
+**Round 3 done 2026-10-24; gate 3e passed (see top)** (reconstruction_stateful, scripts/headless/round3.txt, run from the interactive WSL session
 because the headless run.sh session could not use the shell). Hunches registered 2026-10-22 from the
 hunch-generator, as written: H-0012 field-selective compression (shock physics), H-0013 chatter lock
 (steady-convergence), H-0014 entropy-production blend (structure preservation), H-0015 steep shock less overshoot
@@ -215,9 +224,8 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
 4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
-- **Gate 3e (round 3):** S1/S2 verdicts, the six suggested hunch verdicts, the swarm-outcome ledger entry (swarm.md
-  asks for a closed `orchestrator/method` hunch; round3.txt says not to close hunches), the 21 quarantined cases
-  (B-0016 … B-0036) and the two zoo failures, and what next (open questions at the end of the round summary).
+- *(Gate 3e answered 2026-10-24, DECISIONS.md.)* Open: the two zoo failures found by round-3 breakers (frozen van Leer
+  on a parabolic nozzle, thinc_bvd on planar Noh) are not covered by D1–D5.
 - *(3b(i) closed by Peter 2026-10-22, see DECISIONS.md; the two halts below are kept for the record.)*
 - **Red team v1.4 did not run either** (2026-10-22 ~21:55–22:20, interactive WSL session, cheater subagent, task
   from redteam_v13.txt verbatim with folder candidates/redteam/v13/). A safety classifier stopped the cheater while it
