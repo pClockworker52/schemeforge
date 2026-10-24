@@ -168,7 +168,7 @@ def promote(
 ) -> None:
     """Promotion test (PLAN §5.8): thresholds and paired bootstraps on the held-out suite. Needs promo runs of the
     candidate and of the zoo references under the current judge version; prints verdicts only."""
-    from schemeforge.core import promotion, registry
+    from schemeforge.core import evaluation, promotion, registry
     from schemeforge.core.integrity import judge_version
 
     conn = registry.connect()
@@ -187,9 +187,8 @@ def promote(
     ref_slot = spec["reference_slot"]
     zoo_runs = {}
     for m in sorted(members):
-        row = conn.execute("SELECT id FROM candidates WHERE path = ?",
-                           (f"src/schemeforge/arenas/{arena}/zoo/{ref_slot}/{m}.py",)).fetchone()
-        run = latest(row["id"], "promo") if row else None
+        zid = evaluation.zoo_candidate_id(conn, arena, ref_slot, m)
+        run = latest(zid, "promo") if zid else None
         if run is None:
             _fail(f"zoo member {m} ({ref_slot}) has no promo run under {version}: run `sforge zoo eval --suite promo`",
                   2)

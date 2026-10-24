@@ -107,3 +107,19 @@ def test_accept_records_a_case_already_moved_by_a_judge_commit(tmp_path, monkeyp
     assert registry.connect(reg).execute("SELECT status FROM cases WHERE id = 'B-0099'").fetchone()[0] == "accepted"
     with pytest.raises(ValueError):
         quarantine.accept("B-0099", registry_path=reg)  # no longer quarantined
+
+
+def test_changed_zoo_file_gets_its_own_id(tmp_path) -> None:
+    # judge v1.5 (WSL zoo eval): the changed thinc_bvd reused id zoo-reconstruction-thinc_bvd; the duplicate INSERT
+    # left a write transaction open and every other worker died with "database is locked"
+    from schemeforge.core.evaluation import register_candidate
+
+    conn = registry.connect(tmp_path / "r.sqlite")
+    f = tmp_path / "member.py"
+    f.write_text("EPS = 1e-20\n")
+    old = register_candidate(conn, f, "euler1d", "reconstruction", "zoo", candidate_id="zoo-reconstruction-m")
+    f.write_text("EPS = 1e-20  # relative\n")
+    new = register_candidate(conn, f, "euler1d", "reconstruction", "zoo", candidate_id="zoo-reconstruction-m")
+    assert old == "zoo-reconstruction-m" and new.startswith("zoo-reconstruction-m-") and new != old
+    assert register_candidate(conn, f, "euler1d", "reconstruction", "zoo", candidate_id="zoo-reconstruction-m") == new
+    assert not conn.in_transaction

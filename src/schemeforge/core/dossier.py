@@ -69,15 +69,15 @@ def build(cid: str, target: str = "A") -> Path:
         lines += [f"No promo run under {version} yet: `uv run sforge eval {cid} --arena {arena} --slot {slot} "
                   "--suite promo`, then rebuild.", ""]
     else:
+        from .evaluation import zoo_candidate_id
         from .promotion import TARGETS, check_target
 
         spec = TARGETS[target]
         members = {m for _, _, _, m in spec["bootstrap"]} | {m for *_, m in spec["relative"]}
         zoo_runs = {}
         for m in members:
-            row = conn.execute("SELECT id FROM candidates WHERE path = ?",
-                               (f"src/schemeforge/arenas/{arena}/zoo/{spec['reference_slot']}/{m}.py",)).fetchone()
-            run = _latest_run(conn, row["id"], "promo", version) if row else None
+            zid = zoo_candidate_id(conn, arena, spec["reference_slot"], m)
+            run = _latest_run(conn, zid, "promo", version) if zid else None
             if run is not None:
                 zoo_runs[m] = run["id"]
         dev_vals = {f"{r['case_id']}.{r['metric']}": r["value"] for r in conn.execute(

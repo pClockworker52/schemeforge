@@ -77,17 +77,31 @@ def register_candidate(conn: sqlite3.Connection, path: Path, arena: str, slot: s
     if existing:
         return existing
     cid = candidate_id or f"c-{chash[:10]}"
+    if conn.execute("SELECT 1 FROM candidates WHERE id = ?", (cid,)).fetchone():
+        # the id belongs to other code: a zoo file changed with a judge version (v1.5 thinc_bvd). The new code gets
+        # its own id; the old id keeps the old code and its runs.
+        cid = f"{cid}-{chash[:6]}"
     try:
         rel = str(path.resolve().relative_to(REPO_ROOT))
     except ValueError:
         rel = str(path.resolve())
-    conn.execute(
-        "INSERT INTO candidates (id, arena, slot, hunch_id, code_hash, path, parents, origin, created_at) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (cid, arena, slot, hunch_id, chash, rel, json.dumps(parents or []), origin, _now()),
-    )
-    conn.commit()
+    try:
+        conn.execute(
+            "INSERT INTO candidates (id, arena, slot, hunch_id, code_hash, path, parents, origin, created_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (cid, arena, slot, hunch_id, chash, rel, json.dumps(parents or []), origin, _now()),
+        )
+        conn.commit()
+    except sqlite3.Error:
+        conn.rollback()  # a failed INSERT must not keep the write lock: other workers would wait out BUSY_TIMEOUT
+        raise
     return cid
+
+
+def zoo_candidate_id(conn: sqlite3.Connection, arena: str, slot: str, member: str) -> str | None:
+    """Registry id of the zoo member's current file (a member whose code changed has one id per version)."""
+    path = REPO_ROOT / "src" / "schemeforge" / "arenas" / arena / "zoo" / slot / f"{member}.py"
+    return _candidate_id(conn, arena, slot, code_hash(path.read_text(encoding="utf-8"))) if path.is_file() else None
 
 
 def submit_candidate(path: Path, hunch_id: str, parents: list[str] | None = None,
