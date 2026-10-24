@@ -126,7 +126,31 @@ ul.tight li{margin:.4em 0}
 <p><b>Cost:</b> about $17 list for 240 engine children plus agent sessions, one to two days elapsed. Rounds 2 and 3 cost $25.71 and $33.99.</p>
 
 <h2>5. Does continuing make sense?</h2>
-<p>For round 4, yes: it is cheap, fully specified, and every outcome ends Phase 3 with something to show. Beyond round 4 the plan does not continue Target A without a new recorded decision. The stronger long-term asset may already exist: an audited, cheat-resistant judge with held-out families and a breaker loop, which any scheme-search effort could use.</p>
+<p>For round 4, yes: it is cheap, fully specified, and every outcome ends Phase 3 with something to show. Beyond round 4 the plan does not continue Target A without a new recorded decision. The stronger long-term asset may already exist: an audited, cheat-resistant judge with held-out families and a breaker loop, which any scheme-search effort could use. Section 6 says how far that reaches.</p>
+
+<h2>6. What exists, and where else it applies</h2>
+<p>About half of the code does not know it is about gas dynamics. The other half is the Euler arena, and that half is where most of the effort and risk went.</p>
+<div class="scroll"><table>
+<tr><th>Asset</th><th>Size</th><th>Tied to Euler?</th></tr>
+<tr><td><b>Search loop:</b> sandbox and static checks, registry of every run, judge integrity hash and versioning, held-out storage that agents cannot read, promotion with paired bootstraps, hunch ledger, Pareto leaderboard, evolution engine with islands, archive and LLM backends, CLI and agent tools</td><td>~2,900 lines</td><td><span class="pill ok">no</span> generic; a few tables (descriptor grids, dev screens) are per arena</td></tr>
+<tr><td><b>Agents and process:</b> hunch-generator, proposer, breaker, cheater, analyst, referee, judge auditor; path-guard hook; hunch-round skill; pre-registration, gates, quarantine-then-accept for breaker cases</td><td>7 agents, 1 skill</td><td><span class="pill ok">no</span> prompts name the arena's files, not its physics</td></tr>
+<tr><td><b>Lessons as rules:</b> the traps file, plus judge defences against batch-size guessing, unit dependence, late-run drift, dev overfitting, memory thrashing</td><td>1 file, 5 judge versions</td><td><span class="pill warn">partly</span> the failure modes are general, the cases are not</td></tr>
+<tr><td><b>Euler arena:</b> exact Riemann and nozzle solutions (blind-audited to 6.5e-13), unsteady and steady solvers, metrics, hard constraints, held-out families, 21-member zoo, Targets A and A-c</td><td>~2,600 lines, 277 tests overall</td><td><span class="pill bad">yes</span></td></tr>
+</table></div>
+
+<h3>Where it could be applied</h3>
+<div class="scroll"><table>
+<tr><th>Problem</th><th>What is needed</th><th>Effort</th></tr>
+<tr><td>Other components in the same 1D Euler setting: Riemann solvers for real-gas equations of state, positivity limiters, time integrators, entropy fixes</td><td>a new slot (one table row, a constraint checker) and a target</td><td><span class="pill ok">small</span></td></tr>
+<tr><td>Other 1D hyperbolic systems with exact Riemann solutions: shallow water, isentropic and two-phase flow, traffic models</td><td>new exact solutions, cases and zoo; solvers and metrics largely reused</td><td><span class="pill warn">mid</span></td></tr>
+<tr><td>ODE integrators and quadrature rules</td><td>exact or manufactured references are trivial; a new small arena</td><td><span class="pill warn">mid</span></td></tr>
+<tr><td>Third-medium contact (the planned Arena 2), other solid-mechanics components with analytic references (Hertz, patch tests)</td><td>a new arena on an FE library; the loop, agents and process carry over</td><td><span class="pill warn">mid</span></td></tr>
+<tr><td>2D/3D schemes judged by manufactured solutions</td><td>the same loop, but every evaluation costs seconds to minutes, so held-out suites shrink</td><td><span class="pill bad">large</span></td></tr>
+</table></div>
+
+<p><b>How narrow it is.</b> The method needs three things: a cheap, exact or provably reliable reference; a component small enough to be a pure function inside a fixed harness; and metrics that capture what practitioners care about. Exact solutions in milliseconds give the first. Where there is no ground truth (turbulence models judged against noisy experiments), where one evaluation takes hours, or where the value lies in a whole solver rather than one component, the approach does not fit. It is a tool for a family of problems, not a general method finder.</p>
+
+<p><b>Does it save tokens?</b> For a new arena, roughly the generic half of the code, all agent prompts and the process come for free. More importantly, the failure modes found here would not have to be rediscovered: candidates guessing the case from the batch size, absolute epsilons, overfitting to dev, memory thrashing, a scalar score that misleads the engine, duplicates in top-k picks. Each of those cost a judge version or a lost round here. The expensive part remains: exact references, their blind audit, meaningful metrics and held-out families have to be built for each new problem. My estimate: a new arena of similar size would take somewhat under half the effort Arena 1 did. That is a judgement from this project's history; tokens were not metered per phase.</p>
 <p class="note">Sources: docs/STATUS.md, docs/DECISIONS.md, docs/plans/2026-10-24-round4.md, docs/targets/A.md, A-c.md, swarm.md, docs/rounds/2026-10-21-euler1d-limiter_stateful.md, docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md, docs/judge/2026-10-24-v15-refactor-check.md, and git history. The 2026-10-21 version of this page is docs/reports/2026-10-21-big-picture.html.</p>
 </main>
 
