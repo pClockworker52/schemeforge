@@ -32,3 +32,38 @@ see STATUS): running stateless schemes as stateful with the state passed through
 | reconstruction/weno5z | r-20261024-094530-a8c1 | r-20261024-104452-3396 | 90 | identical |
 | reconstruction_stateful/muscl_van_leer | r-20261024-094751-a736 | r-20261024-104718-6ceb | 90 | identical |
 | reconstruction_stateful/muscl_van_leer_frozen | r-20261024-094944-25c9 | r-20261024-104911-5e8c | 90 | identical |
+
+## Step 2: v1.5 contents on the zoo (dev, commit 5421a9c)
+
+Accepted cases B-0016, B-0019, B-0021, B-0030, relative EPS in thinc_bvd, scaling hard constraint. Compared with the
+v1.4 runs above on the 18 old cases: every member identical except its wall-time cost, and thinc_bvd, whose old-case
+scores move at rounding level (≤ 8e-9 relative; Newton iteration means on B-0011 and N4 by < 1 %). Every member
+passes the new scaling constraint. **Two zoo members are rejected under v1.5**, both by a crash on an accepted case
+(the run-level constraint "non-finite state"):
+
+- `limiter/koren`: B-0030 (double rarefaction);
+- `reconstruction/thinc_bvd`: B-0016 (cold collision) and B-0030 — as the round-3 breakers reported.
+
+| Member | v1.5.dev run | Status |
+|---|---|---|
+| flux/hll | r-20261024-114205-9c5f | ok |
+| flux/hllc | r-20261024-114316-f076 | ok |
+| flux/rusanov | r-20261024-114435-0460 | ok |
+| limiter/koren | r-20261024-110723-bbcf | rejected |
+| limiter/mc | r-20261024-111053-08d1 | ok |
+| limiter/minmod | r-20261024-111428-5cac | ok |
+| limiter/superbee | r-20261024-111622-8eb3 | ok |
+| limiter/van_albada | r-20261024-112029-2fda | ok |
+| limiter/van_leer | r-20261024-112151-7980 | ok |
+| limiter/venkatakrishnan | r-20261024-112316-6bd4 | ok |
+| limiter_stateful/mc | r-20261024-112510-4f38 | ok |
+| limiter_stateful/superbee | r-20261024-112833-ec17 | ok |
+| limiter_stateful/superbee_frozen | r-20261024-113236-2e3e | ok |
+| limiter_stateful/van_albada | r-20261024-113733-0f63 | ok |
+| limiter_stateful/van_leer | r-20261024-113856-815c | ok |
+| limiter_stateful/van_leer_frozen | r-20261024-114020-1d51 | ok |
+| reconstruction/first_order | r-20261024-114533-7a0a | ok |
+| reconstruction/thinc_bvd | r-20261024-114653-9c0d | rejected |
+| reconstruction/weno5z | r-20261024-115536-7dfb | ok |
+| reconstruction_stateful/muscl_van_leer | r-20261024-115753-279c | ok |
+| reconstruction_stateful/muscl_van_leer_frozen | r-20261024-115944-d3ac | ok |
