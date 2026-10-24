@@ -37,7 +37,7 @@ see STATUS): running stateless schemes as stateful with the state passed through
 
 Accepted cases B-0016, B-0019, B-0021, B-0030, relative EPS in thinc_bvd, scaling hard constraint. Compared with the
 v1.4 runs above on the 18 old cases: every member identical except its wall-time cost, and thinc_bvd, whose old-case
-scores move at rounding level (≤ 8e-9 relative; Newton iteration means on B-0011 and N4 by < 1 %). Every member
+scores move at rounding level (≤ 8e-9 relative; Newton iteration means on B-0011 and N4 by < 1 % here, −1.5 % on B-0011 in WSL, see STATUS). Every member
 passes the new scaling constraint. **Two zoo members are rejected under v1.5**, both by a crash on an accepted case
 (the run-level constraint "non-finite state"):
 
