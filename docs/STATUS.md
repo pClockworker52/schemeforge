@@ -1,7 +1,7 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.4 (2026-10-22, 71a3d94)  Plan: v1.2
 Last session: 2026-10-24 (cloud) — round-4 plan step 2 prepared on claude/exciting-fermi-qy077p: judge euler1d-v1.5.dev
-(not tagged), engine changes, target Ac, round-4 prompt. One decision open (below).
+(not tagged), engine changes, target Ac, round-4 prompt. Ready for WSL.
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
@@ -14,8 +14,8 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   and fluxes); target Ac; engine selection by failed Target A dev screens, duplicates removed, unreached requests
   free; promote takes references from the target; run-id rule in the agent prompts; scripts/headless/round4.txt.
   Record with run ids: docs/judge/2026-10-24-v15-refactor-check.md; DECISIONS "Judge v1.5 contents".
-- **Open decision (Peter):** under v1.5 two zoo members are rejected on dev: limiter/koren (B-0030 crash) and
-  reconstruction/thinc_bvd (B-0016, B-0030). Target A's references (van Leer, van Albada, MC) are unaffected; the
+- Decided (Peter, DECISIONS 2026-10-24): under v1.5 two zoo members stay rejected on dev: limiter/koren (B-0030
+  crash) and reconstruction/thinc_bvd (B-0016, B-0030). Target A's references (van Leer, van Albada, MC) are unaffected; the
   limiter and reconstruction leaderboards lose those members from their vs-zoo comparison.
 - Deferred: stateless-as-stateful unification and one limiter checker (behaviour-neutral; not needed for round 4).
 - Next (WSL): merge; pytest; `sforge case accept` B-0016 B-0019 B-0021 B-0030 (registry only, files already moved);

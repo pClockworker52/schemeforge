@@ -212,3 +212,11 @@ branch); no case is accepted before then. 3b(i) residual gaps (metric skipping, 
 `EPS = 1e-20` (all five top ones) may be rejected under v1.5 by the scaling constraint (not checked here: the
 candidate files are only in WSL; the rescore shows it); if c-2ca8842812 is, a round-4 proposer that
 starts from it needs the relative-EPS fix (it is a candidate file; the orchestrator does not edit it).
+
+
+## 2026-10-24 — Zoo members rejected under v1.5 (Peter)
+*Context:* Under judge v1.5.dev the zoo `limiter/koren` (B-0030) and `reconstruction/thinc_bvd` (B-0016, B-0030) end
+in non-finite states on accepted dev cases and are rejected (docs/judge/2026-10-24-v15-refactor-check.md).
+*Decision:* The rejections stand: the zoo gets no exemption from the run-level constraints. B-0030 stays in dev.
+*Consequences:* Both members drop out of their slots' vs-zoo comparisons from v1.5 on; Target A references (van Leer,
+van Albada, MC) are unaffected. Earlier results that cite koren or thinc_bvd stay valid under their judge versions.
