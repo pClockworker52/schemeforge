@@ -1,0 +1,70 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: structure preservation
+statement: >-
+  Scale each cell's two reconstructed face states towards the cell average, in conserved variables, with one factor
+  t in [0, 1] per cell. Choose t as the largest value for which both faces keep rho >= eps rho_bar and
+  p >= eps p_bar. Applied to c-a411e8accb, this removes every hard-constraint violation of the characteristic family:
+  LF1 1 of 5 on promo, and the round-3 breakers' crashes on cold collisions (B-0016) and strong double rarefactions
+  (B-0030), both in v1.5 dev. No Target A promo metric changes by more than 2 %, because t = 1 (no change) wherever both
+  face states are already admissible.
+mechanism: >-
+  Structure: the admissible set G = {rho > 0, p > 0} is convex in conserved variables, because p is concave in U. The
+  cell average U_bar lies in G, so the segment from U_bar to a face state stays in G up to its first boundary
+  crossing. Scaling towards U_bar is the smallest change that restores admissibility (Zhang and Shu 2010). With
+  p >= eps p_bar, t solves a quadratic in closed form; the density condition is linear.
+
+  Why the characteristic family breaks it: face states are built from separately limited characteristic amplitudes and
+  mapped back with the centre cell's eigenvectors. Nothing keeps the resulting face rho and p positive when one
+  amplitude is large compared with rho or p / a^2, as in cold states (p <= 1e-4) or strong rarefactions. Three
+  round-3 breakers named this back-projection as the common cause (docs/rounds/2026-10-23-round3/breaker/).
+
+  HLLC with Einfeldt speeds keeps a first-order update positive for admissible face states (Einfeldt et al. 1991;
+  Batten et al. 1997), so admissible face states remove the source of the failure. Stated plainly: full positivity of
+  a second-order update also needs U_bar to be a convex combination of the face states and a reduced CFL (Perthame and
+  Shu 1996). A nonlinear THINC reconstruction does not satisfy that, so the claim at the judge's CFL 0.5 (local 0.8
+  in pseudo-time) is empirical.
+
+  Why it should cost nothing: using one t per cell keeps the cell's two faces consistent, and t = 1 exactly on all
+  states away from the bounds. Nozzles, Riemann problems at ordinary pressures and smooth waves therefore run
+  bitwise as the parent. The min makes t only C0, but it never acts on the nozzle families, so Newton is unaffected.
+
+  Implementation: eps is relative (eps in {1e-3, 0.05}), so it passes the v1.5 scaling constraint. Every sqrt and
+  division is guarded inside jnp.where (traps: Newton needs finite derivatives). The candidate is stateless and passes
+  s through. Assumption: c-a411e8accb's LF1 violation is a positivity failure; this was not diagnosed. Kill clause (b)
+  below covers the other case.
+predicted_effect:
+  - metric: LF1.pass_rate
+    direction: up
+    size: "from 0.8 (1 of 5 instances violating, c-a411e8accb promo r-20261023-232730-c8f5, v1.4) to 1.0; promo status ok"
+  - metric: B-0016.status
+    direction: up
+    size: "dev, finite and positive (B-0016 and B-0030 both crash the zoo thinc_bvd, v1.5 dev r-20261024-152919-1578)"
+  - metric: RF1.shock_width
+    direction: same
+    size: "median within 2 % of the control (c-a411e8accb promo 2.888, r-20261023-232730-c8f5); RF1 contact 3.007 likewise"
+  - metric: NF3.roughness_J
+    direction: same
+    size: "p90 within 2 % or 1e-6 absolute of the control (c-a411e8accb 1.47e-5)"
+  - metric: NF1.converged_impl
+    direction: same
+    size: "1.00 (c-a411e8accb 1.00); NF1 explicit 0.95 unchanged"
+  - metric: RF2.overshoot
+    direction: same
+    size: "p90 within 2 % of the control (c-a411e8accb 0.0236); RF1 p90 0.0066 likewise"
+kill_criterion: >-
+  The control is the same parent with only the v1.5 relative-EPS fix. Comparisons are against the control's promo run
+  if that run is ok. Otherwise they are against c-a411e8accb's v1.4 promo r-20261023-232730-c8f5, with 5 % instead of
+  2 % tolerance for the judge-version change. Refuted if (a) the scaled candidate is rejected on v1.5 dev for a
+  non-finite or non-positive state on any case, B-0016 and B-0030 included; or (b) its promo run is rejected for a
+  hard-constraint violation in any family; or (c) any of RF1 shock and contact median, RF1 and RF2 overshoot p90, NF1
+  converged_expl and converged_impl mean, or NF3 roughness p90 (absolute tolerance 1e-6) differs from the reference by
+  more than the tolerance; or (d) its dev scores on the 18 cases from before v1.5 differ from the control's by more
+  than 1e-8 relative, which would mean the scaling acts where it should not.
+known_relatives:
+  - "Known method, stated plainly: the Zhang and Shu (2010, J. Comput. Phys. 229) positivity-preserving scaling towards the cell average, applied here to a characteristic reconstruction; label at most 'rediscovery / variant of Zhang-Shu'"
+  - "Perthame and Shu (1996): positivity of MUSCL-type schemes from admissible face states under a reduced CFL"
+  - "Einfeldt, Munz, Roe, Sjogreen (1991) and Batten, Clarke, Lambert, Causon (1997): positivity of HLLE/HLLC with Einfeldt speeds"
+  - "Hu, Adams, Shu (2013): positivity-preserving flux limiting"
+  - "traps file, 'Guard positivity'; round-3 breaker reports (B-0016, B-0017, B-0026..B-0028, B-0030, B-0031, B-0034)"
+author: hunch-generator/structure preservation

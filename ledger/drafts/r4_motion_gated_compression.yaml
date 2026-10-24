@@ -1,0 +1,81 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: steady-convergence
+statement: >-
+  Compression on the acoustic characteristic fields, switched on by a per-cell motion indicator read from the state
+  (the cell's primitive values at the previous step), gives moving shocks THINC-level sharpness. The steady fixed point
+  and its Jacobian stay exactly those of the smooth characteristic base c-a411e8accb. On promo the scheme meets A1 (RF1
+  shock median <= 2.6), A4 (NF1 Newton 1.00) and A5 (NF3 roughness p90 <= 0.002) together, which refutes H-0019.
+mechanism: >-
+  Why: A3, A4 and A5 depend only on the converged fixed point and on the linearisation there. A1, A2, A7 and A8 depend
+  only on features that move. A switch that is exactly zero at every fixed point, with zero derivative there, leaves
+  the fixed point and the Jacobian at the fixed point equal to those of the base. Steady results are then inherited and
+  unsteady results are free to change. The base is c-a411e8accb: characteristic variables, THINC with a smooth BVD
+  weight on the entropy field, van Leer on the acoustic fields. On promo (r-20261023-232730-c8f5, judge v1.4) it has
+  NF1 explicit 0.95, Newton 1.00 and NF3 roughness p90 1.47e-5, and it fails A1 only (RF1 shock 2.89).
+
+  Indicator: the state stores W_i at the start of the step; the judge takes s_new from the step's first evaluation, so
+  s_i = W_i of the previous accepted step. Define d_i = max over (rho, u, p) of |W_i - s_i| /
+  (|W_{i+1} - W_i| + |W_i - W_{i-1}| + 1e-12 |W_i| + tiny). This is dimensionless and scale-free. For a feature that
+  translates, d is about the feature's Courant number per step: about 0.1-0.5 for RF1 shocks at CFL 0.5, small for
+  slowly moving shocks, and exactly 0 at any steady state, steady shocks included. Weight: w = d^2 / (d^2 + d0^2).
+  On each acoustic amplitude, use (1 - w b) MUSCL-van-Leer + w b THINC, where b is the base's smooth BVD weight. The
+  entropy field is unchanged.
+
+  Why the explicit solver should not lock into a limit cycle: the sharp part needs w > 0, so a cycle must keep its
+  amplitude above about d0 times the local difference. A smaller cycle drives w towards 0, and the van Leer acoustic
+  base damps it, so the cycle cannot sustain itself.
+
+  Newton: S is fixed within a step. The convergence residual of U_{k+1} uses S_{k+1} = W_k, so d ~ |W_{k+1} - W_k|,
+  which falls quadratically.
+
+  How this differs from the earlier memory hunches. H-0007 froze the sharp scheme's factor where it had settled, so
+  its fixed point was a frozen sharp scheme that depended on the history. Freezing and H-0006 are triggered by time.
+  Here the fixed point is that of the stateless base, and the state carries no history beyond one step.
+
+  Known weaknesses, stated plainly. (1) The spatial operator depends on the time step through d: at fixed dx with
+  dt -> 0 it falls back to the base. At the judge's fixed CFL, d does not depend on the grid. (2) It is not Galilean
+  invariant: a stationary feature loses the acoustic compression. (3) The parent is REJECTED on promo (LF1, 1 of 5)
+  and under v1.5 (absolute EPS). It needs the relative EPS and a positivity fallback (traps file); neither is part of
+  this mechanism.
+predicted_effect:
+  - metric: RF1.shock_width
+    direction: down
+    size: "median from 2.89 (c-a411e8accb promo r-20261023-232730-c8f5, v1.4) to <= 2.5; THINC on all fields reached 2.18 (c-2ca8842812 r-20261023-040314-a528)"
+  - metric: NF3.roughness_J
+    direction: same
+    size: "p90 <= 1e-4 (base 1.47e-5, r-20261023-232730-c8f5), i.e. at most about 10 x the base and far below 0.002"
+  - metric: NF1.converged_impl
+    direction: same
+    size: "1.00 (base 1.00, same run)"
+  - metric: NF1.converged_expl
+    direction: same
+    size: "mean >= 0.95 (base 0.95, same run)"
+  - metric: RF1.overshoot
+    direction: up
+    size: "p90 from 0.0066 (base) to <= 0.0241 (A7a bound = 1.1 x van Leer 0.02192, r-20261024-153251-4a12)"
+  - metric: RF2.overshoot
+    direction: same
+    size: "p90 within +10 % of the base's 0.0236 (slowly moving shocks have small d, so little compression); A7b bound 0.0256 = 1.1 x 0.02327 (r-20261024-153251-4a12) is the tightest Target A risk"
+  - metric: R1.shock_width
+    direction: down
+    size: "dev, from 2.91 (c-a411e8accb dev r-20261023-174118-dde8, v1.4) to <= 2.6"
+  - metric: N4.roughness_J
+    direction: same
+    size: "dev, <= 1.3e-4 (10 x the base's 1.27e-5, r-20261023-174118-dde8)"
+kill_criterion: >-
+  Control first: the same file with w = 0 must reproduce the EPS-fixed base's dev scores to 1e-6 relative; otherwise
+  the comparison is void. Dev (judge v1.5): refuted if no d0 in {0.02, 0.05, 0.1} reaches R1 shock <= 2.7 (the dev
+  proxy for A1) together with N1 converged_impl = 1 and N4 roughness <= 0.002. Also refuted if the best such variant
+  has N4 roughness above 10 x the base's 1.27e-5 (r-20261023-174118-dde8, v1.4): then the fixed point is not the
+  base's and the mechanism is wrong, even if A5 still holds. Promo (judge v1.5): refuted if the best dev variant has an
+  ok promo run with RF1 shock_width median > 2.6, NF3 roughness_J p90 > 0.002 or NF1 converged_impl mean < 1.00. A promo
+  run rejected for a hard-constraint violation leaves the promo part inconclusive. A7 misses do not refute the
+  mechanism; they are reported against the bounds above.
+known_relatives:
+  - "time-dependent artificial-viscosity switches in SPH: Morris and Monaghan (1997); Cullen and Dehnen (2010), who use a time derivative as the shock indicator. Here a time difference switches compression on rather than viscosity"
+  - "entropy viscosity (Guermond, Pasquetti, Popov 2011): dissipation from a residual that contains the time derivative and vanishes for smooth steady states"
+  - "limiter freezing (Venkatakrishnan 1993/1995), zoo muscl_van_leer_frozen; H-0006 (ratchet); H-0007 (settle-freeze, refuted: it froze the sharp scheme, so its fixed point depended on the history)"
+  - "base c-a411e8accb (round 3, H-0012 island); H-0012 = characteristic THINC on the entropy field (Chamarthi 2024)"
+  - "one web search found no reconstruction that switches compression from the per-step change of the cell values; this is not evidence of novelty"
+author: hunch-generator/steady-convergence

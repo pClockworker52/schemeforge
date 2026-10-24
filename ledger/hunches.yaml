@@ -773,3 +773,492 @@
   author: orchestrator/contrarian
   status: open
   verdict_note: ''
+- id: H-0020
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: shock physics
+  statement: On the acoustic characteristic fields of c-a411e8accb, apply compression only to weak and moderate
+    compressive jumps. Use THINC with a smooth BVD weight, blended in with a weight that falls with the local relative
+    pressure jump, is zero for strong shocks, and is non-zero only where the field's characteristics converge. This
+    cuts the RF1 shock median from 2.89 to <= 2.6, while the RF2 and B-0010 overshoot stay at the base's level.
+  mechanism: "Physics: a captured moving shock has a width set by numerical diffusion working against the convergence\
+    \ of its own characteristics. A viscous shock has width ~ nu / [u], so weak shocks are the wide ones. van Leer's\
+    \ RF1 shock width has median 2.95 and p90 4.37 (r-20261024-153251-4a12), and the wide tail is plausibly the\
+    \ weak shocks. Strong shocks converge hard and are already narrow: the RF2 shock width median is 1.75 for both\
+    \ c-2ca8842812 (r-20261023-040314-a528) and van Leer (r-20261024-153251-4a12). Strong shocks are also where\
+    \ compression creates overshoot. H-0015 found that B-0010 (Mach 10) overshoot rose from 0.026 to 0.087 as THINC\
+    \ beta went from 1.6 to 3.0 (r-20261023-035530-454a, r-20261023-034731-4dee). MC's RF2 overshoot p90 is 0.0727\
+    \ against van Leer's 0.0233 (r-20261024-153251-db77, r-20261024-153251-4a12). Post-shock oscillations of slowly\
+    \ moving shocks grow with shock strength (Arora and Roe 1997; Jin and Liu 1996). So compression helps exactly\
+    \ where it does little harm, and it should scale inversely with strength. Contrary to H-0012's assumption that\
+    \ acoustic fields must not be compressed, the hunch here is that this only holds for strong jumps.\nCharacteristic\
+    \ variables are needed so that the anti-diffusion stays in the family of the shock. Componentwise compression\
+    \ leaks into the other families as spurious waves. With van Leer, the characteristic projection cut RF1 overshoot\
+    \ p90 from 0.0219 to 0.0066 and NF3 roughness p90 from 1.8e-3 to 1.5e-5 (c-a411e8accb r-20261023-232730-c8f5\
+    \ vs van Leer r-20261024-153251-4a12). It did not cut RF2 overshoot (0.0236 vs 0.0233), which is why strong\
+    \ shocks are excluded rather than trusted to the projection.\nRecipe, on fields k = 1 and 3 of cell i: - strength\
+    \ z = |p_{i+1} - p_{i-1}| / min(p_{i-1}, p_{i+1}); this is scale-free. - g(z) = 1 / (1 + (z / z0)^4). - convergence\
+    \ c_k = smooth positive part of (lambda_k(W_{i-1}) - lambda_k(W_{i+1})) / (|lambda_k(W_{i-1})| +\n  |lambda_k(W_{i+1})|\
+    \ + a_i), so only jumps that meet the Lax condition count.\n- weight on the THINC branch = b_BVD g(z) h(c_k);\
+    \ the van Leer branch takes the rest. For orientation at z0 = 3: Sod's shock (z ~ 2) gets g ~ 0.84, a Mach 2\
+    \ shock (z ~ 3.5) about 0.35, Mach 3 (z ~ 9) about 0.01, and Mach 10 (B-0010) 0.\nA steady nozzle shock of moderate\
+    \ strength is partly compressed, so the steady part is a direct test of H-0019's mechanism. The base's steady\
+    \ shock is already 0.86 cells wide (dev N1, r-20261023-174118-dde8) with N4 roughness 1.27e-5, so the prediction\
+    \ is that this compression changes J(p_b) little. The candidate is stateless and passes s through. It needs\
+    \ the v1.5 relative EPS and a positivity fallback (traps); neither is part of the mechanism."
+  predicted_effect:
+  - metric: RF1.shock_width
+    direction: down
+    size: median from 2.89 (c-a411e8accb r-20261023-232730-c8f5, v1.4) to <= 2.6; p90 down by >= 0.5 cell from 4.37
+      (the weak-shock tail)
+  - metric: RF2.overshoot
+    direction: same
+    size: p90 within +10 % of the base's 0.0236 (same run); A7b bound 0.0256 = 1.1 x 0.02327 (r-20261024-153251-4a12)
+  - metric: RF1.overshoot
+    direction: up
+    size: p90 from 0.0066 to <= 0.015 (A7a bound 0.0241)
+  - metric: B-0010.overshoot
+    direction: same
+    size: dev, within 10 % of the base's 0.0204 (r-20261023-174118-dde8) and <= 0.0274 = 1.1 x muscl_van_leer 0.0249
+      (r-20261024-152923-ddbf)
+  - metric: NF3.roughness_J
+    direction: up
+    size: p90 from 1.47e-5 to <= 5e-4, below A5's 0.002
+  - metric: NF1.converged_impl
+    direction: same
+    size: 1.00 (base 1.00)
+  - metric: S1.order_smooth
+    direction: same
+    size: 'dev >= 1.9: in smooth compressions z = O(dx) and c_k = O(dx), and BVD picks MUSCL'
+  kill_criterion: 'Dev (judge v1.5): refuted if no z0 in {2, 3, 5} gives R1 shock <= 2.7 together with B-0010 overshoot
+    <= 0.0274 (= 1.1 x muscl_van_leer 0.0249, r-20261024-152923-ddbf). Also refuted if, at the z0 with the narrowest
+    R1 shock, B-0010 overshoot is more than 10 % above the base''s 0.0204 (r-20261023-174118-dde8, v1.4): the strength
+    gate would then not spare strong shocks. Promo (judge v1.5): refuted if the best dev variant has an ok promo
+    run with RF1 shock_width median > 2.6 or RF2 overshoot p90 > 0.0256. If A1 and A7b hold but NF3 roughness p90
+    > 0.002 or NF1 converged_impl < 1.00, the steady part is refuted; that is evidence for H-0019''s mechanism on
+    compressed steady shocks. A promo run rejected for a hard-constraint violation leaves the promo part inconclusive.'
+  known_relatives:
+  - Harten's artificial compression method (1977/1978); Yang (1990), artificial compression for ENO
+  - 'PPM flattening (Colella and Woodward 1984): a similar detector (relative pressure jump plus compression) used
+    the other way round, to flatten strong shocks'
+  - 'viscous shock structure: width inversely proportional to strength (Taylor 1910; textbook)'
+  - post-shock oscillations of strong or slowly moving shocks (Arora and Roe 1997; Jin and Liu 1996)
+  - local characteristic limiting (Harten, Engquist, Osher, Chakravarthy 1987)
+  - THINC/BVD (Sun, Inaba, Xiao 2016) and BVD variants for shocks (Deng et al.)
+  - H-0011 (sharpness forces overshoot for componentwise phi(r)); H-0012 (acoustic fields deliberately left uncompressed);
+    H-0015 (steeper THINC, more overshoot on B-0010)
+  author: hunch-generator/shock physics
+  status: open
+  verdict_note: ''
+- id: H-0021
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: steady-convergence
+  statement: Compression on the acoustic characteristic fields, switched on by a per-cell motion indicator read
+    from the state (the cell's primitive values at the previous step), gives moving shocks THINC-level sharpness.
+    The steady fixed point and its Jacobian stay exactly those of the smooth characteristic base c-a411e8accb. On
+    promo the scheme meets A1 (RF1 shock median <= 2.6), A4 (NF1 Newton 1.00) and A5 (NF3 roughness p90 <= 0.002)
+    together, which refutes H-0019.
+  mechanism: 'Why: A3, A4 and A5 depend only on the converged fixed point and on the linearisation there. A1, A2,
+    A7 and A8 depend only on features that move. A switch that is exactly zero at every fixed point, with zero derivative
+    there, leaves the fixed point and the Jacobian at the fixed point equal to those of the base. Steady results
+    are then inherited and unsteady results are free to change. The base is c-a411e8accb: characteristic variables,
+    THINC with a smooth BVD weight on the entropy field, van Leer on the acoustic fields. On promo (r-20261023-232730-c8f5,
+    judge v1.4) it has NF1 explicit 0.95, Newton 1.00 and NF3 roughness p90 1.47e-5, and it fails A1 only (RF1 shock
+    2.89).
+
+    Indicator: the state stores W_i at the start of the step; the judge takes s_new from the step''s first evaluation,
+    so s_i = W_i of the previous accepted step. Define d_i = max over (rho, u, p) of |W_i - s_i| / (|W_{i+1} - W_i|
+    + |W_i - W_{i-1}| + 1e-12 |W_i| + tiny). This is dimensionless and scale-free. For a feature that translates,
+    d is about the feature''s Courant number per step: about 0.1-0.5 for RF1 shocks at CFL 0.5, small for slowly
+    moving shocks, and exactly 0 at any steady state, steady shocks included. Weight: w = d^2 / (d^2 + d0^2). On
+    each acoustic amplitude, use (1 - w b) MUSCL-van-Leer + w b THINC, where b is the base''s smooth BVD weight.
+    The entropy field is unchanged.
+
+    Why the explicit solver should not lock into a limit cycle: the sharp part needs w > 0, so a cycle must keep
+    its amplitude above about d0 times the local difference. A smaller cycle drives w towards 0, and the van Leer
+    acoustic base damps it, so the cycle cannot sustain itself.
+
+    Newton: S is fixed within a step. The convergence residual of U_{k+1} uses S_{k+1} = W_k, so d ~ |W_{k+1} -
+    W_k|, which falls quadratically.
+
+    How this differs from the earlier memory hunches. H-0007 froze the sharp scheme''s factor where it had settled,
+    so its fixed point was a frozen sharp scheme that depended on the history. Freezing and H-0006 are triggered
+    by time. Here the fixed point is that of the stateless base, and the state carries no history beyond one step.
+
+    Known weaknesses, stated plainly. (1) The spatial operator depends on the time step through d: at fixed dx with
+    dt -> 0 it falls back to the base. At the judge''s fixed CFL, d does not depend on the grid. (2) It is not Galilean
+    invariant: a stationary feature loses the acoustic compression. (3) The parent is REJECTED on promo (LF1, 1
+    of 5) and under v1.5 (absolute EPS). It needs the relative EPS and a positivity fallback (traps file); neither
+    is part of this mechanism.'
+  predicted_effect:
+  - metric: RF1.shock_width
+    direction: down
+    size: median from 2.89 (c-a411e8accb promo r-20261023-232730-c8f5, v1.4) to <= 2.5; THINC on all fields reached
+      2.18 (c-2ca8842812 r-20261023-040314-a528)
+  - metric: NF3.roughness_J
+    direction: same
+    size: p90 <= 1e-4 (base 1.47e-5, r-20261023-232730-c8f5), i.e. at most about 10 x the base and far below 0.002
+  - metric: NF1.converged_impl
+    direction: same
+    size: 1.00 (base 1.00, same run)
+  - metric: NF1.converged_expl
+    direction: same
+    size: mean >= 0.95 (base 0.95, same run)
+  - metric: RF1.overshoot
+    direction: up
+    size: p90 from 0.0066 (base) to <= 0.0241 (A7a bound = 1.1 x van Leer 0.02192, r-20261024-153251-4a12)
+  - metric: RF2.overshoot
+    direction: same
+    size: p90 within +10 % of the base's 0.0236 (slowly moving shocks have small d, so little compression); A7b
+      bound 0.0256 = 1.1 x 0.02327 (r-20261024-153251-4a12) is the tightest Target A risk
+  - metric: R1.shock_width
+    direction: down
+    size: dev, from 2.91 (c-a411e8accb dev r-20261023-174118-dde8, v1.4) to <= 2.6
+  - metric: N4.roughness_J
+    direction: same
+    size: dev, <= 1.3e-4 (10 x the base's 1.27e-5, r-20261023-174118-dde8)
+  kill_criterion: 'Control first: the same file with w = 0 must reproduce the EPS-fixed base''s dev scores to 1e-6
+    relative; otherwise the comparison is void. Dev (judge v1.5): refuted if no d0 in {0.02, 0.05, 0.1} reaches
+    R1 shock <= 2.7 (the dev proxy for A1) together with N1 converged_impl = 1 and N4 roughness <= 0.002. Also refuted
+    if the best such variant has N4 roughness above 10 x the base''s 1.27e-5 (r-20261023-174118-dde8, v1.4): then
+    the fixed point is not the base''s and the mechanism is wrong, even if A5 still holds. Promo (judge v1.5): refuted
+    if the best dev variant has an ok promo run with RF1 shock_width median > 2.6, NF3 roughness_J p90 > 0.002 or
+    NF1 converged_impl mean < 1.00. A promo run rejected for a hard-constraint violation leaves the promo part inconclusive.
+    A7 misses do not refute the mechanism; they are reported against the bounds above.'
+  known_relatives:
+  - 'time-dependent artificial-viscosity switches in SPH: Morris and Monaghan (1997); Cullen and Dehnen (2010),
+    who use a time derivative as the shock indicator. Here a time difference switches compression on rather than
+    viscosity'
+  - 'entropy viscosity (Guermond, Pasquetti, Popov 2011): dissipation from a residual that contains the time derivative
+    and vanishes for smooth steady states'
+  - 'limiter freezing (Venkatakrishnan 1993/1995), zoo muscl_van_leer_frozen; H-0006 (ratchet); H-0007 (settle-freeze,
+    refuted: it froze the sharp scheme, so its fixed point depended on the history)'
+  - base c-a411e8accb (round 3, H-0012 island); H-0012 = characteristic THINC on the entropy field (Chamarthi 2024)
+  - one web search found no reconstruction that switches compression from the per-step change of the cell values;
+    this is not evidence of novelty
+  author: hunch-generator/steady-convergence
+  status: open
+  verdict_note: ''
+- id: H-0022
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: structure preservation
+  statement: 'Scale each cell''s two reconstructed face states towards the cell average, in conserved variables,
+    with one factor t in [0, 1] per cell. Choose t as the largest value for which both faces keep rho >= eps rho_bar
+    and p >= eps p_bar. Applied to c-a411e8accb, this removes every hard-constraint violation of the characteristic
+    family: LF1 1 of 5 on promo, and the round-3 breakers'' crashes on cold collisions (B-0016) and strong double
+    rarefactions (B-0030), both in v1.5 dev. No Target A promo metric changes by more than 2 %, because t = 1 (no
+    change) wherever both face states are already admissible.'
+  mechanism: 'Structure: the admissible set G = {rho > 0, p > 0} is convex in conserved variables, because p is
+    concave in U. The cell average U_bar lies in G, so the segment from U_bar to a face state stays in G up to its
+    first boundary crossing. Scaling towards U_bar is the smallest change that restores admissibility (Zhang and
+    Shu 2010). With p >= eps p_bar, t solves a quadratic in closed form; the density condition is linear.
+
+    Why the characteristic family breaks it: face states are built from separately limited characteristic amplitudes
+    and mapped back with the centre cell''s eigenvectors. Nothing keeps the resulting face rho and p positive when
+    one amplitude is large compared with rho or p / a^2, as in cold states (p <= 1e-4) or strong rarefactions. Three
+    round-3 breakers named this back-projection as the common cause (docs/rounds/2026-10-23-round3/breaker/).
+
+    HLLC with Einfeldt speeds keeps a first-order update positive for admissible face states (Einfeldt et al. 1991;
+    Batten et al. 1997), so admissible face states remove the source of the failure. Stated plainly: full positivity
+    of a second-order update also needs U_bar to be a convex combination of the face states and a reduced CFL (Perthame
+    and Shu 1996). A nonlinear THINC reconstruction does not satisfy that, so the claim at the judge''s CFL 0.5
+    (local 0.8 in pseudo-time) is empirical.
+
+    Why it should cost nothing: using one t per cell keeps the cell''s two faces consistent, and t = 1 exactly on
+    all states away from the bounds. Nozzles, Riemann problems at ordinary pressures and smooth waves therefore
+    run bitwise as the parent. The min makes t only C0, but it never acts on the nozzle families, so Newton is unaffected.
+
+    Implementation: eps is relative (eps in {1e-3, 0.05}), so it passes the v1.5 scaling constraint. Every sqrt
+    and division is guarded inside jnp.where (traps: Newton needs finite derivatives). The candidate is stateless
+    and passes s through. Assumption: c-a411e8accb''s LF1 violation is a positivity failure; this was not diagnosed.
+    Kill clause (b) below covers the other case.'
+  predicted_effect:
+  - metric: LF1.pass_rate
+    direction: up
+    size: from 0.8 (1 of 5 instances violating, c-a411e8accb promo r-20261023-232730-c8f5, v1.4) to 1.0; promo status
+      ok
+  - metric: B-0016.status
+    direction: up
+    size: dev, finite and positive (B-0016 and B-0030 both crash the zoo thinc_bvd, v1.5 dev r-20261024-152919-1578)
+  - metric: RF1.shock_width
+    direction: same
+    size: median within 2 % of the control (c-a411e8accb promo 2.888, r-20261023-232730-c8f5); RF1 contact 3.007
+      likewise
+  - metric: NF3.roughness_J
+    direction: same
+    size: p90 within 2 % or 1e-6 absolute of the control (c-a411e8accb 1.47e-5)
+  - metric: NF1.converged_impl
+    direction: same
+    size: 1.00 (c-a411e8accb 1.00); NF1 explicit 0.95 unchanged
+  - metric: RF2.overshoot
+    direction: same
+    size: p90 within 2 % of the control (c-a411e8accb 0.0236); RF1 p90 0.0066 likewise
+  kill_criterion: The control is the same parent with only the v1.5 relative-EPS fix. Comparisons are against the
+    control's promo run if that run is ok. Otherwise they are against c-a411e8accb's v1.4 promo r-20261023-232730-c8f5,
+    with 5 % instead of 2 % tolerance for the judge-version change. Refuted if (a) the scaled candidate is rejected
+    on v1.5 dev for a non-finite or non-positive state on any case, B-0016 and B-0030 included; or (b) its promo
+    run is rejected for a hard-constraint violation in any family; or (c) any of RF1 shock and contact median, RF1
+    and RF2 overshoot p90, NF1 converged_expl and converged_impl mean, or NF3 roughness p90 (absolute tolerance
+    1e-6) differs from the reference by more than the tolerance; or (d) its dev scores on the 18 cases from before
+    v1.5 differ from the control's by more than 1e-8 relative, which would mean the scaling acts where it should
+    not.
+  known_relatives:
+  - 'Known method, stated plainly: the Zhang and Shu (2010, J. Comput. Phys. 229) positivity-preserving scaling
+    towards the cell average, applied here to a characteristic reconstruction; label at most ''rediscovery / variant
+    of Zhang-Shu'''
+  - 'Perthame and Shu (1996): positivity of MUSCL-type schemes from admissible face states under a reduced CFL'
+  - 'Einfeldt, Munz, Roe, Sjogreen (1991) and Batten, Clarke, Lambert, Causon (1997): positivity of HLLE/HLLC with
+    Einfeldt speeds'
+  - 'Hu, Adams, Shu (2013): positivity-preserving flux limiting'
+  - traps file, 'Guard positivity'; round-3 breaker reports (B-0016, B-0017, B-0026..B-0028, B-0030, B-0031, B-0034)
+  author: hunch-generator/structure preservation
+  status: open
+  verdict_note: ''
+- id: H-0023
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: contrarian
+  statement: 'The textbook assumption broken here (and H-0019''s mechanism) is that sharp steady shocks give staircase-like
+    objectives. The claim is instead that c-2ca8842812''s NF3 roughness (p90 0.0765) comes from switching that is
+    discontinuous and depends on history, not from sharpness: a discrete BVD argmin, plus a flip-count lock whose
+    final pattern depends on the pseudo-time path. Take the same componentwise THINC/BVD (beta 1.6, primitive variables,
+    all fields), replace the argmin by a C1 weight of the normalised BVD margin, and keep no memory (state passed
+    through). This keeps the RF1 shock median <= 2.6 and reaches NF3 roughness p90 <= 0.002 with NF1 Newton 1.00.'
+  mechanism: '(1) Steady sharpness does not decide roughness. On dev N1 the steady shock is 0.86-0.91 cells wide
+    in four schemes: muscl_van_leer 0.907 (r-20261024-152923-ddbf), weno5z 0.901 (r-20261024-152923-3b0e), c-a411e8accb
+    0.864 (r-20261023-174118-dde8) and c-2ca8842812 0.903 (r-20261023-034337-d53f). Their N4 roughness spans 1.27e-5
+    to 0.0109, a factor of 860, with every N4 point converged. On promo, weno5z (C-infinity weights) has RF1 shock
+    2.35 and NF3 roughness median 4.3e-4. Its p90 of 22 comes from sweep points where Newton did not converge (NF3
+    converged_impl worst 0.91, r-20261024-154023-7489).
+
+    (2) Smoothness of the scheme gives smoothness of J. If R(U, p_b) is C1 in U and dR/dU is nonsingular along the
+    sweep, the implicit function theorem makes U(p_b), and so J(p_b), C1. The second difference over the 11-point
+    sweep then behaves like the exact one. A discrete argmin makes R only piecewise smooth: U(p_b) jumps wherever
+    a cell near the shock crosses a TBV tie, and as p_b moves the shock through the cells, ties are crossed about
+    once per cell. That is a staircase, and the second difference amplifies its steps.
+
+    (3) The lock adds dependence on the path. Which cells are locked to MUSCL at convergence depends on the transient
+    from the fixed initial guess, and the transient differs between neighbouring p_b. Neighbouring sweep points
+    therefore converge to different discrete schemes, which adds noise that is uncorrelated between points. On dev,
+    thinc_bvd without the lock has N4 roughness 4.6e-4 (r-20261023-035530-454a, v1.4); c-2ca8842812 with the lock
+    has 0.0109 (r-20261023-034337-d53f), 24 x more, with all N4 points converged.
+
+    (4) Newton: a C1 weight makes the Jacobian continuous. The discrete thinc_bvd has NF1 Newton 0.65 and NF3 converged
+    median 0.27 (r-20261024-154009-f309). The round-3 smooth BVD weights reached NF1 Newton 1.00 (c-a411e8accb,
+    r-20261023-232730-c8f5), though only on the entropy field. Evidence against: smoothing superbee''s and MC''s
+    kinks did not restore convergence (H-0001, H-0002).
+
+    Recipe: m = (TBV_M - TBV_T) / (TBV_M + TBV_T + relative tiny), w = (1 + tanh(m / tau)) / 2 with tau in {0.05,
+    0.1, 0.2}, face = w THINC + (1 - w) MUSCL-van-Leer. Use the zoo v1.5 relative monotonicity threshold and a positivity
+    fallback (traps). The state is returned unchanged.'
+  predicted_effect:
+  - metric: NF3.roughness_J
+    direction: down
+    size: p90 from 0.0765 (c-2ca8842812 promo r-20261023-040314-a528, v1.4) to <= 0.002
+  - metric: N4.roughness_J
+    direction: down
+    size: 'dev, from 0.0109 (r-20261023-034337-d53f) to <= 1e-3 (thinc_bvd without the lock: 4.6e-4, r-20261023-035530-454a)'
+  - metric: RF1.shock_width
+    direction: same
+    size: median <= 2.4 (c-2ca8842812 2.18; thinc_bvd 2.18, r-20261024-154009-f309); the smooth weight widens by
+      at most 0.2 cell
+  - metric: NF1.converged_impl
+    direction: same
+    size: 1.00 (c-2ca8842812 1.00; the stateless discrete thinc_bvd only 0.65)
+  - metric: NF3.converged_impl
+    direction: up
+    size: mean from 0.945 (c-2ca8842812) to >= 0.98
+  - metric: NF1.converged_expl
+    direction: same
+    size: 0.85-0.95; A3 (>= 0.95) is not claimed
+  - metric: RF2.overshoot
+    direction: same
+    size: p90 within 10 % of c-2ca8842812's 0.0239 (A7b bound 0.0256, r-20261024-153251-4a12)
+  kill_criterion: 'Dev (judge v1.5): refuted if, for every tau in {0.05, 0.1, 0.2}, the stateless C1 candidate has
+    N4 roughness > 0.002 while N4 converged_impl = 1. Non-convergence is then excluded as the cause, so the scheme
+    is rough although smooth and memoryless. Also refuted if every tau that reaches N4 <= 0.002 has R1 shock > 2.7:
+    smoothness bought with width is what H-0019 says. Controls on dev, to attribute the effect: tau = 1e-4 (nearly
+    discrete, no memory) and the EPS-fixed c-2ca8842812 (discrete, with the lock). Promo (judge v1.5): refuted if
+    the best dev tau has an ok promo run with RF1 shock_width median > 2.6, or with NF3 roughness p90 > 0.002 while
+    NF3 converged_impl mean = 1.00 (rough despite converging is H-0019''s mechanism). If NF3 roughness p90 > 0.002
+    and NF3 converged_impl < 1.00, the verdict is inconclusive: Newton failed, as with weno5z, rather than the objective
+    being rough.'
+  known_relatives:
+  - THINC/BVD (Sun, Inaba, Xiao 2016), zoo thinc_bvd; c-2ca8842812 (H-0013 proposer) is the parent
+  - smooth (Lipschitz) BVD weights in the round-3 engine leaders (c-2637af56a6, c-a411e8accb), there on the entropy
+    field only
+  - 'differentiable limiters for steady convergence (Venkatakrishnan 1993; Michalak and Ollivier-Gooch 2008); H-0001
+    and H-0002 (smoothing kinks did not restore convergence: evidence against)'
+  - path dependence of frozen or switched limiters (limiter freezing, Venkatakrishnan 1995; H-0013's lock)
+  - H-0019, the hunch this one opposes
+  author: hunch-generator/contrarian
+  status: open
+  verdict_note: ''
+- id: H-0024
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: transfer
+  statement: 'Transfer Barter and Darmofal''s PDE-based artificial viscosity to the BVD weight. Their method uses
+    a non-smooth shock sensor as the forcing of a screened diffusion equation that is solved alongside the flow.
+    Here the state carries a weight field per cell and variable. Each step applies one Jacobi sweep of (1 + 2 kappa)
+    s_i - kappa (s_{i-1} + s_{i+1}) = f_i, where f_i is the pointwise BVD preference, and the faces use s_i THINC
+    + (1 - s_i) MUSCL. With this, c-2ca8842812''s componentwise THINC/BVD converges with Newton on every NF1 nozzle
+    and NF3 sweep point and reaches NF3 roughness p90 <= 0.002, with RF1 shock median <= 2.6. The spatial spreading
+    removes the staircase, not the pointwise smoothness of the weight: the same forcing without spreading (kappa
+    = 0) stays rough.'
+  mechanism: 'Source: Barter and Darmofal (2010) found that element-wise, non-smooth artificial viscosity causes
+    oscillations that pollute the flow downstream. Smoothing the viscosity field with a PDE removed this and made
+    results less sensitive to how the shock is aligned with the grid (Barter''s thesis, 2008).
+
+    How it maps here: c-2ca8842812''s weight changes from 0 to 1 within the one or two cells next to the steady
+    shock. So the scheme the shock sees changes whenever the shock moves by part of a cell, and the family of discrete
+    steady shocks is not invariant under sub-cell shifts. J(x_s) then picks up a component that repeats every cell.
+    The NF3 sweep points are several cells of shock travel apart, so this component aliases into the second difference
+    as noise. If the weight is spread over about L ~ 2 sqrt(kappa) cells, moving the shock by one cell changes the
+    nearby weight by O(1/L). The scheme around the shock is then nearly the same at every sub-cell position.
+
+    Convergence side: the weight is a state, so it is fixed within a step, in all RK stages and in the Newton Jacobian.
+    Newton therefore solves a fixed, smooth blend at each step, with no switch inside the Jacobian; this is the
+    relay removal H-0013 tried with its lock. For fixed W, the weight field converges linearly to the unique solution
+    of the screened equation (Jacobi factor <= 2 kappa / (1 + 2 kappa)). The weight has no memory beyond that relaxation,
+    unlike H-0013''s lock. The forcing f is the BVD choice as a steep sigmoid (width 0.02 in the normalised margin).
+    Spreading divides the effect of a flip of f_i on s_i by 1 + 2 kappa.
+
+    Unsteady runs: one sweep per step moves the weight front about one cell per step, faster than a shock at CFL
+    0.5 (<= 0.5 cell per step), so the weight keeps up. The spread puts THINC into 1-2 smooth monotone cells beside
+    a jump; the RF1 l1_smooth guard watches that cost.
+
+    Window check: s_new_i needs f_i (cells i-2..i+2) and s_{i-1}, s_{i+1}, all inside the window in which cell i
+    is left of the interface.
+
+    This hunch competes with the contrarian hunch on the same parent, which says a pointwise C1 weight is enough.
+    The kappa = 0 control separates the two.'
+  predicted_effect:
+  - metric: NF3.roughness_J
+    direction: down
+    size: p90 from 0.0765 (c-2ca8842812 promo r-20261023-040314-a528, v1.4) to <= 0.002 for kappa in {1, 3}
+  - metric: NF3.converged_impl
+    direction: up
+    size: mean from 0.945 (same run) to 1.00
+  - metric: NF3.newton_iters
+    direction: up
+    size: 'median from 131 (same run) to 160-240: the weight field converges linearly'
+  - metric: NF1.converged_expl
+    direction: up
+    size: mean from 0.90 (same run) to >= 0.95 (A3), because the weight cannot flip within a step
+  - metric: RF1.shock_width
+    direction: up
+    size: median from 2.18 (same run) to <= 2.5
+  - metric: RF1.l1_smooth
+    direction: up
+    size: median at most 10 % above c-2ca8842812's 0.00102 (same run)
+  - metric: N5.roughness_J
+    direction: down
+    size: dev, from 0.0222 (c-2ca8842812 dev r-20261023-034337-d53f, v1.4) by >= 10 x; N4 from 0.0109 to <= 0.002
+  kill_criterion: 'Dev (judge v1.5): refuted if no kappa in {1, 3} reaches N4 roughness <= 0.002 with N1 and N4
+    converged_impl = 1 and R1 shock <= 2.7. The spreading claim is refuted if the kappa = 0 control (same steep
+    forcing, weight still lagged one step, no spreading) is within a factor of 2 of the best kappa >= 1 variant
+    on both N4 and N5 roughness. The reference levels for that comparison are c-2ca8842812''s dev N4 0.0109 and
+    N5 0.0222 (r-20261023-034337-d53f, v1.4). Promo (judge v1.5): refuted if the best dev kappa has an ok promo
+    run with NF3 roughness_J p90 > 0.002, NF1 converged_impl mean < 1.00 or RF1 shock_width median > 2.6. A promo
+    run rejected for a hard-constraint violation (positivity; the parent needs a fallback per the traps file) leaves
+    the promo part inconclusive.'
+  known_relatives:
+  - 'Barter and Darmofal (2010, J. Comput. Phys. 229): PDE-based artificial viscosity, a sensor forcing a smoothing
+    equation; Barter''s thesis (MIT 2008) on lower sensitivity to shock-grid alignment. Label: variant of PDE-smoothed
+    shock capturing, transferred to a BVD weight'
+  - 'Persson and Peraire (2006): sub-cell shock capturing with smooth artificial viscosity'
+  - 'Kloeckner, Warburton, Hesthaven (2011), as cited in arXiv 1810.02152: no observed advantage of viscosity of
+    higher continuity (evidence against)'
+  - 'JST switch (Jameson, Schmidt, Turkel 1981): the sensor is spread with a max over neighbours'
+  - H-0005 (relaxation of the limiter factor in pseudo-time, refuted; no spatial spreading); H-0013 (lock, history-dependent)
+  - THINC/BVD (Sun, Inaba, Xiao 2016); parent c-2ca8842812
+  author: hunch-generator/transfer
+  status: open
+  verdict_note: ''
+- id: H-0025
+  arena: euler1d
+  slot: reconstruction_stateful
+  lens: approximation theory
+  statement: WENO5-Z in local characteristic variables, on all three fields, stateless with the state passed through,
+    converges with Newton on every NF1 nozzle and every NF3 sweep point; componentwise WENO5-Z reaches only NF1
+    0.65. It therefore meets A1, A4 and A5 together (RF1 shock median <= 2.6, NF1 Newton 1.00, NF3 roughness p90
+    <= 0.002), which refutes H-0019. A7b is not expected to hold.
+  mechanism: 'Approximation theory: WENO''s nonlinear weights carry out ENO stencil selection. That is justified
+    for a scalar function with one isolated jump in the stencil: every substencil that crosses the jump has a smoothness
+    indicator of O(jump^2), and its weight goes to about zero.
+
+    Componentwise on (rho, u, p), the three components jump by different relative amounts at the same shock, and
+    each is polluted by the waves of the others. Their weights then choose different substencils at the same face,
+    so the face state is assembled from different stencils. It does not lie on the shock''s Hugoniot locus, and
+    it emits small waves in the other two families. Zhang and Shu (2007) showed that these slight post-shock oscillations
+    hold the WENO residual at truncation level.
+
+    Here the same effect plausibly makes Newton fail at isolated sweep points: weno5z promo has NF1 converged_impl
+    0.65 and NF3 converged_impl worst 0.91 (r-20261024-154023-7489). Its NF3 roughness is low where it converges
+    (median 4.3e-4); the p90 of 22 is a convergence failure, not a staircase.
+
+    In characteristic variables a steady normal shock is, to leading order in its strength, a jump in the field-1
+    amplitude only. Fields 2 and 3 are smooth across the stencil, so their weights relax to the linear weights (fifth
+    order). The face state then lies on the field-1 Hugoniot and no spurious waves are emitted. The 2010 follow-up
+    to Zhang and Shu reports that the characteristic decomposition affects the post-shock oscillation. In-house
+    support: projecting van Leer onto characteristic fields (c-a411e8accb) cut RF1 overshoot p90 from 0.0219 to
+    0.0066 and NF3 roughness p90 from 1.8e-3 to 1.5e-5 (r-20261023-232730-c8f5 vs r-20261024-153251-4a12).
+
+    Why A1 should survive: the moving shock width comes from stencil selection on the field that carries the shock
+    (componentwise RF1 2.35), and the projection does not widen it.
+
+    Why A7b likely fails: the projection left van Leer''s RF2 overshoot unchanged (0.0236 vs 0.0233, same runs),
+    so overshoot behind slowly moving shocks is not a cross-field effect. weno5z''s RF2 p90 is 0.0696.
+
+    Implementation notes, not part of the mechanism: WENO-Z''s EPS = 1e-40 is absolute; on characteristic amplitudes
+    it must be made relative to pass the v1.5 scaling constraint. A positivity fallback is needed because the back-projection
+    can produce negative face rho or p (traps). The 5-cell stencils fit the 6-cell window, as in the zoo weno5z.'
+  predicted_effect:
+  - metric: NF1.converged_impl
+    direction: up
+    size: mean from 0.65 (weno5z promo r-20261024-154023-7489, v1.5) to 1.00
+  - metric: NF3.roughness_J
+    direction: down
+    size: p90 from 22.2 (same run) to <= 0.002; median at or below 4.3e-4
+  - metric: NF3.converged_impl
+    direction: up
+    size: mean from 0.982 (same run) to 1.00
+  - metric: NF1.converged_expl
+    direction: up
+    size: mean from 0.65 (same run) to >= 0.9
+  - metric: RF1.shock_width
+    direction: same
+    size: median <= 2.5 (componentwise 2.35, same run)
+  - metric: RF1.overshoot
+    direction: down
+    size: p90 from 0.0717 (same run) to <= 0.03
+  - metric: RF2.overshoot
+    direction: same
+    size: p90 within 20 % of 0.0696 (same run); A7b (<= 0.0256 = 1.1 x 0.02327, r-20261024-153251-4a12) expected
+      to fail
+  - metric: S1.order_smooth
+    direction: same
+    size: dev > 3 (componentwise 3.33, r-20261024-152923-3b0e)
+  kill_criterion: 'Dev (judge v1.5): refuted if characteristic WENO5-Z fails to converge with Newton on N1 or on
+    any N4 point (N4 converged_impl < 1). Also refuted if its N4 roughness is more than 10 x weno5z''s 1.3e-4 (r-20261024-152923-3b0e),
+    or if its R1 shock exceeds 2.7 (weno5z 2.56, same run). Promo (judge v1.5): refuted if its ok promo run has
+    NF1 converged_impl mean < 1.00, NF3 roughness_J p90 > 0.002 or RF1 shock_width median > 2.6. A promo run rejected
+    for a positivity violation, after a fallback has been added, leaves the promo part inconclusive. Failing A7
+    does not refute this hunch; it predicts that failure.'
+  known_relatives:
+  - 'Known method, stated plainly: characteristic-wise WENO5-Z is textbook (Borges, Carmona, Costa, Don 2008; Harten,
+    Engquist, Osher, Chakravarthy 1987; Qiu and Shu 2002); zoo weno5z is its componentwise form. Only its steady
+    nozzle Newton convergence and objective smoothness under this judge are tested'
+  - 'Zhang and Shu (2007, J. Sci. Comput. 31): a new smoothness indicator for WENO and its effect on convergence
+    to steady state; post-shock oscillations hold the residual'
+  - 'J. Sci. Comput. follow-up, doi 10.1007/s10915-010-9435-5 (search snippet only, authors not checked): the local
+    characteristic decomposition strongly affects post-shock oscillation'
+  - 'Zhang and Shen (2025): hybrid WENO on genuinely nonlinear fields and BVD on linearly degenerate fields (from
+    H-0012''s relatives; abstract only)'
+  - H-0016 (MOOD on WENO5-Z, refuted)
+  author: hunch-generator/approximation theory
+  status: open
+  verdict_note: ''

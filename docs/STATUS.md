@@ -1,12 +1,21 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544)  Plan: v1.2
-Last session: 2026-10-24 (WSL) — round-4 plan step 2.6 done: judge euler1d-v1.5 tagged (919c544), zoo dev + promo checked against v1.4, rescore 0/376 ok (scaling)
+Last session: 2026-10-24 (WSL) — round 4 started: hunches H-0020..H-0025 registered
 (not tagged), engine changes, target Ac, round-4 prompt. Ready for WSL.
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
+
+## Round 4 running (plan step 4; scripts/headless/round4.txt; interactive WSL session, 2026-10-24)
+- Pre-checks passed: merged f30cb60; pytest 277; judge euler1d-v1.5 integrity ok; H-0019 open; sforge MCP server
+  restarted by Peter (stale since 08:50) and tested (smoke r-20261024-194523-43d5 ok, v1.5); nothing else evaluating.
+- Hunches registered 2026-10-24 from the hunch-generator, as written: H-0020 strength-inverse compression (shock
+  physics), H-0021 motion-gated compression (steady-convergence), H-0022 positivity scaling (structure preservation),
+  H-0023 history not sharpness (contrarian), H-0024 diffused BVD weight (transfer), H-0025 characteristic WENO
+  (approximation theory). Four target the steady shock-position / roughness problem directly (generator's count:
+  H-0021, H-0023, H-0024, H-0025). Next: proposers (8 evals each).
 
 ## Round-4 plan step 2.6 done — judge euler1d-v1.5 tagged and checked (WSL, 2026-10-24)
 - Tag commit 919c544 `euler1d-v1.5` (pushed with the tag); `judge version` euler1d-v1.5 (8a8b8304…), integrity ok;

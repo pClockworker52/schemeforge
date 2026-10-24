@@ -1,0 +1,77 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: transfer
+statement: >-
+  Transfer Barter and Darmofal's PDE-based artificial viscosity to the BVD weight. Their method uses a non-smooth shock
+  sensor as the forcing of a screened diffusion equation that is solved alongside the flow. Here the state carries a
+  weight field per cell and variable. Each step applies one Jacobi sweep of (1 + 2 kappa) s_i - kappa (s_{i-1} +
+  s_{i+1}) = f_i, where f_i is the pointwise BVD preference, and the faces use s_i THINC + (1 - s_i) MUSCL. With this,
+  c-2ca8842812's componentwise THINC/BVD converges with Newton on every NF1 nozzle and NF3 sweep point and reaches NF3
+  roughness p90 <= 0.002, with RF1 shock median <= 2.6. The spatial spreading removes the staircase, not the pointwise
+  smoothness of the weight: the same forcing without spreading (kappa = 0) stays rough.
+mechanism: >-
+  Source: Barter and Darmofal (2010) found that element-wise, non-smooth artificial viscosity causes oscillations that
+  pollute the flow downstream. Smoothing the viscosity field with a PDE removed this and made results less sensitive
+  to how the shock is aligned with the grid (Barter's thesis, 2008).
+
+  How it maps here: c-2ca8842812's weight changes from 0 to 1 within the one or two cells next to the steady shock. So
+  the scheme the shock sees changes whenever the shock moves by part of a cell, and the family of discrete steady
+  shocks is not invariant under sub-cell shifts. J(x_s) then picks up a component that repeats every cell. The NF3
+  sweep points are several cells of shock travel apart, so this component aliases into the second difference as
+  noise. If the weight is spread over about L ~ 2 sqrt(kappa) cells, moving the shock by one cell changes the nearby
+  weight by O(1/L). The scheme around the shock is then nearly the same at every sub-cell position.
+
+  Convergence side: the weight is a state, so it is fixed within a step, in all RK stages and in the Newton Jacobian.
+  Newton therefore solves a fixed, smooth blend at each step, with no switch inside the Jacobian; this is the relay
+  removal H-0013 tried with its lock. For fixed W, the weight field converges linearly to the unique solution of the
+  screened equation (Jacobi factor <= 2 kappa / (1 + 2 kappa)). The weight has no memory beyond that relaxation, unlike
+  H-0013's lock. The forcing f is the BVD choice as a steep sigmoid (width 0.02 in the normalised margin). Spreading
+  divides the effect of a flip of f_i on s_i by 1 + 2 kappa.
+
+  Unsteady runs: one sweep per step moves the weight front about one cell per step, faster than a shock at CFL 0.5
+  (<= 0.5 cell per step), so the weight keeps up. The spread puts THINC into 1-2 smooth monotone cells beside a jump;
+  the RF1 l1_smooth guard watches that cost.
+
+  Window check: s_new_i needs f_i (cells i-2..i+2) and s_{i-1}, s_{i+1}, all inside the window in which cell i is left
+  of the interface.
+
+  This hunch competes with the contrarian hunch on the same parent, which says a pointwise C1 weight is enough. The
+  kappa = 0 control separates the two.
+predicted_effect:
+  - metric: NF3.roughness_J
+    direction: down
+    size: "p90 from 0.0765 (c-2ca8842812 promo r-20261023-040314-a528, v1.4) to <= 0.002 for kappa in {1, 3}"
+  - metric: NF3.converged_impl
+    direction: up
+    size: "mean from 0.945 (same run) to 1.00"
+  - metric: NF3.newton_iters
+    direction: up
+    size: "median from 131 (same run) to 160-240: the weight field converges linearly"
+  - metric: NF1.converged_expl
+    direction: up
+    size: "mean from 0.90 (same run) to >= 0.95 (A3), because the weight cannot flip within a step"
+  - metric: RF1.shock_width
+    direction: up
+    size: "median from 2.18 (same run) to <= 2.5"
+  - metric: RF1.l1_smooth
+    direction: up
+    size: "median at most 10 % above c-2ca8842812's 0.00102 (same run)"
+  - metric: N5.roughness_J
+    direction: down
+    size: "dev, from 0.0222 (c-2ca8842812 dev r-20261023-034337-d53f, v1.4) by >= 10 x; N4 from 0.0109 to <= 0.002"
+kill_criterion: >-
+  Dev (judge v1.5): refuted if no kappa in {1, 3} reaches N4 roughness <= 0.002 with N1 and N4 converged_impl = 1 and
+  R1 shock <= 2.7. The spreading claim is refuted if the kappa = 0 control (same steep forcing, weight still lagged one
+  step, no spreading) is within a factor of 2 of the best kappa >= 1 variant on both N4 and N5 roughness. The reference
+  levels for that comparison are c-2ca8842812's dev N4 0.0109 and N5 0.0222 (r-20261023-034337-d53f, v1.4). Promo
+  (judge v1.5): refuted if the best dev kappa has an ok promo run with NF3 roughness_J p90 > 0.002, NF1 converged_impl
+  mean < 1.00 or RF1 shock_width median > 2.6. A promo run rejected for a hard-constraint violation (positivity; the
+  parent needs a fallback per the traps file) leaves the promo part inconclusive.
+known_relatives:
+  - "Barter and Darmofal (2010, J. Comput. Phys. 229): PDE-based artificial viscosity, a sensor forcing a smoothing equation; Barter's thesis (MIT 2008) on lower sensitivity to shock-grid alignment. Label: variant of PDE-smoothed shock capturing, transferred to a BVD weight"
+  - "Persson and Peraire (2006): sub-cell shock capturing with smooth artificial viscosity"
+  - "Kloeckner, Warburton, Hesthaven (2011), as cited in arXiv 1810.02152: no observed advantage of viscosity of higher continuity (evidence against)"
+  - "JST switch (Jameson, Schmidt, Turkel 1981): the sensor is spread with a max over neighbours"
+  - "H-0005 (relaxation of the limiter factor in pseudo-time, refuted; no spatial spreading); H-0013 (lock, history-dependent)"
+  - "THINC/BVD (Sun, Inaba, Xiao 2016); parent c-2ca8842812"
+author: hunch-generator/transfer
