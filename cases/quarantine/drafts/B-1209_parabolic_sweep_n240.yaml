@@ -1,0 +1,14 @@
+# N5's parabolic nozzle (area ratio 4, length 1.5, inlet ratio 2.5) on a finer grid (N = 240), shock at
+# 30 / 50 / 70 % of the divergent length (N5's back pressures), explicit and implicit. Exact: quasi-1D
+# isentropic flow with a normal shock. Target: explicit pseudo-time convergence of a sharp (THINC) shock
+# profile; the flip lock has to stop the limit cycle on a grid where the shock sits at different sub-cell offsets.
+kind: nozzle_sweep
+id: B-1209
+pbs: [0.8692, 0.6790, 0.4982]
+n: 240
+solvers: [explicit, implicit]
+nozzle:
+  type: parabolic
+  area_ratio: 4.0
+  length: 1.5
+  inlet_ratio: 2.5

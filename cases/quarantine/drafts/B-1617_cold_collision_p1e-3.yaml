@@ -1,0 +1,11 @@
+# Collision of two cold streams, milder than B-1616: (1, 2, 1e-3) / (1, -2, 1e-3), gamma 1.4 (stream Mach ~ 53).
+# Exact Riemann solution: two strong shocks around a resting dense state.
+kind: riemann
+id: B-1617
+left: [1.0, 2.0, 0.001]
+right: [1.0, -2.0, 0.001]
+t_end: 0.5
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

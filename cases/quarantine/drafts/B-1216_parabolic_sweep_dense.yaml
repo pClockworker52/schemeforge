@@ -1,0 +1,14 @@
+# N5's parabolic nozzle (area ratio 4, length 1.5, inlet ratio 2.5), N = 120, eight back pressures between
+# N5's (shock between about 25 % and 75 % of the divergent length), explicit and implicit. Exact: quasi-1D
+# isentropic flow with a normal shock. Target: explicit convergence (limit cycles) of the sharp entropy-field
+# profile; N5 shows one of three explicit runs stalling.
+kind: nozzle_sweep
+id: B-1216
+pbs: [0.89, 0.84, 0.80, 0.75, 0.70, 0.62, 0.55, 0.50]
+n: 120
+solvers: [explicit, implicit]
+nozzle:
+  type: parabolic
+  area_ratio: 4.0
+  length: 1.5
+  inlet_ratio: 2.5

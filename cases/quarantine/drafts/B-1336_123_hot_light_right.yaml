@@ -1,0 +1,10 @@
+kind: riemann
+id: B-1336
+# double rarefaction (u_R - u_L = 4.2) with a 10:1 density step at equal pressure (hot light gas on the right);
+# vacuum would need u_R - u_L >= 15.6
+left: [1.0, -2.1, 0.4]
+right: [0.1, 2.1, 0.4]
+t_end: 0.1
+n: 200
+gamma: 1.4
+x0: 0.5

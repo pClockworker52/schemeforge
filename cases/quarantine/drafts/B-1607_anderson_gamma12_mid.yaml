@@ -1,0 +1,10 @@
+# Anderson nozzle with gamma = 1.2, normal shock in the divergent part (not near p_crit1). Exact: choked flow
+# with a normal shock (spec section 3).
+kind: nozzle_sweep
+id: B-1607
+pbs: [0.9, 0.8, 0.7, 0.6]
+n: 120
+gamma: 1.2
+solvers: [explicit, implicit]
+nozzle:
+  type: anderson

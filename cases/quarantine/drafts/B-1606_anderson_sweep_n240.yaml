@@ -1,0 +1,8 @@
+# Anderson nozzle at N = 240, shock positions across the divergent part. Exact: choked flow with a normal shock.
+kind: nozzle_sweep
+id: B-1606
+pbs: [0.85, 0.75, 0.6784, 0.55]
+n: 240
+solvers: [explicit, implicit]
+nozzle:
+  type: anderson

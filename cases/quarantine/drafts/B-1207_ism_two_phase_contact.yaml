@@ -1,0 +1,16 @@
+# Two-phase interstellar medium in cgs units: cold gas (rho = 1e-22 g/cm^3) next to warm gas (1e-24 g/cm^3) in
+# pressure equilibrium (p = 1e-12 dyn/cm^2), both moving at u = 1e6 cm/s (10 km/s). Exact: a single contact
+# translating at u (the acoustic waves have zero strength); at t = 3e-7 it has moved 0.3 (60 cells).
+# Dimensionless twin: (100, 1, 1) / (1, 1, 1) at t = 0.3 (rho x 1e-24, p x 1e-12, u x 1e6, t x 1e-6); every
+# judge metric is invariant under that change of units.
+# Target: the THINC monotonicity test (d - c)(c - b) > EPS = 1e-20 is absolute; with density differences of order
+# 1e-22 it never fires, so the contact is not sharpened at all.
+kind: riemann
+id: B-1207
+left: [1.0e-22, 1.0e6, 1.0e-12]
+right: [1.0e-24, 1.0e6, 1.0e-12]
+t_end: 3.0e-7
+n: 200
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 1.0]

@@ -1,0 +1,13 @@
+# Planar Noh-type collision of two cold streams: (1, 2, 1e-6) / (1, -2, 1e-6), gamma 1.4 (stream Mach ~ 1690).
+# Exact Riemann solution: two strong shocks at speed ~ -/+ 0.4 around a resting state rho ~ 6, p ~ 4.8.
+# Tests reconstruction of near-zero pressure next to a huge pressure jump (characteristic projection with the
+# cold cell's sound speed).
+kind: riemann
+id: B-1616
+left: [1.0, 2.0, 1.0e-6]
+right: [1.0, -2.0, 1.0e-6]
+t_end: 0.5
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

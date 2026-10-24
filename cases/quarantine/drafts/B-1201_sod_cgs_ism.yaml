@@ -1,0 +1,14 @@
+# Sod (R1) in astrophysical cgs units: rho x 1e-24 (g/cm^3), p x 1e-12 (dyn/cm^2), so u and a scale by 1e6 (cm/s)
+# and t by 1e-6. The Euler equations are invariant under this change of units: the exact solution is R1's,
+# mapped, and every judge metric (relative widths, overshoot, scaled L1) should equal R1's.
+# Target: an absolute threshold in the candidate (THINC monotonicity test (d - c)(c - b) > EPS = 1e-20 on a
+# density-sized variable) switches THINC off at small density scales; the contact then falls back to MUSCL.
+kind: riemann
+id: B-1201
+left: [1.0e-24, 0.0, 1.0e-12]
+right: [1.25e-25, 0.0, 1.0e-13]
+t_end: 2.0e-7
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

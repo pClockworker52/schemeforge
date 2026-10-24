@@ -1,0 +1,17 @@
+kind: riemann
+id: B-0022
+left:
+- 1.0e-22
+- 1.0e6
+- 1.0e-12
+right:
+- 1.0e-24
+- 1.0e6
+- 1.0e-12
+t_end: 3.0e-07
+n: 200
+gamma: 1.4
+x0: 0.3
+domain:
+- 0.0
+- 1.0

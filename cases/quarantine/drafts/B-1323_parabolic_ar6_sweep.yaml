@@ -1,0 +1,12 @@
+# Parabolic nozzle, area ratio 6, length 2, inlet ratio 2; back pressures moving the normal shock through the
+# divergent part. Explicit and implicit, N = 120. Exact: choked flow with a normal shock (spec section 3).
+kind: nozzle_sweep
+id: B-1323
+pbs: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+n: 120
+solvers: [explicit, implicit]
+nozzle:
+  type: parabolic
+  area_ratio: 6.0
+  length: 2.0
+  inlet_ratio: 2.0

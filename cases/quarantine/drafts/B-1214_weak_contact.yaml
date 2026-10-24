@@ -1,0 +1,15 @@
+# Weak moving contact: (1 + 1e-10, 1, 1) / (1, 1, 1), gamma 1.4, x0 = 0.3, t = 0.3, N = 200. Exact: the jump
+# translates at u = 1 (no acoustic waves). For a pure contact (u, p constant) MUSCL + HLLC is invariant under
+# affine maps of rho, so the normalised profile (contact_width, overshoot) should not depend on the amplitude;
+# the B-1298 control (100, 1, 1) / (1, 1, 1) and dev R5/B-0004 give the sharp-contact reference.
+# Target: the absolute THINC monotonicity threshold (d - c)(c - b) > EPS = 1e-20 switches the sharpening off for
+# small-amplitude entropy perturbations at O(1) density.
+kind: riemann
+id: B-1214
+left: [1.0000000001, 1.0, 1.0]
+right: [1.0, 1.0, 1.0]
+t_end: 0.3
+n: 200
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 1.0]

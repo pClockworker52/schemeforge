@@ -1,0 +1,12 @@
+# Parabolic nozzle (N5 geometry: area ratio 4, length 1.5, inlet ratio 2.5), gamma 1.4, nine back pressures
+# moving the normal shock through the divergent part. Explicit and implicit. Exact: choked flow with a normal shock.
+kind: nozzle_sweep
+id: B-1615
+pbs: [0.88, 0.84, 0.8, 0.76, 0.72, 0.68, 0.64, 0.56, 0.52]
+n: 120
+solvers: [explicit, implicit]
+nozzle:
+  type: parabolic
+  area_ratio: 4.0
+  length: 1.5
+  inlet_ratio: 2.5

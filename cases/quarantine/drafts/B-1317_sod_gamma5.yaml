@@ -1,0 +1,8 @@
+kind: riemann
+id: B-1317
+left: [1.0, 0.0, 1.0]
+right: [0.125, 0.0, 0.1]
+t_end: 0.12
+n: 200
+gamma: 5.0
+x0: 0.5

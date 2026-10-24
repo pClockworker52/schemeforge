@@ -1,0 +1,11 @@
+# B-1210 (LeBlanc shock tube, gamma 5/3, density ratio 1e3, pressure ratio 1e9) on a finer grid, N = 1000:
+# checks that the unresolved contact of B-1210 is not a coarse-grid artefact. Exact as B-1210.
+kind: riemann
+id: B-1211
+left: [1.0, 0.0, 0.066666666666666667]
+right: [0.001, 0.0, 6.6666666666666667e-11]
+t_end: 6.0
+n: 1000
+gamma: 1.6666666666666667
+x0: 3.0
+domain: [0.0, 9.0]

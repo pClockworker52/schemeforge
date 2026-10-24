@@ -1,0 +1,12 @@
+# Sod (R1) with density and pressure scaled by 1e-7 (lower-thermosphere densities in SI units, kg/m^3);
+# u, a, x, t unchanged. Exact: R1's solution with rho, p scaled; every judge metric should equal R1's.
+# Target: the absolute THINC threshold EPS = 1e-20 at a moderate density scale.
+kind: riemann
+id: B-1221
+left: [1.0e-7, 0.0, 1.0e-7]
+right: [1.25e-8, 0.0, 1.0e-8]
+t_end: 0.2
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

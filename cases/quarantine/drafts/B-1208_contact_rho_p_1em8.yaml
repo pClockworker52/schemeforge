@@ -1,0 +1,12 @@
+# Moving contact (100, 1, 1) / (1, 1, 1) with density and pressure scaled by 1e-8 (u, a, x, t unchanged):
+# (1e-6, 1, 1e-8) / (1e-8, 1, 1e-8). Exact: a single contact translating at u = 1; every judge metric is invariant
+# under (rho, p) -> k (rho, p). Probes where the absolute THINC threshold EPS = 1e-20 starts to bite.
+kind: riemann
+id: B-1208
+left: [1.0e-6, 1.0, 1.0e-8]
+right: [1.0e-8, 1.0, 1.0e-8]
+t_end: 0.3
+n: 200
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 1.0]

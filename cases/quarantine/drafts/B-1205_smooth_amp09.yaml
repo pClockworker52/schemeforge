@@ -1,0 +1,11 @@
+# Smooth density wave of large amplitude: rho = 1 + 0.9 sin(2 pi x) (rho from 0.1 to 1.9), u = 1, p = 1.
+# Exact: pure translation. Target: the BVD choice between MUSCL and THINC on the entropy field selects THINC on
+# the steep flanks of a large-amplitude smooth wave (the TBV comparison prefers the tanh where the profile is steep),
+# which costs observed order.
+kind: smooth
+id: B-1205
+ns: [50, 100, 200]
+t_end: 1.0
+amp: 0.9
+u0: 1.0
+gamma: 1.4

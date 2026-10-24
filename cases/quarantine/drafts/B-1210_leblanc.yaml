@@ -1,0 +1,15 @@
+# LeBlanc shock tube (Loubere & Shashkov 2005 form): gamma 5/3, (1, 0, 2/3 x 1e-1) / (1e-3, 0, 2/3 x 1e-10),
+# on [0, 9] with the diaphragm at x = 3, t = 6, N = 400. Density ratio 1e3, pressure ratio 1e9. Exact: left
+# rarefaction (head speed -a_L = -0.333, reaches x = 1.0), contact near x = 5.6, strong shock near x = 7.6.
+# Target: extreme pressure and density ratio across a contact that THINC sharpens on the entropy field; the
+# characteristic projection with the centre cell's sound speed mixes an O(1e9) pressure jump into the entropy
+# variable, and the back-projection has no positivity bound.
+kind: riemann
+id: B-1210
+left: [1.0, 0.0, 0.066666666666666667]
+right: [0.001, 0.0, 6.6666666666666667e-11]
+t_end: 6.0
+n: 400
+gamma: 1.6666666666666667
+x0: 3.0
+domain: [0.0, 9.0]

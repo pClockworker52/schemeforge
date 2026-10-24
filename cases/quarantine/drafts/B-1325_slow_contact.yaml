@@ -1,0 +1,9 @@
+kind: riemann
+id: B-1325
+# isolated contact (density ratio 10) moving slowly, u = 0.013 (about 0.011 max(|u|+a)); exact: translation
+left: [10.0, 0.013, 1.0]
+right: [1.0, 0.013, 1.0]
+t_end: 4.0
+n: 200
+gamma: 1.4
+x0: 0.4

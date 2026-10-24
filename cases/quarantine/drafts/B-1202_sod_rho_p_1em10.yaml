@@ -1,0 +1,14 @@
+# Sod (R1) with density and pressure both scaled by 1e-10 (u, a, x, t unchanged). The Euler equations are
+# invariant under (rho, p) -> k (rho, p): the exact solution is R1's with rho, p scaled, and every judge metric
+# (relative widths, overshoot, scaled L1) should equal R1's.
+# Target: the THINC monotonicity test (d - c)(c - b) > EPS = 1e-20 is absolute; at k = 1e-10 the products of
+# density-sized differences across the smeared contact fall below it.
+kind: riemann
+id: B-1202
+left: [1.0e-10, 0.0, 1.0e-10]
+right: [1.25e-11, 0.0, 1.0e-11]
+t_end: 0.2
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

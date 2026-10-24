@@ -1,0 +1,12 @@
+# Slowly moving Mach-20 shock, gamma 1.4. Shock frame: pre-shock rho 1, p 1/1.4 (a = 1), w = -20;
+# Rankine-Hugoniot: rho2 = 960/162, p2 = 466.5 p1, w2 = -3.375. Lab shock speed s = 0.5 (2.4 % of max |u| + a).
+# Exact: a single shock (other waves of zero strength). Long run (~3000 steps), shock moves 40 cells.
+kind: riemann
+id: B-1604
+left: [5.925925925925926, -2.875, 333.2142857142857]
+right: [1.0, -19.5, 0.7142857142857143]
+t_end: 0.4
+n: 200
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 1.0]

@@ -1,13 +1,29 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.4 (2026-10-22, 71a3d94)  Plan: v1.2
-Last session: 2026-10-22 — step 3a done: round 2 closed (docs/rounds/2026-10-21-euler1d-limiter_stateful.md)
+Last session: 2026-10-24 — round 3 done, stopped at gate 3e (docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md)
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
 
-## Latest results (2026-10-22): round 2 closed (PLAN §11.5 step 3a)
+## Latest results (2026-10-24): round 3 done — **waiting for Peter at gate 3e**
+Summary: docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md (all run ids there).
+- Suggested verdicts (not closed): H-0012 supported; H-0013 inconclusive (2 of 8 grid points run); H-0014, H-0015,
+  H-0016, H-0017 refuted. H-0014 and H-0017 are refuted by the overshoot clauses their proposers did not check (R6
+  0.0190–0.0199 vs 1.1 × vL 0.0166; H-0017 B-0010 0.0367 vs 1.2 × thinc_bvd 0.0313).
+- Target A: nothing promoted. Best held-out result is still the H-0013 proposer's c-2ca8842812 (fails only A3 0.90,
+  A5 0.077; r-20261023-040314-a528). Engine top five (one scheme in four spellings plus one) fail A1 (RF1 shock 3.41)
+  and A3 (0.90), c-58306b67e7 REJECTED on promo (NF1 3/20).
+- Swarm (docs/targets/swarm.md): S1 met (suggested); S2 met on one island of three, with small gains: H-0012 island
+  c-a411e8accb (promo r-20261023-232730-c8f5: A4 1.00 vs 0.95, A7b 0.0236 vs 0.0250, rest within 0.1 %) and
+  c-c0644880db / c-0428b6020b. H-0013 and H-0014 islands lose A1 against their seeds.
+- Evolve e-20261023-041826-802c: 480 children, 70 duplicates, 29 rejected, 62 LLM errors, $33.99 ($7.08 / 100).
+- Breakers: 21 cases in quarantine (B-0016 … B-0036): LeBlanc contact ×5, cold-collision NaN ×6, THINC EPS
+  scale dependence ×4, double-rarefaction NaN ×2, low-γ blast, γ 5/3 collision TV, stationary Mach 20, Anderson γ 1.2.
+  Two zoo failures found and not proposed (frozen van Leer on a parabolic nozzle; thinc_bvd on planar Noh).
+
+## Earlier results (2026-10-22): round 2 closed (PLAN §11.5 step 3a)
 - e-20261021-123207-3146 finished: 20 generations, 480 children, $25.71 list ($11.81 for gens 11–19 against the
   plan's ~$5 estimate; ~$1.3 and ~35 min per generation of 24 at K = 7). Stagnation stop never fired.
 - The 90 evolve-time timeouts were memory, not CPU: a `limiter_stateful` dev worker peaks at ~1.45 GB, and 15 of them
@@ -95,7 +111,7 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 State: judge euler1d-v1.4 on main (71a3d94, tagged); round 2 closed; H-0011 closed; no open hunch. Peter's review
 2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
 LF2. **Step 0 done 2026-10-22 (see below). 3b(i) closed without an independent cheater (DECISIONS.md).**
-**Round 3 running** (reconstruction_stateful, scripts/headless/round3.txt, run from the interactive WSL session
+**Round 3 done 2026-10-24, waiting for gate 3e** (reconstruction_stateful, scripts/headless/round3.txt, run from the interactive WSL session
 because the headless run.sh session could not use the shell). Hunches registered 2026-10-22 from the
 hunch-generator, as written: H-0012 field-selective compression (shock physics), H-0013 chatter lock
 (steady-convergence), H-0014 entropy-production blend (structure preservation), H-0015 steep shock less overshoot
@@ -124,7 +140,8 @@ front 289; 29 rejected, 70 duplicates, 62 LLM errors (usage-limit pauses in gens
 limit and still counts against the budget); cost $33.99 list (runs/round3-evolve.log). Leaderboard top 5
 (`--pareto --vs-zoo`): c-58306b67e7 (H-0014 island, dev r-20261023-171400-1476, 0.489 × zoo), c-2637af56a6,
 c-b799935c6b, c-954f644254 (H-0014, same dev numbers to 1e-9: R1 contact 3.16, shock 3.64, S1 1.94), c-140c60abbe
-(H-0013). Next: promo + promote on these five, then breakers.
+(H-0013). Promo + promote on these five (docs/rounds/2026-10-23-round3/evolve_promo.txt), S2 promo on the H-0012
+island (s2_h0012_promo.txt), five breakers (breaker/*.md): see the round summary.
 Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
 Evaluation slots K = 7.
 Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
@@ -198,6 +215,9 @@ run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the t
 4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
 
 ## Blockers / questions for Peter
+- **Gate 3e (round 3):** S1/S2 verdicts, the six suggested hunch verdicts, the swarm-outcome ledger entry (swarm.md
+  asks for a closed `orchestrator/method` hunch; round3.txt says not to close hunches), the 21 quarantined cases
+  (B-0016 … B-0036) and the two zoo failures, and what next (open questions at the end of the round summary).
 - *(3b(i) closed by Peter 2026-10-22, see DECISIONS.md; the two halts below are kept for the record.)*
 - **Red team v1.4 did not run either** (2026-10-22 ~21:55–22:20, interactive WSL session, cheater subagent, task
   from redteam_v13.txt verbatim with folder candidates/redteam/v13/). A safety classifier stopped the cheater while it

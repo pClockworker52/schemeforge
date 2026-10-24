@@ -1,0 +1,11 @@
+# Shock tube into a light, cold gas: (1, 0, 1) / (0.01, 0, 1e-4), gamma 1.4 (density ratio 100, pressure
+# ratio 1e4). Exact Riemann solution: rarefaction, contact, strong shock.
+kind: riemann
+id: B-1610
+left: [1.0, 0.0, 1.0]
+right: [0.01, 0.0, 0.0001]
+t_end: 0.1
+n: 400
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 1.0]

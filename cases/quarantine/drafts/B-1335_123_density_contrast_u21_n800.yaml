@@ -1,0 +1,9 @@
+kind: riemann
+id: B-1335
+# 123-type double rarefaction (u_R - u_L = 4.2, vacuum at 7.48) with a 10:1 density and pressure step, N = 800
+left: [1.0, -2.1, 0.4]
+right: [0.1, 2.1, 0.04]
+t_end: 0.14
+n: 800
+gamma: 1.4
+x0: 0.5

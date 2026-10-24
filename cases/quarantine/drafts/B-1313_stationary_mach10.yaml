@@ -1,0 +1,11 @@
+kind: riemann
+id: B-1313
+# stationary Mach 10 shock (S = 0) on a cell face (dx = 0.005), RH states from M = 10, gamma 1.4.
+# The point-sampled initial data are a discrete steady state of HLLC + any limiter with phi(0) = 0.
+left: [5.714285714285714, -2.0706279240848656, 116.5]
+right: [1.0, -11.832159566199232, 1.0]
+t_end: 0.06
+n: 400
+gamma: 1.4
+x0: 1.0
+domain: [0.0, 2.0]

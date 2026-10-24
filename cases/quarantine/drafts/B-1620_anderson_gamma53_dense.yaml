@@ -1,0 +1,10 @@
+# Anderson nozzle, gamma 5/3, nine back pressures moving the normal shock through the divergent part.
+# Explicit and implicit. Exact: choked flow with a normal shock (spec section 3).
+kind: nozzle_sweep
+id: B-1620
+pbs: [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55]
+n: 120
+gamma: 1.6666666666666667
+solvers: [explicit, implicit]
+nozzle:
+  type: anderson

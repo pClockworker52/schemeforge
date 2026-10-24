@@ -1,0 +1,8 @@
+kind: riemann
+id: B-1420
+left: [1.0, 20.0, 0.01]
+right: [1.0, -20.0, 0.01]
+t_end: 0.1
+n: 200
+gamma: 1.2
+x0: 0.5

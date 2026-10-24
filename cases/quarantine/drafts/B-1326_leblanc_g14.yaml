@@ -1,0 +1,10 @@
+kind: riemann
+id: B-1326
+# LeBlanc-type tube with gamma 1.4: rho ratio 1e3, internal energy ratio 1e6
+left: [1.0, 0.0, 0.04]
+right: [0.001, 0.0, 4.0e-11]
+t_end: 6.0
+n: 400
+gamma: 1.4
+x0: 3.0
+domain: [0.0, 9.0]

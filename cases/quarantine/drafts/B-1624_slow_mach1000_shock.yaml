@@ -1,0 +1,12 @@
+# Slowly moving Mach-1000 shock into cold gas, gamma 1.4. Shock frame: pre-shock rho 1, p 1/1.4 (a = 1),
+# w = -1000; Rankine-Hugoniot: rho2 = 2.4e6/400002, p2/p1 = 1166666.5, w2 = -166.6675. Lab shock speed
+# s = 25 (2.6 % of max |u| + a). Exact: a single shock (other waves of zero strength); ~3000 steps, 40 cells.
+kind: riemann
+id: B-1624
+left: [5.999970000149999, -141.6675, 833333.2142857143]
+right: [1.0, -975.0, 0.7142857142857143]
+t_end: 0.008
+n: 200
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 1.0]

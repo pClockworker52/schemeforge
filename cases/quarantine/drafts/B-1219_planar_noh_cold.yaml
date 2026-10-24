@@ -1,0 +1,13 @@
+# Planar Noh problem with colder gas: (1, 1, 1e-10) / (1, -1, 1e-10), gamma 5/3, x0 = 0.5, t = 0.6, N = 200.
+# Exact: two shocks of speed -/+ 1/3 (upstream Mach about 7.7e4), rho* = 4, p* = 4/3, u* = 0.
+# Target: positivity of the characteristic back-projection p_face = p + a^2 (alpha1 + alpha3) in the cold upstream
+# gas next to a pressure jump of 1e10 (B-1218 with p = 1e-6 survives).
+kind: riemann
+id: B-1219
+left: [1.0, 1.0, 1.0e-10]
+right: [1.0, -1.0, 1.0e-10]
+t_end: 0.6
+n: 200
+gamma: 1.6666666666666667
+x0: 0.5
+domain: [0.0, 1.0]

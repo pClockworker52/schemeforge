@@ -1,0 +1,10 @@
+# CONTROL ONLY, not for quarantine: dimensionless twin of B-1207.
+kind: riemann
+id: B-1298
+left: [100.0, 1.0, 1.0]
+right: [1.0, 1.0, 1.0]
+t_end: 0.3
+n: 200
+gamma: 1.4
+x0: 0.3
+domain: [0.0, 1.0]

@@ -1,0 +1,14 @@
+# Slowly moving contact: (1.4, 0.02, 1) / (1, 0.02, 1), gamma 1.4, N = 100, t = 10: the contact moves 0.2
+# (20 cells) over about 1,200 steps, i.e. 1/60 cell per step. Exact: a single contact (the acoustic waves
+# have zero strength). Target: the flip-counting lock of the BVD margin; a sub-cell contact that creeps through
+# a cell flips the MUSCL/THINC margin repeatedly, the lock (c >= 3) forces MUSCL and only lets go when the
+# margin is decisive, so the contact may diffuse like plain MUSCL over long runs.
+kind: riemann
+id: B-1206
+left: [1.4, 0.02, 1.0]
+right: [1.0, 0.02, 1.0]
+t_end: 10.0
+n: 100
+gamma: 1.4
+x0: 0.4
+domain: [0.0, 1.0]

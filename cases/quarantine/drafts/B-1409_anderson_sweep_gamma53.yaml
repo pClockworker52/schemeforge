@@ -1,0 +1,7 @@
+kind: nozzle_sweep
+id: B-1409
+pbs: [0.5, 0.65, 0.8]
+n: 120
+gamma: 1.6666666666666667
+solvers: [explicit, implicit]
+nozzle: {type: anderson}

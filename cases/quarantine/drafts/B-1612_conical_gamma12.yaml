@@ -1,0 +1,13 @@
+# Smoothed-conical nozzle (N6 geometry: area ratio 3, length 1.2, inlet ratio 2) with gamma = 1.2, normal shock
+# in the divergent part. Exact: choked flow with a normal shock (spec section 3).
+kind: nozzle_sweep
+id: B-1612
+pbs: [0.8, 0.67, 0.55]
+n: 120
+gamma: 1.2
+solvers: [explicit, implicit]
+nozzle:
+  type: conical
+  area_ratio: 3.0
+  length: 1.2
+  inlet_ratio: 2.0

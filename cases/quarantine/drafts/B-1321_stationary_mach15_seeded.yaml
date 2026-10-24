@@ -1,0 +1,11 @@
+kind: riemann
+id: B-1321
+# stationary Mach 15 shock on a cell face (dx = 0.005), gamma 1.4; RH states rounded to 8 digits, so the exact
+# solution has extra waves of relative strength ~1e-8 (unresolved, skipped by the jump metrics) next to the shock.
+left: [5.8695652, -3.0237741, 262.33333]
+right: [1.0, -17.748239, 1.0]
+t_end: 0.05
+n: 400
+gamma: 1.4
+x0: 1.0
+domain: [0.0, 2.0]

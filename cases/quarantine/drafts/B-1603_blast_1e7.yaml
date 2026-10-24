@@ -1,0 +1,11 @@
+# Left blast with pressure ratio 1e7: (1, 0, 1e5) / (1, 0, 0.01), gamma 1.4. Exact Riemann solution.
+# Rarefaction head speed -374 reaches x = 0.05 at t = 1.2e-3; the shock (~ +235) reaches ~0.78.
+kind: riemann
+id: B-1603
+left: [1.0, 0.0, 100000.0]
+right: [1.0, 0.0, 0.01]
+t_end: 0.0012
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

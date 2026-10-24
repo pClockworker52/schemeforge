@@ -1,0 +1,10 @@
+kind: riemann
+id: B-1320
+# stationary Mach 15 shock (S = 0) on a cell face (dx = 0.005), RH states from M = 15, gamma 1.4.
+left: [5.869565217391305, -3.023774111362026, 262.3333333333333]
+right: [1.0, -17.748239349298848, 1.0]
+t_end: 0.05
+n: 400
+gamma: 1.4
+x0: 1.0
+domain: [0.0, 2.0]

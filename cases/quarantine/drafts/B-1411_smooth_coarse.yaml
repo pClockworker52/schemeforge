@@ -1,0 +1,7 @@
+kind: smooth
+id: B-1411
+ns: [20, 40, 80]
+t_end: 1.0
+amp: 0.5
+u0: 1.0
+gamma: 1.4

@@ -1,0 +1,60 @@
+== c-66342d7bbb
+run r-20261023-225021-962e  candidate c-66342d7bbb  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  175.7 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+  VIOLATION: NF1: 3 of 20 instances violate hard constraints
+  VIOLATION: NF2: 1 of 10 instances violate hard constraints
+  VIOLATION: NF3: 1 of 5 instances violate hard constraints
+== c-636f623ba1
+run r-20261023-225331-7721  candidate c-636f623ba1  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  199.2 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-f6057e6d6f
+run r-20261023-225709-f55d  candidate c-f6057e6d6f  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  208.6 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-435811779d
+run r-20261023-230057-263b  candidate c-435811779d  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  175.8 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-c0644880db
+run r-20261023-230405-e34b  candidate c-c0644880db  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  186.4 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-32ef6a7600
+run r-20261023-230728-a683  candidate c-32ef6a7600  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  192.7 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-b83971c113
+run r-20261023-231056-c4c7  candidate c-b83971c113  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  190.1 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-1942e92c26
+run r-20261023-231423-8b73  candidate c-1942e92c26  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  280.1 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-415e99c1bb
+run r-20261023-231918-78d6  candidate c-415e99c1bb  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  140.1 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-0428b6020b
+run r-20261023-232157-60f3  candidate c-0428b6020b  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  154.5 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-effd02aed6
+run r-20261023-232447-c0af  candidate c-effd02aed6  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  144.7 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-a411e8accb
+run r-20261023-232730-c8f5  candidate c-a411e8accb  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  167.6 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-4b35ebd292
+run r-20261023-233042-d40a  candidate c-4b35ebd292  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  174.9 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-e9f1f2e155
+run r-20261023-233353-34cb  candidate c-e9f1f2e155  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  168.8 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-19bed30936
+run r-20261023-233657-4155  candidate c-19bed30936  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  164.0 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-4827502fa8
+run r-20261023-234003-13eb  candidate c-4827502fa8  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  160.5 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-343f47c002
+run r-20261023-234308-2247  candidate c-343f47c002  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  162.7 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-a7780077d8
+run r-20261023-234618-a681  candidate c-a7780077d8  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  248.8 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints
+== c-64b8c61c53
+run r-20261023-235053-08b1  candidate c-64b8c61c53  judge euler1d-v1.4 (72b1b8daddcf)  status REJECTED  176.2 s
+  VIOLATION: LF1: 1 of 5 instances violate hard constraints

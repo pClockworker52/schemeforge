@@ -1,0 +1,14 @@
+# Toro test 3 (R3) with the right pressure lowered from 1e-2 to 1e-6: pressure ratio 1e9 across the
+# diaphragm. Exact: left rarefaction (head speed -37.4), contact, strong shock (speed about 23.6).
+# At t = 0.012 the head is at 0.051, the shock near 0.78.
+# Target: extreme pressure ratio; the characteristic back-projection with the centre cell's sound speed
+# has no positivity bound in the post-shock / pre-shock cells.
+kind: riemann
+id: B-1204
+left: [1.0, 0.0, 1000.0]
+right: [1.0, 0.0, 1.0e-6]
+t_end: 0.012
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]
