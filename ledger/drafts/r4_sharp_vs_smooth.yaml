@@ -1,0 +1,26 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: contrarian
+statement: >-
+  No Arena 1 scheme reaches both a sharp shock and a smooth steady objective: an RF1 shock-width median <= 2.6 cells
+  (Target A1) and an NF3 roughness_J p90 <= 0.002 (A5) are not met together by any candidate whose NF1 Newton
+  convergence is 1.00 (A4).
+mechanism: >-
+  A reconstruction steep enough to put a shock into <= 2.6 cells resolves the shock position by snapping it to a small
+  set of sub-cell positions; as p_b moves the exact shock continuously, the discrete shock jumps between those
+  positions and J(p_b) acquires steps of the size of the sub-cell jump, which the second difference in roughness_J
+  amplifies. Smooth objectives so far (van Albada, minmod, the round-3 engine leaders) all come from schemes with RF1
+  shock >= 3.4 cells; sharp ones (superbee, MC, Koren, c-2ca8842812, the round-2 near misses) all have NF3 roughness
+  >= 0.077 or fail Newton. Pre-registered in docs/plans/2026-10-24-round4.md before round 4.
+predicted_effect:
+  - {metric: NF3.roughness_J, direction: up, size: "> 0.002 (p90) for every round-4 candidate with RF1 shock median <= 2.6"}
+  - {metric: RF1.shock_width, direction: down, size: "Spearman rho(RF1 shock median, NF3 roughness p90) <= -0.5 over all promo-evaluated Arena 1 candidates and zoo members with NF1 converged_impl = 1.00 (reported, not deciding)"}
+kill_criterion: >-
+  Refuted if any candidate, in any Arena 1 slot, has an ok promo run under judge v1.5 or later with RF1 shock_width
+  median <= 2.6, NF3 roughness_J p90 <= 0.002 and NF1 converged_impl mean = 1.00. Otherwise supported "for the
+  families searched"; never a proof for all schemes.
+known_relatives:
+  - subcell resolution (Harten 1989)
+  - staircase effects of shock capturing on steady objectives in adjoint shape optimisation (to be cited from the literature note)
+  - H-0011 (A1 and A7 for phi(r), round 3c)
+author: orchestrator/contrarian
