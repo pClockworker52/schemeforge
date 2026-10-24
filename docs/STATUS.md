@@ -1,6 +1,6 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544)  Plan: v1.2
-Last session: 2026-10-24 (WSL) — round 4 started: hunches H-0020..H-0025 registered
+Last session: 2026-10-24 (WSL) — round 4: hunches H-0020..H-0025 registered, proposers done
 (not tagged), engine changes, target Ac, round-4 prompt. Ready for WSL.
 
 ## Gate 1 — passed 2026-10-20
@@ -15,7 +15,16 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   physics), H-0021 motion-gated compression (steady-convergence), H-0022 positivity scaling (structure preservation),
   H-0023 history not sharpness (contrarian), H-0024 diffused BVD weight (transfer), H-0025 characteristic WENO
   (approximation theory). Four target the steady shock-position / roughness problem directly (generator's count:
-  H-0021, H-0023, H-0024, H-0025). Next: proposers (8 evals each).
+  H-0021, H-0023, H-0024, H-0025).
+- Proposers done 2026-10-24 (reports: docs/rounds/2026-10-24-round4/proposers/; agents' own verdicts, dev, v1.5):
+  H-0020 c-cb9fe80826 r-20261024-202537-69d0 (R1 shock 2.48, N4 roughness 1.3e-5; kill clause 2 fires: B-0010
+  overshoot +18.5 % over base); H-0021 c-698b39759f r-20261024-204336-e65e (R1 shock 2.48, N4 roughness = base 1.27e-5,
+  B-0011 Newton 0.5; "supported on dev"); H-0022 c-9a3faab538 r-20261024-202309-21b3 (hunch's ε still non-finite on
+  B-0030, r-20261024-201321-dc41: "refuted as specified"); H-0023 c-af3143be0c r-20261024-202133-76b1 (N4 roughness
+  6.8e-4, R1 2.475, extra safety switches; "partly"); H-0024 c-5ff53c2690 r-20261024-201845-0539 **rejected** (B-0016,
+  B-0030; "inconclusive"); H-0025 c-47838d9365 r-20261024-201754-e32b (char. WENO5-Z + van Leer fallback, R1 2.56, N4
+  roughness 8.1e-6; promo pending). Most proposers needed positivity/expansion fallbacks outside their mechanism.
+  Next: promo + promote on the leaderboard top 3, then islands.
 
 ## Round-4 plan step 2.6 done — judge euler1d-v1.5 tagged and checked (WSL, 2026-10-24)
 - Tag commit 919c544 `euler1d-v1.5` (pushed with the tag); `judge version` euler1d-v1.5 (8a8b8304…), integrity ok;
