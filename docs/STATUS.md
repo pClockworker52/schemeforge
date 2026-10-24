@@ -24,7 +24,15 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
   6.8e-4, R1 2.475, extra safety switches; "partly"); H-0024 c-5ff53c2690 r-20261024-201845-0539 **rejected** (B-0016,
   B-0030; "inconclusive"); H-0025 c-47838d9365 r-20261024-201754-e32b (char. WENO5-Z + van Leer fallback, R1 2.56, N4
   roughness 8.1e-6; promo pending). Most proposers needed positivity/expansion fallbacks outside their mechanism.
-  Next: promo + promote on the leaderboard top 3, then islands.
+- Promo + promote A on the leaderboard top 3 (docs/rounds/2026-10-24-round4/proposer_promo.txt; references limiter/mc
+  r-20261024-153251-db77, van_albada r-20261024-153252-8783, van_leer r-20261024-153251-4a12): **c-698b39759f**
+  (H-0021) r-20261024-210131-4dcc fails only A4 (NF1 Newton 0.85) and A7b (RF2 overshoot 0.0295 vs 0.0256); passes
+  A1 2.19 and A5 0.0014 together (A4 < 1, so not an H-0019 kill). c-9a3faab538 (H-0022) r-20261024-211946-b555 fails
+  A1 (2.90) and A4 (0.85). c-47838d9365 (H-0025) r-20261024-205819-e795 fails A3 (0.85), A5 (0.31), A7b (0.0314).
+  Islands: H-0021, H-0022 (seeds candidates/H-0021/proposer/cand_1.py, candidates/H-0022/proposer/cand_3.py).
+- **Evolve e-20261024-213316-3d46 stopped at 23:33 in generation 0 (0 children)**: Claude Code killed the background
+  command because the system was low on memory (its reaper, not the run's own memory use). 7 seeding runs left (1
+  rejected, 6 `running`). Not restarted; waiting for Peter.
 
 ## Round-4 plan step 2.6 done — judge euler1d-v1.5 tagged and checked (WSL, 2026-10-24)
 - Tag commit 919c544 `euler1d-v1.5` (pushed with the tag); `judge version` euler1d-v1.5 (8a8b8304…), integrity ok;
