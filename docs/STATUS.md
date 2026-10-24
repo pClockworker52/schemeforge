@@ -1,5 +1,5 @@
 # STATUS
-Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544; zoo check blocked)  Plan: v1.2
+Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544)  Plan: v1.2
 Last session: 2026-10-24 (cloud) — round-4 plan step 2 prepared on claude/exciting-fermi-qy077p: judge euler1d-v1.5.dev
 (not tagged), engine changes, target Ac, round-4 prompt. Ready for WSL.
 
@@ -8,30 +8,31 @@ Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; 
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
 
-## Round-4 plan step 2.6 — v1.5 tagged, zoo check BLOCKED (WSL, 2026-10-24)
-- Merged to bbdc0f7; pytest 276 passed; tag commit 919c544 `euler1d-v1.5` pushed with the tag; `judge version`
-  prints euler1d-v1.5 (8a8b8304…), integrity ok.
-- `sforge case accept` B-0016/19/21/30: refused ("needs an interactive terminal (Peter only)"); registry still shows
-  them as quarantine. Peter runs it in a separate terminal.
-- **Blocker: `sforge zoo eval` aborts with "database is locked"** (twice: rescore.sh 14:10, and a re-run at K = 4,
-  15:07). Cause found: the v1.5 zoo thinc_bvd file has a new code hash, but id `zoo-reconstruction-thinc_bvd` is
-  already registered with the old hash. `register_candidate` (core/evaluation.py) then INSERTs a duplicate primary
-  key; the failed INSERT leaves an open write transaction on a connection that is never closed, every other worker
-  waits out BUSY_TIMEOUT (120 s), and the command dies. Only this member has an unregistered hash. Needs a code fix
-  (and a decision how a changed zoo member is registered); not fixed here. 18 v1.5 runs are left in status `running`.
-- Zoo check so far (members whose runs finished; per-case wall times and the wall-time `cost` excepted): **dev**
-  identical to v1.4 on the 18 old cases for 14 members (flux/hll, limiter mc / minmod / superbee / van_albada /
-  venkatakrishnan / van_leer (c-38addf805f, r-20261024-130848-15f4), limiter_stateful mc / superbee / superbee_frozen /
-  van_albada / van_leer / van_leer_frozen); limiter/koren rejected (B-0030) as expected (r-20261024-130734-3d95).
-  **promo** all 168 aggregates identical for 15 members (the 14 plus koren; e.g. limiter/van_leer
-  r-20261024-131911-4b5c = v1.4 r-20261022-164508-7c66, limiter_stateful/van_leer r-20261024-132307-0d5c = v1.4
-  r-20261022-164948-bba4; superbee_frozen rejected in both, as under v1.4). **Not run under v1.5:** flux/hllc, flux/rusanov,
-  reconstruction first_order / thinc_bvd / weno5z, reconstruction_stateful muscl_van_leer / muscl_van_leer_frozen.
-- Rescore reconstruction_stateful (runs/rescore_v15.log; candidate runs are unaffected by the lock): 376 candidates,
-  **0 ok**: 360 rejected for the new scaling constraint alone, 4 scaling + another violation, 3 TypeError, 2 shape,
-  1 ValueError, 2 B-0030 crash, 1 B-0021 + B-0030 crash, 4 not run (file changed since registration). Round-4
-  parents, all rejected for scaling only: c-2ca8842812 r-20261024-123127-eb8e, c-a411e8accb r-20261024-130330-3ce1,
-  c-2637af56a6 r-20261024-125340-04f6.
+## Round-4 plan step 2.6 done — judge euler1d-v1.5 tagged and checked (WSL, 2026-10-24)
+- Tag commit 919c544 `euler1d-v1.5` (pushed with the tag); `judge version` euler1d-v1.5 (8a8b8304…), integrity ok;
+  pytest 277 passed after the registry fix 26818b5 (a changed zoo file gets its own id; failed inserts roll back).
+  The first two `zoo eval` attempts died with "database is locked" (duplicate id for the changed thinc_bvd); their
+  18 runs stay in status `running` (nothing reads them).
+- **Zoo dev** (runs/zoo_v15.log; r-20261024-1526..1529): 19 ok; rejected exactly limiter/koren (B-0030,
+  r-20261024-152652-a5d6) and reconstruction/thinc_bvd, now id `zoo-reconstruction-thinc_bvd-f23f9c` (B-0016, B-0030,
+  r-20261024-152919-1578). All 20 unchanged members (incl. limiter/van_leer c-38addf805f r-20261024-152651-8c93) are
+  identical to their v1.4 zoo runs on the 18 old cases (89 scores each, wall times and wall-time `cost` excepted).
+  thinc_bvd vs v1.4 r-20261022-164139-e8e3: 7 scores at rounding level (≤ 8e-9), Newton means B-0011 137.5 → 135.5
+  (−1.5 %; the cloud record said < 1 %) and N4 126.7 → 127.4.
+- **Zoo promo** (r-20261024-1532..1540): all 168 aggregates identical to v1.4 for the 20 unchanged members (e.g.
+  limiter/van_leer r-20261024-153251-4a12 = r-20261022-164508-7c66, limiter_stateful/van_leer r-20261024-153727-dffe
+  = r-20261022-164948-bba4, reconstruction_stateful/muscl_van_leer r-20261024-154024-c9f9 = r-20261022-165255-03a8;
+  superbee_frozen rejected in both). thinc_bvd r-20261024-154009-f309 vs r-20261022-165235-e685: 38 aggregates differ,
+  mostly < 2e-5; beyond rounding only NF1 Newton: converged_impl 0.60 → 0.65, newton_iters median 177 → 153.5
+  (relative EPS changes the steady nozzle iteration).
+- **Rescore reconstruction_stateful** (2026-10-24, runs/rescore_v15.log; stands, not repeated): 376 candidates, 0 ok;
+  360 rejected for the scaling constraint alone, 4 scaling + another violation, 3 TypeError, 2 shape, 1 ValueError,
+  2 B-0030 crash, 1 B-0021 + B-0030 crash, 4 not run (file changed since registration). Round-4 parents, rejected for
+  scaling only: c-2ca8842812 r-20261024-123127-eb8e, c-a411e8accb r-20261024-130330-3ce1, c-2637af56a6
+  r-20261024-125340-04f6. Peter keeps the constraint (DECISIONS "2026-10-24 — scaling constraint kept"): round-4
+  proposers start from the parent files and make thresholds relative.
+- Open (Peter, own terminal): `sforge case accept` B-0016 B-0019 B-0021 B-0030 (registry only; files already in
+  cases/accepted, so the judge is unaffected). Next: round 4 (scripts/headless/round4.txt), started by Peter.
 
 ## Round-4 plan step 2 — prepared on the branch, waiting for WSL (2026-10-24)
 - Done (cloud): judge clean-up with zoo dev scores identical to v1.4 (21/21), then v1.5 contents: B-0016, B-0019,

@@ -220,3 +220,14 @@ in non-finite states on accepted dev cases and are rejected (docs/judge/2026-10-
 *Decision:* The rejections stand: the zoo gets no exemption from the run-level constraints. B-0030 stays in dev.
 *Consequences:* Both members drop out of their slots' vs-zoo comparisons from v1.5 on; Target A references (van Leer,
 van Albada, MC) are unaffected. Earlier results that cite koren or thinc_bvd stay valid under their judge versions.
+
+
+## 2026-10-24 — scaling constraint kept (Peter)
+*Context:* The v1.5 rescore of reconstruction_stateful (runs/rescore_v15.log, 2026-10-24) left 0 of 376 candidates
+ok; 364 are rejected by the new scaling hard constraint (ρ, p × 1e-12 / 1e12), 360 of them for that alone. Among them
+are the three round-4 parents: c-2ca8842812 r-20261024-123127-eb8e, c-a411e8accb r-20261024-130330-3ce1,
+c-2637af56a6 r-20261024-125340-04f6 (all rejected for scaling only; absolute EPS = 1e-20 inherited from the zoo
+thinc_bvd).
+*Decision:* Keep the scaling constraint as in v1.5. The rescore stands and is not repeated.
+*Consequences:* Round-4 proposers start from the parent files and make their thresholds relative (as the zoo
+thinc_bvd fix D4 did); the parents themselves stay rejected under v1.5.
