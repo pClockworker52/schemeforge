@@ -1,0 +1,170 @@
+<title>schemeforge big picture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, verdict box up front, diagrams and tables at full column width (as the 2026-10-21 page). */
+:root{
+  --paper:#f6f7f9; --ink:#1a2330; --mute:#5d6878; --line:#d5dae2; --panel:#eceff4;
+  --accent:#2b5c8a; --ok:#2f8a4c; --warn:#b7791f; --bad:#b9412f;
+  --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);margin:0}
+main{max-width:860px;margin:0 auto;padding-block:28px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:650;line-height:1.25;text-wrap:balance}
+h1{font-size:2.1rem;margin:0 0 .2em}
+h2{font-size:1.45rem;margin:2.4em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+h3{font-size:1.1rem;margin:1.6em 0 .4em}
+p,li{max-width:68ch}
+.sub{color:var(--mute);margin:0 0 1.6em}
+code,.id{font-family:var(--mono);font-size:.88em}
+.verdict{background:var(--panel);border-left:4px solid var(--accent);padding:16px 20px;margin:1.4em 0}
+.verdict p{margin:.4em 0}
+.verdict strong{font-weight:600}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.scroll{overflow-x:auto;margin:1em 0}
+table{border-collapse:collapse;font-size:.92rem;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--mute);font-size:.8rem;letter-spacing:.03em}
+td.c,th.c{text-align:center}
+.y{color:var(--ok);font-weight:600}.n{color:var(--bad);font-weight:600}.u{color:var(--mute)}
+.pill{display:inline-block;padding:0 8px;border-radius:9px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.pill.ok{color:var(--ok);border:1px solid var(--ok)}
+.pill.warn{color:var(--warn);border:1px solid var(--warn)}
+.pill.bad{color:var(--bad);border:1px solid var(--bad)}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--ink);font-family:var(--body);font-size:13px}
+svg .m{fill:var(--mute)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:1em 0}
+.cols>div{min-width:0;border-top:3px solid var(--line);padding-top:8px}
+.cols>div.ok{border-color:var(--ok)}.cols>div.warn{border-color:var(--warn)}.cols>div.bad{border-color:var(--bad)}
+.cols h3{margin-top:.2em}
+ul.tight li{margin:.4em 0}
+.note{color:var(--mute);font-size:.9rem}
+</style>
+
+<main>
+<p class="eyebrow">schemeforge · state on 2026-10-24, judge euler1d-v1.5 · previous version: 2026-10-21, v1.2</p>
+<h1>The big picture</h1>
+<p class="sub">What changed in the three days since the last overview, what we learned from it, and what the last Phase 3 round can still deliver.</p>
+
+<div class="verdict">
+<p class="eyebrow">Short answer</p>
+<p><strong>The swarm has now been tested and works in a modest way. Target A is split between two scheme families, and round 4 is set up to decide whether that split is a real law.</strong></p>
+<p>Three days ago the agents had never run. Since then they wrote the hunches, proposed the candidates and broke the leaders in round 3. The best candidate of the project came from a proposer agent: it passes 8 of the 10 Target A checks on held-out data. It fails steady-state smoothness, while the engine's best schemes are smooth but not sharp. Nobody has yet produced a scheme that is both.</p>
+<p><strong>Recommendation: run round 4 as planned, then stop Phase 3.</strong> Its outcome is useful either way. A scheme that is sharp and smooth would be a real result. Failing to find one, under a hunch registered beforehand, gives a clean negative result with evidence from four rounds.</p>
+</div>
+
+<h2>1. What changed since 2026-10-21</h2>
+<div class="scroll">
+<svg viewBox="0 0 860 210" role="img" aria-label="Timeline from 20 to 24 October: judge versions above the axis, search rounds below">
+<g id="tline"></g>
+</svg>
+</div>
+<div class="scroll"><table>
+<tr><th>Change</th><th>Why it happened</th><th></th></tr>
+<tr><td><b>Agents run from WSL.</b> Hunch-generator, proposers and breakers did round 3; the main session only registered, evaluated and summarised.</td><td>The Windows app blocked them. Starting Claude Code inside WSL gave them their hooks and the <code>sforge</code> tools.</td><td><span class="pill ok">fixed</span></td></tr>
+<tr><td><b>Round 2 closed.</b> The 90 mysterious timeouts were memory, not CPU; workers are now capped at one per 2 GB.</td><td>15 parallel workers of 1.45 GB each made a 15.6 GB machine thrash.</td><td><span class="pill ok">fixed</span></td></tr>
+<tr><td><b>New slot: reconstruction</b> (judge v1.3), with memory (<code>reconstruction_stateful</code>). Candidates see a 6-cell window per interface instead of a slope ratio r.</td><td>Round 2 showed that a φ(r) limiter cannot reach the sharpness Target A asks for; the feasibility sweep confirmed it (hunch H-0011, supported).</td><td><span class="pill ok">done</span></td></tr>
+<tr><td><b>Long runs and a new check, A8</b> (judge v1.4): held-out shock tubes on 10–16× longer domains and smooth waves over 1,500–3,000 steps.</td><td>Breakers showed that the round-2 ratchet freezes flat regions at first order. Waves that arrive late then smear. The short tests never saw it.</td><td><span class="pill ok">done</span></td></tr>
+<tr><td><b>Judge v1.5</b> (tagged today): four breaker cases in dev, the zoo THINC fixed, and a new hard rule that a scheme must give the same answer in any units.</td><td>Round-3 breakers crashed four of five leaders. They also showed that an absolute epsilon of 1e-20, inherited from the zoo, switches THINC off at small densities.</td><td><span class="pill warn">strict</span></td></tr>
+<tr><td><b>Engine selection</b> now ranks by failed Target A checks first, drops duplicates and stops losing budget to usage limits.</td><td>In round 3 the engine traded the sharp shock for contact gains. The scalar score rewarded that, and four of its top five were one scheme in four spellings.</td><td><span class="pill ok">done</span></td></tr>
+</table></div>
+<p>Side effect of v1.5: 364 of the 376 round-3 candidates are now rejected for the units rule, including the three round-4 parents. The fix is one line per file (make the threshold relative), and the round-4 proposers will do it. Two zoo members, Koren and THINC/BVD, are also rejected now because they crash on the accepted cases. You decided both should stand.</p>
+
+<h2>2. Target A, round by round</h2>
+<p>Best held-out results per round. All are promo runs on cases the agents never see. The ✓ and ✗ marks come from <code>sforge promote</code>; run ids are in the round summaries.</p>
+<div class="scroll"><table>
+<tr><th>Candidate</th><th>Where from</th><th class="c">A1 shock</th><th class="c">A2 contact</th><th class="c">A3 expl.</th><th class="c">A4 Newton</th><th class="c">A5 smooth J</th><th class="c">A6 order</th><th class="c">A7 overshoot</th><th class="c">A8 long runs</th></tr>
+<tr><td class="id">c-a84758f0e8</td><td>round 2, ratchet</td><td class="c n">2.99</td><td class="c n">6.60</td><td class="c y">1.00</td><td class="c y">1.00</td><td class="c y">✓</td><td class="c y">✓</td><td class="c n">✗</td><td class="c n">✗</td></tr>
+<tr><td class="id">c-2ca8842812</td><td>round 3, proposer (H-0013)</td><td class="c y">2.18</td><td class="c y">2.92</td><td class="c n">0.90</td><td class="c y">1.00</td><td class="c n">0.077</td><td class="c y">1.96</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+<tr><td class="id">c-2637af56a6</td><td>round 3, engine leader</td><td class="c n">3.41</td><td class="c y">3.07</td><td class="c n">0.90</td><td class="c n">0.95</td><td class="c y">1.7e-5</td><td class="c y">1.94</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+<tr><td class="u">threshold</td><td></td><td class="c u">≤ 2.6</td><td class="c u">≤ 6.5</td><td class="c u">≥ 0.95</td><td class="c u">= 1</td><td class="c u">≤ 0.002</td><td class="c u">≥ 1.9</td><td class="c u">≤ 1.1 × vL</td><td class="c u">vL-like</td></tr>
+</table></div>
+<p>Widths are in cells (median over held-out shock tubes). "Smooth J" is the roughness of the nozzle wall force as the back pressure moves (p90). The ratchet's A8 was measured once v1.4 existed (r-20261022-193105-eeb2): its long-run contact spreads over 106.6 cells against a limit of 24.8, which is what the long runs were built to catch.</p>
+
+<h3>The split</h3>
+<p>The two round-3 families sit on opposite sides of the target. The sharp one puts its shock into about 2 cells but makes the wall force jagged. The smooth one makes the wall force smooth but spreads its shock over 3.4 cells. The working explanation: a very sharp steady shock can only sit at a few sub-cell positions. As the back pressure moves the exact shock smoothly, the computed shock jumps from one position to the next, and the wall force jumps with it.</p>
+<div class="scroll">
+<svg viewBox="0 0 860 340" role="img" aria-label="Held-out shock width against wall-force roughness for three round-3 candidates; the Target A corner is empty">
+<g id="split"></g>
+</svg>
+</div>
+<p class="note">Held-out promo values, judge v1.4 (round-3 summary). Logarithmic roughness axis. Only candidates whose two numbers are in the round summaries are drawn; round 4 will add the zoo and every new promo-evaluated candidate, as the pre-registration requires.</p>
+
+<h2>3. What we learned</h2>
+<div class="cols">
+<div class="ok"><h3>The judge keeps paying for itself</h3><p>Every version closed a hole that would otherwise have produced a false winner. v1.1 caught candidates that guessed the case from the batch size. v1.4 caught the ratchet that froze late waves. v1.5 catches crashes and unit dependence. The breakers found 21 failure cases in one round; 4 were accepted. Held-out data again showed that dev results flatter.</p></div>
+<div class="warn"><h3>The swarm helps, a little</h3><p>Pre-registered swarm test: <b>S1 met</b> (agents produced ideas the main session had not), <b>S2 met weakly</b> (one of three engine islands improved on its seed, by ≤ 5 % on held-out data). The best idea came from a proposer. The engine polished, but crossover spread one mechanism to every island, and its scalar score led it the wrong way.</p></div>
+<div class="bad"><h3>Target A may hold a real trade-off</h3><p>For φ(r) limiters, sharp shocks and low overshoot don't go together (H-0011, supported). For reconstructions, sharp steady shocks and a smooth objective have not gone together either. That is now a pre-registered hunch, H-0019, with a kill criterion that round 4 tests directly.</p></div>
+</div>
+<ul class="tight">
+<li><b>Agents need hard rules for numbers.</b> Two of six proposers skipped checking part of their own kill criterion, and both hunches turned out refuted. Every number must now cite a run id.</li>
+<li><b>Positivity is the shared weakness.</b> Nine crash cases across four leaders; van Leer survives all of them. Any promotable scheme will need a fallback.</li>
+<li><b>Known methods keep reappearing.</b> Round 3's mechanisms are rediscoveries or variants: characteristic THINC, BVD, limiter freezing. The search finds good combinations of known parts, not new parts.</li>
+</ul>
+
+<h2>4. What round 4 can deliver</h2>
+<p>Round 4 is the last Phase 3 round under the original kill criterion (4 rounds or about 2,000 candidates; about 1,550 used). Its hunch, its secondary target and its stop rule were fixed before it started.</p>
+<div class="scroll"><table>
+<tr><th>Outcome</th><th>What it would mean</th><th>Next</th><th>My estimate</th></tr>
+<tr><td><b>Target A promoted</b></td><td>A scheme that is sharp, smooth and Newton-convergent on held-out data. H-0019 refuted. This is the impactful result: a drop-in reconstruction for steady shock problems.</td><td>analyst, referee, dossier, then Phase 4 (2D, OpenFOAM)</td><td><span class="pill bad">unlikely, ~1 in 10</span></td></tr>
+<tr><td><b>Target A-c met</b></td><td>Contacts at least 40 % thinner than van Leer's, with no loss on shocks, convergence, smoothness or long runs. A useful practical scheme, labelled at most "variant of characteristic THINC".</td><td>short practical note plus the negative-result note</td><td><span class="pill warn">plausible, ~1 in 3</span></td></tr>
+<tr><td><b>Neither</b></td><td>H-0019 supported across four rounds and three scheme families. A clean, pre-registered negative result, published with the judge and zoo as a benchmark.</td><td>negative-result note, then Phase 6</td><td><span class="pill ok">most likely</span></td></tr>
+</table></div>
+<p class="note">The estimates are my judgement from rounds 1–3, not judge output. The candidates closest to Target A miss by 38× on smoothness or by 0.8 cells on shock width.</p>
+<p><b>What would surprise me in a good way:</b> a proposer finds a way to move a sharp shock continuously within a cell, for example with a sub-cell shock position carried in the state. That would attack the mechanism behind the split rather than trade along it. The round-4 prompt asks for at least two hunches on exactly that problem, without suggesting how.</p>
+<p><b>Cost:</b> about $17 list for 240 engine children plus agent sessions, one to two days elapsed. Rounds 2 and 3 cost $25.71 and $33.99.</p>
+
+<h2>5. Does continuing make sense?</h2>
+<p>For round 4, yes: it is cheap, fully specified, and every outcome ends Phase 3 with something to show. Beyond round 4 the plan does not continue Target A without a new recorded decision. The stronger long-term asset may already exist: an audited, cheat-resistant judge with held-out families and a breaker loop, which any scheme-search effort could use.</p>
+<p class="note">Sources: docs/STATUS.md, docs/DECISIONS.md, docs/plans/2026-10-24-round4.md, docs/targets/A.md, A-c.md, swarm.md, docs/rounds/2026-10-21-euler1d-limiter_stateful.md, docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md, docs/judge/2026-10-24-v15-refactor-check.md, and git history. The 2026-10-21 version of this page is docs/reports/2026-10-21-big-picture.html.</p>
+</main>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;p.appendChild(e);return e}
+// timeline: 20 Oct 00:00 .. 25 Oct 00:00 (days 0..5)
+const t=document.getElementById("tline"),L=40,W=780,X=d=>L+d/5*W,Y=100;
+el(t,"line",{x1:L,y1:Y,x2:L+W,y2:Y,style:"stroke:var(--line)","stroke-width":2});
+["Oct 20","Oct 21","Oct 22","Oct 23","Oct 24"].forEach((d,i)=>{el(t,"line",{x1:X(i),y1:Y-4,x2:X(i),y2:Y+4,style:"stroke:var(--mute)"});
+ el(t,"text",{x:X(i)+4,y:Y+20,class:"m","font-size":"12"},d)});
+// judge versions above the axis
+[[0.9,"v1.0"],[1.2,"v1.1"],[1.75,"v1.2"],[2.4,"v1.3"],[2.77,"v1.4"],[4.65,"v1.5"]].forEach((v,i)=>{
+ const y=i%2?42:60;el(t,"line",{x1:X(v[0]),y1:y+6,x2:X(v[0]),y2:Y,style:"stroke:var(--accent)"});
+ el(t,"text",{x:X(v[0]),y:y,"text-anchor":"middle","font-weight":"600",style:"fill:var(--accent)"},v[1])});
+el(t,"text",{x:L,y:20,class:"m","font-size":"12"},"judge versions");
+// rounds below the axis
+const R=[[1.35,1.56,"R1"],[1.62,2.25,"round 2"],[2.67,2.71,""],[2.9,4.05,"round 3 (agents)"],[4.05,4.75,"v1.5 prep"]];
+R.forEach((r,i)=>{el(t,"rect",{x:X(r[0]),y:Y+32,width:Math.max(3,X(r[1])-X(r[0])),height:14,rx:3,style:`fill:var(--${i==4?"warn":"ok"});fill-opacity:.35;stroke:var(--${i==4?"warn":"ok"})`});
+ if(r[2])el(t,"text",{x:(X(r[0])+X(r[1]))/2,y:Y+64,"text-anchor":"middle","font-size":"12"},r[2])});
+el(t,"text",{x:X(2.69),y:Y+82,"text-anchor":"middle","font-size":"12",class:"m"},"3c sweep");
+[[1.58,"Gate 2"],[4.3,"Gate 3e"]].forEach(g=>{el(t,"line",{x1:X(g[0]),y1:Y+86,x2:X(g[0]),y2:Y+96,style:"stroke:var(--ink)"});
+ el(t,"text",{x:X(g[0]),y:Y+108,"text-anchor":"middle","font-size":"12"},g[1])});
+el(t,"text",{x:L+W,y:Y+108,"text-anchor":"end",class:"m","font-size":"12"},"round 4: next");
+
+// split scatter: x = RF1 shock median [cells], y = log10 NF3 roughness p90
+const s=document.getElementById("split"),PL=80,PR=820,PT=24,PB=280;
+const xs=v=>PL+(v-1.8)/(3.8-1.8)*(PR-PL), ys=v=>PT+(-1-Math.log10(v))/(-1-(-5))*(PB-PT);
+// target corner: shock <= 2.6 and roughness <= 0.002
+el(s,"rect",{x:PL,y:ys(0.002),width:xs(2.6)-PL,height:PB-ys(0.002),style:"fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-dasharray:4 3"});
+el(s,"text",{x:PL+10,y:PB-12,style:"fill:var(--ok)","font-weight":"600"},"Target A corner (A1 and A5)");
+[2,2.5,3,3.5].forEach(v=>{el(s,"line",{x1:xs(v),y1:PT,x2:xs(v),y2:PB,style:"stroke:var(--line)"});el(s,"text",{x:xs(v),y:PB+18,"text-anchor":"middle",class:"m","font-size":"12"},v.toFixed(1))});
+[[1e-1,"0.1"],[1e-2,"0.01"],[1e-3,"0.001"],[1e-4,"1e-4"],[1e-5,"1e-5"]].forEach(([v,l])=>{el(s,"line",{x1:PL,y1:ys(v),x2:PR,y2:ys(v),style:"stroke:var(--line)"});el(s,"text",{x:PL-8,y:ys(v)+4,"text-anchor":"end",class:"m","font-size":"12"},l)});
+el(s,"text",{x:(PL+PR)/2,y:PB+40,"text-anchor":"middle",class:"m","font-size":"12"},"shock width, held-out median [cells]  (sharper ←)");
+el(s,"text",{x:16,y:(PT+PB)/2,"text-anchor":"middle",class:"m","font-size":"12",transform:`rotate(-90 16 ${(PT+PB)/2})`},"wall-force roughness, p90 (smoother ↓)");
+const P=[[2.18,0.0765,"c-2ca8842812 · proposer","bad","start"],[3.41,1.7e-5,"c-2637af56a6 · engine leader","warn","end"],[2.80,0.0190,"c-920a251254 · proposer","mute","start"]];
+P.forEach(p=>{const x=xs(p[0]),y=ys(p[1]);el(s,"circle",{cx:x,cy:y,r:7,style:`fill:var(--${p[3]});stroke:var(--paper);stroke-width:2`});
+ el(s,"text",{x:x+(p[4]=="end"?-12:12),y:y+4,"text-anchor":p[4],"font-size":"12.5"},p[2])});
+})();
+</script>
