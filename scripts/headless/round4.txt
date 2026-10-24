@@ -1,0 +1,45 @@
+Plan docs/plans/2026-10-24-round4.md step 4: round 4 on `reconstruction_stateful`, run by the agents. It is the last
+Phase 3 round (§3.3). The pre-registration in §3 of that plan (H-SR = H-0019, target A-c, stop rule) is fixed and must
+not change during the round.
+
+Before anything else (stop and report if one fails):
+- git fetch origin && git merge origin/claude/exciting-fermi-qy077p; uv run pytest -q passes;
+  `uv run sforge judge version --arena euler1d` prints euler1d-v1.5 and integrity: ok (tag, zoo eval dev + promo and
+  the rescore of plan step 2.6 are done; STATUS says so).
+- `uv run sforge hunch show H-0019` exists and is open (step 3).
+- The checklist in scripts/headless/README.md: the sforge MCP server is connected and /agents lists the agents.
+- Nothing else is evaluating. K = 7 (memory cap) stays.
+- Read docs/STATUS.md, docs/plans/2026-10-24-round4.md, docs/targets/A.md and A-c.md, docs/judge/euler1d_traps.md,
+  the latest docs/literature/ note, and docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md.
+
+Run the round with the /hunch-round skill, arena euler1d, slot reconstruction_stateful, and these settings:
+- n_hunches 6 from the **hunch-generator** agent, lenses spread over: shock physics, steady-convergence,
+  structure preservation, contrarian, transfer, approximation theory (one each). Give it this context and nothing
+  more specific: Target A and A-c; plan §1 (round 3 split Target A across two families: c-2ca8842812 passes all but
+  A3 and A5, the engine leaders pass A5 but not A1); H-0019's statement and mechanism as the obstacle to beat; that at
+  least two of the six hunches must target the steady shock-position / roughness problem directly (the generator
+  decides how); the zoo of this slot and of `reconstruction`; and that a stateless candidate in this slot passes its
+  state through. Do not suggest mechanisms yourself. Register every draft as written (`sforge hunch add`); if one is
+  invalid, send it back to the hunch-generator instead of fixing it.
+- evals_per_proposer 8, one **proposer** agent per hunch; no orchestrator edits to their candidates. Parents they may
+  start from (file paths from `sforge leaderboard --json` or the registry, by id): c-2ca8842812, c-a411e8accb,
+  c-2637af56a6; they may also start from scratch.
+- Before choosing islands: promo + `sforge promote --target A` on the best 3 proposer candidates by
+  `sforge leaderboard --arena euler1d --slot reconstruction_stateful --pareto --vs-zoo --top 3` (screen failures
+  first, duplicates left out). Pick the 2 hunches for islands from promo.
+- islands 2, gens 15, children 8, budget 240, backend claude-cli, model sonnet (haiku for wild), seeds = the best
+  proposer file of each island's hunch. The engine now selects by failed Target A dev screens first; requests that
+  never reach the model no longer use the budget. Run evolve in the background and wait, nothing next to it. If
+  requests stop reaching the model (usage limit), the engine pauses; resume with --resume and --arena.
+- After evolve: promo, `sforge promote --target A` and `sforge promote --target Ac` on the top 5 of
+  `sforge leaderboard --arena euler1d --slot reconstruction_stateful --pareto --vs-zoo --top 5`; then the **breaker**
+  agent on the top 3 (at most 10 cases each, into quarantine; I review them).
+
+Write docs/rounds/<date>-euler1d-reconstruction_stateful-r4.md: hunches with suggested verdicts and run ids, the
+proposer and engine results, promo and promote output (A and Ac) per candidate, quarantined cases, cost, and the
+**H-0019 evidence table**: every candidate and zoo member (any Arena 1 slot) with an ok promo run under v1.5 and NF1
+converged_impl mean = 1.00, with its RF1 shock_width median, NF3 roughness_J p90 and promo run id (the A1, A4 and A5 rows of
+`sforge promote <id> --target A` print exactly these; zoo members are promoted by their candidate id too); mark any row that
+meets the kill criterion; report Spearman ρ between the two columns and n. Every number cites a run id. Do not close
+hunches, H-0019 included; propose verdicts. Update STATUS, commit and push after the hunches are registered, after
+the proposers, after evolve, and at the end. Then stop: I decide at the step-5 gate.
