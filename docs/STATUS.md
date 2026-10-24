@@ -1,5 +1,5 @@
 # STATUS
-Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.4 (2026-10-22, 71a3d94)  Plan: v1.2
+Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544; zoo check blocked)  Plan: v1.2
 Last session: 2026-10-24 (cloud) — round-4 plan step 2 prepared on claude/exciting-fermi-qy077p: judge euler1d-v1.5.dev
 (not tagged), engine changes, target Ac, round-4 prompt. Ready for WSL.
 
@@ -7,6 +7,30 @@ Last session: 2026-10-24 (cloud) — round-4 plan step 2 prepared on claude/exci
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
+
+## Round-4 plan step 2.6 — v1.5 tagged, zoo check BLOCKED (WSL, 2026-10-24)
+- Merged to bbdc0f7; pytest 276 passed; tag commit 919c544 `euler1d-v1.5` pushed with the tag; `judge version`
+  prints euler1d-v1.5 (8a8b8304…), integrity ok.
+- `sforge case accept` B-0016/19/21/30: refused ("needs an interactive terminal (Peter only)"); registry still shows
+  them as quarantine. Peter runs it in a separate terminal.
+- **Blocker: `sforge zoo eval` aborts with "database is locked"** (twice: rescore.sh 14:10, and a re-run at K = 4,
+  15:07). Cause found: the v1.5 zoo thinc_bvd file has a new code hash, but id `zoo-reconstruction-thinc_bvd` is
+  already registered with the old hash. `register_candidate` (core/evaluation.py) then INSERTs a duplicate primary
+  key; the failed INSERT leaves an open write transaction on a connection that is never closed, every other worker
+  waits out BUSY_TIMEOUT (120 s), and the command dies. Only this member has an unregistered hash. Needs a code fix
+  (and a decision how a changed zoo member is registered); not fixed here. 18 v1.5 runs are left in status `running`.
+- Zoo check so far (members whose runs finished; per-case wall times and the wall-time `cost` excepted): **dev**
+  identical to v1.4 on the 18 old cases for 13 members (hll, mc, minmod, superbee, van_albada, venkatakrishnan,
+  limiter_stateful mc / superbee / superbee_frozen / van_albada / van_leer / van_leer_frozen, limiter/van_leer
+  c-38addf805f r-20261024-121315-8a79); koren rejected (B-0030) as expected. **promo** all 168 aggregates identical
+  for 14 members (e.g. limiter/van_leer… see runs r-20261024-131526-*, limiter_stateful/van_leer
+  r-20261024-132307-0d5c = v1.4 r-20261022-164948-bba4). **Not run under v1.5:** flux/hllc, flux/rusanov,
+  reconstruction first_order / thinc_bvd / weno5z, reconstruction_stateful muscl_van_leer / muscl_van_leer_frozen.
+- Rescore reconstruction_stateful (runs/rescore_v15.log; candidate runs are unaffected by the lock): 376 candidates,
+  **0 ok**: 360 rejected for the new scaling constraint alone, 4 scaling + another violation, 3 TypeError, 2 shape,
+  1 ValueError, 2 B-0030 crash, 1 B-0021 + B-0030 crash, 4 not run (file changed since registration). Round-4
+  parents, all rejected for scaling only: c-2ca8842812 r-20261024-123127-eb8e, c-a411e8accb r-20261024-130330-3ce1,
+  c-2637af56a6 r-20261024-125340-04f6.
 
 ## Round-4 plan step 2 — prepared on the branch, waiting for WSL (2026-10-24)
 - Done (cloud): judge clean-up with zoo dev scores identical to v1.4 (21/21), then v1.5 contents: B-0016, B-0019,
