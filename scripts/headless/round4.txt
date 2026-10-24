@@ -23,7 +23,9 @@ Run the round with the /hunch-round skill, arena euler1d, slot reconstruction_st
   invalid, send it back to the hunch-generator instead of fixing it.
 - evals_per_proposer 8, one **proposer** agent per hunch; no orchestrator edits to their candidates. Parents they may
   start from (file paths from `sforge leaderboard --json` or the registry, by id): c-2ca8842812, c-a411e8accb,
-  c-2637af56a6; they may also start from scratch.
+  c-2637af56a6; they may also start from scratch. If the v1.5 rescore rejected a parent (the new scaling constraint
+  catches an absolute `EPS = 1e-20`; DECISIONS 2026-10-24 "Judge v1.5 contents"), say so in the proposer's task: its
+  file is still a valid starting point once the threshold is made relative (traps file).
 - Before choosing islands: promo + `sforge promote --target A` on the best 3 proposer candidates by
   `sforge leaderboard --arena euler1d --slot reconstruction_stateful --pareto --vs-zoo --top 3` (screen failures
   first, duplicates left out). Pick the 2 hunches for islands from promo.

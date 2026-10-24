@@ -60,4 +60,4 @@ hunch-generators read it before writing code or hunches. Each line names its sou
 - **Thresholds must be relative, not absolute.** An `EPS = 1e-20` in a jump test switches THINC off when ρ and p are
   scaled by ≤ 1e-9 (B-0019; the zoo thinc_bvd had the same bug until v1.5). Scale every tolerance with the local
   values (e.g. `1e-12 * (|q_L| + |q_R|)` plus a tiny floor). Since judge v1.5 a hard constraint checks the scheme
-  at ×1e-8 and ×1e8 on the probes; the dev metamorphic ×10 measurement did not catch this.
+  with ρ and p × 1e-12 and × 1e12 on the probes (fluxes too); the dev metamorphic ×10 measurement did not catch this.

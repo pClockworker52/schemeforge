@@ -9,7 +9,7 @@ right state cells k+1..k+5, so the stencil stays within the judge's 6-cell windo
 import jax.numpy as jnp
 
 BETA = 1.6
-EPS = 1e-20
+EPS = 1e-20  # relative: the monotonicity test is scale-free (judge v1.5; v1.4 had an absolute 1e-20)
 
 
 def _muscl(b, c, d):
@@ -22,7 +22,7 @@ def _muscl(b, c, d):
 
 def _thinc(b, c, d):
     """(right face, left face) of cell c from cells b, c, d: THINC where c lies strictly between b and d, else c."""
-    mono = (d - c) * (c - b) > EPS
+    mono = (d - c) * (c - b) > EPS * (jnp.abs(b) + jnp.abs(c) + jnp.abs(d)) ** 2
     qmin = jnp.minimum(b, d)
     delta = jnp.where(mono, jnp.abs(d - b), 1.0)
     theta = jnp.where(d >= b, 1.0, -1.0)

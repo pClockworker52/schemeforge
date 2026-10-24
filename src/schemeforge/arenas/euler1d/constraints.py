@@ -26,6 +26,12 @@ CONSISTENCY_TOL = 1e-12  # relative to max |F|
 MIRROR_TOL = 1e-12
 BATCH_TOL = 1e-13  # batch vs one-at-a-time evaluation, relative (rounding only; a case switch differs by O(1))
 R_MIRROR = np.array([1.0, -1.0, 1.0])
+# Unit scaling (judge v1.5, after B-0019): rho and p times c with u fixed is an exact symmetry of the Euler equations
+# (the sound speed is unchanged), so primitive states scale by (c, 1, c) and fluxes by c. An absolute epsilon breaks it
+# by O(1) at these factors; rounding stays far below SCALE_TOL. Tolerances are relative to each component's largest
+# magnitude on the probe.
+SCALE_FACTORS = (1e-12, 1e12)
+SCALE_TOL = 1e-9
 # run-like batch sizes: interfaces/cells of the dev and held-out grids (N = 50 ... 400) and a single item
 BATCH_ROWS = (1, 54, 101, 104, 121, 124, 201, 204, 404)
 
@@ -187,6 +193,12 @@ def check_flux(flux: Callable, gamma: float = 1.4) -> list[str]:
         v.append(f"mirror symmetry violated: max relative error {err:.2e}")
     if not _bitwise_equal(F, np.asarray(flux(jnp.asarray(UL), jnp.asarray(UR), gamma))):
         v.append("flux is not deterministic")
+    for c in SCALE_FACTORS:  # conserved states and fluxes all scale by c under rho, p times c, u fixed
+        Fs = np.asarray(flux(jnp.asarray(UL * c), jnp.asarray(UR * c), gamma)) / c
+        if not np.all(np.abs(Fs - F) <= SCALE_TOL * np.max(np.abs(F), axis=1, keepdims=True)):
+            v.append(f"flux is not scale-invariant: with density and pressure times {c:g} (velocity unchanged) the "
+                     f"flux does not scale by the same factor (an absolute epsilon or threshold?)")
+            break
     perm = np.random.default_rng(2).permutation(UL.shape[0])
     if not _bitwise_equal(np.asarray(flux(jnp.asarray(UL[perm]), jnp.asarray(UR[perm]), gamma)), F[perm]):
         v.append("flux is not row-wise (a permuted batch does not give the permuted output)")
@@ -305,6 +317,17 @@ def _check_window_scheme(fn: Callable, gamma: float, stateful: bool) -> list[str
                      f"depends on the grid size, its statistics or the position)")
     except Exception as exc:  # noqa: BLE001
         v.append(f"{name} fails on a single interface window of {2 * NG} cells: {type(exc).__name__}: {exc}")
+    for W in grids[:6]:  # random cells, a jump and a smooth wave, at 1, 54 and 101 interfaces; the initial state
+        S = states(W)[0]
+        base = call(fn, W, S)[:2]
+        for c in SCALE_FACTORS:
+            unit = np.array([c, 1.0, c])
+            tol = SCALE_TOL * np.max(np.abs(W), axis=0)
+            if not all(np.all(np.abs(x / unit - b) <= tol) for x, b in zip(call(fn, W * unit, S)[:2], base,
+                                                                              strict=True)):
+                return [*v, f"{name} is not scale-invariant: with density and pressure times {c:g} (velocity "
+                            f"unchanged) its states do not scale by the same factor (an absolute epsilon or "
+                            f"threshold?)"]
     return v
 
 

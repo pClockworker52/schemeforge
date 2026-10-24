@@ -192,8 +192,9 @@ def test_accepted_cases_join_the_dev_suite() -> None:
     from schemeforge.arenas.euler1d.cases import accepted_cases, dev_suite
 
     ids = [c.id for c in dev_suite()]
-    assert [c.id for c in accepted_cases()] == ["B-0002", "B-0004", "B-0010", "B-0011"]
-    assert ids[-4:] == ["B-0002", "B-0004", "B-0010", "B-0011"] and len(ids) == len(set(ids))
+    accepted = ["B-0002", "B-0004", "B-0010", "B-0011", "B-0016", "B-0019", "B-0021", "B-0030"]
+    assert [c.id for c in accepted_cases()] == accepted
+    assert ids[-8:] == accepted and len(ids) == len(set(ids))
 
 
 def test_two_point_sweep_has_no_roughness() -> None:
@@ -204,3 +205,29 @@ def test_two_point_sweep_has_no_roughness() -> None:
     case = next(c for c in accepted_cases() if c.id == "B-0011")
     m, v = run_case(case, muscl(zoo.load("limiter", "van_leer")), zoo.load("flux", "hllc"))
     assert v == [] and "roughness_J" not in m and m["converged_expl"] == 1.0
+
+
+def test_absolute_epsilon_is_rejected() -> None:
+    # judge v1.5 (B-0019): an absolute threshold makes a scheme depend on the units; the v1.4 zoo thinc_bvd had one
+    def gated(W, g, eps=1e-20):  # MUSCL/van Leer that switches its slope off where the jump product is below eps
+        dm, dp = W[1:-1] - W[:-2], W[2:] - W[1:-1]
+        pos = dm * dp > eps
+        slope = jnp.where(pos, 2.0 * dm * dp / jnp.where(pos, dm + dp, 1.0), 0.0)
+        Wc = W[1:-1]
+        return (Wc + 0.5 * slope)[1:-2], (Wc - 0.5 * slope)[2:-1]
+
+    assert any("scale-invariant" in v for v in constraints.check_reconstruction(gated))
+    assert constraints.check_reconstruction(lambda W, g: gated(W, g, 0.0)) == []
+    stateful = constraints.check_reconstruction_stateful(lambda W, g, s: (*gated(W, g), s))
+    assert any("reconstruct_s is not scale-invariant" in v for v in stateful)
+
+
+def test_flux_with_absolute_epsilon_is_rejected() -> None:
+    hllc = zoo.load("flux", "hllc")
+    assert constraints.check_flux(hllc) == []
+    # extra dissipation only where the jump is below an absolute 1e-10: off on the probes, on at density x 1e-12
+    def gated(UL, UR, g):
+        return hllc(UL, UR, g) - jnp.where(jnp.abs(UR - UL) < 1e-10, 0.5 * (UR - UL), 0.0)
+
+    shifted = constraints.check_flux(gated)
+    assert any("flux is not scale-invariant" in v for v in shifted)

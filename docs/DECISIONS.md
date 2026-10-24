@@ -191,3 +191,24 @@ pre-registration: docs/plans/2026-10-24-round4.md (commit 4880bc3). Peter approv
 - **D5** Continue: run round 4 as planned; Phase 3 ends after it whatever the outcome (plan §3.3).
 *Consequences:* H-SR registered as H-0019 before any round-4 work. D3 and D4 land with judge v1.5 (from the
 branch); no case is accepted before then. 3b(i) residual gaps (metric skipping, unanticipated attacks) stay open.
+
+
+## 2026-10-24 — Judge v1.5 contents (cloud session, implementing gate 3e D3/D4 and plan step 2)
+*Context:* Plan docs/plans/2026-10-24-round4.md step 2. Step 1 (refactor) left every zoo dev score identical to v1.4
+(docs/judge/2026-10-24-v15-refactor-check.md).
+*Decision:*
+- D3: B-0016, B-0019, B-0021, B-0030 moved to `arenas/euler1d/cases/accepted/` (dev). WSL records them in the registry
+  with `sforge case accept`. A dev case that ends in a non-finite or non-positive state rejects the candidate, so any
+  zoo member that crashes on B-0016 or B-0030 (round 3: the zoo thinc_bvd did) is **rejected under v1.5**.
+- D4: zoo `thinc_bvd` monotonicity test relative: `(d - c)(c - b) > 1e-20 (|b| + |c| + |d|)²`.
+- New hard constraint (both reconstruction slots and the flux slot): ρ and p × c with u fixed must scale the states
+  (fluxes) by (c, 1, c) (c) to 1e-9 relative. **Deviation from the plan:** factors 1e-12 and 1e12, not 1e-8 and 1e8 —
+  at 1e-8 the v1.4 thinc_bvd still passed on the probes (ρ ≥ 1e-2), at 1e-12 it fails; every v1.5 zoo member passes.
+  Limiters need no such check (r is scale-free by construction).
+- Target `Ac` (plan §3.2) in core/promotion.py, docs/targets/A-c.md.
+- Deferred (not in v1.5): stateless reconstructions run as stateful with the state passed through, and one limiter
+  checker for both limiter slots. Both are behaviour-neutral clean-ups that touch the solvers; not needed for round 4.
+*Consequences:* WSL tags v1.5 after `pytest`, `sforge zoo eval` dev + promo and the rescore. Round-3 candidates with
+`EPS = 1e-20` (all five top ones) may be rejected under v1.5 by the scaling constraint (not checked here: the
+candidate files are only in WSL; the rescore shows it); if c-2ca8842812 is, a round-4 proposer that
+starts from it needs the relative-EPS fix (it is a candidate file; the orchestrator does not edit it).
