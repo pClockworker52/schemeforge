@@ -6,7 +6,9 @@ Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP 
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
 seed alone: smoke 57.6 s r-20261028-204346-2c47, dev 406–492 s). Peter chose option 1: timeouts raised to smoke 300 s /
-dev 1500 s (DECISIONS 2026-10-28); round-4 evolve restarted fresh from a Terminal-panel tab.
+dev 1500 s (DECISIONS 2026-10-28). Rerun e-20261028-212642-e595 failed the same way ($0.87): the real cause is memory
+(4.4 GB peak per worker, r-20261028-220113-4600, vs 2 GB assumed for K = 7). Round-4 evolve restarted with
+SFORGE_MAX_PARALLEL=3 (~1 h per generation).
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found

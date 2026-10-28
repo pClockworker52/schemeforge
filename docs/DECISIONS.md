@@ -244,3 +244,9 @@ The limits therefore filtered the slow, sharp families (the ones H-0019 is about
 *Consequences:* No judge change (arenas/** untouched, judge hash unchanged); timeouts only gate, so no score of an ok
 run changes and no rescore is needed. Earlier timeout rejections stay as recorded under the old limits. Wall clock
 per generation rises to an estimated ~40 min (~10 h for 15 generations). The round-4 summary reports this change.
+*Correction (same day, orchestrator):* the timeouts were not the cause. The fresh run e-20261028-212642-e595 again
+rejected 16/16 in gen 0 (7 smoke at 300 s, 6 dev at 1500 s, 3 size). Cause: memory. A worker of this family peaks at
+4.4 GB (dev r-20261028-220113-4600, ok, 423.7 s alone), against the 2 GB per worker that sets K = 7, so 7 workers
+(~31 GB) thrashed on 15.8 GB. Side finding: workers are pinned to logical CPUs 1..K, which are SMT siblings (0-1, 2-3,
+2-3, ...); left unchanged so cost numbers stay comparable with earlier runs. Fix: round-4 evolve runs with
+SFORGE_MAX_PARALLEL=3 (~13 GB); the raised timeouts stay as margin. Estimated ~1 h per generation.
