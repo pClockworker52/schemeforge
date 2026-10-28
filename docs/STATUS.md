@@ -2,6 +2,8 @@
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544)  Plan: v1.2
 Last session: 2026-10-24 (WSL) — round 4: hunches H-0020..H-0025 registered, proposers done
 (not tagged), engine changes, target Ac, round-4 prompt. Ready for WSL.
+Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
+desktop session on 2026-10-28; restart it before round-4 evolve.
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
