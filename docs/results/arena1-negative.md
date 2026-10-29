@@ -63,10 +63,14 @@ Each round removed one obstacle and exposed the next one:
    But that memory locks cells close to first order on long unsteady runs (LF1/LF2). Target A gained A8 for this
    before round 3; docs/targets/A.md lists LF2 order −1.5 to 0.26 for the round-2 ratchets.
 3. **Sharp shocks vs a smooth steady objective (round 3).** Characteristic splitting (THINC on the entropy field
-   only) gives sharp contacts without the overshoot. But the steady objective is rough whenever the steady shock is
-   sharp (c-2ca8842812, A5 0.077). It is smooth only when the shock is wide (engine leaders, A5 1.7e-5 at A1 3.41).
-   H-0019 was pre-registered to test this as the mechanism: a sharp steady shock snaps to sub-cell positions, which
-   puts steps into J(p_b).
+   only) gives sharp contacts without the overshoot. But in round 3 the steady objective was rough wherever the steady
+   shock was sharp (c-2ca8842812, A5 0.077) and smooth only where the shock was wide (engine leaders, A5 1.7e-5 at
+   A1 3.41). H-0019 was pre-registered to test this as the mechanism: a sharp steady shock snaps to sub-cell
+   positions, which puts steps into J(p_b). It was not a general rule even then: the round-2 limiter c-b5cb82a0ef
+   passed A1 (2.58), A4 (Newton 1.00) and A5 together on held-out data under judge v1.2 (r-20261022-060255-0a90), and
+   failed on overshoot (A7) and smooth accuracy (A6, S1 order 0.13) instead. The pre-registration's mechanism
+   paragraph said the round-2 near misses all had roughness ≥ 0.077 or failed Newton; that was an orchestrator error
+   at registration (see the H-0019 table below).
 4. **Sharp + smooth vs Newton convergence (round 4).** Three evolved candidates pass A1 and A5 together on held-out
    data: c-60c5ed6928 (r-20261029-122317-3b2e), c-4ece6bb6f7 and c-82efea7caf (r-20261029-122320-15bb). All three
    fail A4, with Newton means of 0.85, 0.85 and 0.75. No candidate in the evidence table below, that is, with Newton
@@ -97,6 +101,14 @@ Every Arena 1 candidate or zoo member with an ok v1.5 promo run and NF1 converge
 The table has 0 kill rows. Spearman ρ(shock, roughness) = −0.936 over the 12 rows, or −0.943 over the 6 distinct
 rows above (calculated by hand). That is in line with the predicted ρ ≤ −0.5, which was registered as reported,
 not deciding. Only one non-zoo candidate reaches Newton = 1.00 on promo at all, so the table mostly describes the zoo.
+
+**The table is incomplete, and H-0019 is not settled yet.** It lists only candidates with a v1.5 promo run, and after
+the v1.5 rescore only `reconstruction_stateful` candidates were re-run. The round-2 limiters were never run on v1.5
+promo. Two of them met the kill criterion's three conditions under judge v1.2: c-b5cb82a0ef (A1 2.58, A4 1.00, A5
+pass; r-20261022-060255-0a90) and c-fb8db52bca (A1 2.58, A4 and A5 pass; r-20261022-060626-894c). The criterion
+counts any Arena 1 candidate with an ok v1.5 promo run. Until both have v1.5 promo runs, the H-0019 verdict stays
+open: if either keeps those values, H-0019 is refuted (sharp, smooth and Newton-convergent together, at the price of
+overshoot and smooth-flow accuracy).
 
 ## The zoo front as a result
 
@@ -155,7 +167,7 @@ docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md; the ledger entries
 | H-0016 | 3, reconstruction_stateful | MOOD-style flag on WENO5-Z | refuted |
 | H-0017 | 3, reconstruction_stateful | κ = 1/3 quadratic in the BVD dictionary | refuted; variant of P_nT_m-BVD |
 | H-0018 | 3, method | the agent swarm adds value (docs/targets/swarm.md) | supported weakly: S1 met, S2 met by 1 of 3 islands, ≤ 5 % |
-| H-0019 | 4, all Arena 1 | no scheme with Newton = 1.00 is both sharp and smooth | *proposed:* supported for the families searched; mechanism in doubt (above) |
+| H-0019 | 4, all Arena 1 | no scheme with Newton = 1.00 is both sharp and smooth | *open:* waits for v1.5 promo runs of the round-2 limiters c-b5cb82a0ef and c-fb8db52bca, which met all three conditions under v1.2 (H-0019 table) |
 | H-0020 | 4, reconstruction_stateful | strength-inverse compression | *proposed:* refuted (dev) |
 | H-0021 | 4, reconstruction_stateful | motion-gated compression | *proposed:* refuted (promo, Newton 0.85); its island produced the nearest miss |
 | H-0022 | 4, reconstruction_stateful | positivity scaling of face states | *proposed:* refuted as specified |
@@ -182,13 +194,15 @@ docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md; the ledger entries
   shock fitting, sub-cell resolution with explicit shock tracking, or adjoint-consistent limiting.
 - **Small held-out families.** NF1 has 20 instances, so A4 = 0.85 means 3 failures. The nearest misses could be
   closer to or further from A4 than that suggests.
-- **Not red-teamed since judge v1.1.** Three cheater-agent runs were stopped by safety classifiers. Structural
+- **Not red-teamed since judge v1.1.** Two cheater-agent runs (against v1.3 and v1.4) were stopped by safety
+  classifiers (DECISIONS 3b(i)). Structural
   defences and breakers stand in for them (Peter's decision 3b(i)). Breakers have not attacked the round-4 top 3.
 - **Not reviewed.** No analyst or referee has looked at any candidate, and nothing here is labelled "plausibly new".
 
 ## Next (PLAN §11.4, Phase 6)
 
-1. Peter closes H-0019..H-0025 from the proposed verdicts and decides H-0024.
+1. v1.5 promo runs of c-b5cb82a0ef and c-fb8db52bca, then the H-0019 table again (see above). Then Peter closes
+   H-0019..H-0025 from the proposed verdicts and decides H-0024.
 2. Breakers on c-4ece6bb6f7, c-82efea7caf and c-60c5ed6928 from a WSL session. Any accepted case goes into the next
    judge version, followed by `sforge zoo eval` and an archive rescore.
 3. Publish the judge, the zoo and the harness as a benchmark (PLAN §20), with this note and the ledger.
