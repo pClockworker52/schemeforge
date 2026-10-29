@@ -1,0 +1,79 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: shock physics
+statement: >-
+  On the acoustic characteristic fields of c-a411e8accb, apply compression only to weak and moderate compressive jumps.
+  Use THINC with a smooth BVD weight, blended in with a weight that falls with the local relative pressure jump, is
+  zero for strong shocks, and is non-zero only where the field's characteristics converge. This cuts the RF1 shock
+  median from 2.89 to <= 2.6, while the RF2 and B-0010 overshoot stay at the base's level.
+mechanism: >-
+  Physics: a captured moving shock has a width set by numerical diffusion working against the convergence of its own
+  characteristics. A viscous shock has width ~ nu / [u], so weak shocks are the wide ones. van Leer's RF1 shock width
+  has median 2.95 and p90 4.37 (r-20261024-153251-4a12), and the wide tail is plausibly the weak shocks. Strong shocks
+  converge hard and are already narrow: the RF2 shock width median is 1.75 for both c-2ca8842812
+  (r-20261023-040314-a528) and van Leer (r-20261024-153251-4a12). Strong shocks are also where compression creates
+  overshoot. H-0015 found that B-0010 (Mach 10) overshoot rose from 0.026 to 0.087 as THINC beta went from 1.6 to 3.0
+  (r-20261023-035530-454a, r-20261023-034731-4dee). MC's RF2 overshoot p90 is 0.0727 against van Leer's 0.0233
+  (r-20261024-153251-db77, r-20261024-153251-4a12). Post-shock oscillations of slowly moving shocks grow with shock
+  strength (Arora and Roe 1997; Jin and Liu 1996). So compression helps exactly where it does little harm, and it
+  should scale inversely with strength. Contrary to H-0012's assumption that acoustic fields must not be compressed,
+  the hunch here is that this only holds for strong jumps.
+
+  Characteristic variables are needed so that the anti-diffusion stays in the family of the shock. Componentwise
+  compression leaks into the other families as spurious waves. With van Leer, the characteristic projection cut RF1
+  overshoot p90 from 0.0219 to 0.0066 and NF3 roughness p90 from 1.8e-3 to 1.5e-5 (c-a411e8accb r-20261023-232730-c8f5
+  vs van Leer r-20261024-153251-4a12). It did not cut RF2 overshoot (0.0236 vs 0.0233), which is why strong shocks are
+  excluded rather than trusted to the projection.
+
+  Recipe, on fields k = 1 and 3 of cell i:
+  - strength z = |p_{i+1} - p_{i-1}| / min(p_{i-1}, p_{i+1}); this is scale-free.
+  - g(z) = 1 / (1 + (z / z0)^4).
+  - convergence c_k = smooth positive part of (lambda_k(W_{i-1}) - lambda_k(W_{i+1})) / (|lambda_k(W_{i-1})| +
+    |lambda_k(W_{i+1})| + a_i), so only jumps that meet the Lax condition count.
+  - weight on the THINC branch = b_BVD g(z) h(c_k); the van Leer branch takes the rest.
+  For orientation at z0 = 3: Sod's shock (z ~ 2) gets g ~ 0.84, a Mach 2 shock (z ~ 3.5) about 0.35, Mach 3 (z ~ 9)
+  about 0.01, and Mach 10 (B-0010) 0.
+
+  A steady nozzle shock of moderate strength is partly compressed, so the steady part is a direct test of H-0019's
+  mechanism. The base's steady shock is already 0.86 cells wide (dev N1, r-20261023-174118-dde8) with N4 roughness
+  1.27e-5, so the prediction is that this compression changes J(p_b) little. The candidate is stateless and passes s
+  through. It needs the v1.5 relative EPS and a positivity fallback (traps); neither is part of the mechanism.
+predicted_effect:
+  - metric: RF1.shock_width
+    direction: down
+    size: "median from 2.89 (c-a411e8accb r-20261023-232730-c8f5, v1.4) to <= 2.6; p90 down by >= 0.5 cell from 4.37 (the weak-shock tail)"
+  - metric: RF2.overshoot
+    direction: same
+    size: "p90 within +10 % of the base's 0.0236 (same run); A7b bound 0.0256 = 1.1 x 0.02327 (r-20261024-153251-4a12)"
+  - metric: RF1.overshoot
+    direction: up
+    size: "p90 from 0.0066 to <= 0.015 (A7a bound 0.0241)"
+  - metric: B-0010.overshoot
+    direction: same
+    size: "dev, within 10 % of the base's 0.0204 (r-20261023-174118-dde8) and <= 0.0274 = 1.1 x muscl_van_leer 0.0249 (r-20261024-152923-ddbf)"
+  - metric: NF3.roughness_J
+    direction: up
+    size: "p90 from 1.47e-5 to <= 5e-4, below A5's 0.002"
+  - metric: NF1.converged_impl
+    direction: same
+    size: "1.00 (base 1.00)"
+  - metric: S1.order_smooth
+    direction: same
+    size: "dev >= 1.9: in smooth compressions z = O(dx) and c_k = O(dx), and BVD picks MUSCL"
+kill_criterion: >-
+  Dev (judge v1.5): refuted if no z0 in {2, 3, 5} gives R1 shock <= 2.7 together with B-0010 overshoot <= 0.0274
+  (= 1.1 x muscl_van_leer 0.0249, r-20261024-152923-ddbf). Also refuted if, at the z0 with the narrowest R1 shock,
+  B-0010 overshoot is more than 10 % above the base's 0.0204 (r-20261023-174118-dde8, v1.4): the strength gate would
+  then not spare strong shocks. Promo (judge v1.5): refuted if the best dev variant has an ok promo run with RF1
+  shock_width median > 2.6 or RF2 overshoot p90 > 0.0256. If A1 and A7b hold but NF3 roughness p90 > 0.002 or NF1
+  converged_impl < 1.00, the steady part is refuted; that is evidence for H-0019's mechanism on compressed steady shocks.
+  A promo run rejected for a hard-constraint violation leaves the promo part inconclusive.
+known_relatives:
+  - "Harten's artificial compression method (1977/1978); Yang (1990), artificial compression for ENO"
+  - "PPM flattening (Colella and Woodward 1984): a similar detector (relative pressure jump plus compression) used the other way round, to flatten strong shocks"
+  - "viscous shock structure: width inversely proportional to strength (Taylor 1910; textbook)"
+  - "post-shock oscillations of strong or slowly moving shocks (Arora and Roe 1997; Jin and Liu 1996)"
+  - "local characteristic limiting (Harten, Engquist, Osher, Chakravarthy 1987)"
+  - "THINC/BVD (Sun, Inaba, Xiao 2016) and BVD variants for shocks (Deng et al.)"
+  - "H-0011 (sharpness forces overshoot for componentwise phi(r)); H-0012 (acoustic fields deliberately left uncompressed); H-0015 (steeper THINC, more overshoot on B-0010)"
+author: hunch-generator/shock physics

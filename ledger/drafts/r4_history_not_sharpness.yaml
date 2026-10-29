@@ -1,0 +1,76 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: contrarian
+statement: >-
+  The textbook assumption broken here (and H-0019's mechanism) is that sharp steady shocks give staircase-like
+  objectives. The claim is instead that c-2ca8842812's NF3 roughness (p90 0.0765) comes from switching that is
+  discontinuous and depends on history, not from sharpness: a discrete BVD argmin, plus a flip-count lock whose final
+  pattern depends on the pseudo-time path. Take the same componentwise THINC/BVD (beta 1.6, primitive variables, all
+  fields), replace the argmin by a C1 weight of the normalised BVD margin, and keep no memory (state passed through).
+  This keeps the RF1 shock median <= 2.6 and reaches NF3 roughness p90 <= 0.002 with NF1 Newton 1.00.
+mechanism: >-
+  (1) Steady sharpness does not decide roughness. On dev N1 the steady shock is 0.86-0.91 cells wide in four schemes:
+  muscl_van_leer 0.907 (r-20261024-152923-ddbf), weno5z 0.901 (r-20261024-152923-3b0e), c-a411e8accb 0.864
+  (r-20261023-174118-dde8) and c-2ca8842812 0.903 (r-20261023-034337-d53f). Their N4 roughness spans 1.27e-5 to 0.0109,
+  a factor of 860, with every N4 point converged. On promo, weno5z (C-infinity weights) has RF1 shock 2.35 and NF3
+  roughness median 4.3e-4. Its p90 of 22 comes from sweep points where Newton did not converge (NF3 converged_impl
+  worst 0.91, r-20261024-154023-7489).
+
+  (2) Smoothness of the scheme gives smoothness of J. If R(U, p_b) is C1 in U and dR/dU is nonsingular along the
+  sweep, the implicit function theorem makes U(p_b), and so J(p_b), C1. The second difference over the 11-point sweep
+  then behaves like the exact one. A discrete argmin makes R only piecewise smooth: U(p_b) jumps wherever a cell near
+  the shock crosses a TBV tie, and as p_b moves the shock through the cells, ties are crossed about once per cell.
+  That is a staircase, and the second difference amplifies its steps.
+
+  (3) The lock adds dependence on the path. Which cells are locked to MUSCL at convergence depends on the transient
+  from the fixed initial guess, and the transient differs between neighbouring p_b. Neighbouring sweep points
+  therefore converge to different discrete schemes, which adds noise that is uncorrelated between points. On dev,
+  thinc_bvd without the lock has N4 roughness 4.6e-4 (r-20261023-035530-454a, v1.4); c-2ca8842812 with the lock has
+  0.0109 (r-20261023-034337-d53f), 24 x more, with all N4 points converged.
+
+  (4) Newton: a C1 weight makes the Jacobian continuous. The discrete thinc_bvd has NF1 Newton 0.65 and NF3 converged
+  median 0.27 (r-20261024-154009-f309). The round-3 smooth BVD weights reached NF1 Newton 1.00 (c-a411e8accb,
+  r-20261023-232730-c8f5), though only on the entropy field. Evidence against: smoothing superbee's and MC's kinks did
+  not restore convergence (H-0001, H-0002).
+
+  Recipe: m = (TBV_M - TBV_T) / (TBV_M + TBV_T + relative tiny), w = (1 + tanh(m / tau)) / 2 with tau in
+  {0.05, 0.1, 0.2}, face = w THINC + (1 - w) MUSCL-van-Leer. Use the zoo v1.5 relative monotonicity threshold and a
+  positivity fallback (traps). The state is returned unchanged.
+predicted_effect:
+  - metric: NF3.roughness_J
+    direction: down
+    size: "p90 from 0.0765 (c-2ca8842812 promo r-20261023-040314-a528, v1.4) to <= 0.002"
+  - metric: N4.roughness_J
+    direction: down
+    size: "dev, from 0.0109 (r-20261023-034337-d53f) to <= 1e-3 (thinc_bvd without the lock: 4.6e-4, r-20261023-035530-454a)"
+  - metric: RF1.shock_width
+    direction: same
+    size: "median <= 2.4 (c-2ca8842812 2.18; thinc_bvd 2.18, r-20261024-154009-f309); the smooth weight widens by at most 0.2 cell"
+  - metric: NF1.converged_impl
+    direction: same
+    size: "1.00 (c-2ca8842812 1.00; the stateless discrete thinc_bvd only 0.65)"
+  - metric: NF3.converged_impl
+    direction: up
+    size: "mean from 0.945 (c-2ca8842812) to >= 0.98"
+  - metric: NF1.converged_expl
+    direction: same
+    size: "0.85-0.95; A3 (>= 0.95) is not claimed"
+  - metric: RF2.overshoot
+    direction: same
+    size: "p90 within 10 % of c-2ca8842812's 0.0239 (A7b bound 0.0256, r-20261024-153251-4a12)"
+kill_criterion: >-
+  Dev (judge v1.5): refuted if, for every tau in {0.05, 0.1, 0.2}, the stateless C1 candidate has N4 roughness > 0.002
+  while N4 converged_impl = 1. Non-convergence is then excluded as the cause, so the scheme is rough although smooth
+  and memoryless. Also refuted if every tau that reaches N4 <= 0.002 has R1 shock > 2.7: smoothness bought with width
+  is what H-0019 says. Controls on dev, to attribute the effect: tau = 1e-4 (nearly discrete, no memory) and the
+  EPS-fixed c-2ca8842812 (discrete, with the lock). Promo (judge v1.5): refuted if the best dev tau has an ok promo run
+  with RF1 shock_width median > 2.6, or with NF3 roughness p90 > 0.002 while NF3 converged_impl mean = 1.00 (rough
+  despite converging is H-0019's mechanism). If NF3 roughness p90 > 0.002 and NF3 converged_impl < 1.00, the verdict is
+  inconclusive: Newton failed, as with weno5z, rather than the objective being rough.
+known_relatives:
+  - "THINC/BVD (Sun, Inaba, Xiao 2016), zoo thinc_bvd; c-2ca8842812 (H-0013 proposer) is the parent"
+  - "smooth (Lipschitz) BVD weights in the round-3 engine leaders (c-2637af56a6, c-a411e8accb), there on the entropy field only"
+  - "differentiable limiters for steady convergence (Venkatakrishnan 1993; Michalak and Ollivier-Gooch 2008); H-0001 and H-0002 (smoothing kinks did not restore convergence: evidence against)"
+  - "path dependence of frozen or switched limiters (limiter freezing, Venkatakrishnan 1995; H-0013's lock)"
+  - "H-0019, the hunch this one opposes"
+author: hunch-generator/contrarian

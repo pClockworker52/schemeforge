@@ -1,11 +1,55 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544)  Plan: v1.2
-Last session: 2026-10-24 (WSL) — round-4 plan step 2.6 done: judge euler1d-v1.5 tagged (919c544), zoo dev + promo checked against v1.4, rescore 0/376 ok (scaling)
+Last session: 2026-10-24 (WSL) — round 4: hunches H-0020..H-0025 registered, proposers done
+Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
+desktop session on 2026-10-28; restart it before round-4 evolve.
+2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
+seed alone: smoke 57.6 s r-20261028-204346-2c47, dev 406–492 s). Peter chose option 1: timeouts raised to smoke 300 s /
+dev 1500 s (DECISIONS 2026-10-28). Rerun e-20261028-212642-e595 failed the same way ($0.87): the real cause is memory
+(4.4 GB peak per worker, r-20261028-220113-4600, vs 2 GB assumed for K = 7). Round-4 evolve restarted with
+SFORGE_MAX_PARALLEL=3 (~1 h per generation).
+2026-10-29: **round 4 done, waiting at the step-5 gate.** Evolve e-20261028-220902-e988 completed (15 gens, 240
+children, front 200, $20.34; Windows Update restart at 03:34, resumed 06:52). Promo + promote A/Ac on the top 5: none
+promoted. Nearest miss c-4ece6bb6f7 r-20261029-122317-32a7 fails only A4 (NF1 Newton 0.85) and passes A1 2.243, A5
+1.47e-5 and A7b together; c-82efea7caf r-20261029-122320-15bb fails only A4 (0.75). H-0019 table: 0 kill rows,
+ρ = −0.936 (n = 12; −0.943 over the 6 distinct rows). Summary + proposed verdicts:
+docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md. Open: breakers on the top 3 (need WSL claude + sforge
+MCP), Peter's call on H-0024, then the negative-result note per the stop rule.
+2026-10-29: **negative-result note drafted**, docs/results/arena1-negative.md (Peter's choice at the step-5 gate):
+what was tried per round, the conflict between Target A's criteria (overshoot → long-run accuracy → roughness → Newton),
+the v1.5 zoo front with run ids, every hunch verdict (round 4 proposed), method results, limits. Next: Peter closes
+H-0019..H-0025, breakers on the round-4 top 3, benchmark release (PLAN §20), Phase 6.
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
 (p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
 (docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
+
+## Round 4 running (plan step 4; scripts/headless/round4.txt; interactive WSL session, 2026-10-24)
+- Pre-checks passed: merged f30cb60; pytest 277; judge euler1d-v1.5 integrity ok; H-0019 open; sforge MCP server
+  restarted by Peter (stale since 08:50) and tested (smoke r-20261024-194523-43d5 ok, v1.5); nothing else evaluating.
+- Hunches registered 2026-10-24 from the hunch-generator, as written: H-0020 strength-inverse compression (shock
+  physics), H-0021 motion-gated compression (steady-convergence), H-0022 positivity scaling (structure preservation),
+  H-0023 history not sharpness (contrarian), H-0024 diffused BVD weight (transfer), H-0025 characteristic WENO
+  (approximation theory). Four target the steady shock-position / roughness problem directly (generator's count:
+  H-0021, H-0023, H-0024, H-0025).
+- Proposers done 2026-10-24 (reports: docs/rounds/2026-10-24-round4/proposers/; agents' own verdicts, dev, v1.5):
+  H-0020 c-cb9fe80826 r-20261024-202537-69d0 (R1 shock 2.48, N4 roughness 1.3e-5; kill clause 2 fires: B-0010
+  overshoot +18.5 % over base); H-0021 c-698b39759f r-20261024-204336-e65e (R1 shock 2.48, N4 roughness = base 1.27e-5,
+  B-0011 Newton 0.5; "supported on dev"); H-0022 c-9a3faab538 r-20261024-202309-21b3 (hunch's ε still non-finite on
+  B-0030, r-20261024-201321-dc41: "refuted as specified"); H-0023 c-af3143be0c r-20261024-202133-76b1 (N4 roughness
+  6.8e-4, R1 2.475, extra safety switches; "partly"); H-0024 c-5ff53c2690 r-20261024-201845-0539 **rejected** (B-0016,
+  B-0030; "inconclusive"); H-0025 c-47838d9365 r-20261024-201754-e32b (char. WENO5-Z + van Leer fallback, R1 2.56, N4
+  roughness 8.1e-6; promo pending). Most proposers needed positivity/expansion fallbacks outside their mechanism.
+- Promo + promote A on the leaderboard top 3 (docs/rounds/2026-10-24-round4/proposer_promo.txt; references limiter/mc
+  r-20261024-153251-db77, van_albada r-20261024-153252-8783, van_leer r-20261024-153251-4a12): **c-698b39759f**
+  (H-0021) r-20261024-210131-4dcc fails only A4 (NF1 Newton 0.85) and A7b (RF2 overshoot 0.0295 vs 0.0256); passes
+  A1 2.19 and A5 0.0014 together (A4 < 1, so not an H-0019 kill). c-9a3faab538 (H-0022) r-20261024-211946-b555 fails
+  A1 (2.90) and A4 (0.85). c-47838d9365 (H-0025) r-20261024-205819-e795 fails A3 (0.85), A5 (0.31), A7b (0.0314).
+  Islands: H-0021, H-0022 (seeds candidates/H-0021/proposer/cand_1.py, candidates/H-0022/proposer/cand_3.py).
+- **Evolve e-20261024-213316-3d46 stopped at 23:33 in generation 0 (0 children)**: Claude Code killed the background
+  command because the system was low on memory (its reaper, not the run's own memory use). 7 seeding runs left (1
+  rejected, 6 `running`). Not restarted; waiting for Peter.
 
 ## Round-4 plan step 2.6 done — judge euler1d-v1.5 tagged and checked (WSL, 2026-10-24)
 - Tag commit 919c544 `euler1d-v1.5` (pushed with the tag); `judge version` euler1d-v1.5 (8a8b8304…), integrity ok;

@@ -18,7 +18,7 @@ from .loader import code_hash
 from .locks import acquire_core
 from .worker import MARKER
 
-TIMEOUTS = {"smoke": 120, "dev": 600, "promo": 3600}  # wall-clock seconds, JIT included
+TIMEOUTS = {"smoke": 300, "dev": 1500, "promo": 3600}  # wall-clock seconds, JIT included (DECISIONS 2026-10-28)
 MEMORY_BYTES = 0  # RLIMIT_AS; 0 = off (JAX reserves large virtual address ranges, see DECISIONS.md)
 REPORTS_DIR = Path("runs") / "reports"
 HELDOUT_DIR = Path.home() / ".schemeforge" / "heldout_runs"  # per-instance promo details; denied to Claude Code

@@ -231,3 +231,22 @@ thinc_bvd).
 *Decision:* Keep the scaling constraint as in v1.5. The rescore stands and is not repeated.
 *Consequences:* Round-4 proposers start from the parent files and make their thresholds relative (as the zoo
 thinc_bvd fix D4 did); the parents themselves stay rejected under v1.5.
+
+
+## 2026-10-28 — evaluation timeouts raised for round-4 evolve (Peter, option 1)
+*Context:* Round-4 evolve e-20261028-201918-36b6 rejected all 16 generation-0 children: 14 for timeouts (7 smoke at
+120 s, 7 dev at 600 s), 2 for the 150-line size limit. One timed-out child was the seed c-698b39759f itself. Alone,
+the seed needs 57.6 s on smoke (r-20261028-204346-2c47) and 406 s (r-20261024-204336-e65e) to 492 s on dev; at K = 7
+in parallel each evaluation slows by more than 2x. The earlier evolve e-20261024-213316-3d46 most likely failed the same way.
+The limits therefore filtered the slow, sharp families (the ones H-0019 is about) before any score was taken.
+*Decision:* Raise the wall-clock limits in core/evaluation.py from smoke 120 s / dev 600 s to smoke 300 s / dev
+1500 s; promo stays 3600 s. K = 7 stays. Run e-20261028-201918-36b6 is abandoned; round-4 evolve restarts fresh.
+*Consequences:* No judge change (arenas/** untouched, judge hash unchanged); timeouts only gate, so no score of an ok
+run changes and no rescore is needed. Earlier timeout rejections stay as recorded under the old limits. Wall clock
+per generation rises to an estimated ~40 min (~10 h for 15 generations). The round-4 summary reports this change.
+*Correction (same day, orchestrator):* the timeouts were not the cause. The fresh run e-20261028-212642-e595 again
+rejected 16/16 in gen 0 (7 smoke at 300 s, 6 dev at 1500 s, 3 size). Cause: memory. A worker of this family peaks at
+4.4 GB (dev r-20261028-220113-4600, ok, 423.7 s alone), against the 2 GB per worker that sets K = 7, so 7 workers
+(~31 GB) thrashed on 15.8 GB. Side finding: workers are pinned to logical CPUs 1..K, which are SMT siblings (0-1, 2-3,
+2-3, ...); left unchanged so cost numbers stay comparable with earlier runs. Fix: round-4 evolve runs with
+SFORGE_MAX_PARALLEL=3 (~13 GB); the raised timeouts stay as margin. Estimated ~1 h per generation.

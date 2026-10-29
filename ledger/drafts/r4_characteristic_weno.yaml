@@ -1,0 +1,79 @@
+arena: euler1d
+slot: reconstruction_stateful
+lens: approximation theory
+statement: >-
+  WENO5-Z in local characteristic variables, on all three fields, stateless with the state passed through, converges
+  with Newton on every NF1 nozzle and every NF3 sweep point; componentwise WENO5-Z reaches only NF1 0.65. It therefore
+  meets A1, A4 and A5 together (RF1 shock median <= 2.6, NF1 Newton 1.00, NF3 roughness p90 <= 0.002), which refutes
+  H-0019. A7b is not expected to hold.
+mechanism: >-
+  Approximation theory: WENO's nonlinear weights carry out ENO stencil selection. That is justified for a scalar
+  function with one isolated jump in the stencil: every substencil that crosses the jump has a smoothness indicator of
+  O(jump^2), and its weight goes to about zero.
+
+  Componentwise on (rho, u, p), the three components jump by different relative amounts at the same shock, and each is
+  polluted by the waves of the others. Their weights then choose different substencils at the same face, so the face
+  state is assembled from different stencils. It does not lie on the shock's Hugoniot locus, and it emits small waves
+  in the other two families. Zhang and Shu (2007) showed that these slight post-shock oscillations hold the WENO
+  residual at truncation level.
+
+  Here the same effect plausibly makes Newton fail at isolated sweep points: weno5z promo has NF1 converged_impl 0.65
+  and NF3 converged_impl worst 0.91 (r-20261024-154023-7489). Its NF3 roughness is low where it converges (median
+  4.3e-4); the p90 of 22 is a convergence failure, not a staircase.
+
+  In characteristic variables a steady normal shock is, to leading order in its strength, a jump in the field-1
+  amplitude only. Fields 2 and 3 are smooth across the stencil, so their weights relax to the linear weights (fifth
+  order). The face state then lies on the field-1 Hugoniot and no spurious waves are emitted. The 2010 follow-up to
+  Zhang and Shu reports that the characteristic decomposition affects the post-shock oscillation. In-house support:
+  projecting van Leer onto characteristic fields (c-a411e8accb) cut RF1 overshoot p90 from 0.0219 to 0.0066 and NF3
+  roughness p90 from 1.8e-3 to 1.5e-5 (r-20261023-232730-c8f5 vs r-20261024-153251-4a12).
+
+  Why A1 should survive: the moving shock width comes from stencil selection on the field that carries the shock
+  (componentwise RF1 2.35), and the projection does not widen it.
+
+  Why A7b likely fails: the projection left van Leer's RF2 overshoot unchanged (0.0236 vs 0.0233, same runs), so
+  overshoot behind slowly moving shocks is not a cross-field effect. weno5z's RF2 p90 is 0.0696.
+
+  Implementation notes, not part of the mechanism: WENO-Z's EPS = 1e-40 is absolute; on characteristic amplitudes it
+  must be made relative to pass the v1.5 scaling constraint. A positivity fallback is needed because the
+  back-projection can produce negative face rho or p (traps). The 5-cell stencils fit the 6-cell window, as in the zoo
+  weno5z.
+predicted_effect:
+  - metric: NF1.converged_impl
+    direction: up
+    size: "mean from 0.65 (weno5z promo r-20261024-154023-7489, v1.5) to 1.00"
+  - metric: NF3.roughness_J
+    direction: down
+    size: "p90 from 22.2 (same run) to <= 0.002; median at or below 4.3e-4"
+  - metric: NF3.converged_impl
+    direction: up
+    size: "mean from 0.982 (same run) to 1.00"
+  - metric: NF1.converged_expl
+    direction: up
+    size: "mean from 0.65 (same run) to >= 0.9"
+  - metric: RF1.shock_width
+    direction: same
+    size: "median <= 2.5 (componentwise 2.35, same run)"
+  - metric: RF1.overshoot
+    direction: down
+    size: "p90 from 0.0717 (same run) to <= 0.03"
+  - metric: RF2.overshoot
+    direction: same
+    size: "p90 within 20 % of 0.0696 (same run); A7b (<= 0.0256 = 1.1 x 0.02327, r-20261024-153251-4a12) expected to fail"
+  - metric: S1.order_smooth
+    direction: same
+    size: "dev > 3 (componentwise 3.33, r-20261024-152923-3b0e)"
+kill_criterion: >-
+  Dev (judge v1.5): refuted if characteristic WENO5-Z fails to converge with Newton on N1 or on any N4 point (N4
+  converged_impl < 1). Also refuted if its N4 roughness is more than 10 x weno5z's 1.3e-4 (r-20261024-152923-3b0e), or
+  if its R1 shock exceeds 2.7 (weno5z 2.56, same run). Promo (judge v1.5): refuted if its ok promo run has NF1
+  converged_impl mean < 1.00, NF3 roughness_J p90 > 0.002 or RF1 shock_width median > 2.6. A promo run rejected for a
+  positivity violation, after a fallback has been added, leaves the promo part inconclusive. Failing A7 does not refute
+  this hunch; it predicts that failure.
+known_relatives:
+  - "Known method, stated plainly: characteristic-wise WENO5-Z is textbook (Borges, Carmona, Costa, Don 2008; Harten, Engquist, Osher, Chakravarthy 1987; Qiu and Shu 2002); zoo weno5z is its componentwise form. Only its steady nozzle Newton convergence and objective smoothness under this judge are tested"
+  - "Zhang and Shu (2007, J. Sci. Comput. 31): a new smoothness indicator for WENO and its effect on convergence to steady state; post-shock oscillations hold the residual"
+  - "J. Sci. Comput. follow-up, doi 10.1007/s10915-010-9435-5 (search snippet only, authors not checked): the local characteristic decomposition strongly affects post-shock oscillation"
+  - "Zhang and Shen (2025): hybrid WENO on genuinely nonlinear fields and BVD on linearly degenerate fields (from H-0012's relatives; abstract only)"
+  - "H-0016 (MOOD on WENO5-Z, refuted)"
+author: hunch-generator/approximation theory
