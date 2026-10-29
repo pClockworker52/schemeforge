@@ -7,7 +7,7 @@ judge has scored it.
 - Plan: [docs/PLAN.md](docs/PLAN.md)
 - Current state: [docs/STATUS.md](docs/STATUS.md)
 - Decisions: [docs/DECISIONS.md](docs/DECISIONS.md)
-- Latest overview: [docs/reports/2026-10-24-big-picture.html](docs/reports/2026-10-24-big-picture.html) (open in a browser)
+- Latest overview: [docs/reports/2026-10-29-big-picture.html](docs/reports/2026-10-29-big-picture.html) (open in a browser)
 
 ## What is in the repo
 
@@ -42,15 +42,6 @@ Current numbers and open questions are in [docs/STATUS.md](docs/STATUS.md); each
   far came from a proposer agent. The pre-registered swarm test ([docs/targets/swarm.md](docs/targets/swarm.md))
   was met for new ideas and only weakly for the engine improving on them.
 - Target A ([docs/targets/A.md](docs/targets/A.md)), a limiter or reconstruction that is both sharp and steady-state
-  convergent, has not been met; rounds 1–3 point to a trade-off, tested as a pre-registered hunch in round 4
-  ([docs/plans/2026-10-24-round4.md](docs/plans/2026-10-24-round4.md)).
-
-## Setup (WSL2 / Linux)
-
-```bash
-uv sync
-uv run sforge --help
-uv run pytest -q
-```
-
-The held-out seed lives outside the repo at `~/.schemeforge/heldout_seed` and is never committed.
+  convergent, was not met in four rounds. The nearest miss passes 12 of 13 checks on held-out data and fails Newton
+  convergence on 3 of 20 nozzles. The criteria conflict in several ways rather than along one trade-off
+  ([docs/results/arena1-negative.md](docs/results/arena1-negative.md)).

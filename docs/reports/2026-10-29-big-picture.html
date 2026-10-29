@@ -1,0 +1,209 @@
+<title>schemeforge big picture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, verdict box up front, diagrams and tables at full column width (as the earlier versions). */
+:root{
+  --paper:#f6f7f9; --ink:#1a2330; --mute:#5d6878; --line:#d5dae2; --panel:#eceff4;
+  --accent:#2b5c8a; --ok:#2f8a4c; --warn:#b7791f; --bad:#b9412f;
+  --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);margin:0}
+main{max-width:860px;margin:0 auto;padding-block:28px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:650;line-height:1.25;text-wrap:balance}
+h1{font-size:2.1rem;margin:0 0 .2em}
+h2{font-size:1.45rem;margin:2.4em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+h3{font-size:1.1rem;margin:1.6em 0 .4em}
+p,li{max-width:68ch}
+.sub{color:var(--mute);margin:0 0 1.6em}
+code,.id{font-family:var(--mono);font-size:.88em}
+.verdict{background:var(--panel);border-left:4px solid var(--accent);padding:16px 20px;margin:1.4em 0}
+.verdict p{margin:.4em 0}
+.verdict strong{font-weight:600}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.scroll{overflow-x:auto;margin:1em 0}
+table{border-collapse:collapse;font-size:.92rem;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--mute);font-size:.8rem;letter-spacing:.03em}
+td.c,th.c{text-align:center}
+.y{color:var(--ok);font-weight:600}.n{color:var(--bad);font-weight:600}.u{color:var(--mute)}
+.pill{display:inline-block;padding:0 8px;border-radius:9px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.pill.ok{color:var(--ok);border:1px solid var(--ok)}
+.pill.warn{color:var(--warn);border:1px solid var(--warn)}
+.pill.bad{color:var(--bad);border:1px solid var(--bad)}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--ink);font-family:var(--body);font-size:13px}
+svg .m{fill:var(--mute)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:1em 0}
+.cols>div{min-width:0;border-top:3px solid var(--line);padding-top:8px}
+.cols>div.ok{border-color:var(--ok)}.cols>div.warn{border-color:var(--warn)}.cols>div.bad{border-color:var(--bad)}
+.cols h3{margin-top:.2em}
+ul.tight li{margin:.4em 0}
+.note{color:var(--mute);font-size:.9rem}
+</style>
+
+<main>
+<p class="eyebrow">schemeforge · state on 2026-10-29, judge euler1d-v1.5, end of Phase 3 · earlier versions: 2026-10-21, 2026-10-24</p>
+<h1>The big picture</h1>
+<p class="sub">What the four search rounds on Arena 1 produced, why Target A was not reached, and what comes next.</p>
+
+<div class="verdict">
+<p class="eyebrow">Short answer</p>
+<p><strong>Phase 3 ended without a Target A promotion, but closer than expected. The last obstacle is Newton convergence on 3 of 20 held-out nozzles.</strong></p>
+<p>Round 4's best scheme, evolved by the engine, passes 12 of Target A's 13 checks on held-out data. It is sharp, it gives a smooth steady objective, and its overshoot is at van Leer's level. It fails only A4: Newton converges on 17 of 20 held-out nozzle instances, and A4 asks for all 20.</p>
+<p>The explanation the plan bet on, that sharp steady shocks force a rough objective, did not hold up. Round 4 produced schemes that are both sharp and smooth, and a round-2 limiter already had been sharp, smooth and Newton-convergent at once. Target A's checks do conflict, but along several lines, not one.</p>
+<p><strong>Recommendation:</strong> finish the two open checks (H-0019 evidence, breakers), publish the negative-result note with the judge and zoo as a benchmark, and move to Phase 6. A round 5 aimed only at A4 for the nearest-miss family is the one continuation that looks worth a decision.</p>
+</div>
+
+<h2>1. What happened since 2026-10-24</h2>
+<div class="scroll">
+<svg viewBox="0 0 860 210" role="img" aria-label="Timeline from 20 to 29 October: judge versions above the axis, search rounds below">
+<g id="tline"></g>
+</svg>
+</div>
+<div class="scroll"><table>
+<tr><th>Step</th><th>What came out</th></tr>
+<tr><td><b>Judge v1.5 tagged</b> (Oct 24)</td><td>Zoo scores identical to v1.4 apart from the intended changes. 364 of 376 round-3 candidates rejected by the new units rule, including all three round-4 parents; Koren and THINC/BVD rejected for crashes.</td></tr>
+<tr><td><b>Round 4 hunches and proposers</b> (Oct 24)</td><td>Six hunches from the hunch-generator agent (H-0020 to H-0025), two aimed at the steady-shock problem as asked. Proposers made the parents' thresholds relative and built on them.</td></tr>
+<tr><td><b>Engine</b> (Oct 28–29)</td><td>Two false starts: every child timed out, because this family needs 4.4 GB per worker, not the 2 GB assumed. With 3 workers, 15 generations and 240 children ran in about a day, through a Windows Update restart. $20.34.</td></tr>
+<tr><td><b>Promotion test</b> (Oct 29)</td><td>Top 5 on held-out data: none promoted for A or A-c. Three engine children pass sharpness and smoothness together and fail only Newton, or Newton and one overshoot check.</td></tr>
+<tr><td><b>Negative-result note</b> (Oct 29)</td><td>Drafted per the stop rule: <code>docs/results/arena1-negative.md</code>. A review found that the H-0019 evidence table missed two round-2 limiters; they are being re-run on v1.5 now.</td></tr>
+</table></div>
+
+<h2>2. Target A, round by round</h2>
+<p>Best held-out results per round, from <code>sforge promote</code>; run ids are in the round summaries.</p>
+<div class="scroll"><table>
+<tr><th>Candidate</th><th>Where from</th><th class="c">A1 shock</th><th class="c">A2 contact</th><th class="c">A3 expl.</th><th class="c">A4 Newton</th><th class="c">A5 smooth J</th><th class="c">A6 order</th><th class="c">A7 overshoot</th><th class="c">A8 long runs</th></tr>
+<tr><td class="id">c-44f8015f87</td><td>round 1, limiter φ(r)</td><td class="c n">2.99</td><td class="c n">6.60</td><td class="c n">0.60</td><td class="c y">1.00</td><td class="c u">–</td><td class="c u">–</td><td class="c n">✗</td><td class="c u">–</td></tr>
+<tr><td class="id">c-b5cb82a0ef</td><td>round 2, limiter + memory</td><td class="c y">2.58</td><td class="c y">5.11</td><td class="c y">0.95</td><td class="c y">1.00</td><td class="c y">✓</td><td class="c n">0.13</td><td class="c n">~3 × vL</td><td class="c n">✗</td></tr>
+<tr><td class="id">c-2ca8842812</td><td>round 3, proposer</td><td class="c y">2.18</td><td class="c y">2.92</td><td class="c n">0.90</td><td class="c y">1.00</td><td class="c n">0.077</td><td class="c y">1.96</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+<tr><td class="id">c-4ece6bb6f7</td><td>round 4, engine</td><td class="c y">2.24</td><td class="c y">2.99</td><td class="c y">0.95</td><td class="c n">0.85</td><td class="c y">1.5e-5</td><td class="c y">1.92</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+<tr><td class="u">threshold</td><td></td><td class="c u">≤ 2.6</td><td class="c u">≤ 6.5</td><td class="c u">≥ 0.95</td><td class="c u">= 1</td><td class="c u">≤ 0.002</td><td class="c u">≥ 1.9</td><td class="c u">≤ 1.1 × vL</td><td class="c u">vL-like</td></tr>
+</table></div>
+<p>Widths are in cells. "Smooth J" is the roughness of the nozzle wall force as the back pressure moves (p90). Each round's best fails a different set of checks. Round 1 judged A5 and A8 differently or not at all (–). Round 2's c-b5cb82a0ef was tested under judge v1.2; its long-run failure was measured under v1.4.</p>
+
+<h3>The conflict, moved around</h3>
+<p>Each round removed one obstacle and exposed the next. Sharp limiters overshoot (rounds 1 and 3c). Memory fixes convergence but freezes accuracy on long runs (round 2). Round 3 found sharp shocks with rough objectives. Round 4 found sharp and smooth shocks that Newton cannot always converge. The chart places every held-out result whose two numbers are recorded; filled points converge with Newton on every instance, open points do not.</p>
+<div class="scroll">
+<svg viewBox="0 0 860 380" role="img" aria-label="Held-out shock width against wall-force roughness: round-4 children reach the Target A corner but fail Newton">
+<g id="split"></g>
+</svg>
+</div>
+<p class="note">Held-out promo values: zoo and round 4 under judge v1.5, round 3 under v1.4. Logarithmic roughness axis. Superbee, MC and WENO5-Z lie above the top of the chart (roughness 7.7 to 22). Round 2's c-b5cb82a0ef is not drawn because only its pass on A5 is recorded, not the value.</p>
+
+<h2>3. What we learned</h2>
+<div class="cols">
+<div class="ok"><h3>The judge keeps paying for itself</h3><p>Every version closed a hole that would otherwise have produced a false winner: case guessing (v1.1), memory that freezes late waves (v1.4), crashes and unit dependence (v1.5). Held-out data keeps exposing dev results: H-0025 had a roughness of 8.1e-6 on dev and 0.311 on held-out data.</p></div>
+<div class="warn"><h3>Agents and engine both contribute</h3><p>Round 3's best candidate came from a proposer agent, round 4's from the engine, after the screen and dedupe fixes. In both rounds crossover spread one mechanism to every island, so the islands say little about their own hunches. The swarm test was met for new ideas, and only weakly for improvement.</p></div>
+<div class="bad"><h3>No single trade-off law</h3><p>Two pre-registered "impossibility" hunches were tested. H-0011 (sharp φ(r) limiters overshoot) holds for the family swept. H-0019 (sharp steady shocks force a rough objective) is in doubt: its mechanism failed in round 4, and two round-2 limiters may still refute it formally.</p></div>
+</div>
+<ul class="tight">
+<li><b>Each mechanism found is a known one.</b> Characteristic THINC, BVD, limiter freezing, motion-gated compression: good combinations of known parts, no new part.</li>
+<li><b>Machines limit the pace more than models do.</b> Memory pressure caused false timeouts three times (rounds 2 and 4); usage limits and an OS restart paused runs. The LLM cost of all of Arena 1 is $92.77 over 1,351 engine calls, plus agent sessions on the subscription.</li>
+<li><b>The pre-registration had a factual error.</b> Its mechanism paragraph said every round-2 near miss was rough or failed Newton; c-b5cb82a0ef was neither. The kill criterion itself was right, and the note now says so.</li>
+</ul>
+
+<h2>4. Round 4 against its pre-registered outcomes</h2>
+<div class="scroll"><table>
+<tr><th>Outcome</th><th>My estimate on Oct 24</th><th>What happened</th></tr>
+<tr><td><b>Target A promoted</b></td><td><span class="pill bad">~1 in 10</span></td><td>No. Nearest miss fails A4 only (0.85).</td></tr>
+<tr><td><b>Target A-c met</b> (thin contacts, no regression)</td><td><span class="pill warn">~1 in 3</span></td><td>No. A-c also requires A4, and no candidate passed it.</td></tr>
+<tr><td><b>Neither</b>: negative-result note</td><td><span class="pill ok">most likely</span></td><td>Yes. Note drafted; Phase 3 ends.</td></tr>
+</table></div>
+<p>What did happen was the kind of surprise I hoped for on Oct 24, in a weaker form. A scheme got sharp and smooth at the same time, which round 3 suggested might be impossible. It just didn't also converge with Newton everywhere.</p>
+
+<h2>5. What next</h2>
+<ul class="tight">
+<li><b>Running now (WSL):</b> v1.5 promo runs of the round-2 limiters c-b5cb82a0ef and c-fb8db52bca. If either still passes A1, A4 and A5, H-0019 is refuted. Then the breakers on round 4's top 3.</li>
+<li><b>Then (Peter):</b> close H-0019 to H-0025, decide on the quarantined cases, finalise the note.</li>
+<li><b>Then:</b> publish the judge, zoo and harness as a benchmark (PLAN §20), and Phase 6.</li>
+<li><b>Optional round 5</b>, only by a new recorded decision: Newton convergence (A4) for c-4ece6bb6f7's family, starting from new dev nozzle cases in the NF1 regime, proposed by a breaker or by you and never reconstructed from held-out data. It would aim at one check on one family, with a clear way to fail fast.</li>
+</ul>
+
+<h2>6. What exists, and where else it applies</h2>
+<p>About half of the code does not know it is about gas dynamics. The other half is the Euler arena, and that half is where most of the effort and risk went.</p>
+<div class="scroll"><table>
+<tr><th>Asset</th><th>Size</th><th>Tied to Euler?</th></tr>
+<tr><td><b>Search loop:</b> sandbox and static checks, registry of every run, judge integrity hash and versioning, held-out storage that agents cannot read, promotion with paired bootstraps, hunch ledger, Pareto leaderboard, evolution engine with islands, archive and LLM backends, CLI and agent tools</td><td>~2,900 lines</td><td><span class="pill ok">no</span> generic; a few tables (descriptor grids, dev screens) are per arena</td></tr>
+<tr><td><b>Agents and process:</b> hunch-generator, proposer, breaker, cheater, analyst, referee, judge auditor; path-guard hook; hunch-round skill; pre-registration, gates, quarantine-then-accept for breaker cases</td><td>7 agents, 1 skill</td><td><span class="pill ok">no</span> prompts name the arena's files, not its physics</td></tr>
+<tr><td><b>Lessons as rules:</b> the traps file, plus judge defences against batch-size guessing, unit dependence, late-run drift, dev overfitting, memory thrashing</td><td>1 file, 5 judge versions</td><td><span class="pill warn">partly</span> the failure modes are general, the cases are not</td></tr>
+<tr><td><b>Euler arena:</b> exact Riemann and nozzle solutions (blind-audited to 6.5e-13), unsteady and steady solvers, metrics, hard constraints, held-out families, 21-member zoo, Targets A and A-c</td><td>~2,600 lines, 277 tests overall</td><td><span class="pill bad">yes</span></td></tr>
+<tr><td><b>A result:</b> the Arena 1 negative-result note, with the v1.5 zoo front, 1,316 searched candidates and every hunch verdict</td><td>1 note, 25 hunches</td><td><span class="pill bad">yes</span></td></tr>
+</table></div>
+
+<h3>Where it could be applied</h3>
+<div class="scroll"><table>
+<tr><th>Problem</th><th>What is needed</th><th>Effort</th></tr>
+<tr><td>Other components in the same 1D Euler setting: Riemann solvers for real-gas equations of state, positivity limiters, time integrators, entropy fixes</td><td>a new slot (one table row, a constraint checker) and a target</td><td><span class="pill ok">small</span></td></tr>
+<tr><td>Other 1D hyperbolic systems with exact Riemann solutions: shallow water, isentropic and two-phase flow, traffic models</td><td>new exact solutions, cases and zoo; solvers and metrics largely reused</td><td><span class="pill warn">mid</span></td></tr>
+<tr><td>ODE integrators and quadrature rules</td><td>exact or manufactured references are trivial; a new small arena</td><td><span class="pill warn">mid</span></td></tr>
+<tr><td>Third-medium contact (the planned Arena 2), other solid-mechanics components with analytic references (Hertz, patch tests)</td><td>a new arena on an FE library; the loop, agents and process carry over</td><td><span class="pill warn">mid</span></td></tr>
+<tr><td>2D/3D schemes judged by manufactured solutions</td><td>the same loop, but every evaluation costs seconds to minutes, so held-out suites shrink</td><td><span class="pill bad">large</span></td></tr>
+</table></div>
+
+<p><b>How narrow it is.</b> The method needs three things: a cheap, exact or provably reliable reference; a component small enough to be a pure function inside a fixed harness; and metrics that capture what practitioners care about. Exact solutions in milliseconds give the first. Where there is no ground truth (turbulence models judged against noisy experiments), where one evaluation takes hours, or where the value lies in a whole solver rather than one component, the approach does not fit. It is a tool for a family of problems, not a general method finder.</p>
+
+<p><b>Does it save tokens?</b> For a new arena, roughly the generic half of the code, all agent prompts and the process come for free. More importantly, the failure modes found here would not have to be rediscovered: candidates guessing the case from the batch size, absolute epsilons, overfitting to dev, memory thrashing, a scalar score that misleads the engine, duplicates in top-k picks. Each of those cost a judge version or a lost round here. The expensive part remains: exact references, their blind audit, meaningful metrics and held-out families have to be built for each new problem. My estimate: a new arena of similar size would take somewhat under half the effort Arena 1 did. That is a judgement from this project's history; tokens were not metered per phase.</p>
+<p class="note">Sources: docs/results/arena1-negative.md, docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md and docs/rounds/2026-10-24-round4/, the earlier round summaries, docs/STATUS.md, docs/DECISIONS.md, docs/plans/2026-10-24-round4.md, docs/targets/, and git history. Earlier versions of this page: docs/reports/2026-10-21-big-picture.html, docs/reports/2026-10-24-big-picture.html.</p>
+</main>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;p.appendChild(e);return e}
+// timeline: 20 Oct 00:00 .. 30 Oct 00:00 (days 0..10)
+const t=document.getElementById("tline"),L=40,W=780,D=10,X=d=>L+d/D*W,Y=100;
+el(t,"line",{x1:L,y1:Y,x2:L+W,y2:Y,style:"stroke:var(--line)","stroke-width":2});
+for(let i=0;i<D;i++){el(t,"line",{x1:X(i),y1:Y-4,x2:X(i),y2:Y+4,style:"stroke:var(--mute)"});
+ el(t,"text",{x:X(i)+3,y:Y+20,class:"m","font-size":"11"},"Oct "+(20+i))}
+[[0.9,"v1.0"],[1.2,"v1.1"],[1.75,"v1.2"],[2.4,"v1.3"],[2.77,"v1.4"],[4.65,"v1.5"]].forEach((v,i)=>{
+ const y=i%2?42:60;el(t,"line",{x1:X(v[0]),y1:y+6,x2:X(v[0]),y2:Y,style:"stroke:var(--accent)"});
+ el(t,"text",{x:X(v[0]),y:y,"text-anchor":"middle","font-weight":"600","font-size":"12",style:"fill:var(--accent)"},v[1])});
+el(t,"text",{x:L,y:20,class:"m","font-size":"12"},"judge versions");
+const R=[[1.35,1.56,"R1",0],[1.62,2.25,"R2",0],[2.9,4.05,"round 3",0],[4.75,5.0,"",0],[8.85,9.55,"round 4 engine",0],[9.55,9.8,"",1]];
+R.forEach(r=>{const c=r[3]?"warn":"ok";el(t,"rect",{x:X(r[0]),y:Y+32,width:Math.max(3,X(r[1])-X(r[0])),height:14,rx:3,style:`fill:var(--${c});fill-opacity:.35;stroke:var(--${c})`});
+ if(r[2])el(t,"text",{x:(X(r[0])+X(r[1]))/2,y:Y+64,"text-anchor":"middle","font-size":"12"},r[2])});
+el(t,"text",{x:X(4.88),y:Y+64,"text-anchor":"middle","font-size":"12"},"R4 proposers");
+el(t,"text",{x:X(6.9),y:Y+40,"text-anchor":"middle","font-size":"12",class:"m"},"waiting: memory fix, restarts");
+[[1.58,"Gate 2"],[4.3,"Gate 3e"],[9.7,"note"]].forEach(g=>{el(t,"line",{x1:X(g[0]),y1:Y+86,x2:X(g[0]),y2:Y+96,style:"stroke:var(--ink)"});
+ el(t,"text",{x:X(g[0]),y:Y+108,"text-anchor":"middle","font-size":"12"},g[1])});
+
+// scatter: x = RF1 shock median [cells], y = log10 NF3 roughness p90; filled = Newton 1.00 on every instance
+const s=document.getElementById("split"),PL=80,PR=830,PT=20,PB=310;
+const XMIN=2.0,XMAX=4.0,YTOP=0,YBOT=-5;
+const xs=v=>PL+(v-XMIN)/(XMAX-XMIN)*(PR-PL), ys=v=>PT+(YTOP-Math.log10(v))/(YTOP-YBOT)*(PB-PT);
+el(s,"rect",{x:PL,y:ys(0.002),width:xs(2.6)-PL,height:PB-ys(0.002),style:"fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-dasharray:4 3"});
+el(s,"text",{x:PL+8,y:ys(0.002)+18,style:"fill:var(--ok)","font-weight":"600","font-size":"12"},"Target A corner (A1, A5)");
+[2,2.5,3,3.5,4].forEach(v=>{el(s,"line",{x1:xs(v),y1:PT,x2:xs(v),y2:PB,style:"stroke:var(--line)"});el(s,"text",{x:xs(v),y:PB+18,"text-anchor":"middle",class:"m","font-size":"12"},v.toFixed(1))});
+[[1,"1"],[1e-1,"0.1"],[1e-2,"0.01"],[1e-3,"0.001"],[1e-4,"1e-4"],[1e-5,"1e-5"]].forEach(([v,l])=>{el(s,"line",{x1:PL,y1:ys(v),x2:PR,y2:ys(v),style:"stroke:var(--line)"});el(s,"text",{x:PL-8,y:ys(v)+4,"text-anchor":"end",class:"m","font-size":"12"},l)});
+el(s,"text",{x:(PL+PR)/2,y:PB+40,"text-anchor":"middle",class:"m","font-size":"12"},"shock width, held-out median [cells]  (sharper ←)");
+el(s,"text",{x:16,y:(PT+PB)/2,"text-anchor":"middle",class:"m","font-size":"12",transform:`rotate(-90 16 ${(PT+PB)/2})`},"wall-force roughness, p90 (smoother ↓)");
+// [shock, roughness, label, color, newton ok, label side, label dy]
+const P=[
+ [2.243,1.471e-5,"round 4 engine children (3): Newton 0.75–0.85","bad",0,"start",-12],
+ [2.203,1.475e-5,"","bad",0],[2.267,1.474e-5,"","bad",0],
+ [2.18,0.0765,"c-2ca8842812 · round 3 proposer","accent",1,"start",4],
+ [2.80,0.0190,"c-920a251254 · round 3 proposer","accent",1,"start",4],
+ [3.41,1.7e-5,"c-2637af56a6 · round 3 engine (Newton 0.95)","accent",0,"end",4],
+ [2.182,0.0620,"zoo THINC/BVD (0.65)","mute",0,"start",22],
+ [2.945,0.00178,"zoo van Leer","mute",1,"start",-10],
+ [3.424,0.00146,"zoo van Albada","mute",1,"start",-10],
+ [3.894,8.71e-4,"minmod","mute",1,"end",22]];
+P.forEach(p=>{const x=xs(p[0]),y=ys(p[1]),c=`var(--${p[3]})`;
+ el(s,"circle",{cx:x,cy:y,r:6.5,style:p[4]?`fill:${c};stroke:var(--paper);stroke-width:2`:`fill:var(--paper);stroke:${c};stroke-width:2.5`});
+ if(p[2])el(s,"text",{x:x+(p[5]=="end"?-12:12),y:y+(p[6]||4),"text-anchor":p[5],"font-size":"12.5"},p[2])});
+// legend
+el(s,"circle",{cx:PR-190,cy:PT+14,r:6,style:"fill:var(--ink);stroke:var(--paper);stroke-width:2"});el(s,"text",{x:PR-178,y:PT+18,"font-size":"12"},"Newton 1.00");
+el(s,"circle",{cx:PR-90,cy:PT+14,r:6,style:"fill:var(--paper);stroke:var(--ink);stroke-width:2.5"});el(s,"text",{x:PR-78,y:PT+18,"font-size":"12"},"Newton < 1");
+})();
+</script>
