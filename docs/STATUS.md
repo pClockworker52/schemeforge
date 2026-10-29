@@ -16,6 +16,10 @@ promoted. Nearest miss c-4ece6bb6f7 r-20261029-122317-32a7 fails only A4 (NF1 Ne
 ρ = −0.936 (n = 12; −0.943 over the 6 distinct rows). Summary + proposed verdicts:
 docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md. Open: breakers on the top 3 (need WSL claude + sforge
 MCP), Peter's call on H-0024, then the negative-result note per the stop rule.
+2026-10-29: **negative-result note drafted**, docs/results/arena1-negative.md (Peter's choice at the step-5 gate):
+what was tried per round, the conflict between Target A's criteria (overshoot → long-run accuracy → roughness → Newton),
+the v1.5 zoo front with run ids, every hunch verdict (round 4 proposed), method results, limits. Next: Peter closes
+H-0019..H-0025, breakers on the round-4 top 3, benchmark release (PLAN §20), Phase 6.
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
