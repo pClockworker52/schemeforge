@@ -9,6 +9,13 @@ seed alone: smoke 57.6 s r-20261028-204346-2c47, dev 406–492 s). Peter chose o
 dev 1500 s (DECISIONS 2026-10-28). Rerun e-20261028-212642-e595 failed the same way ($0.87): the real cause is memory
 (4.4 GB peak per worker, r-20261028-220113-4600, vs 2 GB assumed for K = 7). Round-4 evolve restarted with
 SFORGE_MAX_PARALLEL=3 (~1 h per generation).
+2026-10-29: **round 4 done, waiting at the step-5 gate.** Evolve e-20261028-220902-e988 completed (15 gens, 240
+children, front 200, $20.34; Windows Update restart at 03:34, resumed 06:52). Promo + promote A/Ac on the top 5: none
+promoted. Nearest miss c-4ece6bb6f7 r-20261029-122317-32a7 fails only A4 (NF1 Newton 0.85) and passes A1 2.243, A5
+1.47e-5 and A7b together; c-82efea7caf r-20261029-122320-15bb fails only A4 (0.75). H-0019 table: 0 kill rows,
+ρ = −0.936 (n = 12; −0.943 over the 6 distinct rows). Summary + proposed verdicts:
+docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md. Open: breakers on the top 3 (need WSL claude + sforge
+MCP), Peter's call on H-0024, then the negative-result note per the stop rule.
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found

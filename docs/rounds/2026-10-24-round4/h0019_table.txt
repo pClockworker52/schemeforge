@@ -1,0 +1,16 @@
+﻿judge euler1d-v1.5: rows with an ok promo run and NF1 converged_impl mean = 1.00
+candidate                                          slot                     zoo                    RF1 shock med NF3 rough p90  run           kill
+c-47838d9365                                       reconstruction_stateful                                 2.256         0.311  r-20261024-205819-e795  
+zoo-limiter-venkatakrishnan                        limiter                  venkatakrishnan                2.944       0.00179  r-20261024-153251-de6a  
+c-38addf805f                                       limiter                  van_leer                       2.945       0.00178  r-20261024-153251-4a12  
+zoo-limiter_stateful-van_leer                      limiter_stateful         van_leer                       2.945       0.00178  r-20261024-153727-dffe  
+zoo-limiter_stateful-van_leer_frozen               limiter_stateful         van_leer_frozen                2.945       0.00178  r-20261024-153732-c287  
+zoo-flux-hllc                                      flux                     hllc                           2.945       0.00178  r-20261024-153826-a803  
+zoo-reconstruction_stateful-muscl_van_leer         reconstruction_stateful  muscl_van_leer                 2.945       0.00178  r-20261024-154024-c9f9  
+zoo-reconstruction_stateful-muscl_van_leer_frozen  reconstruction_stateful  muscl_van_leer_frozen          2.945       0.00178  r-20261024-154041-f18a  
+zoo-limiter-van_albada                             limiter                  van_albada                     3.424       0.00146  r-20261024-153252-8783  
+zoo-limiter_stateful-van_albada                    limiter_stateful         van_albada                     3.424       0.00146  r-20261024-153605-762c  
+zoo-limiter-minmod                                 limiter                  minmod                         3.894      0.000871  r-20261024-153251-0b76  
+zoo-reconstruction-first_order                     reconstruction           first_order                   11.015       0.00112  r-20261024-153949-68d1  
+Spearman rho(RF1 shock median, NF3 roughness p90) = -0.936, n = 12
+kill rows: 0

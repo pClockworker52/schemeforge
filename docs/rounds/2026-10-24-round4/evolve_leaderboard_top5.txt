@@ -1,0 +1,7 @@
+fail rank candidate              hunch    vs zoo  R1.shock_width  R1.contact_width  N1.res_orders_expl  N1.newton_iters  N4.roughness_J  S1.order_smooth  R7.l1_ref  B-0010.overshoot  B-0002.order_smooth
+   1    0 c-47838d9365           H-0025    0.455           0.877             0.699                2.32              1.6         0.00413            0.596      0.329             0.795                0.574
+   1    0 c-60c5ed6928           H-0022    0.492           0.855              0.45                1.43             1.17          0.0065             1.02      0.472             0.831                 1.01
+   1    0 c-4ece6bb6f7           H-0021    0.492           0.853             0.458                1.42             1.13          0.0065             1.03      0.475             0.819                 1.02
+   1    0 c-82efea7caf           H-0022    0.493           0.861             0.464                1.42             1.12          0.0065             1.03       0.48              0.82                 1.02
+   1    0 c-1a71c5a13b           H-0021    0.493           0.855             0.452                1.43             1.18          0.0065             1.02      0.475              0.83                 1.01
+(values are ratios to the best zoo member per metric; < 1 is better than every zoo member)

@@ -1,0 +1,351 @@
+== c-60c5ed6928
+run r-20261029-122317-3b2e  candidate c-60c5ed6928  judge euler1d-v1.5 (8a8b830456a8)  status OK  1153.8 s
+  LF1 (n=5, pass rate 1.00)
+      contact_width      median=3.04  p90=3.13  worst=3.14
+      l1_smooth          median=1.23e-04  p90=2.00e-04  worst=2.38e-04
+      overshoot          median=6.92e-04  p90=0.0329  worst=0.0523
+      shock_width        median=2.43  p90=2.54  worst=2.59
+      tv_increase        median=0.00747  p90=0.0568  worst=0.0715
+  LF2 (n=5, pass rate 1.00)
+      l1_smooth          median=2.51e-04  p90=5.29e-04  worst=6.06e-04
+      order_smooth       median=1.96  p90=1.95  worst=1.94
+  NF1 (n=20, pass rate 1.00)
+      converged_expl     median=1  p90=1  worst=0
+      converged_impl     median=1  p90=0  worst=0
+      entropy_spurious   median=3.87e-04  p90=6.72e-04  worst=0.0137
+      h0_var             median=0.0157  p90=0.0295  worst=0.0378
+      l1_smooth          median=1.35e-04  p90=1.67e-04  worst=2.68e-04
+      limit_cycle        median=0  p90=0  worst=1
+      mdot_var           median=0.11  p90=0.258  worst=0.316
+      newton_iters       median=154  p90=300  worst=300
+      overshoot          median=0.00248  p90=0.00669  worst=0.0128
+      res_orders_expl    median=12  p90=12  worst=2.94
+      shock_pos_err      median=0.0651  p90=0.0877  worst=0.0952
+      shock_width        median=1.64  p90=1.76  worst=1.77
+  NF2 (n=10, pass rate 1.00)
+      converged_expl     median=0  p90=0  worst=0
+      converged_impl     median=0.5  p90=0  worst=0
+      entropy_spurious   median=2.23e-04  p90=3.11e-04  worst=3.80e-04
+      h0_var             median=0.00124  p90=0.00193  worst=0.00195
+      l1_smooth          median=0.00284  p90=0.0122  worst=0.022
+      limit_cycle        median=0  p90=0.1  worst=1
+      mdot_var           median=0.0271  p90=0.0835  worst=0.122
+      newton_iters       median=255  p90=300  worst=300
+      res_orders_expl    median=4.91  p90=3.86  worst=2.91
+  NF3 (n=5, pass rate 1.00)
+      converged_impl     median=1  p90=0.782  worst=0.636
+      newton_iters       median=145  p90=197  worst=223
+      roughness_J        median=6.72e-06  p90=1.47e-05  worst=1.58e-05
+  RF1 (n=20, pass rate 1.00)
+      contact_width      median=2.99  p90=3.12  worst=3.16
+      l1_smooth          median=7.53e-04  p90=0.00114  worst=0.00266
+      overshoot          median=4.32e-04  p90=0.00719  worst=0.0131
+      shock_width        median=2.2  p90=2.64  worst=2.75
+      tv_increase        median=0.0177  p90=0.0358  worst=0.0396
+  RF2 (n=10, pass rate 1.00)
+      l1_smooth          median=0.00143  p90=0.00216  worst=0.00227
+      overshoot          median=0.0146  p90=0.029  worst=0.0384
+      shock_width        median=1.71  p90=1.82  worst=1.83
+      tv_increase        median=0.277  p90=0.434  worst=0.493
+  max_cfl: 0.9
+== c-4ece6bb6f7
+run r-20261029-122317-32a7  candidate c-4ece6bb6f7  judge euler1d-v1.5 (8a8b830456a8)  status OK  1157.9 s
+  LF1 (n=5, pass rate 1.00)
+      contact_width      median=2.99  p90=3.12  worst=3.14
+      l1_smooth          median=1.24e-04  p90=1.98e-04  worst=2.37e-04
+      overshoot          median=9.20e-04  p90=0.0352  worst=0.0561
+      shock_width        median=2.45  p90=2.59  worst=2.6
+      tv_increase        median=0.00792  p90=0.0529  worst=0.0694
+  LF2 (n=5, pass rate 1.00)
+      l1_smooth          median=2.45e-04  p90=5.18e-04  worst=5.95e-04
+      order_smooth       median=1.94  p90=1.93  worst=1.93
+  NF1 (n=20, pass rate 1.00)
+      converged_expl     median=1  p90=1  worst=0
+      converged_impl     median=1  p90=0  worst=0
+      entropy_spurious   median=3.87e-04  p90=6.32e-04  worst=7.67e-04
+      h0_var             median=0.0154  p90=0.0275  worst=0.0367
+      l1_smooth          median=1.35e-04  p90=1.66e-04  worst=1.79e-04
+      limit_cycle        median=0  p90=0  worst=1
+      mdot_var           median=0.103  p90=0.258  worst=0.315
+      newton_iters       median=134  p90=300  worst=300
+      overshoot          median=0.00248  p90=0.00669  worst=0.0128
+      res_orders_expl    median=12  p90=12  worst=2.93
+      shock_pos_err      median=0.0651  p90=0.0877  worst=0.0952
+      shock_width        median=1.64  p90=1.76  worst=1.77
+  NF2 (n=10, pass rate 1.00)
+      converged_expl     median=0  p90=0  worst=0
+      converged_impl     median=1  p90=0  worst=0
+      entropy_spurious   median=2.19e-04  p90=3.11e-04  worst=3.80e-04
+      h0_var             median=0.00119  p90=0.00193  worst=0.00195
+      l1_smooth          median=0.00244  p90=0.0209  worst=0.0223
+      limit_cycle        median=0  p90=0.1  worst=1
+      mdot_var           median=0.0248  p90=0.106  worst=0.123
+      newton_iters       median=138  p90=300  worst=300
+      res_orders_expl    median=4.91  p90=3.86  worst=2.91
+  NF3 (n=5, pass rate 1.00)
+      converged_impl     median=1  p90=0.8  worst=0.727
+      newton_iters       median=130  p90=168  worst=191
+      roughness_J        median=6.72e-06  p90=1.47e-05  worst=1.57e-05
+  RF1 (n=20, pass rate 1.00)
+      contact_width      median=2.99  p90=3.13  worst=3.18
+      l1_smooth          median=8.39e-04  p90=0.00115  worst=0.0026
+      overshoot          median=4.48e-04  p90=0.00709  worst=0.0129
+      shock_width        median=2.24  p90=2.79  worst=2.84
+      tv_increase        median=0.0167  p90=0.036  worst=0.0382
+  RF2 (n=10, pass rate 1.00)
+      l1_smooth          median=0.00128  p90=0.00198  worst=0.00207
+      overshoot          median=0.0133  p90=0.0251  worst=0.0382
+      shock_width        median=1.72  p90=1.81  worst=1.83
+      tv_increase        median=0.256  p90=0.387  worst=0.426
+  max_cfl: 0.9
+== c-82efea7caf
+run r-20261029-122320-15bb  candidate c-82efea7caf  judge euler1d-v1.5 (8a8b830456a8)  status OK  518.5 s
+  LF1 (n=5, pass rate 1.00)
+      contact_width      median=3.01  p90=3.13  worst=3.14
+      l1_smooth          median=1.24e-04  p90=1.98e-04  worst=2.37e-04
+      overshoot          median=9.66e-04  p90=0.036  worst=0.0574
+      shock_width        median=2.49  p90=2.59  worst=2.62
+      tv_increase        median=0.00808  p90=0.0549  worst=0.0693
+  LF2 (n=5, pass rate 1.00)
+      l1_smooth          median=2.44e-04  p90=5.16e-04  worst=5.93e-04
+      order_smooth       median=1.94  p90=1.93  worst=1.93
+  NF1 (n=20, pass rate 1.00)
+      converged_expl     median=1  p90=1  worst=0
+      converged_impl     median=1  p90=0  worst=0
+      entropy_spurious   median=3.87e-04  p90=6.32e-04  worst=7.67e-04
+      h0_var             median=0.0155  p90=0.0275  worst=0.0371
+      l1_smooth          median=1.35e-04  p90=1.66e-04  worst=1.79e-04
+      limit_cycle        median=0  p90=0  worst=1
+      mdot_var           median=0.103  p90=0.258  worst=0.315
+      newton_iters       median=130  p90=300  worst=300
+      overshoot          median=0.00248  p90=0.00669  worst=0.0128
+      res_orders_expl    median=12  p90=12  worst=2.93
+      shock_pos_err      median=0.0651  p90=0.0877  worst=0.0952
+      shock_width        median=1.64  p90=1.76  worst=1.77
+  NF2 (n=10, pass rate 1.00)
+      converged_expl     median=0  p90=0  worst=0
+      converged_impl     median=1  p90=0  worst=0
+      entropy_spurious   median=2.26e-04  p90=3.11e-04  worst=3.80e-04
+      h0_var             median=0.00121  p90=0.00195  worst=0.00201
+      l1_smooth          median=0.00244  p90=0.0061  worst=0.0153
+      limit_cycle        median=0  p90=0.1  worst=1
+      mdot_var           median=0.0246  p90=0.0452  worst=0.0844
+      newton_iters       median=114  p90=300  worst=300
+      res_orders_expl    median=4.91  p90=3.86  worst=2.91
+  NF3 (n=5, pass rate 1.00)
+      converged_impl     median=1  p90=0.727  worst=0.545
+      newton_iters       median=125  p90=181  worst=211
+      roughness_J        median=6.72e-06  p90=1.47e-05  worst=1.58e-05
+  RF1 (n=20, pass rate 1.00)
+      contact_width      median=2.99  p90=3.14  worst=3.18
+      l1_smooth          median=8.82e-04  p90=0.00119  worst=0.00263
+      overshoot          median=4.27e-04  p90=0.007  worst=0.0128
+      shock_width        median=2.27  p90=2.82  worst=2.87
+      tv_increase        median=0.0171  p90=0.0361  worst=0.0378
+  RF2 (n=10, pass rate 1.00)
+      l1_smooth          median=0.00124  p90=0.00197  worst=0.00204
+      overshoot          median=0.0134  p90=0.025  worst=0.0382
+      shock_width        median=1.72  p90=1.81  worst=1.83
+      tv_increase        median=0.25  p90=0.384  worst=0.424
+  max_cfl: 0.9
+== c-1a71c5a13b
+run r-20261029-122321-9f52  candidate c-1a71c5a13b  judge euler1d-v1.5 (8a8b830456a8)  status OK  1178.4 s
+  LF1 (n=5, pass rate 1.00)
+      contact_width      median=3  p90=3.12  worst=3.14
+      l1_smooth          median=1.24e-04  p90=2.00e-04  worst=2.39e-04
+      overshoot          median=7.87e-04  p90=0.0333  worst=0.053
+      shock_width        median=2.47  p90=2.57  worst=2.6
+      tv_increase        median=0.00755  p90=0.0543  worst=0.0713
+  LF2 (n=5, pass rate 1.00)
+      l1_smooth          median=2.52e-04  p90=5.30e-04  worst=6.08e-04
+      order_smooth       median=1.96  p90=1.95  worst=1.94
+  NF1 (n=20, pass rate 1.00)
+      converged_expl     median=1  p90=1  worst=0
+      converged_impl     median=1  p90=0.9  worst=0
+      entropy_spurious   median=3.87e-04  p90=6.32e-04  worst=7.67e-04
+      h0_var             median=0.0159  p90=0.0278  worst=0.0392
+      l1_smooth          median=1.35e-04  p90=1.66e-04  worst=1.79e-04
+      limit_cycle        median=0  p90=0  worst=1
+      mdot_var           median=0.103  p90=0.258  worst=0.316
+      newton_iters       median=145  p90=200  worst=300
+      overshoot          median=0.00248  p90=0.00669  worst=0.0128
+      res_orders_expl    median=12  p90=12  worst=2.93
+      shock_pos_err      median=0.0651  p90=0.0877  worst=0.0952
+      shock_width        median=1.64  p90=1.76  worst=1.77
+  NF2 (n=10, pass rate 1.00)
+      converged_expl     median=0  p90=0  worst=0
+      converged_impl     median=0.5  p90=0  worst=0
+      entropy_spurious   median=2.25e-04  p90=3.11e-04  worst=3.80e-04
+      h0_var             median=0.00124  p90=0.00195  worst=0.00195
+      l1_smooth          median=0.00284  p90=0.00957  worst=0.0206
+      limit_cycle        median=0  p90=0.1  worst=1
+      mdot_var           median=0.0271  p90=0.0825  worst=0.113
+      newton_iters       median=275  p90=300  worst=300
+      res_orders_expl    median=4.91  p90=3.86  worst=2.91
+  NF3 (n=5, pass rate 1.00)
+      converged_impl     median=0.909  p90=0.855  worst=0.818
+      newton_iters       median=153  p90=183  worst=201
+      roughness_J        median=6.72e-06  p90=0.164  worst=0.274
+  RF1 (n=20, pass rate 1.00)
+      contact_width      median=2.99  p90=3.11  worst=3.16
+      l1_smooth          median=7.93e-04  p90=0.00115  worst=0.00268
+      overshoot          median=3.89e-04  p90=0.00693  worst=0.0131
+      shock_width        median=2.21  p90=2.7  worst=2.76
+      tv_increase        median=0.0172  p90=0.0356  worst=0.0402
+  RF2 (n=10, pass rate 1.00)
+      l1_smooth          median=0.00139  p90=0.00212  worst=0.00216
+      overshoot          median=0.0143  p90=0.0282  worst=0.0384
+      shock_width        median=1.71  p90=1.82  worst=1.83
+      tv_increase        median=0.269  p90=0.414  worst=0.467
+  max_cfl: 0.9
+== promote c-47838d9365 --target A
+references: limiter/mc r-20261024-153251-db77, limiter/van_albada r-20261024-153252-8783, limiter/van_leer r-20261024-153251-4a12
+PASS  A1   RF1 shock_width median <= 2.6: 2.256
+PASS  A2   RF1 contact_width median <= 6.5: 4.508
+FAIL  A3   NF1 converged_expl mean >= 0.95: 0.85
+PASS  A4   NF1 converged_impl mean >= 1.0: 1
+FAIL  A5   NF3 roughness_J p90 <= 0.002: 0.3111
+PASS  A8b  LF2 order_smooth median >= 1.8: 3.159
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.01316 vs 0.02411
+FAIL  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.03139 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 7.186 vs 24.76
+PASS  B1   bootstrap RF1 shock_width vs van_albada: 95 % CI of log ratio < 0: mean -0.479 [-0.578, -0.403] over n = 6 (ratio 0.619)
+PASS  B2   bootstrap RF1 contact_width vs van_albada: 95 % CI of log ratio < 0: mean -0.641 [-0.742, -0.530] over n = 5 (ratio 0.527)
+PASS  B5   bootstrap NF3 roughness_J vs mc: 95 % CI of log ratio < 0: mean -11.714 [-14.490, -7.114] over n = 5 (ratio 0.000)
+PASS  A6   dev S1 order_smooth >= 1.9: 3.325
+c-47838d9365: not promoted for Target A (promo run r-20261024-205819-e795, judge euler1d-v1.5)
+== promote c-47838d9365 --target Ac
+references: limiter/van_leer r-20261024-153251-4a12
+FAIL  A3   NF1 converged_expl mean >= 0.95: 0.85
+PASS  A4   NF1 converged_impl mean >= 1.0: 1
+FAIL  A5   NF3 roughness_J p90 <= 0.002: 0.3111
+PASS  A8b  LF2 order_smooth median >= 1.8: 3.159
+FAIL  C1   RF1 contact_width median <= 0.6 x van_leer: 4.508 vs 4.275
+PASS  C2   RF1 shock_width median <= 1.1 x van_leer: 2.256 vs 3.24
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.01316 vs 0.02411
+FAIL  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.03139 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 7.186 vs 24.76
+PASS  B2   bootstrap RF1 contact_width vs van_leer: 95 % CI of log ratio < 0: mean -0.494 [-0.583, -0.408] over n = 5 (ratio 0.610)
+PASS  A6   dev S1 order_smooth >= 1.9: 3.325
+c-47838d9365: not promoted for Target Ac (promo run r-20261024-205819-e795, judge euler1d-v1.5)
+== promote c-60c5ed6928 --target A
+references: limiter/mc r-20261024-153251-db77, limiter/van_albada r-20261024-153252-8783, limiter/van_leer r-20261024-153251-4a12
+PASS  A1   RF1 shock_width median <= 2.6: 2.203
+PASS  A2   RF1 contact_width median <= 6.5: 2.992
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.85
+PASS  A5   NF3 roughness_J p90 <= 0.002: 1.475e-05
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.961
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.007193 vs 0.02411
+FAIL  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02899 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 3.037 vs 24.76
+PASS  B1   bootstrap RF1 shock_width vs van_albada: 95 % CI of log ratio < 0: mean -0.520 [-0.632, -0.422] over n = 6 (ratio 0.595)
+PASS  B2   bootstrap RF1 contact_width vs van_albada: 95 % CI of log ratio < 0: mean -1.052 [-1.191, -0.891] over n = 5 (ratio 0.349)
+PASS  B5   bootstrap NF3 roughness_J vs mc: 95 % CI of log ratio < 0: mean -14.479 [-15.947, -13.246] over n = 5 (ratio 0.000)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.939
+c-60c5ed6928: not promoted for Target A (promo run r-20261029-122317-3b2e, judge euler1d-v1.5)
+== promote c-60c5ed6928 --target Ac
+references: limiter/van_leer r-20261024-153251-4a12
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.85
+PASS  A5   NF3 roughness_J p90 <= 0.002: 1.475e-05
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.961
+PASS  C1   RF1 contact_width median <= 0.6 x van_leer: 2.992 vs 4.275
+PASS  C2   RF1 shock_width median <= 1.1 x van_leer: 2.203 vs 3.24
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.007193 vs 0.02411
+FAIL  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02899 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 3.037 vs 24.76
+PASS  B2   bootstrap RF1 contact_width vs van_leer: 95 % CI of log ratio < 0: mean -0.904 [-1.036, -0.771] over n = 5 (ratio 0.405)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.939
+c-60c5ed6928: not promoted for Target Ac (promo run r-20261029-122317-3b2e, judge euler1d-v1.5)
+== promote c-4ece6bb6f7 --target A
+references: limiter/mc r-20261024-153251-db77, limiter/van_albada r-20261024-153252-8783, limiter/van_leer r-20261024-153251-4a12
+PASS  A1   RF1 shock_width median <= 2.6: 2.243
+PASS  A2   RF1 contact_width median <= 6.5: 2.991
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.85
+PASS  A5   NF3 roughness_J p90 <= 0.002: 1.471e-05
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.943
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.007093 vs 0.02411
+PASS  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02507 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 2.988 vs 24.76
+PASS  B1   bootstrap RF1 shock_width vs van_albada: 95 % CI of log ratio < 0: mean -0.491 [-0.607, -0.407] over n = 6 (ratio 0.612)
+PASS  B2   bootstrap RF1 contact_width vs van_albada: 95 % CI of log ratio < 0: mean -1.049 [-1.188, -0.887] over n = 5 (ratio 0.350)
+PASS  B5   bootstrap NF3 roughness_J vs mc: 95 % CI of log ratio < 0: mean -14.480 [-15.947, -13.248] over n = 5 (ratio 0.000)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.915
+c-4ece6bb6f7: not promoted for Target A (promo run r-20261029-122317-32a7, judge euler1d-v1.5)
+== promote c-4ece6bb6f7 --target Ac
+references: limiter/van_leer r-20261024-153251-4a12
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.85
+PASS  A5   NF3 roughness_J p90 <= 0.002: 1.471e-05
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.943
+PASS  C1   RF1 contact_width median <= 0.6 x van_leer: 2.991 vs 4.275
+PASS  C2   RF1 shock_width median <= 1.1 x van_leer: 2.243 vs 3.24
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.007093 vs 0.02411
+PASS  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02507 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 2.988 vs 24.76
+PASS  B2   bootstrap RF1 contact_width vs van_leer: 95 % CI of log ratio < 0: mean -0.902 [-1.031, -0.767] over n = 5 (ratio 0.406)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.915
+c-4ece6bb6f7: not promoted for Target Ac (promo run r-20261029-122317-32a7, judge euler1d-v1.5)
+== promote c-82efea7caf --target A
+references: limiter/mc r-20261024-153251-db77, limiter/van_albada r-20261024-153252-8783, limiter/van_leer r-20261024-153251-4a12
+PASS  A1   RF1 shock_width median <= 2.6: 2.267
+PASS  A2   RF1 contact_width median <= 6.5: 2.994
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.75
+PASS  A5   NF3 roughness_J p90 <= 0.002: 1.474e-05
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.945
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.006998 vs 0.02411
+PASS  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02497 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 3.009 vs 24.76
+PASS  B1   bootstrap RF1 shock_width vs van_albada: 95 % CI of log ratio < 0: mean -0.483 [-0.599, -0.400] over n = 6 (ratio 0.617)
+PASS  B2   bootstrap RF1 contact_width vs van_albada: 95 % CI of log ratio < 0: mean -1.048 [-1.187, -0.886] over n = 5 (ratio 0.351)
+PASS  B5   bootstrap NF3 roughness_J vs mc: 95 % CI of log ratio < 0: mean -14.479 [-15.947, -13.246] over n = 5 (ratio 0.000)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.921
+c-82efea7caf: not promoted for Target A (promo run r-20261029-122320-15bb, judge euler1d-v1.5)
+== promote c-82efea7caf --target Ac
+references: limiter/van_leer r-20261024-153251-4a12
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.75
+PASS  A5   NF3 roughness_J p90 <= 0.002: 1.474e-05
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.945
+PASS  C1   RF1 contact_width median <= 0.6 x van_leer: 2.994 vs 4.275
+PASS  C2   RF1 shock_width median <= 1.1 x van_leer: 2.267 vs 3.24
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.006998 vs 0.02411
+PASS  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02497 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 3.009 vs 24.76
+PASS  B2   bootstrap RF1 contact_width vs van_leer: 95 % CI of log ratio < 0: mean -0.900 [-1.028, -0.766] over n = 5 (ratio 0.406)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.921
+c-82efea7caf: not promoted for Target Ac (promo run r-20261029-122320-15bb, judge euler1d-v1.5)
+== promote c-1a71c5a13b --target A
+references: limiter/mc r-20261024-153251-db77, limiter/van_albada r-20261024-153252-8783, limiter/van_leer r-20261024-153251-4a12
+PASS  A1   RF1 shock_width median <= 2.6: 2.211
+PASS  A2   RF1 contact_width median <= 6.5: 2.99
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.9
+FAIL  A5   NF3 roughness_J p90 <= 0.002: 0.1643
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.963
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.006933 vs 0.02411
+FAIL  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02819 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 2.998 vs 24.76
+PASS  B1   bootstrap RF1 shock_width vs van_albada: 95 % CI of log ratio < 0: mean -0.508 [-0.619, -0.416] over n = 6 (ratio 0.601)
+PASS  B2   bootstrap RF1 contact_width vs van_albada: 95 % CI of log ratio < 0: mean -1.052 [-1.190, -0.891] over n = 5 (ratio 0.349)
+PASS  B5   bootstrap NF3 roughness_J vs mc: 95 % CI of log ratio < 0: mean -12.527 [-15.947, -7.484] over n = 5 (ratio 0.000)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.947
+c-1a71c5a13b: not promoted for Target A (promo run r-20261029-122321-9f52, judge euler1d-v1.5)
+== promote c-1a71c5a13b --target Ac
+references: limiter/van_leer r-20261024-153251-4a12
+PASS  A3   NF1 converged_expl mean >= 0.95: 0.95
+FAIL  A4   NF1 converged_impl mean >= 1.0: 0.9
+FAIL  A5   NF3 roughness_J p90 <= 0.002: 0.1643
+PASS  A8b  LF2 order_smooth median >= 1.8: 1.963
+PASS  C1   RF1 contact_width median <= 0.6 x van_leer: 2.99 vs 4.275
+PASS  C2   RF1 shock_width median <= 1.1 x van_leer: 2.211 vs 3.24
+PASS  A7a  RF1 overshoot p90 <= 1.1 x van_leer: 0.006933 vs 0.02411
+FAIL  A7b  RF2 overshoot p90 <= 1.1 x van_leer: 0.02819 vs 0.02559
+PASS  A8a  LF1 contact_width median <= 1.5 x van_leer: 2.998 vs 24.76
+PASS  B2   bootstrap RF1 contact_width vs van_leer: 95 % CI of log ratio < 0: mean -0.904 [-1.035, -0.772] over n = 5 (ratio 0.405)
+PASS  A6   dev S1 order_smooth >= 1.9: 1.947
+c-1a71c5a13b: not promoted for Target Ac (promo run r-20261029-122321-9f52, judge euler1d-v1.5)
+R4 PROMO DONE
