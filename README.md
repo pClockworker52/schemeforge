@@ -38,8 +38,8 @@ Current numbers and open questions are in [docs/STATUS.md](docs/STATUS.md); each
 - The judge holds up: its exact solutions agree with an independent re-implementation to 6.5e-13
   ([audit/euler1d/REPORT.md](audit/euler1d/REPORT.md)), and red teams and breakers found real holes, each closed
   by a judge version ([docs/judge/redteam.md](docs/judge/redteam.md), [docs/DECISIONS.md](docs/DECISIONS.md)).
-- The agents add something: in round 3 they produced ideas the main session had not, and the best candidate so
-  far came from a proposer agent. The pre-registered swarm test ([docs/targets/swarm.md](docs/targets/swarm.md))
+- The agents add something: in round 3 they produced ideas the main session had not; round 3's best
+  candidate came from a proposer agent and round 4's from the engine. The pre-registered swarm test ([docs/targets/swarm.md](docs/targets/swarm.md))
   was met for new ideas and only weakly for the engine improving on them.
 - Target A ([docs/targets/A.md](docs/targets/A.md)), a limiter or reconstruction that is both sharp and steady-state
   convergent, was not met in four rounds. The nearest miss passes 12 of 13 checks on held-out data and fails Newton
