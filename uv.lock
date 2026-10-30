@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -410,6 +410,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a9/95/a3dbbb5028f35eafb79008e7522a75244477d2838f38cbb722248dabc2a8/cycler-0.12.1.tar.gz", hash = "sha256:88bb128f02ba341da8ef447245a9e138fae777f6a23943da4540077d3601eb1c", size = 7615, upload-time = "2023-10-07T05:32:18.335Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl", hash = "sha256:85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30", size = 8321, upload-time = "2023-10-07T05:32:16.783Z" },
+]
+
+[[package]]
+name = "felupe"
+version = "11.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0e/3e/77577b3aa3eb4c383c52113e100820fcc749fccd65aeeed304c78c95dba9/felupe-11.3.0.tar.gz", hash = "sha256:d267ea792b31bbd2cde6517d19369b207eb98ab1c81710b831dc714b5b92fcf6", size = 429326, upload-time = "2026-10-14T09:22:13.71Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/8a/f3891bed63e269f10d092a4683d2099ae2458f6baa4fddfca2e1d46e4544/felupe-11.3.0-py3-none-any.whl", hash = "sha256:631f38248f98e3ceb433d835e4038cfdf0ef996f8ab805d49e7a1c90a16d49c7", size = 525941, upload-time = "2026-10-14T09:22:12.511Z" },
 ]
 
 [[package]]
@@ -1889,6 +1904,12 @@ dependencies = [
     { name = "typer" },
 ]
 
+[package.optional-dependencies]
+contact = [
+    { name = "felupe" },
+    { name = "tensortrax" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "hypothesis" },
@@ -1898,6 +1919,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "felupe", marker = "extra == 'contact'", specifier = "==11.3.0" },
     { name = "jax", specifier = ">=0.4.30" },
     { name = "matplotlib", specifier = ">=3.9" },
     { name = "mcp", specifier = ">=1.2" },
@@ -1905,8 +1927,10 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "scipy", specifier = ">=1.13" },
     { name = "sympy", specifier = ">=1.13" },
+    { name = "tensortrax", marker = "extra == 'contact'", specifier = "==0.30.0" },
     { name = "typer", specifier = ">=0.12" },
 ]
+provides-extras = ["contact"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -2128,6 +2152,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/83/d3/803453b36afefb7c2bb238361cd4ae6125a569b4db67cd9e79846ba2d68c/sympy-1.14.0.tar.gz", hash = "sha256:d3d3fe8df1e5a0b42f0e7bdf50541697dbe7d23746e894990c030e2b05e72517", size = 7793921, upload-time = "2025-04-27T18:05:01.611Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a2/09/77d55d46fd61b4a135c444fc97158ef34a095e5681d0a6c10b75bf356191/sympy-1.14.0-py3-none-any.whl", hash = "sha256:e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5", size = 6299353, upload-time = "2025-04-27T18:04:59.103Z" },
+]
+
+[[package]]
+name = "tensortrax"
+version = "0.30.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/86/76/dc0f50480253e27b484facf818dd28c660b8dd86f9f9dadeef25528dfb44/tensortrax-0.30.0.tar.gz", hash = "sha256:b61919351f3161d8db2b384934a829541119a57b2e658bac3a6b134ac7780cf1", size = 80736, upload-time = "2026-10-29T10:47:31.78Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/59/a1/776194cbbe6e79f3eb72d6b0ba8c71a17655613fd0b0c8af826b0f318055/tensortrax-0.30.0-py3-none-any.whl", hash = "sha256:0f095e10d67374641f99acbb9e06d78d4f231a5b7055f5ff91ca48480c17a613", size = 56385, upload-time = "2026-10-29T10:47:30.445Z" },
 ]
 
 [[package]]

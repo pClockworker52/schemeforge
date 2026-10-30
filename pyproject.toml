@@ -17,6 +17,10 @@ dependencies = [
     "mcp>=1.2",
 ]
 
+[project.optional-dependencies]
+# Arena 2 (third-medium contact) judge; pinned: felupe 12 removes the callback API (docs/plans/2026-10-30-phase6.md D3)
+contact = ["felupe==11.3.0", "tensortrax==0.30.0"]  # tensortrax: felupe.constitution.jax imports it
+
 [project.scripts]
 sforge = "schemeforge.cli:app"
 sforge-mcp = "schemeforge.mcp_server:main"
