@@ -1,0 +1,13 @@
+kind: riemann
+id: B-1908
+# RF2-type slowly moving shock (Rankine-Hugoniot exact): Mach 10, gamma 1.2 (the judge's stress gamma),
+# pre-shock (1.2, u1, 1) so a1 = 1. rho2 = 1.2 * 10 = 12, p2 = 109, shock-frame w1 = -10, w2 = -1;
+# lab shock speed s = 11/6 = 0.2 * max(|u| + a) (max = 55/6, pre-shock side), ~0.1 cells/step at CFL 0.5.
+# u1 - u2 = -9 exactly. Same Mach and speed fraction as B-1902 (gamma 1.4).
+left: [12.0, 0.8333333333333334, 109.0]
+right: [1.2, -8.166666666666667, 1.0]
+t_end: 0.06545454545454546
+n: 200
+gamma: 1.2
+x0: 0.5
+domain: [0.0, 1.0]

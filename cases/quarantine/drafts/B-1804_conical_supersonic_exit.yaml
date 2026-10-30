@@ -1,0 +1,10 @@
+kind: nozzle
+id: B-1804
+pb: 0.1
+n: 120
+gamma: 1.4
+nozzle:
+  type: conical
+  area_ratio: 3.0
+  length: 1.2
+  inlet_ratio: 2.0

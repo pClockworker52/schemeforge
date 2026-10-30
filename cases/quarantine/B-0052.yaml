@@ -1,0 +1,11 @@
+kind: nozzle
+id: B-0052
+pb: 0.01
+n: 120
+gamma: 1.4
+nozzle:
+  type: conical
+  x_in: -2.0
+  area_ratio: 3.0
+  length: 1.2
+  inlet_ratio: 2.0

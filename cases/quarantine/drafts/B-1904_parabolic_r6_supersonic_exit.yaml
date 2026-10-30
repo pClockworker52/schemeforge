@@ -1,0 +1,14 @@
+kind: nozzle
+id: B-1904
+# NF2-type shock-free supersonic nozzle (isentropic, exact): parabolic, area ratio 6, divergent length 3,
+# inlet ratio 2, gamma 1.4, N 120. Exit Mach ~3.4 (isentropic exit p/p0 ~0.016, exit-shock pb ~0.2), so
+# pb = 0.01 gives a supersonic exit with no shock. Dev N3 (Anderson, pb 0.01) is the only supersonic shock-free
+# nozzle in dev; no quarantined case covers this regime. Both solvers (explicit and implicit).
+pb: 0.01
+n: 120
+gamma: 1.4
+nozzle:
+  type: parabolic
+  area_ratio: 6.0
+  length: 3.0
+  inlet_ratio: 2.0

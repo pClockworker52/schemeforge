@@ -1,0 +1,11 @@
+kind: nozzle_sweep
+id: B-1705
+pbs: [0.95, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.25]
+n: 120
+gamma: 1.6666666666666667
+solvers: [explicit, implicit]
+nozzle:
+  type: parabolic
+  area_ratio: 5.0
+  length: 2.0
+  inlet_ratio: 2.0

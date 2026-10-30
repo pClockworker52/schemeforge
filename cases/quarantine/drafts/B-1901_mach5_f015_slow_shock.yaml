@@ -1,0 +1,13 @@
+kind: riemann
+id: B-1901
+# RF2-type slowly moving shock (Rankine-Hugoniot exact): Mach 5, gamma 1.4, pre-shock (1.4, u1, 1) so a1 = 1.
+# Shock speed s = 18/23 = 0.15 * max(|u| + a) (max = 120/23 on the pre-shock side), ~0.075 cells/step at CFL 0.5,
+# inside the transition band of the candidate's quartic motion gate (D0 = 0.17).
+# post-shock: rho2 = 5 * 1.4 = 7, p2 = 29, u2 = -5/23; pre-shock u1 = -97/23; u1 - u2 = -4 exactly.
+left: [7.0, -0.21739130434782608, 29.0]
+right: [1.4, -4.217391304347826, 1.0]
+t_end: 0.115
+n: 200
+gamma: 1.4
+x0: 0.5
+domain: [0.0, 1.0]

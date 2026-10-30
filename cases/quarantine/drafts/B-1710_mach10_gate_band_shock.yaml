@@ -1,0 +1,10 @@
+kind: riemann
+id: B-1710
+# Mach 10 shock (gamma 1.4) into (1, -9, 1): lab shock speed 2.832 = 0.278 max(|u| + a),
+# about 0.14 cells per step at CFL 0.5, inside the motion-gate transition band (D0 = 0.15).
+left: [5.714285714285714, 0.761531642114367, 116.5]
+right: [1.0, -9.0, 1.0]
+t_end: 0.1
+n: 200
+gamma: 1.4
+x0: 0.5

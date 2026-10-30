@@ -1,0 +1,15 @@
+kind: nozzle
+id: B-1905
+# NF2-type shock-free supersonic nozzle (isentropic, exact) with a low-Mach inlet: smoothed-conical, area ratio 3,
+# length 1.2, inlet ratio 2, inlet moved upstream to x_in = -2 (inlet area ~10, inlet Mach ~0.06, like the
+# Anderson inlet of dev N3). Exit Mach ~2.6 (isentropic exit p/p0 ~0.047), pb = 0.01: supersonic exit, no shock.
+# Both solvers. Targets the explicit limit cycle the candidate shows on dev N3 (8.5 orders, van Leer 12.0).
+pb: 0.01
+n: 120
+gamma: 1.4
+nozzle:
+  type: conical
+  x_in: -2.0
+  area_ratio: 3.0
+  length: 1.2
+  inlet_ratio: 2.0

@@ -1,0 +1,14 @@
+kind: nozzle
+id: B-1907
+# NF2-type shock-free supersonic nozzle (isentropic, exact) with a low-Mach inlet set by the inlet ratio:
+# parabolic, area ratio 6, divergent length 3, inlet ratio 8 (inlet Mach ~0.07), gamma 1.4, N 120, pb 0.01
+# (isentropic exit p/p0 ~0.016: supersonic exit, no shock). Same geometry as B-1904 except the inlet ratio
+# (B-1904, inlet ratio 2, converges with both solvers). Both solvers.
+pb: 0.01
+n: 120
+gamma: 1.4
+nozzle:
+  type: parabolic
+  area_ratio: 6.0
+  length: 3.0
+  inlet_ratio: 8.0
