@@ -49,4 +49,10 @@ Current numbers and open questions are in [docs/STATUS.md](docs/STATUS.md); each
 
 ## Licence
 
-MIT ([LICENSE](LICENSE)). Citation: [CITATION.cff](CITATION.cff).
+GPL-3.0-or-later ([LICENSE](LICENSE)): you may use, study, change and redistribute schemeforge; a distributed
+program that contains it must be released under the same licence, with its source. Running the judge, citing its
+results or reimplementing a scheme it found is not affected. Citation: [CITATION.cff](CITATION.cff).
+
+    schemeforge — Copyright (C) 2026 pClockworker52
+    This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it
+    under the conditions of the GNU General Public License, version 3 or (at your option) any later version.

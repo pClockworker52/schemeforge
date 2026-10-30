@@ -5,7 +5,7 @@ type: software
 authors:
   - alias: pClockworker52
 repository-code: "https://github.com/pClockworker52/schemeforge"
-license: MIT
+license: GPL-3.0-or-later
 version: "benchmark-v1.0"
 date-released: "2026-10-30"
 keywords:

@@ -3,7 +3,7 @@ name = "schemeforge"
 version = "0.1.0"
 description = "AI-swarm search for numerical scheme components, judged by exact solutions."
 readme = "README.md"
-license = "MIT"
+license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
 dependencies = [

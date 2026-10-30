@@ -287,3 +287,14 @@ users generate their own seed (same family distributions, different instances); 
 on request (repository issue), answered with aggregates and verdicts only. Release `benchmark-v1.0` on judge
 euler1d-v1.6. Then Phase 6 (tooling spike first).
 *Consequences:* BENCHMARK.md, LICENSE, CITATION.cff; the spec and slot docs now list the v1.5 scaling constraint.
+
+
+## 2026-10-30 — Licence: GPL-3.0-or-later instead of MIT (Peter)
+*Context:* The Phase 6 spike chose FElupe, which (with tensortrax) is GPL-3.0-or-later. Under MIT the repository would
+have needed a split (Arena 2 GPL, the rest MIT). The ecosystem the plan builds on is GPL as well (FElupe; OpenFOAM in
+Phase 4); the dependencies (JAX, NumPy, SciPy) are GPL-compatible.
+*Decision:* The whole repository is GPL-3.0-or-later, replacing the MIT licence of the benchmark-release entry above,
+before the benchmark-v1.0 tag. LICENSE holds the canonical GPL-3.0 text.
+*Consequences:* Running the judge, citing results and reimplementing schemes are unaffected; a distributed program
+that contains schemeforge must be GPL with its source. The branch carried the MIT file for a few hours (915ba1e); no
+release was tagged under MIT.

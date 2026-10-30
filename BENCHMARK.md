@@ -5,7 +5,7 @@ a reconstruction, with or without per-cell memory. It runs the component inside 
 solutions (Riemann problems, quasi-1D Laval nozzles with a normal shock) and reports sharpness, overshoot, accuracy,
 steady-state convergence and smoothness of a steady objective. A zoo of published schemes gives the reference front.
 
-Release `benchmark-v1.0` = judge `euler1d-v1.6` (tag `euler1d-v1.6`). Licence: MIT ([LICENSE](LICENSE)). How to cite:
+Release `benchmark-v1.0` = judge `euler1d-v1.6` (tag `euler1d-v1.6`). Licence: GPL-3.0-or-later ([LICENSE](LICENSE)). How to cite:
 [CITATION.cff](CITATION.cff).
 
 ## What you can trust

@@ -4,12 +4,12 @@ Last session: 2026-10-29/30 (WSL) — Phase 3 wrap-up: H-0019 evidence (2 kill r
 2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
 docs/judge/2026-10-30-v16-check.md (no member newly rejected, old-case dev and all promo identical to v1.5). The
 reconstruction_stateful rescore is deferred until a round 5 or the benchmark leaderboard needs it. H-0019..H-0025 closed by Peter
-2026-10-30 (H-0019 refuted; H-0020/21/22/25 refuted; H-0023, H-0024 inconclusive). Benchmark release prepared (BENCHMARK.md, MIT LICENSE,
-CITATION.cff; Peter: MIT, held-out seed stays private, scoring on request); tag `benchmark-v1.0` on main after the merge.
+2026-10-30 (H-0019 refuted; H-0020/21/22/25 refuted; H-0023, H-0024 inconclusive). Benchmark release prepared (BENCHMARK.md, GPL-3.0 LICENSE,
+CITATION.cff; Peter: GPL-3.0-or-later, held-out seed stays private, scoring on request); tag `benchmark-v1.0` on main after the merge.
 Phase 6 tooling spike done in the cloud
 (docs/spikes/2026-10-30-phase6-tooling.md): FElupe meets the tested criteria (Hertz, Q2, 9.5k DOF: 11.6 s, 181 MB;
-jax.numpy energies via JAX AD give identical results). **Open (Peter): FElupe is GPL-3.0** vs the MIT repo; options
-in the spike note. Then Phase 6 proper (PLAN §14.2–14.8).
+jax.numpy energies via JAX AD give identical results). FElupe is GPL-3.0: the repository switched to GPL-3.0-or-later
+(DECISIONS 2026-10-30). Then Phase 6 proper (PLAN §14.2–14.8).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;

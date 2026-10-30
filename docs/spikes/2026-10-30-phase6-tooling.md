@@ -50,13 +50,15 @@ removes one of the attack surfaces the slot contract planned to test (PLAN §14.
 interface stays `jax.numpy`, and custom JAX FE (meshes, Q2 shape functions, assembly, Newton with line search,
 Hessian forms) would cost several sessions before the first reference case.
 
-## Open decision: licence
+## Licence (resolved 2026-10-30: the whole repository is GPL-3.0-or-later)
 
-FElupe and tensortrax are **GPL-3.0-or-later**; the repository is MIT since 2026-10-30. An Arena 2 that imports FElupe
+FElupe and tensortrax are **GPL-3.0-or-later**; the repository was MIT for a few hours on 2026-10-30, then Peter
+switched it to GPL-3.0-or-later (DECISIONS 2026-10-30), so FElupe can be used without a licence split. The options
+considered: An Arena 2 that imports FElupe
 is commonly read as a work that must be distributed under the GPL as a whole. This needs Peter's decision, not
 legal advice from here:
 
-1. **FElupe, Arena 2 under GPL-3.0:** keep `core/`, `engine/` and Arena 1 MIT; license the Arena 2 package (and the
+1. **FElupe, Arena 2 under GPL-3.0 (superseded: the whole repository is GPL now):** keep `core/`, `engine/` and Arena 1 MIT; license the Arena 2 package (and the
    spike scripts) GPL-3.0, stated in its own LICENSE file. Least work.
 2. **Custom JAX FE, all MIT:** no GPL dependency; several extra sessions; the judge owns more code to audit.
 3. **Ask FElupe's author** for an exception or dual licence; possible, not in our control.
