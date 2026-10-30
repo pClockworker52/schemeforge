@@ -771,8 +771,12 @@
     literature note)
   - H-0011 (A1 and A7 for phi(r), round 3c)
   author: orchestrator/contrarian
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Kill criterion met on v1.5 promo (also identical under v1.6): c-b5cb82a0ef r-20261029-185257-3e4a
+    (RF1 shock 2.581, NF3 roughness p90 0.00175, NF1 Newton 1.00) and c-fb8db52bca r-20261029-185256-7cd3 (2.582,
+    0.00142, 1.00); they fail A7 and A8 instead. Round-4 children c-4ece6bb6f7 r-20261029-122317-32a7 are sharp
+    and smooth with Newton 0.85. Spearman rho -0.592 over 14 rows (reported, not deciding). docs/results/arena1-negative.md.
+    Closed by Peter 2026-10-30.'
 - id: H-0020
   arena: euler1d
   slot: reconstruction_stateful
@@ -848,8 +852,9 @@
   - H-0011 (sharpness forces overshoot for componentwise phi(r)); H-0012 (acoustic fields deliberately left uncompressed);
     H-0015 (steeper THINC, more overshoot on B-0010)
   author: hunch-generator/shock physics
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Dev kill clause 2: B-0010 overshoot +18.5 % over base (c-cb9fe80826 r-20261024-202537-69d0, proposer
+    report); promo part not run. docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md. Closed by Peter 2026-10-30.'
 - id: H-0021
   arena: euler1d
   slot: reconstruction_stateful
@@ -938,8 +943,11 @@
   - one web search found no reconstruction that switches compression from the per-step change of the cell values;
     this is not evidence of novelty
   author: hunch-generator/steady-convergence
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Promo clause: NF1 converged_impl mean 0.85 < 1.00 (c-698b39759f r-20261024-210131-4dcc); island
+    descendants show the same gap (c-4ece6bb6f7 0.85 r-20261029-122317-32a7, the round''s nearest miss; c-1a71c5a13b
+    0.90 r-20261029-122321-9f52). Breakers: Newton stalls across geometries and low-Mach flow (docs/rounds/2026-10-29-round4-breakers.md).
+    Closed by Peter 2026-10-30.'
 - id: H-0022
   arena: euler1d
   slot: reconstruction_stateful
@@ -1014,8 +1022,9 @@
   - 'Hu, Adams, Shu (2013): positivity-preserving flux limiting'
   - traps file, 'Guard positivity'; round-3 breaker reports (B-0016, B-0017, B-0026..B-0028, B-0030, B-0031, B-0034)
   author: hunch-generator/structure preservation
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: 'Clause (a): non-finite state on B-0030 with the hunch''s epsilon (r-20261024-201321-dc41, proposer
+    report); best candidate c-9a3faab538 r-20261024-202309-21b3. Closed by Peter 2026-10-30.'
 - id: H-0023
   arena: euler1d
   slot: reconstruction_stateful
@@ -1094,8 +1103,9 @@
   - path dependence of frozen or switched limiters (limiter freezing, Venkatakrishnan 1995; H-0013's lock)
   - H-0019, the hunch this one opposes
   author: hunch-generator/contrarian
-  status: open
-  verdict_note: ''
+  status: inconclusive
+  verdict_note: 'Dev kill not met (c-af3143be0c r-20261024-202133-76b1: N4 roughness 6.8e-4 with R1 2.475); not
+    in the promo top 3, so the promo clause is untested. Closed by Peter 2026-10-30.'
 - id: H-0024
   arena: euler1d
   slot: reconstruction_stateful
@@ -1176,8 +1186,10 @@
   - H-0005 (relaxation of the limiter factor in pseudo-time, refuted; no spatial spreading); H-0013 (lock, history-dependent)
   - THINC/BVD (Sun, Inaba, Xiao 2016); parent c-2ca8842812
   author: hunch-generator/transfer
-  status: open
-  verdict_note: ''
+  status: inconclusive
+  verdict_note: Every kappa rejected on dev (B-0016, B-0030 crashes; c-5ff53c2690 r-20261024-201845-0539), so no
+    scores exist; the dev clause holds only trivially. Closed inconclusive per the proposer's call (refuted would
+    also be defensible). Closed by Peter 2026-10-30.
 - id: H-0025
   arena: euler1d
   slot: reconstruction_stateful
@@ -1260,5 +1272,6 @@
     H-0012''s relatives; abstract only)'
   - H-0016 (MOOD on WENO5-Z, refuted)
   author: hunch-generator/approximation theory
-  status: open
-  verdict_note: ''
+  status: refuted
+  verdict_note: Promo NF3 roughness_J p90 0.311 > 0.002 with Newton 1.00 (c-47838d9365 r-20261024-205819-e795);
+    dev N4 had 8.1e-6, a large dev to held-out gap. Closed by Peter 2026-10-30.

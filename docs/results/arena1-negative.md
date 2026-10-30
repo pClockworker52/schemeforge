@@ -163,8 +163,8 @@ What the front shows:
 
 ## Every hunch verdict
 
-Closed by Peter (gates 2–3e) unless marked *proposed*. Round-4 verdicts are proposals from
-docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md; the ledger entries are still `open`.
+All closed by Peter: rounds 1–3 at gates 2–3e, round 4 (H-0019..H-0025) on 2026-10-30 from the proposals in
+docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md (ledger/hunches.yaml has the notes with run ids).
 
 | Hunch | Round, slot | Idea | Verdict |
 |---|---|---|---|
@@ -186,13 +186,13 @@ docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md; the ledger entries
 | H-0016 | 3, reconstruction_stateful | MOOD-style flag on WENO5-Z | refuted |
 | H-0017 | 3, reconstruction_stateful | κ = 1/3 quadratic in the BVD dictionary | refuted; variant of P_nT_m-BVD |
 | H-0018 | 3, method | the agent swarm adds value (docs/targets/swarm.md) | supported weakly: S1 met, S2 met by 1 of 3 islands, ≤ 5 % |
-| H-0019 | 4, all Arena 1 | no scheme with Newton = 1.00 is both sharp and smooth | *proposed:* refuted; kill criterion met by c-b5cb82a0ef (r-20261029-185257-3e4a) and c-fb8db52bca (r-20261029-185256-7cd3) on v1.5 promo (H-0019 table) |
-| H-0020 | 4, reconstruction_stateful | strength-inverse compression | *proposed:* refuted (dev) |
-| H-0021 | 4, reconstruction_stateful | motion-gated compression | *proposed:* refuted (promo, Newton 0.85); its island produced the nearest miss |
-| H-0022 | 4, reconstruction_stateful | positivity scaling of face states | *proposed:* refuted as specified |
-| H-0023 | 4, reconstruction_stateful | history, not sharpness, causes roughness | *proposed:* inconclusive (promo not run) |
-| H-0024 | 4, reconstruction_stateful | diffused BVD weight (Barter–Darmofal transfer) | *proposed:* inconclusive or refuted; Peter's call |
-| H-0025 | 4, reconstruction_stateful | characteristic WENO5-Z with Newton | *proposed:* refuted (promo roughness 0.311; dev had 8.1e-6) |
+| H-0019 | 4, all Arena 1 | no scheme with Newton = 1.00 is both sharp and smooth | refuted (closed 2026-10-30); kill criterion met by c-b5cb82a0ef (r-20261029-185257-3e4a) and c-fb8db52bca (r-20261029-185256-7cd3) on v1.5 promo (H-0019 table) |
+| H-0020 | 4, reconstruction_stateful | strength-inverse compression | refuted (dev) |
+| H-0021 | 4, reconstruction_stateful | motion-gated compression | refuted (promo, Newton 0.85); its island produced the nearest miss |
+| H-0022 | 4, reconstruction_stateful | positivity scaling of face states | refuted as specified |
+| H-0023 | 4, reconstruction_stateful | history, not sharpness, causes roughness | inconclusive (promo not run) |
+| H-0024 | 4, reconstruction_stateful | diffused BVD weight (Barter–Darmofal transfer) | inconclusive (all κ rejected on dev; refuted would also be defensible) |
+| H-0025 | 4, reconstruction_stateful | characteristic WENO5-Z with Newton | refuted (promo roughness 0.311; dev had 8.1e-6) |
 
 ## Method results
 
@@ -230,7 +230,7 @@ docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md; the ledger entries
 ## Next (PLAN §11.4, Phase 6)
 
 1. ~~v1.5 promo runs of c-b5cb82a0ef and c-fb8db52bca, then the H-0019 table again~~ done 2026-10-29: 2 kill rows.
-   Peter closes H-0019..H-0025 from the proposed verdicts and decides H-0024.
+   ~~Peter closes H-0019..H-0025~~ done 2026-10-30 (H-0019 refuted, H-0024 inconclusive).
 2. ~~Breakers on c-4ece6bb6f7, c-82efea7caf and c-60c5ed6928~~ done 2026-10-30: B-0037 … B-0056 in quarantine.
    Peter decides on them; any accepted case goes into the next judge version, followed by `sforge zoo eval` and an
    archive rescore.

@@ -3,8 +3,8 @@ Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: eul
 Last session: 2026-10-29/30 (WSL) — Phase 3 wrap-up: H-0019 evidence (2 kill rows), breakers on the round-4 top 3
 2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
 docs/judge/2026-10-30-v16-check.md (no member newly rejected, old-case dev and all promo identical to v1.5). The
-reconstruction_stateful rescore is deferred until a round 5 or the benchmark leaderboard needs it. Next: Peter closes
-H-0019..H-0025 (H-0019 proposed refuted), the note is finalised, benchmark release (PLAN §20), Phase 6.
+reconstruction_stateful rescore is deferred until a round 5 or the benchmark leaderboard needs it. H-0019..H-0025 closed by Peter
+2026-10-30 (H-0019 refuted; H-0020/21/22/25 refuted; H-0023, H-0024 inconclusive). Next: benchmark release (PLAN §20), Phase 6.
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
