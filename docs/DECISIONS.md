@@ -307,3 +307,13 @@ dependency group; D4 Target D (frictionless) only, friction and C5/C6 later; D5 
 `jax.numpy`, with direction field, thickness measure and state as planned later slots. Step 7 (search readiness:
 engine tables, prompts, calibration run, hunch preview with closest relatives) added before Gate 6.
 *Consequences:* Phase 6 starts with step 1 (arena skeleton, generic tables, Arena 1 scores unchanged).
+
+
+## 2026-10-30 — Each arena is its own judge (Phase 6 step 1)
+*Context:* The judge hash and the integrity check covered all of src/schemeforge/arenas/. A committed contact file
+would have made euler1d "differ from tag euler1d-v1.6" and refused every Arena 1 evaluation.
+*Decision:* Hash, uncommitted-change refusal and tag diff cover arenas/<arena>/ plus arenas/__init__.py only
+(core/integrity.judge_paths). The CLI and MCP tools no longer default to euler1d.
+*Consequences:* The euler1d judge files are byte-identical to the v1.6 tag, but the hash recorded with new runs
+changes from 742819536be4… (whole tree) to a38ee919f14b… (euler1d only); judge_version stays euler1d-v1.6.
+Comparisons go by judge_version and scores, never by hash, so no earlier result is affected.
