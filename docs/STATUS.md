@@ -1,6 +1,7 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.6 (2026-10-30, 2590e3e)  Plan: v1.2
 Last session: 2026-10-30 (WSL) — benchmark-v1.0 released (GPL-3.0-or-later)
+Handoff 2026-10-30: docs/HANDOFF.md (Phase 6 steps 1–2 done; next: step 3, Hertz and the error floor).
 2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
 docs/judge/2026-10-30-v16-check.md (no member newly rejected, old-case dev and all promo identical to v1.5). The
 reconstruction_stateful rescore is deferred until a round 5 or the benchmark leaderboard needs it. H-0019..H-0025 closed by Peter
