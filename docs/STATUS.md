@@ -16,7 +16,11 @@ jax.numpy energies via JAX AD give identical results). FElupe is GPL-3.0: the re
 docs/plans/2026-10-30-phase6.md. Step 1 (cloud, 2026-10-30): per-arena judges
 (DECISIONS "Each arena is its own judge"), no euler1d defaults in CLI/MCP, contact arena skeleton contact-v0.1.dev
 (medium slot, smoke C0a, zoo neo_hooke); acceptance run r-20261030-071154-7111 ok (cloud registry). Arena 1 zoo dev
-identical before/after, 21/21 (docs/judge/2026-10-30-phase6-step1-euler1d-check.md). **Step 1 done.** Next: step 2 (C0a/C0b exact cases, pressure from reactions, classical reference).
+identical before/after, 21/21 (docs/judge/2026-10-30-phase6-step1-euler1d-check.md). **Step 1 done.** Step 2 done (judge contact-v0.2.dev, 5858abe): C0a laterally
+confined (exact homogeneous solution for any medium; FE agrees to 1e-9 or better), C0b simple shear (exact from psi),
+wall pressure from reactions (exact for uniform pressure), classical ContactRigidPlane + penalty extrapolation (2e-10).
+Spec: docs/judge/contact_spec.md. Zoo neo_hooke dev r-20261030-082524-e9a2 (cloud registry): leak_pre 0.0187 / 1.95e-4 and gap_res
+0.0316 / 6.5e-4 at gamma 1e-3 / 1e-5, shear_parasitic 1e-5. Next: step 3 (Hertz C2, patch test C1, judge error floor).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
