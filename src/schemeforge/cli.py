@@ -270,7 +270,13 @@ def zoo_eval(
 
     with ThreadPoolExecutor(max_workers=max_parallel()) as pool:
         results = list(pool.map(one, jobs))
-    if suite == ZooSuite.promo:  # family medians
+    columns = getattr(ev, "ZOO_COLUMNS", {}).get(suite.value)  # an arena may name its own; else Arena 1's below
+    if columns:
+        key = columns
+
+        def value(r, c, m):
+            return r.get("cases", {}).get(c, {}).get(m)
+    elif suite == ZooSuite.promo:  # family medians
         key = [("RF1", "l1_smooth"), ("RF1", "shock_width"), ("RF2", "tv_increase"), ("NF1", "shock_pos_err"),
                ("NF1", "res_orders_expl"), ("NF1", "newton_iters"), ("NF3", "roughness_J")]
 
