@@ -298,3 +298,12 @@ before the benchmark-v1.0 tag. LICENSE holds the canonical GPL-3.0 text.
 *Consequences:* Running the judge, citing results and reimplementing schemes are unaffected; a distributed program
 that contains schemeforge must be GPL with its source. The branch carried the MIT file for a few hours (915ba1e); no
 release was tagged under MIT.
+
+
+## 2026-10-30 — Phase 6 plan approved (Peter)
+*Context:* docs/plans/2026-10-30-phase6.md.
+*Decision:* D1 arena `contact`; D2 Hertz as an elastic cylinder on a rigid flat; D3 `felupe==11.3.0` in an optional
+dependency group; D4 Target D (frictionless) only, friction and C5/C6 later; D5 candidate `psi_medium(C, p)` in
+`jax.numpy`, with direction field, thickness measure and state as planned later slots. Step 7 (search readiness:
+engine tables, prompts, calibration run, hunch preview with closest relatives) added before Gate 6.
+*Consequences:* Phase 6 starts with step 1 (arena skeleton, generic tables, Arena 1 scores unchanged).
