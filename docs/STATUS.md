@@ -16,7 +16,7 @@ jax.numpy energies via JAX AD give identical results). FElupe is GPL-3.0: the re
 docs/plans/2026-10-30-phase6.md. Step 1 (cloud, 2026-10-30): per-arena judges
 (DECISIONS "Each arena is its own judge"), no euler1d defaults in CLI/MCP, contact arena skeleton contact-v0.1.dev
 (medium slot, smoke C0a, zoo neo_hooke); acceptance run r-20261030-071154-7111 ok (cloud registry). Arena 1 zoo dev
-identity check before/after running. Next: step 2 (C0a/C0b exact cases, pressure from reactions, classical reference).
+identical before/after, 21/21 (docs/judge/2026-10-30-phase6-step1-euler1d-check.md). **Step 1 done.** Next: step 2 (C0a/C0b exact cases, pressure from reactions, classical reference).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
