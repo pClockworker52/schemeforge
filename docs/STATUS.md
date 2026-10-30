@@ -1,5 +1,5 @@
 # STATUS
-Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.6 (2026-10-30, 2590e3e)  Plan: v1.2
+Phase: 6 — Arena 2 judge and zoo (started 2026-10-30; Phase 3 closed)  Judges: euler1d-v1.6 (2590e3e), contact-v0.2.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-10-30 (WSL) — benchmark-v1.0 released (GPL-3.0-or-later)
 Handoff 2026-10-30: docs/HANDOFF.md (Phase 6 steps 1–2 done; next: step 3, Hertz and the error floor).
 2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
