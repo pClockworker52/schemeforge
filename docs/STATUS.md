@@ -12,7 +12,8 @@ from the web UI at 2026-10-30T06:09Z (no gh): https://github.com/pClockworker52/
 Phase 6 tooling spike done in the cloud
 (docs/spikes/2026-10-30-phase6-tooling.md): FElupe meets the tested criteria (Hertz, Q2, 9.5k DOF: 11.6 s, 181 MB;
 jax.numpy energies via JAX AD give identical results). FElupe is GPL-3.0: the repository switched to GPL-3.0-or-later
-(DECISIONS 2026-10-30). Then Phase 6 proper (PLAN §14.2–14.8).
+(DECISIONS 2026-10-30). Phase 6 plan proposed: docs/plans/2026-10-30-phase6.md (decisions D1–D5 for
+Peter, six steps to Gate 6).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
