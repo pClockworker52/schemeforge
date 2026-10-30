@@ -62,7 +62,7 @@ ul.tight li{margin:.4em 0}
 <p><strong>Phase 3 ended without a Target A promotion, but closer than expected. The last obstacle is Newton convergence on 3 of 20 held-out nozzles.</strong></p>
 <p>Round 4's best scheme, evolved by the engine, passes 12 of Target A's 13 checks on held-out data. It is sharp, it gives a smooth steady objective, and its overshoot is at van Leer's level. It fails only A4: Newton converges on 17 of 20 held-out nozzle instances, and A4 asks for all 20.</p>
 <p>The explanation the plan bet on, that sharp steady shocks force a rough objective, did not hold up. Round 4 produced schemes that are both sharp and smooth, and a round-2 limiter already had been sharp, smooth and Newton-convergent at once. Target A's checks do conflict, but along several lines, not one. Re-run under judge v1.5, those round-2 limiters refute the pre-registered hunch H-0019 formally.</p>
-<p><strong>Recommendation:</strong> close the hunches and decide on the 20 quarantined breaker cases, publish the negative-result note with the judge and zoo as a benchmark, and move to Phase 6. A round 5 aimed only at A4 for the nearest-miss family is the one continuation that looks worth a decision.</p>
+<p><strong>Recommendation:</strong> close the hunches, tag judge v1.6 with three of the breaker cases, publish the negative-result note with the judge and zoo as a benchmark, and move to Phase 6. A round 5 aimed only at A4 for the nearest-miss family is the one continuation that looks worth a decision.</p>
 </div>
 
 <h2>1. What happened since 2026-10-24</h2>
@@ -125,7 +125,8 @@ ul.tight li{margin:.4em 0}
 <h2>5. What next</h2>
 <ul class="tight">
 <li><b>Done (Oct 29–30):</b> the round-2 limiters c-b5cb82a0ef and c-fb8db52bca keep their values under v1.5 (shock 2.58, roughness 0.0018 / 0.0014, Newton 1.00), so H-0019's kill criterion is met. Breakers on round 4's top 3 proposed 20 cases (B-0037 to B-0056). They show the Newton failure is broad: across nozzle shapes, γ from 1.05 to 3, coarse and fine grids, and worst in low-Mach flow, even without a shock, where van Leer converges. One candidate also overshoots up to 6 × van Leer on slow strong shocks.</li>
-<li><b>Next (Peter):</b> close H-0019 to H-0025 (H-0019 proposed refuted), decide on the 20 quarantined cases, finalise the note.</li>
+<li><b>Decided (Oct 30):</b> three breaker cases join dev in judge v1.6, one per mechanism: B-0042 (Newton stall on a shock sweep), B-0052 (low-Mach stall without a shock), B-0054 (overshoot on a slow strong shock). The other 17 stay in quarantine. WSL tags v1.6 and re-runs the zoo.</li>
+<li><b>Next (Peter):</b> close H-0019 to H-0025 (H-0019 proposed refuted), finalise the note.</li>
 <li><b>Then:</b> publish the judge, zoo and harness as a benchmark (PLAN §20), and Phase 6.</li>
 <li><b>Optional round 5</b>, only by a new recorded decision: Newton convergence (A4) for c-4ece6bb6f7's family, starting from new dev nozzle cases in the NF1 regime, proposed by a breaker or by you and never reconstructed from held-out data. The breakers have now supplied such cases, and the Newton failure already shows on the existing dev case N2. It would aim at one check on one family, with a clear way to fail fast.</li>
 </ul>
