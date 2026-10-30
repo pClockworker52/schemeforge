@@ -21,7 +21,8 @@ def test_dev_suite_ids_and_admissibility() -> None:
     suite = dev_suite()
     assert [c.id for c in suite] == ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "S1", "N1", "N2", "N3", "N4", "N5",
                                      "N6", "B-0002", "B-0004", "B-0010", "B-0011",  # accepted breaker cases (v1.4)
-                                     "B-0016", "B-0019", "B-0021", "B-0030"]  # (v1.5, gate 3e D3)
+                                     "B-0016", "B-0019", "B-0021", "B-0030",  # (v1.5, gate 3e D3)
+                                     "B-0042", "B-0052", "B-0054"]  # (v1.6, round-4 breakers)
     for case in suite:
         validate_case(case)
 

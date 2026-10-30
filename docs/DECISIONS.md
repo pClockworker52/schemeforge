@@ -250,3 +250,16 @@ rejected 16/16 in gen 0 (7 smoke at 300 s, 6 dev at 1500 s, 3 size). Cause: memo
 (~31 GB) thrashed on 15.8 GB. Side finding: workers are pinned to logical CPUs 1..K, which are SMT siblings (0-1, 2-3,
 2-3, ...); left unchanged so cost numbers stay comparable with earlier runs. Fix: round-4 evolve runs with
 SFORGE_MAX_PARALLEL=3 (~13 GB); the raised timeouts stay as margin. Estimated ~1 h per generation.
+
+
+## 2026-10-30 — Round-4 breaker cases accepted into judge v1.6 (Peter)
+*Context:* The round-4 breakers proposed B-0037..B-0056 (docs/rounds/2026-10-29-round4-breakers.md), grouped in three
+mechanisms.
+*Decision:* Accept one case per mechanism into dev: **B-0042** (Newton stall on a shock sweep: Anderson nozzle, N 60,
+11 back pressures; c-4ece6bb6f7 6/11 implicit, r-20261029-201644-c309, vs van Leer 11/11, r-20261029-202631-c516),
+**B-0052** (low-Mach inlet, supersonic, no shock: c-60c5ed6928 implicit 0/1, r-20261029-225629-c059, vs van Leer ok,
+r-20261029-230331-362d), **B-0054** (slow strong shock, Mach 10, γ 5/3: c-60c5ed6928 overshoot 5.96 × van Leer,
+r-20261029-235037-efff vs r-20261029-235732-69ac). The other 17 stay in quarantine. B-0043, on which the zoo
+muscl_van_leer_frozen crashes, is not accepted.
+*Consequences:* Judge euler1d-v1.6 (cases only, no code change): zoo eval dev + promo, rescore reconstruction_stateful,
+before the benchmark release. Phase 3 still ends (stop rule); the cases serve the benchmark and any later round.

@@ -192,9 +192,10 @@ def test_accepted_cases_join_the_dev_suite() -> None:
     from schemeforge.arenas.euler1d.cases import accepted_cases, dev_suite
 
     ids = [c.id for c in dev_suite()]
-    accepted = ["B-0002", "B-0004", "B-0010", "B-0011", "B-0016", "B-0019", "B-0021", "B-0030"]
+    accepted = ["B-0002", "B-0004", "B-0010", "B-0011", "B-0016", "B-0019", "B-0021", "B-0030", "B-0042", "B-0052",
+                "B-0054"]
     assert [c.id for c in accepted_cases()] == accepted
-    assert ids[-8:] == accepted and len(ids) == len(set(ids))
+    assert ids[-len(accepted):] == accepted and len(ids) == len(set(ids))
 
 
 def test_two_point_sweep_has_no_roughness() -> None:
