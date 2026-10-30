@@ -1,11 +1,16 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.6 (2026-10-30, 2590e3e)  Plan: v1.2
-Last session: 2026-10-29/30 (WSL) — Phase 3 wrap-up: H-0019 evidence (2 kill rows), breakers on the round-4 top 3
+Last session: 2026-10-30 (WSL) — benchmark-v1.0 tagged (GitHub release pending, web UI)
 2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
 docs/judge/2026-10-30-v16-check.md (no member newly rejected, old-case dev and all promo identical to v1.5). The
 reconstruction_stateful rescore is deferred until a round 5 or the benchmark leaderboard needs it. H-0019..H-0025 closed by Peter
 2026-10-30 (H-0019 refuted; H-0020/21/22/25 refuted; H-0023, H-0024 inconclusive). Benchmark release prepared (BENCHMARK.md, GPL-3.0 LICENSE,
 CITATION.cff; Peter: GPL-3.0-or-later, held-out seed stays private, scoring on request); tag `benchmark-v1.0` on main after the merge.
+2026-10-30 (WSL): **tag `benchmark-v1.0` pushed** (annotated, on main 8c2f1ef; pytest 277, judge euler1d-v1.6 integrity ok,
+LICENSE GPL v3, pyproject GPL-3.0-or-later). **GitHub release not yet published:** gh is not installed (WSL or Windows);
+Peter publishes it from the prefilled web form (title "benchmark-v1.0 (judge euler1d-v1.6)", notes = BENCHMARK.md
+paragraphs 1–2 + links + licence line). Release URL once published:
+https://github.com/pClockworker52/schemeforge/releases/tag/benchmark-v1.0
 Phase 6 tooling spike done in the cloud
 (docs/spikes/2026-10-30-phase6-tooling.md): FElupe meets the tested criteria (Hertz, Q2, 9.5k DOF: 11.6 s, 181 MB;
 jax.numpy energies via JAX AD give identical results). FElupe is GPL-3.0: the repository switched to GPL-3.0-or-later
