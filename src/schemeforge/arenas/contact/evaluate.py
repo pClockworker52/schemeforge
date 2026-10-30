@@ -5,7 +5,8 @@ evaluate(fn, slot, suite, extra_cases) -> report (JSON-serializable dict), the s
     violations   hard-constraint violations (any -> rejected)
     cases        {case_id: {metric: value, "seconds": wall time}}
     metamorphic  {} (none yet)
-Step 1 has the smoke suite only; dev follows in step 2, promo in step 4 (docs/plans/2026-10-30-phase6.md).
+Suites: smoke (one C0a) and dev (C0a at three medium stiffnesses, C0b at two shears); promo follows in step 4
+(docs/plans/2026-10-30-phase6.md).
 """
 
 from __future__ import annotations
@@ -16,32 +17,48 @@ from typing import Any
 
 import numpy as np
 
-from . import constraints
-from .cases import Case, GapClosureCase, smoke_suite
+from . import constraints, reference
+from .cases import Case, GapClosureCase, SimpleShearCase, dev_suite, smoke_suite
 
 # slot -> hard-constraint checker. The solver wraps the candidate itself (solve.medium_material).
 SLOT_TABLE: dict[str, Callable[[Callable], list[str]]] = {"medium": constraints.check_medium}
 SLOTS = tuple(SLOT_TABLE)
-SUITES = ("smoke",)
+SUITES = ("smoke", "dev")
+# columns `sforge zoo eval` prints per suite
+ZOO_COLUMNS = {"dev": [("C0a-g3", "leak_pre"), ("C0a-g3", "gap_res"), ("C0a-g5", "leak_pre"), ("C0a-g5", "gap_res"),
+                       ("C0a-g6", "gap_res"), ("C0a-g6", "newton_iters"), ("C0b-s2", "shear_parasitic")],
+               "smoke": [("smoke-C0a", "leak_pre"), ("smoke-C0a", "gap_res"), ("smoke-C0a", "force_err")]}
 
 
 def suite_cases(suite: str) -> list[Case]:
     if suite == "smoke":
         return smoke_suite()
+    if suite == "dev":
+        return dev_suite()
     raise ValueError(f"suite {suite!r} is not available in Arena 2 yet")
 
 
 def gap_closure_metrics(case: GapClosureCase, res) -> tuple[dict[str, float], list[str]]:
-    """C0a metrics. leak_pre: force at half the gap over the ideal force at full push; gap_res: medium thickness left
-    at full push over the gap; stiffness_err: post-contact stiffness relative to the column's E/(1-nu^2) w/h."""
-    k_ideal = case.E / (1.0 - case.nu**2) * case.width / case.height
-    f_ideal = k_ideal * (case.push - case.gap)
+    """C0a, against ideal contact (reference.ideal_gap_force). leak_pre: force at half the gap over the ideal force at
+    full push; gap_res: medium thickness left at full push over the gap; force_err: force at full push over the ideal
+    one, minus 1 (positive: the residual medium layer takes up height, so the body is compressed more)."""
+    f_ideal = float(reference.ideal_gap_force(case, case.push))
     f_half = float(np.interp(0.5 * case.gap, res.push, res.force))
-    k_last = float((res.force[-1] - res.force[-2]) / (res.push[-1] - res.push[-2]))
     m = {"converged": 1.0, "leak_pre": f_half / f_ideal, "gap_res": res.medium_thickness / case.gap,
-         "stiffness_err": k_last / k_ideal - 1.0, "newton_iters": float(sum(res.newton_iters)),
+         "force_err": float(res.force[-1]) / f_ideal - 1.0, "newton_iters": float(sum(res.newton_iters)),
          "min_J_medium": res.min_j_medium}
     v = [] if res.min_j_medium > 0.0 else ["medium inverted (min J <= 0)"]
+    return m, v
+
+
+def simple_shear_metrics(case: SimpleShearCase, psi: Callable) -> tuple[dict[str, float], list[str]]:
+    """C0b: shear_parasitic = P_xy / (mu shear), the medium's shear stress relative to the body's linear shear stress
+    at the same shear (0 for an ideal frictionless medium; gamma for the scaled neo-Hookean). normal_parasitic =
+    P_yy / (mu shear): the normal stress the shear induces (Poynting effect)."""
+    mu, lmbda = reference.lame(case.E, case.nu)
+    pxy, pyy = reference.shear_stress(psi, {"mu": mu, "lmbda": lmbda, "gamma": case.gamma}, case.shear)
+    m = {"shear_parasitic": pxy / (mu * case.shear), "normal_parasitic": pyy / (mu * case.shear)}
+    v = [] if np.isfinite(pxy) and np.isfinite(pyy) else ["non-finite stress in simple shear"]
     return m, v
 
 
@@ -55,6 +72,8 @@ def run_case(case: Case, psi: Callable) -> tuple[dict[str, float], list[str]]:
     try:
         if isinstance(case, GapClosureCase):
             return gap_closure_metrics(case, solve.gap_closure(psi, case))
+        if isinstance(case, SimpleShearCase):
+            return simple_shear_metrics(case, psi)
         raise TypeError(type(case).__name__)
     except fem.tools.NewtonConvergenceError:
         return {"converged": 0.0}, []

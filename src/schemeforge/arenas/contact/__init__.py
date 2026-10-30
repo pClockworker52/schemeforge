@@ -9,4 +9,4 @@ judge change (PLAN §2 rule 2). This arena is its own judge: its version and has
 arenas/__init__.py (core/integrity.py).
 """
 
-JUDGE_VERSION = "contact-v0.1.dev"
+JUDGE_VERSION = "contact-v0.2.dev"
