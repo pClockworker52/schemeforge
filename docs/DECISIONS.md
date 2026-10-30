@@ -263,3 +263,18 @@ r-20261029-235037-efff vs r-20261029-235732-69ac). The other 17 stay in quaranti
 muscl_van_leer_frozen crashes, is not accepted.
 *Consequences:* Judge euler1d-v1.6 (cases only, no code change): zoo eval dev + promo, rescore reconstruction_stateful,
 before the benchmark release. Phase 3 still ends (stop rule); the cases serve the benchmark and any later round.
+
+
+## 2026-10-30 — Judge v1.6 kept; rescore deferred (Peter)
+*Context:* Peter had doubts after accepting B-0042, B-0052, B-0054. The concerns were that nothing needed the cases
+yet, that the record would split between v1.5 (the result) and v1.6, that the zoo had not been checked on the new
+cases before the tag, and that the cases target one family's weakness. The WSL zoo check
+(docs/judge/2026-10-30-v16-check.md) answers the third and most of the second: no member newly rejected; every
+member's old-case dev scores and all promo aggregates identical to v1.5. The new cases separate convergent from
+non-convergent zoo members too (B-0042 Newton: superbee 1/11, MC 9/11, van Leer 11/11), so they are not specific to
+one family.
+*Decision:* Keep judge euler1d-v1.6 (tag 2590e3e); no revert. Defer the reconstruction_stateful rescore (12–16 h at
+K = 3) until a round 5 or the benchmark leaderboard needs it.
+*Consequences:* The negative-result note states that its verdicts hold under v1.5 and v1.6 (promo identical). Until
+the rescore, the v1.6 leaderboards hold only the zoo. Six v1.6 dev runs from the stopped rescore stay in status
+`running` (listed in the check record).

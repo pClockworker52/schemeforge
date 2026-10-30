@@ -4,6 +4,12 @@ Negative-result note required by PLAN §11.4 and the round-4 stop rule (docs/pla
 Written 2026-10-29 by the orchestrator, after round 4. Judge `euler1d-v1.5` (8a8b830456a8) unless a row says
 otherwise. Every number cites a judge run; the per-round details are in docs/rounds/.
 
+**Judge v1.6 (2026-10-30) changes no verdict here.** v1.6 adds three of the round-4 breaker cases to dev (B-0042,
+B-0052, B-0054) and changes no code. Every zoo member's promo aggregates are identical under v1.5 and v1.6, and so
+are its dev scores on the old cases (docs/judge/2026-10-30-v16-check.md). The verdicts here rest on promo runs, plus
+A6 on the old dev case S1, so they hold under both versions. The candidates have not been rescored on v1.6 dev
+(deferred, DECISIONS 2026-10-30).
+
 ## Result
 
 Four rounds (2026-10-21 to 2026-10-29) searched four slots: `limiter`, `limiter_stateful`, `reconstruction_stateful`,
@@ -211,7 +217,8 @@ docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md; the ledger entries
   classifiers (DECISIONS 3b(i)). Structural
   defences and breakers stand in for them (Peter's decision 3b(i)).
 - **Breakers done on the round-4 top 3** (2026-10-29/30, docs/rounds/2026-10-29-round4-breakers.md): 20 cases in
-  quarantine, B-0037 … B-0056, not yet reviewed. 17 break Newton convergence on steady nozzles where both stateful
+  quarantine, B-0037 … B-0056; B-0042, B-0052 and B-0054 accepted into judge v1.6, the other 17 stay in
+  quarantine. 17 break Newton convergence on steady nozzles where both stateful
   van Leer members converge, across geometries, γ 1.05–3 and N 60–240; the worst are low-Mach, weak-gradient flows,
   with or without a shock (c-60c5ed6928 0/5 on B-0047, 2/11 on B-0049, r-20261029-221507-59df, -233534-108c). All
   three already fail dev N2 (Newton 0/1). So the A4 gap of the nearest misses is a regime-wide weakness of the
