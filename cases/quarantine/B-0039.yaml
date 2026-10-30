@@ -1,0 +1,27 @@
+kind: nozzle_sweep
+id: B-0039
+pbs:
+- 0.92
+- 0.89
+- 0.86
+- 0.83
+- 0.8
+- 0.77
+- 0.74
+- 0.71
+- 0.68
+- 0.65
+- 0.62
+- 0.59
+- 0.56
+- 0.53
+n: 120
+gamma: 1.4
+solvers:
+- explicit
+- implicit
+nozzle:
+  type: conical
+  area_ratio: 2.0
+  length: 1.0
+  inlet_ratio: 3.0

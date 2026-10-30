@@ -1,0 +1,10 @@
+kind: riemann
+id: B-1706
+# Mach 3 shock (gamma 1.4) into (1, -2.5, 1): lab shock speed 1.0496 = 0.285 max(|u| + a),
+# about 0.14 cells per step at CFL 0.5, i.e. inside the motion-gate transition band (D0 = 0.15).
+left: [3.857142857142857, 0.129368792488718, 10.333333333333334]
+right: [1.0, -2.5, 1.0]
+t_end: 0.6
+n: 200
+gamma: 1.4
+x0: 0.2

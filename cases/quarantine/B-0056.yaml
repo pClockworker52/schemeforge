@@ -1,0 +1,11 @@
+kind: nozzle
+id: B-0056
+pb: 0.01
+n: 120
+gamma: 1.4
+nozzle:
+  type: parabolic
+  x_in: -2.0
+  area_ratio: 4.0
+  length: 1.5
+  inlet_ratio: 2.5

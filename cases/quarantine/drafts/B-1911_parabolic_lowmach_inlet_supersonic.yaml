@@ -1,0 +1,15 @@
+kind: nozzle
+id: B-1911
+# NF2-type shock-free supersonic nozzle (isentropic, exact) with a long low-Mach inlet section: parabolic N5
+# geometry (area ratio 4, length 1.5, inlet ratio 2.5) with the inlet moved upstream to x_in = -2
+# (inlet area 1 + 1.5 * 9 = 14.5, inlet Mach ~0.04). Exit Mach ~2.9 (isentropic exit p/p0 ~0.03), pb = 0.01:
+# supersonic exit, no shock. Both solvers. Parabolic counterpart of the conical B-1905 (quarantined B-0052).
+pb: 0.01
+n: 120
+gamma: 1.4
+nozzle:
+  type: parabolic
+  x_in: -2.0
+  area_ratio: 4.0
+  length: 1.5
+  inlet_ratio: 2.5

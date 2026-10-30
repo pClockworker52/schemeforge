@@ -81,9 +81,9 @@ Each round removed one obstacle and exposed the next one:
    sharpness, smoothness and Newton as such; with overshoot and long runs added, no candidate has resolved it.
 
 Whether the round-4 Newton failures come from one localised cause has not been checked. The held-out instances are
-not readable here (CLAUDE.md rule 3). That would be the question for any further work on Target A. The next step
-would be new dev cases in the NF1 regime (nozzle, back-pressure range), proposed by a breaker or by Peter. They
-must not be reconstructed from the held-out instances.
+not readable here (CLAUDE.md rule 3). That would be the question for any further work on Target A. The round-4
+breakers then proposed such NF1-regime cases without reading the held-out set (B-0037 … B-0056, see Limits): the
+failures are spread over the nozzle regime, worst in low-Mach flow, rather than localised.
 
 ## H-0019 evidence table
 
@@ -209,15 +209,24 @@ docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md; the ledger entries
   closer to or further from A4 than that suggests.
 - **Not red-teamed since judge v1.1.** Two cheater-agent runs (against v1.3 and v1.4) were stopped by safety
   classifiers (DECISIONS 3b(i)). Structural
-  defences and breakers stand in for them (Peter's decision 3b(i)). Breakers have not attacked the round-4 top 3.
+  defences and breakers stand in for them (Peter's decision 3b(i)).
+- **Breakers done on the round-4 top 3** (2026-10-29/30, docs/rounds/2026-10-29-round4-breakers.md): 20 cases in
+  quarantine, B-0037 … B-0056, not yet reviewed. 17 break Newton convergence on steady nozzles where both stateful
+  van Leer members converge, across geometries, γ 1.05–3 and N 60–240; the worst are low-Mach, weak-gradient flows,
+  with or without a shock (c-60c5ed6928 0/5 on B-0047, 2/11 on B-0049, r-20261029-221507-59df, -233534-108c). All
+  three already fail dev N2 (Newton 0/1). So the A4 gap of the nearest misses is a regime-wide weakness of the
+  motion-gated family, not three unlucky held-out instances. Three cases (B-0053 … B-0055) show c-60c5ed6928
+  overshooting up to 5.96 × van Leer on slowly moving strong shocks at γ 5/3 (r-20261029-235037-efff). The mechanism
+  is suspected (motion gate on the previous iterate; ungated entropy-field BVD weight), not measured.
 - **Not reviewed.** No analyst or referee has looked at any candidate, and nothing here is labelled "plausibly new".
 
 ## Next (PLAN §11.4, Phase 6)
 
 1. ~~v1.5 promo runs of c-b5cb82a0ef and c-fb8db52bca, then the H-0019 table again~~ done 2026-10-29: 2 kill rows.
    Peter closes H-0019..H-0025 from the proposed verdicts and decides H-0024.
-2. Breakers on c-4ece6bb6f7, c-82efea7caf and c-60c5ed6928 from a WSL session. Any accepted case goes into the next
-   judge version, followed by `sforge zoo eval` and an archive rescore.
+2. ~~Breakers on c-4ece6bb6f7, c-82efea7caf and c-60c5ed6928~~ done 2026-10-30: B-0037 … B-0056 in quarantine.
+   Peter decides on them; any accepted case goes into the next judge version, followed by `sforge zoo eval` and an
+   archive rescore.
 3. Publish the judge, the zoo and the harness as a benchmark (PLAN §20), with this note and the ledger.
 4. Phase 6. A round 5 on Target A needs a new decision in DECISIONS.md. The obvious candidate is A4 for
    c-4ece6bb6f7's family, approached through new NF1-regime dev cases (item 2 of the step above).

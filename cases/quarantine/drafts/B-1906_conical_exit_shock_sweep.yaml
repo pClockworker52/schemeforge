@@ -1,0 +1,16 @@
+kind: nozzle_sweep
+id: B-1906
+# Back-pressure sweep that pushes the shock out through the exit (exact at every point): smoothed-conical N6
+# geometry (area ratio 3, length 1.2, inlet ratio 2), gamma 1.4, N 120, implicit. Exit Mach ~2.64; the shock
+# sits at the exit for pb ~0.376 (isentropic exit p/p0 ~0.047). pbs 0.45 ... 0.38 put the shock in the last
+# ~10-15 % of the divergent part (last few cells), 0.37 ... 0.30 give a supersonic exit with no shock.
+# NF1 places shocks at 15-90 %; quarantined sweeps so far stay inside that range or are unchoked.
+pbs: [0.45, 0.43, 0.415, 0.40, 0.39, 0.385, 0.38, 0.377, 0.37, 0.35, 0.30]
+n: 120
+gamma: 1.4
+solvers: [implicit]
+nozzle:
+  type: conical
+  area_ratio: 3.0
+  length: 1.2
+  inlet_ratio: 2.0

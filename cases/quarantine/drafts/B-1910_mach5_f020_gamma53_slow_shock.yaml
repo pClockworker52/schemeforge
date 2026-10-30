@@ -1,0 +1,12 @@
+kind: riemann
+id: B-1910
+# RF2-type slowly moving shock (Rankine-Hugoniot exact): Mach 5, gamma 5/3, pre-shock (5/3, u1, 1) so a1 = 1.
+# rho2 = (5/3) * 25/7 = 125/21, p2 = 31, shock-frame w1 = -5, w2 = -1.4; lab shock speed s = 1
+# = 0.2 * max(|u| + a) (max = 5, pre-shock side), ~0.1 cells/step at CFL 0.5. u1 - u2 = -3.6 exactly.
+left: [5.952380952380952, -0.4, 31.0]
+right: [1.6666666666666667, -4.0, 1.0]
+t_end: 0.12
+n: 200
+gamma: 1.6666666666666667
+x0: 0.5
+domain: [0.0, 1.0]

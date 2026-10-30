@@ -1,6 +1,6 @@
 # STATUS
 Phase: 3 — Production search, Arena 1 (started 2026-10-21)  Judge version: euler1d-v1.5 (2026-10-24, 919c544)  Plan: v1.2
-Last session: 2026-10-24 (WSL) — round 4: hunches H-0020..H-0025 registered, proposers done
+Last session: 2026-10-29/30 (WSL) — Phase 3 wrap-up: H-0019 evidence (2 kill rows), breakers on the round-4 top 3
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
@@ -19,6 +19,17 @@ MCP), Peter's call on H-0024, then the negative-result note per the stop rule.
 what was tried per round, the conflict between Target A's criteria (overshoot → long-run accuracy → roughness → Newton),
 the v1.5 zoo front with run ids, every hunch verdict (round 4 proposed), method results, limits. Next: Peter closes
 H-0019..H-0025, breakers on the round-4 top 3, benchmark release (PLAN §20), Phase 6.
+2026-10-29/30 (WSL): **Phase 3 wrap-up done, waiting for Peter.** Pre-checks: merged 864641b, pytest 277, judge
+euler1d-v1.5 integrity ok, sforge MCP connected (its process has no SFORGE_MAX_PARALLEL; breakers evaluated strictly
+one at a time). (1) H-0019 evidence: v1.5 promo of the round-2 limiters, both ok and both meet the kill criterion:
+c-b5cb82a0ef r-20261029-185257-3e4a (shock 2.581, Newton 1.00, roughness 0.00175), c-fb8db52bca
+r-20261029-185256-7cd3 (2.582, 1.00, 0.00142); neither promoted (A7, A8; A6 nan, no v1.5 dev run). Table rerun:
+2 kill rows, ρ −0.592 (n 14). H-0019 proposed *refuted*, not closed. (2) Breakers, one at a time:
+c-4ece6bb6f7 B-0037..B-0044, c-82efea7caf B-0045..B-0051, c-60c5ed6928 B-0052..B-0056 (20 cases in quarantine;
+17 nozzle Newton stalls where both van Leer members converge, worst in low-Mach flow; 3 slow-shock overshoot up to
+5.96 × vL). Report docs/rounds/2026-10-29-round4-breakers.md; note updated (H-0019 table, Limits). Next (Peter):
+close H-0019..H-0025, decide H-0024, review B-0037..B-0056 (any acceptance = new judge version + zoo eval + rescore).
+Open: add `"env": {"SFORGE_MAX_PARALLEL": "3"}` to .mcp.json so MCP evals respect the memory cap.
 
 ## Gate 1 — passed 2026-10-20
 Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found

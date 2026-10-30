@@ -1,0 +1,12 @@
+kind: riemann
+id: B-1912
+# Near-miss probe for B-1909: Mach 10, gamma 5/3, pre-shock (5/3, u1, 1), but speed fraction 0.1
+# (s = 1 = 0.1 * max(|u| + a), max = 10), ~0.05 cells/step, below the candidate's motion-gate band.
+# rho2 = 2000/309, p2 = 124.75, w2 = -2.575, u2 = -1.575, u1 = -9; u1 - u2 = -7.425.
+left: [6.472491909385113, -1.575, 124.75]
+right: [1.6666666666666667, -9.0, 1.0]
+t_end: 0.06
+n: 200
+gamma: 1.6666666666666667
+x0: 0.5
+domain: [0.0, 1.0]
