@@ -72,7 +72,8 @@ within ±3 cells, the stencil the implicit solver's Jacobian assumes.
 Hard constraints (`constraints.check_reconstruction`): the right shapes, float64, finite and deterministic on
 random admissible grids, step profiles and smooth waves of run-like sizes (1–404 interfaces); a constant state
 is reproduced to 1e-12 relative; and the output on those grids equals the one-interface-at-a-time output to
-1e-13 relative ("not local" otherwise). Zoo: `first_order`, `weno5z`, `thinc_bvd` (THINC/BVD, Sun, Inaba,
+1e-13 relative ("not local" otherwise). Since v1.5 also unit scaling: ρ, p × 1e-12 and × 1e12 (u fixed) must scale
+the states by (c, 1, c) (spec §8); use relative, not absolute, thresholds. Zoo: `first_order`, `weno5z`, `thinc_bvd` (THINC/BVD, Sun, Inaba,
 Xiao 2016: MUSCL-van Leer or a tanh jump per cell, chosen by the smaller boundary variation; the known relative of
 seed hunch 4); MUSCL with any zoo limiter also passes.
 

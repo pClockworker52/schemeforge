@@ -278,3 +278,12 @@ K = 3) until a round 5 or the benchmark leaderboard needs it.
 *Consequences:* The negative-result note states that its verdicts hold under v1.5 and v1.6 (promo identical). Until
 the rescore, the v1.6 leaderboards hold only the zoo. Six v1.6 dev runs from the stopped rescore stay in status
 `running` (listed in the check record).
+
+
+## 2026-10-30 — Benchmark release (Peter)
+*Context:* PLAN §20: publish the judge, zoo and harness with the Arena 1 negative result.
+*Decision:* MIT licence. Held-out seed policy A: our seed stays private; published zoo numbers carry its fingerprint;
+users generate their own seed (same family distributions, different instances); components are scored on our seed
+on request (repository issue), answered with aggregates and verdicts only. Release `benchmark-v1.0` on judge
+euler1d-v1.6. Then Phase 6 (tooling spike first).
+*Consequences:* BENCHMARK.md, LICENSE, CITATION.cff; the spec and slot docs now list the v1.5 scaling constraint.

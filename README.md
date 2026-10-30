@@ -4,6 +4,7 @@ An AI swarm proposes numerical scheme components (limiters, fluxes, reconstructi
 energies). A deterministic judge scores every proposal against exact solutions. No result counts until the
 judge has scored it.
 
+- **Benchmark (judge, zoo, how to score your own scheme): [BENCHMARK.md](BENCHMARK.md)**
 - Plan: [docs/PLAN.md](docs/PLAN.md)
 - Current state: [docs/STATUS.md](docs/STATUS.md)
 - Decisions: [docs/DECISIONS.md](docs/DECISIONS.md)
@@ -45,3 +46,7 @@ Current numbers and open questions are in [docs/STATUS.md](docs/STATUS.md); each
   convergent, was not met in four rounds. The nearest miss passes 12 of 13 checks on held-out data and fails Newton
   convergence on 3 of 20 nozzles. The criteria conflict in several ways rather than along one trade-off
   ([docs/results/arena1-negative.md](docs/results/arena1-negative.md)).
+
+## Licence
+
+MIT ([LICENSE](LICENSE)). Citation: [CITATION.cff](CITATION.cff).

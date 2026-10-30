@@ -180,6 +180,10 @@ higher is better), and the pass rate (share of instances without a hard-constrai
   row, deterministic, row-wise (permutation, and since v1.1 the same batch-size test as the limiter, one
   interface at a time);
 - every run: finite output, ρ > 0, p > 0, and no solver failure.
+- reconstructions and fluxes, since v1.5: unit scaling. Density and pressure × c with velocity fixed (c = 1e-12 and
+  1e12) is an exact symmetry of the Euler equations, so reconstructed primitive states must scale by (c, 1, c) and
+  fluxes by c, to 1e-9 relative per component (`constraints.SCALE_FACTORS`, `SCALE_TOL`). It rejects absolute
+  epsilons and thresholds (round 3: `EPS = 1e-20` in THINC). Limiters need no such check: r is scale-free.
 
 **Stateful limiters (since v1.2).** The `limiter_stateful` slot carries a state S of the shape of the slope ratios
 ((n + 4, 3) on a grid of n cells) through every solver, starting at 0. Unsteady SSP-RK3 and explicit pseudo-time:

@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use the schemeforge judge, zoo or results, please cite it as below."
+title: "schemeforge: an audited judge and zoo for 1D shock-capturing scheme components"
+type: software
+authors:
+  - alias: pClockworker52
+repository-code: "https://github.com/pClockworker52/schemeforge"
+license: MIT
+version: "benchmark-v1.0"
+date-released: "2026-10-30"
+keywords:
+  - shock capturing
+  - slope limiter
+  - reconstruction
+  - Riemann problem
+  - Laval nozzle
+  - benchmark
+  - LLM-assisted search
