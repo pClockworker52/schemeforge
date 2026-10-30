@@ -18,7 +18,7 @@ Run the round with the /hunch-round skill, arena euler1d, slot reconstruction_st
   the orchestrator do not count for the swarm criterion (S1). Register every draft as written (`sforge hunch add`);
   if one is invalid, send it back to the hunch-generator instead of fixing it.
 - evals_per_proposer 8, one **proposer** agent per hunch; no orchestrator edits to their candidates.
-- Before choosing islands: promo + `sforge promote --target A` on the best 2–3
+- Before choosing islands: promo + `sforge promote --arena euler1d --target A` on the best 2–3
   proposer candidates (dev overstates held-out success, traps file). Pick the 3 hunches for islands from promo.
 - islands 3, gens 20, children 8, budget 480, backend claude-cli, model sonnet (haiku for wild), seeds = the best
   proposer file of each island's hunch. Expect ~$1.3 per generation and long dev evaluations (a reconstruction dev

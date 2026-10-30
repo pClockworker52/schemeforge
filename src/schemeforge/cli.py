@@ -163,8 +163,8 @@ def submit(
 @app.command()
 def promote(
     candidate: Annotated[str, typer.Argument(help="Candidate id.")],
+    arena: Arena,
     target: Annotated[str, typer.Option("--target", help="Pre-registered target (docs/targets/).")] = "A",
-    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
 ) -> None:
     """Promotion test (PLAN §5.8): thresholds and paired bootstraps on the held-out suite. Needs promo runs of the
     candidate and of the zoo references under the current judge version; prints verdicts only."""
@@ -354,7 +354,7 @@ def hunch_close(
 @case_app.command("propose")
 def case_propose(
     yaml_file: Annotated[Path, typer.Argument(help="Case YAML.")],
-    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
+    arena: Arena,
 ) -> None:
     """Put a breaker case into cases/quarantine/."""
     from schemeforge.core import quarantine
@@ -438,7 +438,7 @@ def dossier_build(
 
 @judge_app.command("verify")
 def judge_verify(
-    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
+    arena: Arena,
 ) -> None:
     """Check exact solutions against Appendix H, the zoo sanity ranking and the metamorphic tests."""
     import importlib
@@ -453,13 +453,13 @@ def judge_verify(
 
 @judge_app.command("version")
 def judge_version(
-    arena: Annotated[str, typer.Option("--arena", help="Arena.")] = "euler1d",
+    arena: Arena,
 ) -> None:
     """Print the judge version, content hash and integrity state."""
     from schemeforge.core import integrity
 
     problems = integrity.integrity_problems(arena)
-    typer.echo(f"{integrity.judge_version(arena)}  {integrity.tree_hash()}")
+    typer.echo(f"{integrity.judge_version(arena)}  {integrity.tree_hash(arena=arena)}")
     typer.echo("integrity: ok" if not problems else "integrity: " + "; ".join(problems))
 
 

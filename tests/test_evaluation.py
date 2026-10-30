@@ -118,3 +118,24 @@ def test_worker_timeout_is_a_rejection(in_tmp, monkeypatch) -> None:
     res = evaluation.evaluate_file(path, "euler1d", "limiter", "smoke", registry_path=in_tmp / "reg.sqlite")
     assert res.report["status"] == "rejected"
     assert any("timeout" in v or "CPU time" in v for v in res.report["violations"]), res.report["violations"]
+
+
+def test_each_arena_is_its_own_judge(tmp_path, monkeypatch) -> None:
+    # Phase 6 step 1: an uncommitted or committed change in one arena must not refuse scoring in another
+    arenas = tmp_path / "src" / "schemeforge" / "arenas"
+    for name in ("a1", "a2"):
+        (arenas / name).mkdir(parents=True)
+        (arenas / name / "metrics.py").write_text("A = 1\n")
+    (arenas / "__init__.py").write_text("")
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "add", "-A")
+    _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "init")
+    monkeypatch.setattr(integrity, "judge_version", lambda arena: f"{arena}-v0.1.dev")
+    (arenas / "a2" / "new.py").write_text("B = 1\n")
+    assert integrity.integrity_problems("a1", repo=tmp_path) == []
+    assert "uncommitted" in integrity.integrity_problems("a2", repo=tmp_path)[0]
+    (arenas / "__init__.py").write_text("# shared\n")  # the shared file belongs to every arena
+    assert "uncommitted" in integrity.integrity_problems("a1", repo=tmp_path)[0]
+    h1 = integrity.tree_hash(arenas, arena="a1")
+    (arenas / "a2" / "metrics.py").write_text("A = 2\n")
+    assert integrity.tree_hash(arenas, arena="a1") == h1 != integrity.tree_hash(arenas, arena="a2")

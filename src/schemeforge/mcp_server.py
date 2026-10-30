@@ -31,7 +31,7 @@ def _repo_file(path: str) -> Path:
     return p
 
 
-def eval_tool(file: str, arena: str = "euler1d", slot: str = "limiter", suite: str = "dev",
+def eval_tool(file: str, arena: str, slot: str, suite: str = "dev",
               case: str | None = None) -> dict[str, Any]:
     from schemeforge.core import evaluation
     from schemeforge.core.integrity import integrity_problems
@@ -66,7 +66,7 @@ def submit_tool(file: str, hunch: str, parents: list[str] | None = None) -> dict
     return {"candidate_id": cid, "hunch": hunch, "parents": parents or []}
 
 
-def leaderboard_tool(arena: str = "euler1d", slot: str = "limiter", pareto: bool = False, vs_zoo: bool = True,
+def leaderboard_tool(arena: str, slot: str, pareto: bool = False, vs_zoo: bool = True,
                      top: int | None = 20) -> list[dict[str, Any]]:
     from schemeforge.core import leaderboard, registry
 
@@ -103,16 +103,16 @@ def hunch_add_tool(file: str) -> dict[str, Any]:
     return {"id": ledger.add(yaml.safe_load(_repo_file(file).read_text(encoding="utf-8")) or {})}
 
 
-def case_propose_tool(file: str, arena: str = "euler1d") -> dict[str, Any]:
+def case_propose_tool(file: str, arena: str) -> dict[str, Any]:
     from schemeforge.core import quarantine
 
     return {"case_id": quarantine.propose(_repo_file(file), arena)}
 
 
-def judge_version_tool(arena: str = "euler1d") -> dict[str, Any]:
+def judge_version_tool(arena: str) -> dict[str, Any]:
     from schemeforge.core import integrity
 
-    return {"version": integrity.judge_version(arena), "hash": integrity.tree_hash(),
+    return {"version": integrity.judge_version(arena), "hash": integrity.tree_hash(arena=arena),
             "problems": integrity.integrity_problems(arena)}
 
 

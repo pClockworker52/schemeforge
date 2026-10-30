@@ -164,7 +164,7 @@ def report(args: argparse.Namespace) -> int:
     print("\npromo for the three points closest to the corner (H-0011 kill criterion):")
     for _, k, v in rows[:3]:
         print(f"  uv run sforge eval {v['candidate_id']} --arena euler1d --slot limiter --suite promo   # {k}")
-        print(f"  uv run sforge promote {v['candidate_id']} --target A")
+        print(f"  uv run sforge promote {v['candidate_id']} --arena euler1d --target A")
 
     import matplotlib
 

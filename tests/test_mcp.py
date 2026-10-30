@@ -17,11 +17,11 @@ def test_tool_list() -> None:
 
 def test_eval_guards() -> None:
     with pytest.raises(ms.ToolError, match="promo"):
-        ms.eval_tool("src/schemeforge/arenas/euler1d/zoo/limiter/minmod.py", suite="promo")
+        ms.eval_tool("src/schemeforge/arenas/euler1d/zoo/limiter/minmod.py", "euler1d", "limiter", suite="promo")
     with pytest.raises(ms.ToolError, match="outside the repository"):
-        ms.eval_tool("/etc/passwd", suite="smoke")
+        ms.eval_tool("/etc/passwd", "euler1d", "limiter", suite="smoke")
     with pytest.raises(ms.ToolError, match="outside the repository"):
-        ms.eval_tool("../../../etc/passwd", suite="smoke")
+        ms.eval_tool("../../../etc/passwd", "euler1d", "limiter", suite="smoke")
 
 
 def test_hunch_and_case_tools(tmp_path, monkeypatch) -> None:
@@ -42,7 +42,7 @@ def test_hunch_and_case_tools(tmp_path, monkeypatch) -> None:
         hid = ms.hunch_add_tool(str(draft.relative_to(ms.REPO_ROOT)))["id"]
         assert hid == "H-0001" and ms.hunch_list_tool()[0]["lens"] == "contrarian"
         assert ms.hunch_show_tool(hid)["status"] == "open"
-        cid = ms.case_propose_tool(str(case.relative_to(ms.REPO_ROOT)))["case_id"]
+        cid = ms.case_propose_tool(str(case.relative_to(ms.REPO_ROOT)), "euler1d")["case_id"]
         assert cid == "B-0001" and (tmp_path / "quarantine" / "B-0001.yaml").exists()
     finally:
         draft.unlink()
@@ -57,11 +57,11 @@ def test_inadmissible_case_is_refused(tmp_path, monkeypatch) -> None:
                                    "t_end": 0.1, "n": 100}))
     try:
         with pytest.raises(ValueError):
-            ms.case_propose_tool(str(bad.relative_to(ms.REPO_ROOT)))
+            ms.case_propose_tool(str(bad.relative_to(ms.REPO_ROOT)), "euler1d")
     finally:
         bad.unlink()
 
 
 def test_judge_version_tool() -> None:
-    v = ms.judge_version_tool()
+    v = ms.judge_version_tool("euler1d")
     assert v["version"].startswith("euler1d-v") and len(v["hash"]) == 64

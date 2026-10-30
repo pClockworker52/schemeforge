@@ -57,7 +57,7 @@ uv run sforge eval my_limiter.py --arena euler1d --slot limiter --suite smoke   
 uv run sforge eval my_limiter.py --arena euler1d --slot limiter --suite dev     # 25 visible cases
 uv run sforge eval my_limiter.py --arena euler1d --slot limiter --suite promo   # held-out families
 uv run sforge zoo eval --arena euler1d --suite promo                            # zoo references, same seed
-uv run sforge promote <candidate id> --target A                                 # verdict per check
+uv run sforge promote <candidate id> --arena euler1d --target A                 # verdict per check
 uv run sforge leaderboard --arena euler1d --slot limiter --pareto --vs-zoo
 ```
 

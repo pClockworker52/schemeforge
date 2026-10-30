@@ -26,14 +26,14 @@ Run the round with the /hunch-round skill, arena euler1d, slot reconstruction_st
   c-2637af56a6; they may also start from scratch. If the v1.5 rescore rejected a parent (the new scaling constraint
   catches an absolute `EPS = 1e-20`; DECISIONS 2026-10-24 "Judge v1.5 contents"), say so in the proposer's task: its
   file is still a valid starting point once the threshold is made relative (traps file).
-- Before choosing islands: promo + `sforge promote --target A` on the best 3 proposer candidates by
+- Before choosing islands: promo + `sforge promote --arena euler1d --target A` on the best 3 proposer candidates by
   `sforge leaderboard --arena euler1d --slot reconstruction_stateful --pareto --vs-zoo --top 3` (screen failures
   first, duplicates left out). Pick the 2 hunches for islands from promo.
 - islands 2, gens 15, children 8, budget 240, backend claude-cli, model sonnet (haiku for wild), seeds = the best
   proposer file of each island's hunch. The engine now selects by failed Target A dev screens first; requests that
   never reach the model no longer use the budget. Run evolve in the background and wait, nothing next to it. If
   requests stop reaching the model (usage limit), the engine pauses; resume with --resume and --arena.
-- After evolve: promo, `sforge promote --target A` and `sforge promote --target Ac` on the top 5 of
+- After evolve: promo, `sforge promote --arena euler1d --target A` and `sforge promote --arena euler1d --target Ac` on the top 5 of
   `sforge leaderboard --arena euler1d --slot reconstruction_stateful --pareto --vs-zoo --top 5`; then the **breaker**
   agent on the top 3 (at most 10 cases each, into quarantine; I review them).
 
@@ -41,7 +41,7 @@ Write docs/rounds/<date>-euler1d-reconstruction_stateful-r4.md: hunches with sug
 proposer and engine results, promo and promote output (A and Ac) per candidate, quarantined cases, cost, and the
 **H-0019 evidence table**: every candidate and zoo member (any Arena 1 slot) with an ok promo run under v1.5 and NF1
 converged_impl mean = 1.00, with its RF1 shock_width median, NF3 roughness_J p90 and promo run id (the A1, A4 and A5 rows of
-`sforge promote <id> --target A` print exactly these; zoo members are promoted by their candidate id too); mark any row that
+`sforge promote <id> --arena euler1d --target A` print exactly these; zoo members are promoted by their candidate id too); mark any row that
 meets the kill criterion; report Spearman ρ between the two columns and n. Every number cites a run id. Do not close
 hunches, H-0019 included; propose verdicts. Update STATUS, commit and push after the hunches are registered, after
 the proposers, after evolve, and at the end. Then stop: I decide at the step-5 gate.

@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 S=.venv/bin/sforge
 if [ "${SKIP_ZOO:-0}" != 1 ]; then
     .venv/bin/pytest -q 2>&1 | tail -1
-    $S judge verify 2>&1 | tail -1
+    $S judge verify --arena euler1d 2>&1 | tail -1
     $S zoo eval --arena euler1d --suite dev 2>&1 | grep -v -e CUDA -e bogus | tail -20
     $S zoo eval --arena euler1d --suite promo 2>&1 | grep -v -e CUDA -e bogus | tail -3
 fi

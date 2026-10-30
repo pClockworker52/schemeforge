@@ -30,7 +30,7 @@ Rules: the judge decides — every claim cites a run id. Never edit src/schemefo
 - From the proposer results and `uv run sforge leaderboard --arena {arena} --slot {slot} --vs-zoo`, pick the
   {islands} most promising hunches (best Pareto rank of their candidates; mechanism still plausible).
   Dev has one nozzle instance: before seeding, check the best 2–3 candidates on promo
-  (`sforge eval <id> --suite promo`, `sforge promote <id> --target A`); round 1's leader converged on dev N1 but
+  (`sforge eval <id> --suite promo`, `sforge promote <id> --arena <arena> --target A`); round 1's leader converged on dev N1 but
   on only 60 % of held-out NF1.
 - Run `uv run sforge evolve --arena {arena} --slot {slot} --hunch H-a --hunch H-b --gens {gens}
   --children {children} --backend claude-cli --model sonnet --seed <best proposer file of each hunch>`

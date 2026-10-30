@@ -27,7 +27,7 @@ Plan: docs/PLAN.md · State: docs/STATUS.md · Decisions: docs/DECISIONS.md
 - Evaluate: `sforge eval <file> --arena euler1d --slot limiter --suite dev`
 - Leaderboard: `sforge leaderboard --arena euler1d --slot limiter --pareto --vs-zoo`
 - Ledger: `sforge hunch add ledger/drafts/<file>.yaml` · `sforge hunch list --open`
-- Judge self-check: `sforge judge verify`
+- Judge self-check: `sforge judge verify --arena euler1d`
 
 ## Layout
 src/schemeforge/{core,arenas,engine} · candidates/ (agent workspaces, gitignored) · cases/quarantine

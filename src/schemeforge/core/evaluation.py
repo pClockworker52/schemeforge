@@ -129,7 +129,7 @@ def evaluate_file(path: Path, arena: str, slot: str, suite: str, extra_cases: li
                   probe: bool = False) -> EvalResult:
     conn = registry.connect(registry_path)
     cid = register_candidate(conn, path, arena, slot, origin, candidate_id)
-    version, jhash = judge_version(arena), tree_hash()
+    version, jhash = judge_version(arena), tree_hash(arena=arena)
     run_id = f"r-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}-{secrets.token_hex(2)}"
     conn.execute(
         "INSERT INTO runs (id, kind, candidate_id, arena, slot, suite, judge_version, judge_hash, status, started_at) "

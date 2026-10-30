@@ -62,7 +62,7 @@ def build(cid: str, target: str = "A") -> Path:
              "Label: rediscovery | variant of <X> | plausibly new (analyst proposes, referee decides) · "
              "Referee: (pending)",
              f"Arena/slot: {arena}/{slot} · Hunch: {cand['hunch_id'] or '-'} · Lineage: {_lineage(conn, cid)} · "
-             f"Judge: {version} ({tree_hash()[:12]})", ""]
+             f"Judge: {version} ({tree_hash(arena=arena)[:12]})", ""]
 
     lines += [f"## Result vs zoo (held-out, Target {target})", ""]
     if promo is None:
