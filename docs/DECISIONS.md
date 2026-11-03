@@ -334,3 +334,23 @@ not started). Open the cold-spray question as a separate, research-first track b
 *Consequences:* Arena 2 stays as a general third-medium-contact benchmark; resuming means step 6 (Target D from the
 four-medium front). The next session starts from docs/HANDOFF.md and a research brief, in a fresh session (this one's
 context is long and expensive per turn).
+
+
+## 2026-11-03 — Cold-spray track: discipline only (Peter)
+*Context:* Research brief docs/plans/2026-11-03-coldspray-research-brief.md answered in docs/research/
+(coldspray-questions.md, coldspray-data-and-zoo.md, coldspray-go-nogo.md). Of 20 domain questions none is answered
+by a model checked across materials. The mechanistic data are single-particle impact (LIPIT) measurements; the
+largest table (Hassani et al. 2020) has 16 critical-velocity windows over 11 matched materials and 5 mismatched
+pairs, windows 2–25 % wide, with no open raw dataset. HUGO-CS (4,383 literature experiments) has no particle
+velocity distributions, and its critical velocities are mostly computed with Schmidt's formula. Single-particle v_cr
+for Al, Ni and Zn lies ~40–60 % above process values, and no model explains the gap. Zoo originals read in full:
+Assadi 2003 (linearisation around Cu), Schmidt 2006 (F1 = 1.2, F2 = 0.3, calibrated on 6 materials), Hassani-Gangaraj
+2018 (v_cr ≈ 0.15·sqrt(B/ρ)), Vlcek 2003.
+*Decision:* Go, discipline only. No arena, judge or search run yet. Use schemeforge's process (pre-registered
+hunches with kill criteria, a held-out set, ledger, referee labels) to structure model development, with hunches
+steered by the assumption inventory H1–H7 and a disagreement map.
+*Consequences:* Next steps: build an open v_cr table from the LIPIT literature; pre-register zoo (Z1, Z2, Z6, Z7,
+baseline) and hunch predictions for unmeasured materials; choose a blind LIPIT campaign where predictions disagree
+most. Upgrade to a component arena (slot v_cr(props_p, props_s, d, T) -> (v_cr, in_domain)) only when the open
+table reaches ~15 matched materials, a held-out set is frozen by someone other than the searcher, and the reference
+separates the zoo members beyond the measurement windows. Arena 2 stays paused.
