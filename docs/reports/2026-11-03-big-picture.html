@@ -59,7 +59,7 @@ ul.tight li{margin:.4em 0}
 <p class="eyebrow">Short answer</p>
 <p><strong>The Arena 2 judge exists and is exact where it can be. Four of its seven steps are done; the next step decides whether there is anything worth searching for.</strong></p>
 <p>The judge runs a candidate contact medium through gap closure, shear, a patch test and Hertz contact, and compares it with exact solutions and with a classical contact reference. Where the answer is exact, the judge reproduces it to round-off; for Hertz its own error floor is about 1 % on the dev mesh. The published medium already shows the trade-off the search will attack.</p>
-<p><strong>Next:</strong> the first real held-out run (on Peter's PC, running now), then the zoo of published media and the trade-off front: if the zoo shows no trade-off, Arena 2 stops there.</p>
+<p><strong>First real held-out run done</strong> (Peter's PC, promo <span class="id">r-20261103-123550-7e5a</span>, 70 s): all 27 instances of the published medium converge, none violates a constraint. <strong>Next:</strong> the zoo of published media and the trade-off front: if the zoo shows no trade-off, Arena 2 stops there.</p>
 </div>
 
 <h2>1. Since 29 October</h2>
@@ -69,7 +69,7 @@ ul.tight li{margin:.4em 0}
 <tr><td><b>Judge euler1d-v1.6</b></td><td>Three round-4 breaker cases added to dev. Zoo scores and every verdict identical to v1.5.</td><td><span class="pill ok">done</span></td></tr>
 <tr><td><b>Benchmark release</b></td><td><code>benchmark-v1.0</code> on GitHub under GPL-3.0: judge, zoo, results, how to score your own scheme. The held-out seed stays private; scoring on request.</td><td><span class="pill ok">done</span></td></tr>
 <tr><td><b>Phase 6 plan</b></td><td>Seven steps to Gate 6, including a stop condition (the trade-off must exist) and a search-readiness step with a hunch preview.</td><td><span class="pill ok">approved</span></td></tr>
-<tr><td><b>Phase 6 steps 1–4</b></td><td>The arena and its judge, described below.</td><td><span class="pill warn">real promo run pending</span></td></tr>
+<tr><td><b>Phase 6 steps 1–4</b></td><td>The arena and its judge, described below. First real held-out run on Peter's PC: all families pass, every instance converges.</td><td><span class="pill ok">done</span></td></tr>
 </table></div>
 
 <h2>2. What Arena 2 is about</h2>
@@ -95,6 +95,7 @@ ul.tight li{margin:.4em 0}
 <p>For the published neo-Hookean medium (zoo dev run <span class="id">r-20261103-082551-03b8</span>, cloud registry):</p>
 <div class="scroll"><table>
 <tr><th>Medium stiffness γ</th><th>Gap closure: force leak before contact</th><th>Gap closure: residual gap</th><th>Hertz: contact width error</th><th>Hertz: Newton iterations</th></tr>
+<!-- dev mesh, zoo neo-Hooke; the held-out medians are in section 5 -->
 <tr><td>1e-3</td><td>1.9 %</td><td>3.2 %</td><td>—</td><td>—</td></tr>
 <tr><td>1e-4</td><td>—</td><td>—</td><td>+104 % (load carried through the open gap)</td><td>56</td></tr>
 <tr><td>1e-5</td><td>0.02 %</td><td>0.07 %</td><td>+12 %</td><td>62</td></tr>
@@ -113,7 +114,7 @@ ul.tight li{margin:.4em 0}
 
 <h2>5. What comes next</h2>
 <ul class="tight">
-<li><b>Now (WSL):</b> the first real held-out run of the zoo, with the secret seed.</li>
+<li><b>Done (WSL, 3 Nov):</b> the first real held-out run. Medians for the published medium: gap closure leak 0.03 %, residual gap 0.1 %; Hertz width error −0.6 %, peak pressure +0.4 %; largest stable load step a quarter of the push. Worst instances: a Hertz width error of +12 %, a leak outside contact of 5 %, 87 Newton iterations.</li>
 <li><b>Step 5, the decisive one:</b> the published media (Wriggers 2013, Bluhm 2021, the FElupe variants, FElupe's mixed formulation) and classical penalty contact, each over a sweep of γ, plotted as a front. <b>If the front shows no trade-off, Arena 2 stops</b> with a short report, before any search money is spent.</li>
 <li><b>Step 6:</b> blind audit of the references by an independent agent, Target D pre-registered from the front, judge tagged <code>contact-v1.0</code>.</li>
 <li><b>Step 7:</b> the engine and agents set up for this arena, a calibration run that must rediscover known media, and a preview of the agents' hunches with the closest published relative named for each.</li>
