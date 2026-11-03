@@ -63,7 +63,12 @@ declaring the domain.
   through CFD rather than measured. This confirms that Z1 is not an extrapolating model and changes nothing
   in the recommendation.
 - Still needed: Schmidt2006 and Assadi2011 in full (Z2 coefficients F₁, F₂; the η-map). They are S-level here.
-- Confirm the Hassani2020 table of 20 combinations and its uncertainties (Elsevier; the accepted manuscript may
-  be on OSTI or DSpace, but DSpace returned 429).
+- Done: Hassani2020 Table 1 transcribed (16 numeric windows, 11 matched materials, 2 % velocity uncertainty,
+  window widths 2–25 % of v_cr). Against the upgrade trigger: 11 matched materials (< ~15 required), so the
+  recommendation stands. The Al-alloy rows (790–1290 m/s at similar ρ and B) are the subset that can separate
+  Z6 from strength-dependent laws. Running that comparison is a pre-registered hunch, not an estimate here.
+- Schmidt2006 is now the most important missing original: it is a strength- and temperature-dependent zoo
+  member, and its F₁, F₂ and calibration materials decide whether the Table 1 materials are in-sample for it.
+  Assadi2011 (η-maps) is process-side and optional.
 - Inspect the HUGO-CS files for particle velocity and DE coverage (raw.githubusercontent.com works; needs file
   names, or github.com allowed).

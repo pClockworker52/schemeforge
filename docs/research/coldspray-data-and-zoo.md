@@ -40,7 +40,7 @@ Sandia [Murray2025 M] and McGill [Imbriglio2019 S].
 |---|---|---|---|---|---|
 | HG2018a (preprint 1612.08081) | v_cr from restitution; jetting onset; FE simulations | Al, Cu, Ni, Zn, matched pairs | 100–1200 m/s launch; ~10 µm (Al also 14, 30, 45 µm) | Per-shot velocity ±3–4 %; v_cr bracketed in 25 m/s steps | F |
 | HG2018b Scripta | In-situ bonding moment, restitution vs velocity | Al (two sizes) and others | — | — | A (via Veysset2021 F) |
-| Hassani2020 Acta 199 | v_cr for **20 particle/substrate combinations**, 9 of them dissimilar; impact-mode map | Matched and mismatched metals | — | 20 v_cr values | S (count and design from Veysset2021 F) |
+| Hassani2020 Acta 199 | Table 1: 20 particle/substrate combinations (9 mismatched, 11 matched), regime, adhesion-velocity window | See table below | 8–15 µm particles | **16 numeric windows** (4 rows "NA": no window found or melting); velocity uncertainty 2 %; window = smallest range with equal numbers adhered and rebounded | F (accepted manuscript, Elsevier user license) |
 | Dowding2020 | v_cr against particle size | Al, Ti matched | ~5–50 µm | v_cr ± window (equal numbers bonded/rebounded); exponent ±0.05 | F |
 | Chaban2021 | v_cr against substrate temperature | Al–Al, Sn–Sn, Ti–Ti | Heated substrate (hot stage up to 100 °C first; up to 250 °C later [Schuh2026 F]) | Narrow size selection | A (F header) |
 | Lienhard2020 | Oxide/hydroxide state against v_cr | Al powder: 300 °C air, 50 % and 95 % relative humidity | — | 95 % RH: +2–3 nm layer, ~+14 % v_cr; other treatments no significant change | S (from Veysset2021 F) |
@@ -55,6 +55,39 @@ Sandia [Murray2025 M] and McGill [Imbriglio2019 S].
 | Khan2026 Acta | Restricted interfacial melting enabling bonding | Alloy particles, eutectics (AA7075 in a related abstract) | — | — | A (F header) |
 | Lucas2024/2025 | Microstructure, substrate strength and ductility against bonding | Cu | — | — | M (cited in Panova2026b F) |
 
+**Hassani2020 Table 1** (transcribed from the accepted manuscript; matched rows cite the group's earlier papers):
+
+| Particle | Substrate | d (µm) | Regime | Adhesion window (m/s) |
+|---|---|---|---|---|
+| Al | Ni | 11±2 | splatting | 1080–1210 |
+| Al | Ti | 12±2 | splatting | 1000–1110 |
+| Al | Cu | 11±2 | splatting | 855–990 |
+| Cu | W | 10±2 | splatting (no indentation found) | NA |
+| Sn | Cu | 11±2 | splatting | NA (competition with melting) |
+| Cu | Al | 10±1 | penetration | 625–710 |
+| W | Cu | 8±1 | penetration | NA |
+| Ti | Cu | 13±2 | co-deformation | 525–685 |
+| Cu | Ti | 12±1 | co-deformation | 765–845 (competition with melting) |
+| Cu | Cu | 12±2 | co-deformation | 560–590 |
+| Ni | Ni | 11±2 | co-deformation | 620–675 |
+| Ti | Ti | 12±1 | co-deformation | 680–810 |
+| Zn | Zn | 12±2 | co-deformation | 520–570 |
+| Au | Au | 14±4 | co-deformation | 260–275 |
+| Ag | Ag | 12±1 | co-deformation | 340–365 |
+| Sn | Sn | 10±1 | co-deformation | 325–370 |
+| Al | Al | 14±2 | co-deformation | 790–835 |
+| Al 6061 | Al 6061 | 13±3 | co-deformation | 900–950 |
+| Al 2024 | Al 2024 | 14±3 | co-deformation | 1095–1220 |
+| Al 7075 | Al 7075 | 15±2 | co-deformation | 1200–1290 |
+
+What this table shows at a glance:
+- Window widths run from 15 m/s (Au) to 160 m/s (Ti–Cu), i.e. about 2–25 % of v_cr. That is the judge's noise
+  floor.
+- The four Al grades span 790–1290 m/s. Their density and bulk modulus differ little from pure Al (to be
+  checked with property data), so a law in sqrt(B/ρ) alone (Z6) cannot reproduce this spread. A
+  strength-dependent law (Z7, Z1, Z2) is designed to. This is the most discriminating subset in the public
+  data.
+
 **The key caveat for a judge.** LIPIT v_cr is a single impact at room temperature (unless heated), on a
 polished bulk substrate, with no carrier gas. It is not the cold-spray process critical velocity. Panova2026b
 [F] puts LIPIT matched-pair values for Al, Ni and Zn at 797–824, 650–660 and 518–523 m/s. The cold-spray
@@ -68,9 +101,9 @@ velocity", "cold spray dataset") found **no deposited LIPIT or critical-velocity
 open as accepted manuscripts (OSTI, DSpace, arXiv). A v_cr table would have to be extracted from figures and
 tables, ideally confirmed with the authors.
 
-**Held-out split by material.** Possible in principle. The matched pairs measured so far are about 8 metals
-(Al, Cu, Ni, Zn, Ti, Sn, Ag, Au; per HG2018a, Dowding2020, Chaban2021, HG2019), plus 9 dissimilar pairs
-[Hassani2020 S]. That allows leave-one-material-out validation, but with very few degrees of freedom.
+**Held-out split by material.** Possible in principle. Hassani2020 [F] gives 11 matched materials (8 pure
+metals: Al, Cu, Ni, Zn, Ti, Sn, Ag, Au; and 3 Al alloys) plus 5 mismatched pairs with numeric windows. That
+allows leave-one-material-out validation, but with very few degrees of freedom.
 
 ### Q2.2 Bulk deposition efficiency (DE)
 
@@ -122,7 +155,7 @@ cover Al–Al only. So **no held-out material split is possible for bond strengt
 | Z6 | Hydrodynamic / sound-speed law (HG2018a) | B, ρ (+ T*, d) | v_cr,ref = α·sqrt(B/ρ), α = 0.15 (experiments), 0.14 (simulations), ~10 µm matched pairs, room temperature; extension with sqrt-type dependence on T* = (T−T_room)/(T_m−T_room) and a weak size power law | Shock and release at the particle edge drive jetting; strength negligible against impact pressure | ~10 µm, matched, room temperature | Linear fit in Fig. 4 over Al, Cu, Ni, Zn (+ simulations) | F |
 | Z7 | Spall-based jetting v_cr (HG2019 response; Lucas & Schuh 2025) | C₀, B, dynamic σ_y, tensile failure strain ε | v_cr ∝ C₀·(2σ_y ε / B)^0.5, with an arithmetic mean of particle and substrate properties for mismatched pairs | Jetting as a hydrodynamic spall process | Explains size, strength and temperature effects (claim) | — | S (form from Panova2026b F); A for HG2019 |
 | Z8 | Size effect via jet temperature and spall strength (Dowding2020) | d, FE jet temperature | v_cr ∝ d^(−n), n = 0.19 Al, 0.21 Ti (±0.05) | Larger particles → hotter jet → lower spall strength | 5–50 µm | "Reasonable agreement" with LIPIT | F |
-| Z9 | Impact-mode map (Hassani2020) | ρ, C₀, dynamic σ_y of both bodies | Dimensionless ratio; ~1: co-deformation; < 1/2: splatting; > 2: penetration | — | 9 dissimilar plus matched pairs | Observations on the map | S (Veysset2021 F) |
+| Z9 | Impact-mode map (Hassani2020) | ρ, C₀, dynamic σ_y of both bodies | Impact ratio R built on Johnson's damage number, using the material velocities in particle and substrate; R ≈ 1: co-deformation; transitions at R ≈ 1/2 (splatting) and R ≈ 2 (penetration) | — | 9 mismatched plus 11 matched pairs | Observed regimes fall on the map | F |
 | Z10 | Melting limits: melting hinders adhesion (HG2017 PRL); melt-driven erosion velocity (HG2018c); erosion model (Lucas2025b); restricted melt enables bonding (Khan2026) | Thermal properties, velocity | Upper bound of the bonding window: an erosion velocity; adhesion fails where the interface is liquid unless the melt layer is nanoscale | Resolidification time against contact time | Sn, Zn, Al (erosion); alloys with eutectics (Khan) | — | S / A |
 | Z11 | Oxide-controlled v_cr | Oxide thickness, particle size | Thicker oxide → higher v_cr for metal–metal contact; larger particles clean better | Peridynamics (Ren2024); LIPIT Al +14 % at +2–3 nm [Lienhard2020] | Cu, Fe (simulation) | — | A / S |
 | Z12 | Growth-surface correction (Panova2026b) | Surface roughness, hardness | Particle–particle v_cr ≈ 1.3 × particle–substrate (Cu) | LIPIT on sprayed and polished surfaces | Cu, room temperature | Each factor 10–15 % | F |
@@ -165,7 +198,7 @@ DOIs were checked on Crossref on 2026-11-03 unless marked otherwise.
 | Grujicic2004 | Grujicic et al., Mater. Des. 25 (2004) 681. doi:10.1016/j.matdes.2004.03.008 |
 | Hall2015 | Hall, Sarobol, Urrea, Beatty, "Microstructural characterization of cold sprayed Cu-W MMCs", SAND2015-3457C, OSTI 1251553 (slides reproducing Z1, Z2, Z4 and Alkimov's curves) |
 | Hamrani2024 | Hamrani et al., Coatings 15 (2024) 12. doi:10.3390/coatings15010012 |
-| Hassani2020 | Hassani, Veysset, Sun, Nelson, Schuh, Acta Mater. 199 (2020) 480. doi:10.1016/j.actamat.2020.08.038 |
+| Hassani2020 | Hassani, Veysset, Sun, Nelson, Schuh, Acta Mater. 199 (2020) 480. doi:10.1016/j.actamat.2020.08.038 (accepted manuscript supplied by Peter, Elsevier user license) |
 | HG2017 | Hassani-Gangaraj et al., Phys. Rev. Lett. 119 (2017) 175701. doi:10.1103/physrevlett.119.175701 |
 | HG2018a | Hassani-Gangaraj, Veysset, Champagne, Nelson, Schuh, Acta Mater. 158 (2018) 430. doi:10.1016/j.actamat.2018.07.065. Read as preprint arXiv:1612.08081 ("Supersonic impact of metallic micro-particles"); published text may differ |
 | HG2018b | Hassani-Gangaraj et al., Scripta Mater. 145 (2018) 9. doi:10.1016/j.scriptamat.2017.09.042 |
