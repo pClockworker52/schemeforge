@@ -111,7 +111,7 @@ export PATH=$OPENCOURANT_PATH/exec:$PATH
 
 `ldd` shows no missing libraries for starter, engine and MPI engine once `env.sh` is sourced.
 
-## 3. Smoke test (done, serial)
+## 3. Smoke test (done: serial, 4-rank MPI, converters)
 
 **Deck:** `qa-tests/miniqa/INTERF/INT_7/small_boule/data/BOULE1V4_0000.rad` + `BOULE1V4_0001.rad` +
 `qadiags.inc`, at commit `cb760c2`. Readme: "Ball impact on the wall with /INTER/TYPE7". The model has
@@ -141,22 +141,50 @@ engine_linux64_gf  -i BOULE1V4_0001.rad
 
 Run directory (temporary, not kept in the repo): the session scratchpad, `run_serial/`.
 
+### 3.1 MPI run (4 ranks)
+
+Same inputs, in a fresh directory:
+
+```bash
+. ~/opt/opencourant/latest-20261011/env.sh
+export OMP_NUM_THREADS=1
+starter_linux64_gf -i BOULE1V4_0000.rad -np 4
+mpiexec -n 4 --bind-to core engine_linux64_gf_ompi -i BOULE1V4_0001.rad
+```
+
+| Item | Value |
+|---|---|
+| Cores | 4 SPMD domains × 1 thread (listing: "NUMBER OF SPMD DOMAINS 4", "THREADS PER DOMAIN 1"), Open MPI 4.1.6 |
+| Starter | exit 0; wall 0.45 s |
+| Engine | exit 0, "NORMAL TERMINATION", 2098 cycles; engine elapsed 0.47 s, `mpiexec` wall 0.62 s. The model is too small for MPI to help: 4 ranks are slower than 1 rank |
+| Against reference and serial | All 6 printed energy rows are **identical** to the reference and to the serial run (`/PARITH/ON` in the engine deck) |
+| Extra outputs | One restart file per domain: `BOULE1V4_000{0,1}_000{1..4}.rst` |
+
+### 3.2 Output conversion
+
+```bash
+gunzip -k BOULE1V4A00?.gz                     # needed: anim_to_vtk on a .gz file exits 1 with no output
+for f in BOULE1V4A00?; do anim_to_vtk_linux64_gf $f > $f.vtk; done
+th_to_csv_linux64_gf BOULE1V4T01              # writes BOULE1V4T01.csv
+```
+
+- `anim_to_vtk`: 8 legacy ASCII VTK files (`UNSTRUCTURED_GRID`, about 7 kB each), 154 points, 115 cells. Fields:
+  `TIME`, `CYCLE`, `NODE_ID`, `ELEMENT_ID`, `PART_ID`, `EROSION_STATUS`. **No stress, strain or temperature fields**,
+  because this deck requests no `/ANIM/ELEM` or `/ANIM/NODA` output. Our own decks must request them, e.g. plastic
+  strain, temperature and pressure. Observation: the `FieldData` `CYCLE` reads 0 even in `A008` (TIME 0.130053);
+  use `TIME`, not `CYCLE`.
+- `th_to_csv`: "CONVERSION COMPLETED"; `BOULE1V4T01.csv` has 131 rows and named columns (`"time"`, `"INTERNAL
+  ENERGY"`, `"KINETIC ENERGY"`, momenta, `"CONTACT ENERGY"`, `"HOURGLASS ENERGY"`, `"PLASTIC WORK"`, …, and the
+  per-part `BOULE … IE/KE/…` columns). It is directly readable from Python (`csv` / `numpy`).
+
 ## 4. What did not work or was not done
 
 - **The prompt's premise:** "official OpenRadioss sources" no longer exist (section 1.1). Peter decided to use the fork.
 - First starter run: `ERROR ID 100002 Include file qadiags.inc not found`. My mistake: I had copied only the two
   `.rad` files. Fixed by copying `qadiags.inc` (a comment-only include).
-- **MPI run (4 ranks) and the converters (`anim_to_vtk`, `th_to_csv`) were not run.** The Claude Code auto-mode
-  permission classifier blocked further execution of the downloaded binaries ("Code from External"). Planned
-  commands, for Peter or a session with that permission:
-  ```bash
-  starter_linux64_gf -i BOULE1V4_0000.rad -np 4
-  mpiexec -n 4 --bind-to core engine_linux64_gf_ompi -i BOULE1V4_0001.rad
-  gunzip -k BOULE1V4A0*.gz       # the converter README takes plain A-files; whether it reads .gz is untested
-  for f in BOULE1V4A0??; do anim_to_vtk_linux64_gf $f > ${f}.vtk; done
-  th_to_csv_linux64_gf BOULE1V4T01   # add /TH/TITLE to the engine deck for full column names
-  ```
-  Converter usage is from `OpenCourant/Tools` `output_converters/{anim_to_vtk,th_to_csv}/README.md`.
+- The MPI run and the converters were blocked at first by the Claude Code auto-mode classifier ("Code from
+  External"). After Peter allowed them, they ran (3.1, 3.2).
+- `anim_to_vtk` does not read gzipped animation files: gunzip first.
 - The manuals are Altair Radioss **2022**, the only ones linked by the fork. There is no OpenCourant-specific
   manual yet.
 - No source build, no Apptainer image (not needed).
@@ -179,7 +207,8 @@ Run directory (temporary, not kept in the repo): the session scratchpad, `run_se
    element variables: PEEQ, T, pressure) gives the jet and interface quantities we will converge on.
 5. **Parameter sweeps (impact velocity) from Python:** the decks are plain text. The plan is to generate the starter
    deck from a template (`/INIVEL` or `/IMPVEL` value), run starter + engine via `subprocess` in one directory per
-   case, then parse the `T01` time history (via `th_to_csv`) and the `.out` energy rows. Check: run-time scaling with
+   case, then parse the `T01` time history (`th_to_csv` works, 3.2), the VTK fields (`anim_to_vtk`, with
+   `/ANIM/ELEM` requests added) and the `.out` energy rows. Check: run-time scaling with
    mesh size, `-np`/`OMP_NUM_THREADS` choice, and the `qa-tests/miniqa/PYTHON/FUNCT_PYTHON` feature (Python functions
    inside the deck).
 6. **Reproducibility:** pin `latest-20261011` (zip kept locally with its SHA-256). Move to the first formal
