@@ -1,7 +1,7 @@
 """Hard constraints on Arena 2 slot functions, checked on fixed probe sets before any case runs (PLAN §14.3).
 
-Step 1 checks the medium energy at rest and on a probe set of deformations; unit scaling, positivity under
-compression and batch independence follow in step 4 (docs/plans/2026-10-30-phase6.md).
+Batch independence holds by construction: felupe.constitution.jax maps the energy over cells and quadrature points
+(jax.vmap), so a candidate only ever sees one C (3, 3), as Arena 1 applies its candidates one item at a time.
 """
 
 from __future__ import annotations
@@ -17,6 +17,8 @@ import numpy as np  # noqa: E402
 
 P_PROBE = {"mu": 0.3846153846153846, "lmbda": 0.5769230769230769, "gamma": 1e-3}  # E = 1, nu = 0.3
 REST_TOL = 1e-12  # relative to mu * gamma
+SCALE_FACTORS = (1e-6, 1e6)  # unit scaling of the moduli (Arena 1 v1.5 lesson: absolute epsilons depend on units)
+SCALE_TOL = 1e-9
 
 
 def deformation_probes(seed: int = 20261030) -> list[np.ndarray]:
@@ -39,22 +41,40 @@ def deformation_probes(seed: int = 20261030) -> list[np.ndarray]:
 
 
 def check_medium(psi: Callable) -> list[str]:
-    """medium: psi(C, p) -> scalar energy density. Finite with finite gradient on the probes, deterministic, zero and
-    stress-free at rest (C = I)."""
+    """medium: psi(C, p) -> scalar energy density. On the probes: finite energy, gradient and tangent (Hessian),
+    deterministic, non-negative, strictly positive under compression (det C < 1); zero and stress-free at rest; and unit
+    scaling: psi(C, c mu, c lmbda, gamma) = c psi(C, mu, lmbda, gamma) for c = 1e-6, 1e6 to 1e-9 relative."""
     p = {k: jnp.asarray(v) for k, v in P_PROBE.items()}
     scale = P_PROBE["mu"] * P_PROBE["gamma"]
     grad = jax.grad(lambda C: psi(C, p))
+    hess = jax.hessian(lambda C: psi(C, p))
     v: list[str] = []
     try:
         for F in deformation_probes():
             C = jnp.asarray(F.T @ F)
-            e, dC = np.asarray(psi(C, p)), np.asarray(grad(C))
+            e, dC, d2C = np.asarray(psi(C, p)), np.asarray(grad(C)), np.asarray(hess(C))
             if e.shape != ():
                 return [f"psi_medium returned shape {e.shape}, expected a scalar"]
             if e.dtype != np.float64:
                 return [f"psi_medium returned dtype {e.dtype}, expected float64"]
             if not (np.isfinite(e) and np.all(np.isfinite(dC))):
                 v.append("psi_medium or its derivative is not finite on admissible deformations")
+                break
+            if not np.all(np.isfinite(d2C)):
+                v.append("the tangent (second derivative) of psi_medium is not finite on admissible deformations")
+                break
+            if e < -REST_TOL * scale:
+                v.append("psi_medium is negative for an admissible deformation (rest must be the minimum)")
+                break
+            if np.linalg.det(F) < 1.0 - 1e-9 and not e > 0.0:
+                v.append("psi_medium does not resist compression (energy not positive for det F < 1)")
+                break
+            for c in SCALE_FACTORS:
+                pc = {"mu": p["mu"] * c, "lmbda": p["lmbda"] * c, "gamma": p["gamma"]}
+                if not abs(float(psi(C, pc)) - c * float(e)) <= SCALE_TOL * c * max(abs(float(e)), scale):
+                    v.append(f"psi_medium does not scale with the moduli (x {c:g}): an absolute constant or epsilon?")
+                    break
+            if v:
                 break
             if not np.array_equal(e, np.asarray(psi(C, p))):
                 v.append("psi_medium is not deterministic")

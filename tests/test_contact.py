@@ -166,3 +166,42 @@ def test_hertz_width_and_peak_are_mesh_stable() -> None:
 
     m = ev.hertz_mesh_sensitivity(NEO, HertzCase("g5", gamma=1e-5), sizes=((24, 12), (32, 16)))
     assert m["mesh_sens_a_err"] < 0.01 and m["mesh_sens_p0_err"] < 0.01
+
+
+def test_step4_constraints_reject_negative_soft_and_unit_dependent_media() -> None:
+    def negative(C, p):  # rest is a saddle: energy below zero in extension
+        return NEO(C, p) - p["gamma"] * p["mu"] * (jnp.trace(C) - 3.0) ** 2
+
+    def no_compression(C, p):  # zero energy whenever the volume shrinks
+        j = jnp.sqrt(jnp.linalg.det(C))
+        return jnp.where(j < 1.0, 0.0, NEO(C, p))
+
+    def absolute_eps(C, p):  # depends on units: an absolute floor on the moduli
+        return p["gamma"] * jnp.maximum(p["mu"], 1e-3) * (jnp.trace(C) - 3.0 - jnp.log(jnp.linalg.det(C))) / 2.0
+
+    assert "negative" in " ".join(constraints.check_medium(negative))
+    assert "does not resist compression" in " ".join(constraints.check_medium(no_compression))
+    assert "does not scale with the moduli" in " ".join(constraints.check_medium(absolute_eps))
+
+
+def test_held_out_families_are_valid_seeded_and_independent_of_arena_1() -> None:
+    from schemeforge.arenas.contact import families
+
+    seed = "test-seed-not-the-real-one-0123456789"
+    suite = families.promo_suite(seed)  # validates every case
+    assert [f for f, _ in suite].count("GF") == 10 and [f for f, _ in suite].count("HF") == 6
+    assert families.promo_suite(seed) == suite  # deterministic
+    assert families.promo_suite(seed + "x") != suite
+    hertz = [c for f, c in suite if f == "HF"]
+    assert len({c.R for c in hertz}) == len(hertz) and all(1e-6 <= c.gamma <= 1e-5 for c in hertz)
+
+
+def test_promo_report_aggregates_families_and_hides_nothing_it_should_not() -> None:
+    import time
+
+    report = {"slot": "medium", "suite": "promo", "violations": [], "cases": {}, "metamorphic": {}}
+    r = ev.evaluate_promo(NEO, report, time.perf_counter(), seed="test-seed-not-the-real-one-0123456789",
+                          sizes={"GF": 2, "SF": 2})
+    assert r["status"] == "ok" and set(r["families"]) == {"GF", "SF"}
+    assert r["families"]["GF"]["n"] == 2 and "median" in r["families"]["GF"]["gap_res"]
+    assert len(r["instances"]) == 4 and len(r["seed_fingerprint"]) == 16  # the parent strips and stores instances

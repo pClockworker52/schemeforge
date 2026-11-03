@@ -5,7 +5,8 @@ evaluate(fn, slot, suite, extra_cases) -> report (JSON-serializable dict), the s
     violations   hard-constraint violations (any -> rejected)
     cases        {case_id: {metric: value, "seconds": wall time}}
     metamorphic  {} (none yet)
-Suites: smoke (one C0a) and dev (C0a at three medium stiffnesses, C0b at two shears, C2 Hertz at two); promo in step 4
+Suites: smoke (one C0a), dev (C0a at three medium stiffnesses, C0b at two shears, C2 Hertz at two, C1 patch test),
+promo (held-out families GF, SF, HF and HX from families.py; instances stored outside the repo by the parent)
 (docs/plans/2026-10-30-phase6.md).
 """
 
@@ -24,13 +25,18 @@ from .metrics import edge_traction
 # slot -> hard-constraint checker. The solver wraps the candidate itself (solve.medium_material).
 SLOT_TABLE: dict[str, Callable[[Callable], list[str]]] = {"medium": constraints.check_medium}
 SLOTS = tuple(SLOT_TABLE)
-SUITES = ("smoke", "dev")
+SUITES = ("smoke", "dev", "promo")
 # columns `sforge zoo eval` prints per suite
 ZOO_COLUMNS = {"dev": [("C0a-g3", "leak_pre"), ("C0a-g3", "gap_res"), ("C0a-g5", "leak_pre"), ("C0a-g5", "gap_res"),
                        ("C0a-g6", "gap_res"), ("C0b-s2", "shear_parasitic"), ("C2-g5", "a_err"),
                        ("C2-g5", "p0_err"), ("C2-g6", "a_err"), ("C2-g6", "leak_out"), ("C2-g6", "newton_iters"),
                        ("C1", "pressure_spread")],
-               "smoke": [("smoke-C0a", "leak_pre"), ("smoke-C0a", "gap_res"), ("smoke-C0a", "force_err")]}
+               "smoke": [("smoke-C0a", "leak_pre"), ("smoke-C0a", "gap_res"), ("smoke-C0a", "force_err")],
+               # promo: family medians
+               "promo": [("GF", "leak_pre"), ("GF", "gap_res"), ("SF", "shear_parasitic"), ("HF", "a_err"),
+                         ("HF", "p0_err"), ("HF", "converged"), ("HX", "max_step"), ("HX", "mesh_sens_a_err")]}
+HIGHER_IS_BETTER = {"converged", "max_step"}
+MAX_STEP_TRIALS = (1, 2, 3, 4, 6, 8, 12)  # load steps tried, fewest first
 
 
 def suite_cases(suite: str) -> list[Case]:
@@ -129,6 +135,69 @@ def run_case(case: Case, psi: Callable) -> tuple[dict[str, float], list[str]]:
         return {}, [f"{type(exc).__name__}: {exc}"]
 
 
+def max_step(psi: Callable, case: HertzCase) -> float:
+    """max_step: the largest load increment, as a fraction of the full push, at which C2 still converges in one go
+    (1 / the fewest of MAX_STEP_TRIALS equal steps that converge); 0 if none does. Robustness, PLAN §14.4."""
+    from dataclasses import replace
+
+    for n in MAX_STEP_TRIALS:
+        if run_case(replace(case, steps=n), psi)[0].get("converged") == 1.0:
+            return 1.0 / n
+    return 0.0
+
+
+def aggregate(instances: dict[str, dict]) -> dict[str, dict]:
+    """Per family: n, pass rate, and per metric median, mean, p90 and worst on the bad side (as Arena 1)."""
+    out: dict[str, dict] = {}
+    for fam in sorted({d["family"] for d in instances.values()}):
+        rows = [d for d in instances.values() if d["family"] == fam]
+        agg: dict[str, Any] = {"n": len(rows), "pass_rate": float(np.mean([not d["violations"] for d in rows]))}
+        for k in sorted({k for d in rows for k in d["metrics"] if k != "seconds"}):
+            vals = np.array([d["metrics"][k] for d in rows if k in d["metrics"]], dtype=float)
+            vals = vals[np.isfinite(vals)]
+            if vals.size == 0:
+                continue
+            hi = k in HIGHER_IS_BETTER
+            agg[k] = {"median": float(np.median(vals)), "mean": float(np.mean(vals)),
+                      "p90": float(np.percentile(vals, 10 if hi else 90)),
+                      "worst": float(vals.min() if hi else vals.max()), "n": int(vals.size)}
+        out[fam] = agg
+    return out
+
+
+def evaluate_promo(fn: Callable, report: dict[str, Any], t_start: float, seed: str | None = None,
+                   sizes: dict[str, int] | None = None) -> dict[str, Any]:
+    """The held-out suite: every instance of GF, SF, HF; for the HX instance the promo-only metrics mesh_sens and
+    max_step. Instances (with their parameters) go into report["instances"], which the parent process strips and
+    stores outside the repo; the report keeps family aggregates only."""
+    from dataclasses import asdict
+
+    from .families import promo_suite, read_seed, seed_fingerprint
+
+    seed = read_seed() if seed is None else seed
+    instances: dict[str, dict] = {}
+    for fam, case in promo_suite(seed, sizes):
+        t0 = time.perf_counter()
+        if fam == "HX":
+            m, v = run_case(case, fn)
+            if m.get("converged") == 1.0:
+                m = {**m, **hertz_mesh_sensitivity(fn, case), "max_step": max_step(fn, case)}
+        else:
+            m, v = run_case(case, fn)
+        instances[case.id] = {"family": fam, "metrics": {**m, "seconds": time.perf_counter() - t0},
+                              "violations": v, "case": asdict(case)}
+    families = sorted({d["family"] for d in instances.values()})
+    report.update(
+        families=aggregate(instances), seed_fingerprint=seed_fingerprint(seed), instances=instances,
+        violations=[f"{fam}: {sum(1 for d in instances.values() if d['family'] == fam and d['violations'])} of "
+                    f"{sum(1 for d in instances.values() if d['family'] == fam)} instances violate hard constraints"
+                    for fam in families
+                    if any(d["violations"] for d in instances.values() if d["family"] == fam)])
+    report["status"] = "rejected" if report["violations"] else "ok"
+    report["seconds"] = time.perf_counter() - t_start
+    return report
+
+
 def evaluate(fn: Callable, slot: str, suite: str, extra_cases: Iterable[Case] = ()) -> dict[str, Any]:
     t_start = time.perf_counter()
     report: dict[str, Any] = {"slot": slot, "suite": suite, "violations": [], "cases": {}, "metamorphic": {}}
@@ -138,6 +207,8 @@ def evaluate(fn: Callable, slot: str, suite: str, extra_cases: Iterable[Case] = 
     if v:
         report.update(status="rejected", violations=v, seconds=time.perf_counter() - t_start)
         return report
+    if suite == "promo":
+        return evaluate_promo(fn, report, t_start)
     for case in [*suite_cases(suite), *extra_cases]:
         t0 = time.perf_counter()
         m, v = run_case(case, fn)
