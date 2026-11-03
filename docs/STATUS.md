@@ -25,8 +25,10 @@ Spec: docs/judge/contact_spec.md. Zoo neo_hooke dev r-20261030-082524-e9a2 (clou
 f84d504): C2 Hertz on a rigid flat with medium + classical reference; judge error floor (classical vs Hertz) dev
 mesh a +0.9 % / p0 -0.5 %, 0.3 % at 128 columns; fixed HuHu regularization kr = 5e-7 (5e-6 adds ~4 % p0 tension,
 5e-8 fails on finer meshes); dev suite 26.4 s, zoo dev r-20261103-072519-256c (cloud registry): C2-g5 a_err +12 %,
-C2-g6 a_err -3.9 %, 87 Newton iterations. Spec: docs/judge/contact_spec.md. Open in step 3: C1 patch test
-(non-matching meshes), Q1/Q2 mesh_sens. Then step 4.
+C2-g6 a_err -3.9 %, 87 Newton iterations. Spec: docs/judge/contact_spec.md. C1 patch test done (contact-v0.4.dev, c9bf0ad): C0a on
+distorted meshes (TMC meshes are conforming, so non-matching interfaces do not occur), exact to 1e-13, wall pressure
+uniform to 5e-9; zoo dev r-20261103-082551-03b8. Mesh plots: scripts/plot_contact_meshes.py, docs/judge/figures/. Open in
+step 3: Q1/Q2 mesh_sens. Then step 4.
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
