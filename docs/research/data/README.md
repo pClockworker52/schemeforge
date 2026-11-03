@@ -18,7 +18,8 @@ Version 0.1, 2026-11-03. Built only from full texts read in this track (evidence
 | DW | Dowding2020 Fig. 6 | 9 | Size series: Al 10.3–39.4 µm, Ti 6.9–24.9 µm, matched |
 | CH | Chaban2021 p. 2 | 3 | Heated substrates: Al and Sn at 364 K, Ti at 348 K; particles at 292 K |
 | PA | Panova2026b Table 1 | 3 | Cu on polished plate, polished sprayed Cu, rough sprayed Cu (growth surface) |
-| Q | Secondary quotes | 6 | Values that later papers attribute to the same primary sources as H20 rows, but which differ from them (see below) |
+| P19 | HG2019b p. 7 (primary; supplied by Peter) | 2 | Au 253 ± 7 (16 ± 4 µm), Ag 353 ± 2.5 (13 ± 2 µm) |
+| Q | Secondary quotes | 7 | Values that later papers attribute to the same primary sources as H20 rows, but which differ from them (see below) |
 
 Distinct matched materials: 11 (Al, Cu, Ni, Ti, Zn, Au, Ag, Sn, Al 6061, Al 2024, Al 7075).
 
@@ -55,8 +56,9 @@ Distinct matched materials: 11 (Al, Cu, Ni, Ti, Zn, Au, Ag, Sn, Al 6061, Al 2024
    Zn 520–570 m/s. Panova2026b quotes the same paper as 797–824, 650–660 and 518–523. Dowding2020 quotes it
    as Al 810 ± 16 (14 µm) and 770 ± 15 (30 µm). For Au, Hassani2020 gives 260–275 at 14 ± 4 µm, while Reiser2024
    gives 253 ± 7 at 16 ± 4 µm, both from HG2019b. The preprint of HG2018a (arXiv 1612.08081) gives Al 825 at 14 µm
-   and 775 at 30 µm. These rows stay flagged until checked against the primaries (HG2018b *Scripta* 145,
-   HG2019b *Appl. Surf. Sci.* 476).
+   and 775 at 30 µm. Resolved for Au and Ag from the primary HG2019b: Au 253 ± 7 (Reiser's quote is right; H20-14 does not
+   contain it), Ag 353 ± 2.5 (inside H20-15). HG2019b quotes Zn as 520 ± 2.5, like Panova2026b and unlike H20-13.
+   Al, Ni, Cu still need the primary HG2018b (*Scripta* 145).
 4. **Possible duplicates.** DW, CH (room-temperature comparisons) and H20 may reuse impacts from the same group's
    earlier campaigns, so rows are not necessarily independent measurements.
 5. **Quantity.** These are single impacts on polished (or prepared) substrates, mostly at room temperature,
@@ -113,3 +115,13 @@ P-H20 is the matched source for the v_cr table: same materials, same group, Y_d 
 "C₀" in P-HG is sqrt(B/ρ), not a Hugoniot intercept. Strength values depend on temper and on how they were
 measured. The property source must therefore be fixed as part of pre-registration, before predictions are made
 (go/no-go note, step 2), and never chosen after seeing results.
+
+---
+
+# Cu process critical velocity against oxide thickness (`vcr_process_oxide_cu.csv`)
+
+Seven rows from HG2019b Table 1, compiled by those authors from five spray studies (Gilmore1999, Li2010,
+Gärtner2006, Van Steenkiste1999, Li2006). The oxide thickness is HG2019b's estimate, assuming all measured powder
+oxygen sits in a surface layer. Process quantity (not LIPIT), mixed particle sizes (10–56 µm) and gas
+temperatures (200–300 °C). HG2019b's reading: from ~20 to 7.5 nm, v_cr changes by no more than ~15 %; below
+2–3 nm it drops by up to ~50 % (to 310–327 m/s).

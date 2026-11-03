@@ -54,6 +54,13 @@ strength-dependent law was runnable.
    for the impact-tested powders, which no source in hand provides. That is now the main gap for a fair
    comparison.
 
+## Caveat found after scoring (2026-11-03)
+
+The primary HG2019b gives Au 253 ± 7 and Ag 353 ± 2.5 m/s. The v1 scores used the Hassani2020 quotes (H20-14
+Au 260–275, H20-15 Ag 340–365). For Au the primary window is lower, so Z6's over-prediction would be larger,
+not smaller. The verdicts of CS-01 do not change (it stays inconclusive), but v1 is not rescored; a v2 would
+use primaries where available.
+
 ## Next
 
 - Source the tensile strength and failure strain of the Hassani2020 powders (ask the authors; check the

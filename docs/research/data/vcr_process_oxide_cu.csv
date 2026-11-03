@@ -1,0 +1,8 @@
+oxygen_wt_pct,d_um_avg,gas_T_C,oxide_nm_equiv,vcr_process_mps,original_study,read_from,notes
+0.336,~20,200,16.7,640,Gilmore1999,HG2019b Table 1,"Cu, process quantity; oxide thickness computed by HG2019b assuming all oxygen sits in a surface layer"
+0.38,56.2,265,53.2,610,Li2010,HG2019b Table 1,"Cu, process quantity; oxide thickness computed by HG2019b assuming all oxygen sits in a surface layer"
+0.14,56.2,265,19.6,550,Li2010,HG2019b Table 1,"Cu, process quantity; oxide thickness computed by HG2019b assuming all oxygen sits in a surface layer"
+0.2,~15,300,7.5,550,Gaertner2006,HG2019b Table 1,"Cu, process quantity; oxide thickness computed by HG2019b assuming all oxygen sits in a surface layer"
+0.1,10,200,2.5,470,VanSteenkiste1999,HG2019b Table 1,"Cu, process quantity; oxide thickness computed by HG2019b assuming all oxygen sits in a surface layer"
+0.01,56,265,1.4,327,Li2006,HG2019b Table 1,"Cu, process quantity; oxide thickness computed by HG2019b assuming all oxygen sits in a surface layer"
+0.02,56.2,265,2.8,310,Li2010,HG2019b Table 1,"Cu, process quantity; oxide thickness computed by HG2019b assuming all oxygen sits in a surface layer"

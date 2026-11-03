@@ -29,7 +29,9 @@ its registration, never on the rows of `data/vcr_lipit.csv` v0.1, which inspired
     of at least three states shows no monotone increase beyond the window widths. Inconclusive if fewer than
     two oxide-free metals or no oxide series are measured.
   known_relatives:
-    - HG2019b (Al, Ag, Au; role of native oxide)
+    - HG2019b (Al, Ag, Au; role of native oxide). It makes this argument itself: Au and Ag lie ~50 % and ~30 %
+      below Zn at similar bulk sound speed, and Cu process v_cr drops by up to ~50 % below 2-3 nm oxide
+      (its Table 1). CS-07 is a variant of HG2019b; its added value is the quantitative kill test on blind data.
     - Lienhard2020 (Al, +2-3 nm hydroxide, about +14 % v_cr)
     - Ren2024 (peridynamics, oxide thickness raises v_cr)
     - Ichikawa2015, Ichikawa2019 (substrate oxide, oxide at the crater centre)
@@ -40,6 +42,7 @@ its registration, never on the rows of `data/vcr_lipit.csv` v0.1, which inspired
     cannot confirm this hunch.
   needs: an oxide-state column filled from primaries (HG2019b; authors) and, ideally, an oxide series for one
     or two metals besides Al.
+  label: variant of HG2019b (label set 2026-11-03 after reading HG2019b; referee to confirm)
   status: open
   author: claude (with Peter)
 ```

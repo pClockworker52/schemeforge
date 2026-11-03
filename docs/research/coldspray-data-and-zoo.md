@@ -114,6 +114,9 @@ allows leave-one-material-out validation, but with very few degrees of freedom.
 | Source | What | Materials | Notes | Level |
 |---|---|---|---|---|
 | Assadi2003 | Process v_cr: Cu 570 m/s (99.8 %, 5–22 µm), Al 660 m/s (99.93 %, < 45 µm). Coating adhesion (EN 582) just above v_cr ≈ 20 % of bulk Cu UTS | Cu, Al | **v_cr is inferred, not measured**: CFD velocity distribution (checked only against the LDA mean) combined with measured DE and size distribution (method in their ref. 12). The process v_cr therefore depends on a gas-dynamics model | F |
+| Gaertner2006 | Gärtner, Stoltenhoff, Schmidt, Kreye, J. Therm. Spray Technol. 15 (2006). doi:10.1361/105996306X108110 (via HG2019b Table 1) |
+| Li2010 | Li, Wang, Zhang, Yang, Li, Liao, J. Therm. Spray Technol. 19 (2010) 95. doi:10.1007/s11666-009-9427-x (via HG2019b Table 1) |
+| VanSteenkiste1999 | Van Steenkiste et al., Surf. Coat. Technol. 111 (1999) 62 (via HG2019b Table 1) |
 | Gilmore1999 | DE against measured particle velocity | Cu, ~19 µm (11–26 µm) | DE ~53 % at 640 m/s, ~95 % at 725 m/s | S (numbers via Dowding2020 F) |
 | Alkimov1990 | DE against particle velocity | Cu, Ni, Al | Classic S-curves; the origin of the "critical velocity" | S (figure reproduced in Hall2015 F) |
 | Raletz2006 | v_cr inferred from DE and the velocity distribution | — | — | M |
@@ -228,7 +231,7 @@ DOIs were checked on Crossref on 2026-11-03 unless marked otherwise.
 | HG2018b | Hassani-Gangaraj et al., Scripta Mater. 145 (2018) 9. doi:10.1016/j.scriptamat.2017.09.042 |
 | HG2018c | Hassani-Gangaraj et al., Nat. Commun. 9 (2018) 5077. doi:10.1038/s41467-018-07509-y |
 | HG2019 | Hassani-Gangaraj et al., Scripta Mater. 162 (2019) 515 (response). doi:10.1016/j.scriptamat.2018.12.015 |
-| HG2019b | Hassani-Gangaraj et al., Appl. Surf. Sci. 476 (2019) 528. doi:10.1016/j.apsusc.2019.01.111 |
+| HG2019b | Hassani-Gangaraj et al., Appl. Surf. Sci. 476 (2019) 528. doi:10.1016/j.apsusc.2019.01.111 (accepted manuscript supplied by Peter, read in full) |
 | Hussain2009 | Hussain, McCartney, Shipway, Zhang, J. Therm. Spray Technol. 18 (2009) 364. doi:10.1007/s11666-009-9298-1 |
 | Ichikawa2015 | Ichikawa, Ogawa, J. Therm. Spray Technol. 24 (2015) 1269. doi:10.1007/s11666-015-0299-y |
 | Ichikawa2019 | Ichikawa, Tokoro, Tanno, Ogawa, Acta Mater. 164 (2019) 39. doi:10.1016/j.actamat.2018.09.041 |
