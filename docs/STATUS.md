@@ -41,7 +41,11 @@ fingerprint d4f3b5e7dedec0f6, no violations, pass_rate 1.0 and converged 1 (wors
 HX 1). Medians: GF leak_pre 3.08e-4, gap_res 1.04e-3; SF shear_parasitic 2.47e-4; HF a_err -0.0059, p0_err 0.0042;
 HX max_step 0.25, mesh_sens_a_err 0.0066. Worst values: GF force_err 0.115, gap_res 0.046; HF a_err 0.119, leak_out
 0.053, 87 Newton iterations. No family with violations or converged < 1. WSL git has no GitHub credentials; push via
-Windows git. Next: step 5 (zoo, trade-off front).
+Windows git. Step 5 (cloud, 2026-11-03, contact-v0.7.dev 48ced4b): zoo
+member neo_hooke_iv (FElupe variant); front over gamma 1e-3..1e-7 in docs/judge/contact_baseline.md: **the trade-off
+exists** (accuracy improves by orders of magnitude as gamma falls, max_step falls from 1 to 1/6, gamma 1e-7 fails);
+classical contact is the ideal corner. Pending zoo members (Wriggers 2013, mixed formulation) need their sources.
+Next: step 6 (blind audit, Target D pre-registration, tag contact-v1.0).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
