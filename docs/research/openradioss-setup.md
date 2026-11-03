@@ -8,6 +8,10 @@ project.** Peter chose (2026-11-03, option 1) to use **OpenCourant**, a communit
 OpenRadioss code. Everything below refers to OpenCourant unless stated otherwise. DECISIONS and the prompt were not
 edited; that is Peter's call.
 
+**Usage rule (Peter, 2026-11-03):** use OpenCourant as installed, locally (`~/opt/opencourant/latest-20261011`).
+Never commit its binaries, libraries or result files. Keep the shipped QA decks (CC BY-NC 4.0) out of the repository;
+cite them by path and commit only.
+
 ## 1. Verified facts (checked 2026-11-03)
 
 ### 1.1 Status of OpenRadioss
