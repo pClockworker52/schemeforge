@@ -382,3 +382,18 @@ substitute for a blind test: a literature-blind hold-out set, frozen before read
 *Consequences:* docs/research/coldspray-campaign-proposal.md is parked. Order: simulation pipeline,
 registered model hunches, frozen predictions, literature-blind scoring, external campaign only if this cannot
 decide.
+
+
+## 2026-11-03 — Main impact solver: OpenCourant instead of OpenRadioss (Peter)
+*Context:* The setup session (docs/research/openradioss-setup.md) found OpenRadioss withdrawn as a public project:
+the GitHub repository returns 404 and openradioss.org redirects to Siemens' commercial Simcenter Radioss. The
+community fork OpenCourant continues the last public code (solver AGPL-3.0). Release latest-20261011 is installed
+in WSL (zip kept with its SHA-256), and a serial Johnson–Cook ball-on-wall smoke deck reproduces the shipped
+reference energies exactly.
+*Decision:* OpenCourant replaces OpenRadioss as the main impact solver in "Cold-spray track: local first"; the
+independent JAX code stays the cross-check. Pin latest-20261011 until a formal vYYYY.N release exists.
+*Consequences:* Open: the licence of the non-AGPL parts (hm_reader, H3D, hm_cfg_files; Siemens permission "solely in
+connection with OpenRadioss software"), which matters before we publish derived decks or results that depend on
+them. The fork's provenance claims are its own and unverified. Not yet confirmed by a run: the rate and temperature
+terms of Johnson–Cook, axisymmetric 2D, and JC + Mie–Grüneisen (LAW4) on /QUAD elements. These are the next
+verification steps, together with the shared cross-check case against the JAX code.
