@@ -1,4 +1,12 @@
-# Handoff — 2026-10-30 (replaces the 2026-10-28 version)
+# Handoff — 2026-11-03 (Phase 6 paused; replaces the 2026-10-30 version)
+
+**Now:** Phase 6 is paused after step 5 (DECISIONS 2026-11-03). The open question is Peter's cold-spray application:
+deposition efficiency and bonding, mechanistic, with the model stating its own range of validity. Start the next
+session fresh with: "Read docs/HANDOFF.md and docs/DECISIONS.md (2026-11-03), then work on the cold-spray question."
+Arena 2 resumes at step 6 (blind audit, Target D from docs/judge/contact_baseline.md, tag contact-v1.0).
+
+---
+
 
 The short version for the next session. The working record is docs/STATUS.md; decisions are in docs/DECISIONS.md;
 every number below has its run id there or in the linked file.

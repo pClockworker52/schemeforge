@@ -317,3 +317,20 @@ would have made euler1d "differ from tag euler1d-v1.6" and refused every Arena 1
 *Consequences:* The euler1d judge files are byte-identical to the v1.6 tag, but the hash recorded with new runs
 changes from 742819536be4… (whole tree) to a38ee919f14b… (euler1d only); judge_version stays euler1d-v1.6.
 Comparisons go by judge_version and scores, never by hash, so no earlier result is affected.
+
+
+## 2026-11-03 — Arena 2 paused; cold-spray question opened (Peter)
+*Context:* Phase 6 reached a clean checkpoint: judge contact-v0.8.dev with C0a, C0b, C1, C2, hard constraints,
+held-out families (first real promo run clean, r-20261103-123550-7e5a), and a four-medium zoo front
+(docs/judge/contact_baseline.md: the trade-off exists, with a second axis, robustness against residual gap). Peter's
+application is multi-particle cold spray with coating buildup, and specifically deposition efficiency and bonding.
+Assessment (cloud session): third-medium contact addresses contact enforcement, which is not the bottleneck there
+(extreme distortion, impact dynamics and explicit time steps, bonding, material behaviour); it fits quasi-static
+analyses of deposited, porous coatings. Peter: current cold-spray models answer few of the domain's questions;
+existing data were often taken with the wrong mindset; a mechanistic multi-physics view is likely needed; the model
+should itself say for which materials it predicts.
+*Decision:* Pause Phase 6 at this checkpoint (steps 1–5 done; step 6, the blind audit and Target D pre-registration,
+not started). Open the cold-spray question as a separate, research-first track before any new arena or repo.
+*Consequences:* Arena 2 stays as a general third-medium-contact benchmark; resuming means step 6 (Target D from the
+four-medium front). The next session starts from docs/HANDOFF.md and a research brief, in a fresh session (this one's
+context is long and expensive per turn).
