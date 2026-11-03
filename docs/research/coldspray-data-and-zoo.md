@@ -243,6 +243,7 @@ DOIs were checked on Crossref on 2026-11-03 unless marked otherwise.
 | Lienhard2020 | Lienhard et al., Acta Mater. 197 (2020) 28. doi:10.1016/j.actamat.2020.07.011 |
 | Lucas2025 | Lucas, Schuh, Int. J. Mech. Sci. 303 (2025) 110676. doi:10.1016/j.ijmecsci.2025.110676 |
 | Lucas2025b | Lucas, Barton, Saunders, Schuh, Acta Mater. 301 (2025) 121488. doi:10.1016/j.actamat.2025.121488 |
+| Mishra2026repo | github.com/akshansh11/Cold-Spray-Impact-Simulation-Abaqus-Explicit (README read 2026-11-03): Abaqus/CAE script, one Al-Al case (R 40 um, 700 m/s, 60 ns), Johnson-Cook + Mie-Grueneisen, ALE with element deletion, no velocity sweep, no bonding criterion, no mesh-convergence study; CC BY-NC 4.0 (cite only, not reusable in this GPL repository). Its Al Johnson-Cook values equal the HG2018a table. Not useful as a zoo member or type-2 setup |
 | Murray2025 | Murray et al., J. Therm. Spray Technol. (2025). doi:10.1007/s11666-025-02085-2 (OSTI 3009523) |
 | Panova2026a | Panova, Schuh, Materialia 46 (2026) 102742. doi:10.1016/j.mtla.2026.102742 (OSTI 3367627) |
 | Panova2026b | Panova, Roper, Kracum, Schuh, Materialia (2026) 102788. doi:10.1016/j.mtla.2026.102788 (OSTI 3376515) |
