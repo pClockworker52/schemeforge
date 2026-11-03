@@ -28,7 +28,8 @@ SUITES = ("smoke", "dev")
 # columns `sforge zoo eval` prints per suite
 ZOO_COLUMNS = {"dev": [("C0a-g3", "leak_pre"), ("C0a-g3", "gap_res"), ("C0a-g5", "leak_pre"), ("C0a-g5", "gap_res"),
                        ("C0a-g6", "gap_res"), ("C0b-s2", "shear_parasitic"), ("C2-g5", "a_err"),
-                       ("C2-g5", "p0_err"), ("C2-g6", "a_err"), ("C2-g6", "leak_out"), ("C2-g6", "newton_iters")],
+                       ("C2-g5", "p0_err"), ("C2-g6", "a_err"), ("C2-g6", "leak_out"), ("C2-g6", "newton_iters"),
+                       ("C1", "pressure_spread")],
                "smoke": [("smoke-C0a", "leak_pre"), ("smoke-C0a", "gap_res"), ("smoke-C0a", "force_err")]}
 
 
@@ -43,12 +44,15 @@ def suite_cases(suite: str) -> list[Case]:
 def gap_closure_metrics(case: GapClosureCase, res) -> tuple[dict[str, float], list[str]]:
     """C0a, against ideal contact (reference.ideal_gap_force). leak_pre: force at half the gap over the ideal force at
     full push; gap_res: medium thickness left at full push over the gap; force_err: force at full push over the ideal
-    one, minus 1 (positive: the residual medium layer takes up height, so the body is compressed more)."""
+    one, minus 1 (positive: the residual medium layer takes up height, so the body is compressed more);
+    pressure_spread: (max - min) / mean of the wall pressure at full push (0 exactly: the solution is homogeneous;
+    the C1 patch test checks it on distorted meshes)."""
     f_ideal = float(reference.ideal_gap_force(case, case.push))
     f_half = float(np.interp(0.5 * case.gap, res.push, res.force))
     m = {"converged": 1.0, "leak_pre": f_half / f_ideal, "gap_res": res.medium_thickness / case.gap,
          "force_err": float(res.force[-1]) / f_ideal - 1.0, "newton_iters": float(sum(res.newton_iters)),
-         "min_J_medium": res.min_j_medium}
+         "min_J_medium": res.min_j_medium,
+         "pressure_spread": float(np.ptp(res.wall_pressure) / abs(np.mean(res.wall_pressure)))}
     v = [] if res.min_j_medium > 0.0 else ["medium inverted (min J <= 0)"]
     return m, v
 

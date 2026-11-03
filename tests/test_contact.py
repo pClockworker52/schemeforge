@@ -98,7 +98,7 @@ def test_simple_shear_is_exact_for_neo_hooke() -> None:
 
 def test_dev_suite_shows_the_stiffness_trade_off() -> None:
     ids = [c.id for c in dev_suite()]
-    assert ids == ["C0a-g3", "C0a-g5", "C0a-g6", "C0b-s05", "C0b-s2", "C2-g5", "C2-g6"]
+    assert ids == ["C0a-g3", "C0a-g5", "C0a-g6", "C0b-s05", "C0b-s2", "C2-g5", "C2-g6", "C1"]
     r = ev.evaluate(NEO, "medium", "dev")
     assert r["status"] == "ok", r["violations"]
     c = r["cases"]
@@ -144,3 +144,17 @@ def test_hertz_with_the_medium_shows_the_trade_off() -> None:
     assert v5 == v6 == [] and m5["converged"] == m6["converged"] == 1.0
     assert m5["a_err"] > m6["a_err"] and m6["newton_iters"] > m5["newton_iters"]
     assert abs(m5["p0_err"]) < 0.02 and abs(m6["p0_err"]) < 0.02  # the peak pressure itself is close to Hertz
+
+
+def test_patch_test_on_distorted_meshes() -> None:
+    # C1: the confined gap closure on randomly distorted, straight-edged Q2 meshes still has the homogeneous exact
+    # solution; the FE result must reproduce it and the wall pressure must stay uniform
+    case = next(c for c in dev_suite() if c.id == "C1")
+    assert case.distort > 0.0
+    res = solve.gap_closure(NEO, case)
+    for k in (2, 4, 6):
+        assert res.force[k] == pytest.approx(reference.exact_gap_closure(NEO, case, res.push[k])[0], rel=1e-9)
+    m, v = ev.gap_closure_metrics(case, res)
+    assert v == [] and m["pressure_spread"] < 1e-7
+    with pytest.raises(ValueError):
+        validate_case(GapClosureCase("bad", distort=0.6))

@@ -29,6 +29,8 @@ class GapClosureCase:
     E: float = 1.0
     nu: float = 0.3
     gamma: float = 1e-6
+    distort: float = 0.0  # C1 patch test: random corner-node moves, as a fraction of the cell size (solve._column)
+    seed: int = 0
 
 
 @dataclass(frozen=True)
@@ -78,10 +80,11 @@ def smoke_suite() -> list[Case]:
 
 def dev_suite() -> list[Case]:
     """C0a over three decades of medium stiffness (the trade-off of PLAN §14.7), C0b at a small and a large shear,
-    C2 Hertz at two medium stiffnesses."""
+    C2 Hertz at two medium stiffnesses, C1 patch test (C0a on distorted meshes)."""
     return [GapClosureCase("C0a-g3", gamma=1e-3), GapClosureCase("C0a-g5", gamma=1e-5),
             GapClosureCase("C0a-g6", gamma=1e-6), SimpleShearCase("C0b-s05", shear=0.5),
-            SimpleShearCase("C0b-s2", shear=2.0), HertzCase("C2-g5", gamma=1e-5), HertzCase("C2-g6", gamma=1e-6)]
+            SimpleShearCase("C0b-s2", shear=2.0), HertzCase("C2-g5", gamma=1e-5), HertzCase("C2-g6", gamma=1e-6),
+            GapClosureCase("C1", gamma=1e-5, nx=3, ny_body=3, ny_medium=3, distort=0.3, seed=11)]
 
 
 def case_from_dict(d: dict[str, Any]) -> Case:
@@ -105,6 +108,8 @@ def validate_case(case: Case) -> None:
             raise ValueError(f"{case.id}: sizes, E and gamma must be positive and 0 <= nu < 0.5")
         if not case.gap < case.push < case.gap + 0.5 * case.height:
             raise ValueError(f"{case.id}: push must close the gap and compress the column by less than half")
+        if not 0.0 <= case.distort < 0.5:
+            raise ValueError(f"{case.id}: distort must be in [0, 0.5) so that cells stay convex")
         if case.steps < 2 or min(case.nx, case.ny_body, case.ny_medium) < 1:
             raise ValueError(f"{case.id}: at least 2 steps and one cell per direction")
         return

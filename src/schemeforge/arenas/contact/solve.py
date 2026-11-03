@@ -38,8 +38,23 @@ class GapClosureResult:
     min_j_medium: float
 
 
-def _column(x1: float, y0: float, y1: float, nx: int, ny: int) -> fem.Mesh:
+def _column(x1: float, y0: float, y1: float, nx: int, ny: int, distort: float = 0.0, seed: int = 0) -> fem.Mesh:
+    """Q2 mesh of the rectangle [0, x1] x [y0, y1]. With distort > 0 (C1 patch test) the corner nodes move randomly by
+    up to distort times the cell size: interior nodes in x and y, side nodes along their side only; the top and
+    bottom lines stay straight and unperturbed, so stacked layers still share their nodes. Mid-edge and centre nodes
+    are added after the move, so all edges stay straight and the elements reproduce linear fields exactly."""
     m = fem.Rectangle(a=(0.0, y0), b=(x1, y1), n=(nx + 1, ny + 1))
+    if distort > 0.0:
+        rng = np.random.default_rng(seed)
+        hx, hy = x1 / nx, (y1 - y0) / ny
+        pts = m.points.copy()
+        on_x = np.isclose(pts[:, 0], 0.0) | np.isclose(pts[:, 0], x1)
+        on_y = np.isclose(pts[:, 1], y0) | np.isclose(pts[:, 1], y1)
+        move = rng.uniform(-distort, distort, pts.shape) * np.array([hx, hy])
+        move[on_x, 0] = 0.0
+        move[on_y, 1] = 0.0
+        move[on_y, 0] = 0.0
+        m.update(points=pts + move)
     return m.add_midpoints_edges().add_midpoints_faces()
 
 
@@ -48,8 +63,8 @@ def gap_closure(psi: Callable, case: GapClosureCase) -> GapClosureResult:
     fails (the evaluator records converged = 0)."""
     g, h, w = case.gap, case.height, case.width
     mu, lmbda = lame(case.E, case.nu)
-    body = _column(w, g, g + h, case.nx, case.ny_body)
-    medium = _column(w, 0.0, g, case.nx, case.ny_medium)
+    body = _column(w, g, g + h, case.nx, case.ny_body, case.distort, case.seed)
+    medium = _column(w, 0.0, g, case.nx, case.ny_medium, case.distort, case.seed + 1)
     container = fem.MeshContainer([body, medium], merge=True, decimals=10)
     regions = [fem.RegionBiQuadraticQuad(m) for m in container.meshes]
     sub = [fem.FieldPlaneStrain(r, dim=2).as_container() for r in regions]
