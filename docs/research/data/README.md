@@ -93,15 +93,20 @@ C₀, B, dynamic σ_y, ε; Z9: ρ, C₀, Y_d). The table is incomplete on purpos
 |---|---|---|---|
 | P-HG | HG2018a preprint, Extended Data Table 1 (F) | Cu, Ni, Al, Ta | ρ, c_p, T_m, B, G, ν, C₀, Hugoniot s, Johnson–Cook A, B, n, C, m |
 | P-WP | Wikipedia element infoboxes, retrieved 2026-11-03 (tertiary; densities cite Arblaster 2018) | Al, Cu, Ni, Ti, Zn, Sn, Ag, Au, W, Ta, Fe | ρ, T_m, molar C_p, B, G |
+| **P-H20** | **Hassani2020 supplementary information, Table S1** (supplied by Peter; F) | Al, Ni, Cu, W, Ti, Zn, Sn, Au, Ag, Al 6061, Al 2024, Al 7075 | ρ, ν, E, Hugoniot C₀ (from Marsh 1980), macroscale dynamic yield (plate impact, 5 metals, cited), **microscale dynamic yield Y_d ± uncertainty** |
 
-**Missing, and needed before any zoo member is evaluated:**
-- Strength data (σ_u or σ_TS, dynamic σ_y, failure strain ε) for every material.
-- Everything for the Al alloys 6061, 2024 and 7075.
-- Specific heat c_p for the P-WP rows. Converting molar C_p needs standard atomic weights; the Wikipedia
-  lookup was rate-limited, and I did not fill them from memory.
-- Hugoniot intercepts C₀ and slopes s. Hassani2020 takes these from Hugoniot data and estimates dynamic yield
-  strengths from restitution data, both in its supplementary information. That file was not in the accepted
-  manuscript and is the most valuable missing source, because it matches the v_cr table's own materials.
+P-H20 is the matched source for the v_cr table: same materials, same group, Y_d at impact conditions. Two flags:
+- **Partial circularity.** Microscale Y_d was fitted to the sub-critical rebound data of the same LIPIT
+  campaigns (Wu et al. 2005 elastic–perfectly-plastic model, prefactor 0.57 from Sun2020). A model that uses
+  Y_d to predict v_cr is therefore not fully independent of the impacts that define v_cr. Pre-registration must
+  say whether Y_d is an allowed input, and for a blind material it has to come from impacts below v_cr only.
+- **W.** Its Y_d (6900 MPa) is estimated from a macro–micro correlation (Fig. S4), not measured.
+
+**Still missing:**
+- Melting point and specific heat for the Al alloys, and c_p for the P-WP rows (atomic weights:
+  Wikipedia rate-limited the lookup; nothing filled from memory).
+- Hugoniot slope s, except for Cu, Ni, Al and Ta (P-HG).
+- Tensile strength σ_TS / σ_u (Z1, Z2) and failure strain ε (Z7) for the impact-tested powders.
 
 **The property source changes predictions.** Cu density is 8960 (P-HG) against 8935 kg/m³ (P-WP), and the
 "C₀" in P-HG is sqrt(B/ρ), not a Hugoniot intercept. Strength values depend on temper and on how they were

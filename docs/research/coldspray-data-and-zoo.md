@@ -87,8 +87,8 @@ three Al alloys are held out for Z2.
 What this table shows at a glance:
 - Window widths run from 15 m/s (Au) to 160 m/s (Ti–Cu), i.e. about 2–25 % of v_cr. That is the judge's noise
   floor.
-- The four Al grades span 790–1290 m/s. Their density and bulk modulus differ little from pure Al (to be
-  checked with property data), so a law in sqrt(B/ρ) alone (Z6) cannot reproduce this spread. A
+- The four Al grades span 790–1290 m/s. Their density and Hugoniot C₀ differ little from pure Al (Table S1:
+  ρ 2700–2810 kg/m³, C₀ 5200–5380 m/s), so a law in sqrt(B/ρ) alone (Z6) cannot reproduce this spread. A
   strength-dependent law (Z7, Z1, Z2) is designed to. This is the most discriminating subset in the public
   data.
 
@@ -222,7 +222,7 @@ DOIs were checked on Crossref on 2026-11-03 unless marked otherwise.
 | Grujicic2004 | Grujicic et al., Mater. Des. 25 (2004) 681. doi:10.1016/j.matdes.2004.03.008 |
 | Hall2015 | Hall, Sarobol, Urrea, Beatty, "Microstructural characterization of cold sprayed Cu-W MMCs", SAND2015-3457C, OSTI 1251553 (slides reproducing Z1, Z2, Z4 and Alkimov's curves) |
 | Hamrani2024 | Hamrani et al., Coatings 15 (2024) 12. doi:10.3390/coatings15010012 |
-| Hassani2020 | Hassani, Veysset, Sun, Nelson, Schuh, Acta Mater. 199 (2020) 480. doi:10.1016/j.actamat.2020.08.038 (accepted manuscript supplied by Peter, Elsevier user license) |
+| Hassani2020 | Hassani, Veysset, Sun, Nelson, Schuh, Acta Mater. 199 (2020) 480. doi:10.1016/j.actamat.2020.08.038 (accepted manuscript supplied by Peter, Elsevier user license); supplementary information mmc1 with Table S1 of properties also supplied |
 | HG2017 | Hassani-Gangaraj et al., Phys. Rev. Lett. 119 (2017) 175701. doi:10.1103/physrevlett.119.175701 |
 | HG2018a | Hassani-Gangaraj, Veysset, Champagne, Nelson, Schuh, Acta Mater. 158 (2018) 430. doi:10.1016/j.actamat.2018.07.065. Read as preprint arXiv:1612.08081 ("Supersonic impact of metallic micro-particles"); published text may differ |
 | HG2018b | Hassani-Gangaraj et al., Scripta Mater. 145 (2018) 9. doi:10.1016/j.scriptamat.2017.09.042 |
