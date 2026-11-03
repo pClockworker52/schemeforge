@@ -34,7 +34,7 @@ One line per entry, in order. Generated from the `##` headings; regenerate when 
 | 2026-10-30 | [Licence: GPL-3.0-or-later instead of MIT (Peter)](#2026-10-30--licence-gpl-30-or-later-instead-of-mit-peter) | repository |  |
 | 2026-10-30 | [Phase 6 plan approved (Peter)](#2026-10-30--phase-6-plan-approved-peter) | Arena 2 / all arenas |  |
 | 2026-10-30 | [Each arena is its own judge (Phase 6 step 1)](#2026-10-30--each-arena-is-its-own-judge-phase-6-step-1) | Arena 2 / all arenas |  |
-| 2026-11-03 | [Arena 2 paused; cold-spray question opened (Peter)](#2026-11-03--arena-2-paused-cold-spray-question-opened-peter) | cold spray |  |
+| 2026-11-03 | [Arena 2 paused; cold-spray question opened (Peter)](#2026-11-03--arena-2-paused-cold-spray-question-opened-peter) | Arena 2 / cold spray |  |
 | 2026-11-03 | [Cold-spray track: discipline only (Peter)](#2026-11-03--cold-spray-track-discipline-only-peter) | cold spray |  |
 | 2026-11-03 | [Cold-spray retrospective test: rules (Peter)](#2026-11-03--cold-spray-retrospective-test-rules-peter) | cold spray |  |
 | 2026-11-03 | [Cold-spray track: local first (Peter)](#2026-11-03--cold-spray-track-local-first-peter) | cold spray | solver part: [OpenCourant instead of OpenRadioss](#2026-11-03--main-impact-solver-opencourant-instead-of-openradioss-peter) |
