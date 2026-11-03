@@ -44,8 +44,10 @@ HX max_step 0.25, mesh_sens_a_err 0.0066. Worst values: GF force_err 0.115, gap_
 Windows git. Step 5 (cloud, 2026-11-03, contact-v0.7.dev 48ced4b): zoo
 member neo_hooke_iv (FElupe variant); front over gamma 1e-3..1e-7 in docs/judge/contact_baseline.md: **the trade-off
 exists** (accuracy improves by orders of magnitude as gamma falls, max_step falls from 1 to 1/6, gamma 1e-7 fails);
-classical contact is the ideal corner. Pending zoo members (Wriggers 2013, mixed formulation) need their sources.
-Next: step 6 (blind audit, Target D pre-registration, tag contact-v1.0).
+classical contact is the ideal corner. Zoo widened (contact-v0.8.dev cbd5854): wriggers2013
+(via felupe ex20) and faltus2026 (arXiv 2603.13063 Eq. 1); the newer media are far more robust (faltus2026 gamma 1e-6:
+Hertz a_err +1.0 %, one load step) at a 1-4 % residual gap: a second trade-off axis. Mixed formulation and other
+regularizations belong to the regularization slot. Next: step 6 (blind audit, Target D pre-registration, tag).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
