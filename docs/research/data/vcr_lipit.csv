@@ -1,0 +1,42 @@
+id,particle,substrate,particle_condition,substrate_condition,d_um,d_um_spread,T_substrate_K,vcr_low_mps,vcr_high_mps,vcr_mid_mps,vcr_definition,n_impacts,regime,read_from,primary_source,extraction,notes
+H20-01,Al,Ni,,polished,11,2,room,1080,1210,1145,equal-count window,,splatting,Hassani2020 Table 1,Hassani2020,printed,
+H20-02,Al,Ti,,polished,12,2,room,1000,1110,1055,equal-count window,,splatting,Hassani2020 Table 1,Hassani2020,printed,
+H20-03,Al,Cu,,polished,11,2,room,855,990,922,equal-count window,,splatting,Hassani2020 Table 1,Hassani2020,printed,
+H20-04,Cu,W,,polished,10,2,room,,,,equal-count window,,splatting,Hassani2020 Table 1,Hassani2020,printed,NA: no post-impact indentations found; no window satisfying the definition
+H20-05,Sn,Cu,,polished,11,2,room,,,,equal-count window,,splatting,Hassani2020 Table 1,Hassani2020,printed,NA: no window; competition with melting
+H20-06,Cu,Al,,polished,10,1,room,625,710,668,equal-count window,,penetration,Hassani2020 Table 1,Hassani2020,printed,
+H20-07,W,Cu,,polished,8,1,room,,,,equal-count window,,penetration,Hassani2020 Table 1,Hassani2020,printed,NA: no window satisfying the definition
+H20-08,Ti,Cu,,polished,13,2,room,525,685,605,equal-count window,,co-deformation,Hassani2020 Table 1,Hassani2020,printed,
+H20-09,Cu,Ti,,polished,12,1,room,765,845,805,equal-count window,,co-deformation,Hassani2020 Table 1,Hassani2020,printed,competition with melting
+H20-10,Cu,Cu,,polished,12,2,room,560,590,575,equal-count window,,co-deformation,Hassani2020 Table 1,HG2018b,printed (quote of primary),
+H20-11,Ni,Ni,,polished,11,2,room,620,675,648,equal-count window,,co-deformation,Hassani2020 Table 1,HG2018b,printed (quote of primary),Panova2026b quotes the same source as 650-660 (row Q-Ni)
+H20-12,Ti,Ti,,polished,12,1,room,680,810,745,equal-count window,,co-deformation,Hassani2020 Table 1,HG2019,printed (quote of primary),
+H20-13,Zn,Zn,,polished,12,2,room,520,570,545,equal-count window,,co-deformation,Hassani2020 Table 1,HG2018b,printed (quote of primary),Panova2026b quotes the same source as 518-523 (row Q-Zn)
+H20-14,Au,Au,,polished,14,4,room,260,275,268,equal-count window,,co-deformation,Hassani2020 Table 1,HG2019b,printed (quote of primary),Reiser2024 quotes the same source as 253 +- 7 at d = 16 +- 4 (row Q-Au)
+H20-15,Ag,Ag,,polished,12,1,room,340,365,352,equal-count window,,co-deformation,Hassani2020 Table 1,HG2019b,printed (quote of primary),
+H20-16,Sn,Sn,,polished,10,1,room,325,370,348,equal-count window,,co-deformation,Hassani2020 Table 1,HG2018c,printed (quote of primary),
+H20-17,Al,Al,,polished,14,2,room,790,835,812,equal-count window,,co-deformation,Hassani2020 Table 1,HG2018b,printed (quote of primary),Panova2026b quotes 797-824; Dowding2020 quotes 810 +- 16 (rows Q-Al)
+H20-18,Al 6061,Al 6061,,polished,13,3,room,900,950,925,equal-count window,,co-deformation,Hassani2020 Table 1,HG2019,printed (quote of primary),
+H20-19,Al 2024,Al 2024,,polished,14,3,room,1095,1220,1158,equal-count window,,co-deformation,Hassani2020 Table 1,HG2019,printed (quote of primary),
+H20-20,Al 7075,Al 7075,,polished,15,2,room,1200,1290,1245,equal-count window,,co-deformation,Hassani2020 Table 1,HG2019,printed (quote of primary),
+DW-01,Al,Al,,polished,10.3,,room,971,1048,1010,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),
+DW-02,Al,Al,,polished,14.7,,room,824,882,853,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),
+DW-03,Al,Al,,polished,22.1,,room,842,951,896,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),authors: outlier from the size trend (Fig. 4c)
+DW-04,Al,Al,,polished,30.3,,room,731,839,785,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),
+DW-05,Al,Al,,polished,39.4,,room,725,788,756,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),
+DW-06,Ti,Ti,,polished,6.9,,room,809,905,857,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),
+DW-07,Ti,Ti,,polished,11.5,,room,723,779,751,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),
+DW-08,Ti,Ti,,polished,15.3,,room,700,716,708,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),window hidden inside the marker; bounds are the marker extent
+DW-09,Ti,Ti,,polished,24.9,,room,635,677,656,equal-count window (mid = v_cr),,co-deformation,Dowding2020 Fig. 6 (digitized); d from Fig. 4/5 labels,Dowding2020,digitized (+-5 m/s),
+CH-01,Al,Al,"as received, 292 K","polished, heated",15.5,1.3,364,675,745,710,value +- uncertainty as printed,,co-deformation,Chaban2021 text p. 2,Chaban2021,printed,room-temperature comparison quoted by the authors: 810 m/s (14.4 um)
+CH-02,Sn,Sn,"as received, 292 K","polished, heated",10.0,0.5,364,250,290,270,value +- uncertainty as printed,,co-deformation,Chaban2021 text p. 2,Chaban2021,printed,room-temperature comparison quoted by the authors: 330 m/s
+CH-03,Ti,Ti,"as received, 292 K","polished, heated",11.1,0.7,348,675,755,715,value +- uncertainty as printed,,co-deformation,Chaban2021 text p. 2,Chaban2021,printed,room-temperature comparison quoted by the authors: 765 m/s
+PA-01,Cu,Cu,sieved 17-21 um,polished H02 plate (98 HV),19,17-21 (sieve),room,563,571,567,mean of last 2 rebounds and first 2 bonds,39,co-deformation,Panova2026b Table 1,Panova2026b,printed,
+PA-02,Cu,Cu,sieved 17-21 um,polished cold-spray Cu (142 HV),19,17-21 (sieve),room,651,655,653,mean of last 2 rebounds and first 2 bonds,48,co-deformation,Panova2026b Table 1,Panova2026b,printed,hardness effect
+PA-03,Cu,Cu,sieved 17-21 um,"rough cold-spray Cu (142 HV, Ra 8 um, Rz 45 um)",19,17-21 (sieve),room,717,737,727,mean of last 2 rebounds and first 2 bonds,40,co-deformation,Panova2026b Table 1,Panova2026b,printed,growth surface; threshold 'not as sharp'
+Q-Al-1,Al,Al,,polished,,,room,797,824,810,as quoted,,co-deformation,Panova2026b p. 9,HG2018b,quote of primary,secondary quote; differs from H20 quote of the same source; resolve from the primary
+Q-Al-2,Al,Al,,polished,14,,room,794,826,810,as quoted,,co-deformation,Dowding2020 p. 3 (810 +- 16),HG2018b,quote of primary,secondary quote; differs from H20 quote of the same source; resolve from the primary
+Q-Al-3,Al,Al,,polished,30,,room,755,785,770,as quoted,,co-deformation,"Dowding2020 p. 3 (770 +- 15, d 30 +- 7)",HG2018b,quote of primary,secondary quote; differs from H20 quote of the same source; resolve from the primary
+Q-Ni,Ni,Ni,,polished,,,room,650,660,655,as quoted,,co-deformation,Panova2026b p. 9,HG2018b,quote of primary,secondary quote; differs from H20 quote of the same source; resolve from the primary
+Q-Zn,Zn,Zn,,polished,,,room,518,523,520,as quoted,,co-deformation,Panova2026b p. 9,HG2018b,quote of primary,secondary quote; differs from H20 quote of the same source; resolve from the primary
+Q-Au,Au,Au,,polished,16,,room,246,260,253,as quoted,,co-deformation,"Reiser2024 p. 5 (253 +- 7, d 16 +- 4)",HG2019b,quote of primary,secondary quote; differs from H20 quote of the same source; resolve from the primary

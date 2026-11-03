@@ -32,7 +32,8 @@ physics.
 
 1. Build an **open v_cr table** from the LIPIT literature (C1's inputs and outputs, uncertainty brackets,
    source figure for each row). Ask the Schuh, Hassani and Ichikawa groups for the raw restitution data where
-   possible. No search runs on it.
+   possible. No search runs on it. *v0.1 done 2026-11-03: [data/vcr_lipit.csv](data/vcr_lipit.csv), 41 rows,
+   11 matched materials; conflicting secondary quotes flagged; primaries HG2018b and HG2019b still needed.*
 2. **Pre-register** the zoo predictions (Z1, Z2, Z6, Z7, and a property-free baseline) for materials not yet
    measured. Each needs a hunch with mechanism, predicted value and kill criterion, as in the ledger.
 3. Test against **blind measurements**. This is the judge that would make C1 honest: a LIPIT campaign on
