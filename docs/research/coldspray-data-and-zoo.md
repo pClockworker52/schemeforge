@@ -15,9 +15,12 @@ Every row cites a source key from the register at the end. The level says how di
 
 Access in this session: arXiv, OSTI, Crossref and MIT DSpace pages were readable. ScienceDirect (403),
 Springer (bot challenge) and the university repositories (Brunel, ResearchGate) were not. MIT DSpace PDFs were
-rate-limited (429). So the classic Elsevier and Springer papers (Assadi 2003, Schmidt 2006, Assadi 2011) are
-**S or M**: their formulas come from a Sandia slide that reproduces them [Hall2015], not from the originals.
-Read the originals (PDFs from Peter) before any of these becomes a zoo member.
+rate-limited (429). So the classic Elsevier and Springer papers (Schmidt 2006, Assadi 2011) are
+**S or M**: Schmidt's formula comes from a Sandia slide that reproduces it [Hall2015], not from the original.
+Read the originals before any of these becomes a zoo member.
+
+Update 2026-11-03 (same day): Peter supplied PDFs of Assadi2003, Vlcek2003 and Dykhuizen1998, now read in full
+(F).
 
 ---
 
@@ -73,6 +76,7 @@ tables, ideally confirmed with the authors.
 
 | Source | What | Materials | Notes | Level |
 |---|---|---|---|---|
+| Assadi2003 | Process v_cr: Cu 570 m/s (99.8 %, 5–22 µm), Al 660 m/s (99.93 %, < 45 µm). Coating adhesion (EN 582) just above v_cr ≈ 20 % of bulk Cu UTS | Cu, Al | **v_cr is inferred, not measured**: CFD velocity distribution (checked only against the LDA mean) combined with measured DE and size distribution (method in their ref. 12). The process v_cr therefore depends on a gas-dynamics model | F |
 | Gilmore1999 | DE against measured particle velocity | Cu, ~19 µm (11–26 µm) | DE ~53 % at 640 m/s, ~95 % at 725 m/s | S (numbers via Dowding2020 F) |
 | Alkimov1990 | DE against particle velocity | Cu, Ni, Al | Classic S-curves; the origin of the "critical velocity" | S (figure reproduced in Hall2015 F) |
 | Raletz2006 | v_cr inferred from DE and the velocity distribution | — | — | M |
@@ -110,7 +114,7 @@ cover Al–Al only. So **no held-out material split is possible for bond strengt
 
 | # | Model | Inputs | Form (as verified) | Assumptions / basis | Claimed validity | Reported accuracy | Level |
 |---|---|---|---|---|---|---|---|
-| Z1 | Assadi2003 empirical v_cr | ρ, T_m, σ_u, T_i | v_cr = 667 − 14ρ + 0.08 T_m + 0.1 σ_u − 0.4 T_i (units per original; K versus °C ambiguity reported) | Fitted to Cu–Cu impact simulations; bonding tied to adiabatic shear instability (ASI) | "Small parameter changes" (review quoted in search) | Not verified | S (form from Hall2015 F) |
+| Z1 | Assadi2003 linearised v_cr | ρ (g/cm³), T_m (°C), σ_u (MPa), T_i (°C) | v_cr = 667 − 14ρ + 0.08 T_m + 0.1 σ_u − 0.4 T_i (Eq. 3; Table 2 gives the derivatives per K, which is equivalent for differences). Not a fit: a first-order Taylor expansion around the Cu reference (v_cr,ref = 570 m/s). The derivatives come from FE sensitivities of the peak interface temperature T_max (Appendix A, Eq. A.3) | Bonding when ASI is reached at the particle surface; FE of Cu–Cu (and Al) impacts, 5–100 µm | Authors: "valid only for small changes of involved parameters"; for Al a full FE run is needed | Cu: FE 545–580 against 570 m/s experiment. Al: Eq. 3 gives ~620, full FE 675, experiment 660 m/s. Fig. 14 values for other materials are "for qualitative comparison" only | F |
 | Z2 | Schmidt2006 generalized window | σ_u, ρ, c_p, T_m, T_i, d | v_cr = sqrt( 4F₁σ_u(1 − (T_i−T_R)/(T_m−T_R))/ρ + F₂ c_p (T_m − T_i) ), with v_cr ∝ d^(−n), n = 0.19 Cu, 0.14 316L | Fitting coefficients F₁, F₂ (values unverified); spray, ballistic and explosive-compaction data | Not verified | Not verified | S (form from Hall2015 F; n from Dowding2020 F) |
 | Z3 | Schmidt2009 refinement; Assadi2011 parameter maps | v_p/v_cr = η; gas pressure and temperature | Coating properties as a unique function of η; constant-η contours on a gas-temperature × pressure plane | Cu as worked example | — | — | S |
 | Z4 | Li2014 Eulerian window | V_f = sqrt(σ/ρ) | v_cr increases with the "material characteristic velocity" | Eulerian FE | — | — | S |
@@ -125,11 +129,13 @@ cover Al–Al only. So **no held-out material split is possible for bond strengt
 | Z13 | Bond strength against velocity (Tang2025) | Velocity | Peak strength near 1.3 v_cr, then decline from elastic recovery and adiabatic softening | — | Al–Al | — | A |
 | Z14 | DE from v_cr and velocity distribution (Zhang2025 reduced-order) | Gas T and p, particle size | DE = fraction of particles above v_cr(d); v_cr from the spall mechanism; impact velocity with a bow-shock correction | — | Calibrated on Al; 10 validation runs | "Remarkable agreement" (abstract) | S |
 | Z15 | ML: Canales2020 energy-window classifier | Kinetic and thermal particle energy (CFD) | Classifier → critical total energy → DE | — | Cu, Al and others | "Acceptable accuracy" | S |
+| Z17 | Vlcek2003 material eligibility ranking | Crystal structure (fcc > hcp > bcc), K·G against homologous temperature, Grüneisen parameter, Hugoniot elastic limit, T_m | Qualitative ranking. "Significantly more difficult" compactability above T_m ≈ 1600 °C; Zn, Al, Cu ideal; most Fe- and Ni-based materials hard at low process temperature | Shock physics (equations of state, HEL), FE impact pressures (up to 25 GPa at 1200 m/s), literature coating outcomes | Authors: "only a rough framework"; properties at 1–10 s⁻¹ and room temperature, the "main inaccuracy" | None quantitative | F |
 | Z16 | ML: Wang2021 v_cr with feature selection; Hamrani2024 two-stage DE (Al 6061) | Process and material features | Black box | — | Within training data | Not verified | M / A |
 
 **Gaps in the zoo** (what no model above does):
 - No model states its own validity domain as an output. Domains are prose remarks (Z1 "small parameter
-  changes", Z6 "~10 µm matched pairs at room temperature").
+  changes", Z6 "~10 µm matched pairs at room temperature"). The closest thing is Z17, a qualitative
+  eligibility ranking of materials, which is a domain statement about the process rather than about a model.
 - No model has been tested on materials held out from its calibration, as far as I found. Z6 was fitted
   across materials (Al, Cu, Ni, Zn), which is the closest.
 - None predicts the bonded area or bond strength across materials. Z13 covers one material.
@@ -153,6 +159,7 @@ DOIs were checked on Crossref on 2026-11-03 unless marked otherwise.
 | Canales2020 | Canales, Cano, Dosta, Surf. Coat. Technol. 401 (2020) 126143. doi:10.1016/j.surfcoat.2020.126143 |
 | Chaban2021 | Chaban, Sun, Veysset, Nelson, Schuh, Appl. Phys. Lett. 119 (2021) 011903. doi:10.1063/5.0055274 (OSTI 1852492) |
 | Dowding2020 | Dowding et al., Acta Mater. 194 (2020) 40. doi:10.1016/j.actamat.2020.04.044 (OSTI 1658603, accepted manuscript) |
+| Dykhuizen1998 | Dykhuizen, Smith, J. Therm. Spray Technol. 7 (1998) 205. doi:10.1361/105996398770350945 (1-D isentropic nozzle model for particle velocity; harness, not zoo) |
 | Gilmore1999 | Gilmore et al., J. Therm. Spray Technol. 8 (1999) 576. doi:10.1361/105996399770350278 |
 | Grujicic2003 | Grujicic et al., Appl. Surf. Sci. 219 (2003) 211. doi:10.1016/s0169-4332(03)00643-3 |
 | Grujicic2004 | Grujicic et al., Mater. Des. 25 (2004) 681. doi:10.1016/j.matdes.2004.03.008 |
@@ -192,6 +199,7 @@ DOIs were checked on Crossref on 2026-11-03 unless marked otherwise.
 | Tang2024 | Tang, Veysset, Assadi, Ichikawa, Hassani, Nat. Commun. 15 (2024) 9630. doi:10.1038/s41467-024-53990-z |
 | Tang2025 | Tang, Ichikawa, Hassani, PNAS 122 (2025). doi:10.1073/pnas.2424355122 |
 | Veysset2021 | Veysset et al., Appl. Phys. Rev. 8 (2021) 011319. doi:10.1063/5.0040772 (arXiv:2012.08402) |
+| Vlcek2003 | Vlcek, Gimeno, Huber, Lugscheider, ITSC 2003, pp. 37–44. doi:10.31399/asm.cp.itsc2003p0037 (journal version: J. Therm. Spray Technol. 14 (2005) 125, doi:10.1361/10599630522738; the PDF read is the 8-page proceedings version) |
 | Wang2021 | Wang, Cai, Chen, Ali, Jin, J. Therm. Spray Technol. 30 (2021) 1213. doi:10.1007/s11666-021-01198-8 |
 | Zhang2024 | Zhang, Li, Yang, Huang, Surf. Coat. Technol. 478 (2024) 130492. doi:10.1016/j.surfcoat.2024.130492 (via Panova2026b) |
 | Zhang2025 | Zhang, Molla, Brandl et al., J. Manuf. Process. 134 (2025) 547. doi:10.1016/j.jmapro.2024.12.077 |

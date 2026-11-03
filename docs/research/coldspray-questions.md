@@ -12,7 +12,7 @@ out of sample, or only qualitative; **not answered** = no model found.
 
 | # | Question | Status | Best current answer (source) |
 |---|---|---|---|
-| A1 | Does particle material P bond to substrate S at all within reachable velocities? | **partly** | Matched metals bond above a v_cr [HG2018a F]. Some mismatched pairs show no v_cr in the tested range (Al–Zn per Nelson group page; Al on some steels per a TMS abstract) [S]. The impact-mode map (Z9) classifies splatting, co-deformation and penetration but does not predict "never bonds". |
+| A1 | Does particle material P bond to substrate S at all within reachable velocities? | **partly** | Matched metals bond above a v_cr [HG2018a F]. Some mismatched pairs show no v_cr in the tested range (Al–Zn per Nelson group page; Al on some steels per a TMS abstract) [S]. The impact-mode map (Z9) classifies splatting, co-deformation and penetration but does not predict "never bonds". Qualitative eligibility ranking by crystal structure, moduli, Grüneisen parameter and T_m (Z17) [Vlcek2003 F]. |
 | A2 | Which mechanism makes the bond: jetting and oxide break-up, interlocking, diffusion, nanoscale melting? | **partly; contested** | ASI view (Z1, Z5) against the hydrodynamic/spall view (Z6, Z7). The Assadi–Schuh exchange in Scripta 162 (2019) is unresolved in the literature I found [Assadi2019c M, HG2019 A]. Mechanical interlocking dominates some dissimilar pairs [Hussain2009 S]. Restricted melting can bond [Khan2026 A]. |
 | A3 | How do oxide/hydroxide films on powder and substrate change bonding? | **partly** | +2–3 nm hydroxide → ~+14 % v_cr for Al [Lienhard2020 S]; thicker substrate oxide → lower DE [Ichikawa2015 S]; peridynamics trend [Ren2024 A]. No quantitative cross-material model. |
 
@@ -20,7 +20,7 @@ out of sample, or only qualitative; **not answered** = no model found.
 
 | # | Question | Status | Best current answer (source) |
 |---|---|---|---|
-| B1 | Critical velocity v_cr for a matched pair, ~10 µm, room temperature | **partly** (closest to answered) | v_cr ≈ 0.15·sqrt(B/ρ), fitted over Al, Cu, Ni, Zn [HG2018a F]. Empirical Z1, Z2 are calibrated mainly on Cu [S]. Not yet tested on held-out materials. |
+| B1 | Critical velocity v_cr for a matched pair, ~10 µm, room temperature | **partly** (closest to answered) | v_cr ≈ 0.15·sqrt(B/ρ), fitted over Al, Cu, Ni, Zn [HG2018a F]. Z1 is a linearisation around Cu; its Al estimate is ~620 against 660 m/s measured [Assadi2003 F]. Z2 is calibrated mainly on Cu [S]. Not yet tested on held-out materials. |
 | B2 | v_cr against particle size | **partly** | Power law, n ≈ 0.19–0.21 (LIPIT Al, Ti) [Dowding2020 F]; 0.19 Cu and 0.14 316L from nozzle experiments [Schmidt2006 via Dowding2020]; mechanism proposed (jet temperature → spall strength). |
 | B3 | v_cr against particle and substrate temperature | **partly** | Particle: sqrt-type dependence on T* [HG2018a F], temperature terms in Z1 and Z2 [S]. Substrate: lower v_cr when heated (Al, Sn, Ti) [Chaban2021 A]. |
 | B4 | v_cr for dissimilar pairs | **partly** | Arithmetic-mean rule in Z7 [Panova2026b F]; 9 dissimilar pairs measured [Hassani2020 S]. |
@@ -51,7 +51,7 @@ out of sample, or only qualitative; **not answered** = no model found.
 |---|---|---|---|
 | E1 | Prediction for a **new material** (not in the calibration) | **not answered (not tested)** | Z6 and Z7 are material-property-based and could be tested this way. I found no held-out-material test. |
 | E2 | Prediction for an **extended parameter range** of a known material (higher velocity, temperature, finer powder) | **partly** | Upper limits (Z10, Z13) show non-monotonic effects that empirical fits miss (strength peaks, erosion). |
-| E3 | Does the model state **for which materials and conditions it predicts**? | **not answered** | Domains exist only as prose remarks (Z1, Z6). No model outputs a validity predicate. |
+| E3 | Does the model state **for which materials and conditions it predicts**? | **not answered** | Domains exist only as prose remarks. Z1's authors limit it to small changes around Cu [Assadi2003 F]; Z6 to ~10 µm matched pairs. Z17 ranks materials for the process, not a model's domain. No model outputs a validity predicate. |
 
 ## Summary for Peter
 

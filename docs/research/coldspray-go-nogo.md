@@ -16,7 +16,7 @@ between candidates found by a search. A swarm searching on them would be fitting
 |---|---|---|---|
 | **C1. Single-impact v_cr(particle, substrate, d, T)** from material properties | LIPIT v_cr: ~8 matched metals; 20 particle/substrate combinations in Hassani2020; size series (Al, Ti), substrate-temperature series (Al, Sn, Ti), oxide series (Al), growth surface (Cu) | Yes: leave-one-material-out | **Not yet.** n ≈ 20–40 values (my estimate from the studies listed), mostly one lab, extracted from figures, ±3–4 % per shot velocity. The zoo has a one-parameter law fitting within that noise (0.15·sqrt(B/ρ), Z6) and a two-parameter spall law (Z7). The judge cannot separate candidates any better than that, so a search would overfit. |
 | **C2. DE map**: DE from velocity and size distributions plus a bonding probability p(v/v_cr, d) | Bulk DE runs with **measured** per-run particle velocity and size distributions (Gilmore1999 Cu, Zhang2025 Al, Raletz2006) | Barely: the validated work found covers Cu and Al | **No.** The convolution is near-trivial. The unknown is the width of p (C3 in Q1), and no dataset constrains it across materials. HUGO-CS may hold the DE values, but whether it records particle velocity is unchecked. |
-| **C3. Validity-domain predicate**: does the v_cr model apply (regime: rebound / bond / erosion-melt; splat / co-deform / penetrate)? | LIPIT regime observations (Hassani2020 map, melting and erosion studies) | Partly | **Not alone**: the labels are few and coupled to C1. Peter's position 5 is best realised as part of C1's output, scored on both in-domain error and declared-out-of-domain failures. |
+| **C3. Validity-domain predicate**: does the v_cr model apply (regime: rebound / bond / erosion-melt; splat / co-deform / penetrate)? | LIPIT regime observations (Hassani2020 map, melting and erosion studies); zoo baseline: Vlcek2003's qualitative eligibility ranking (Z17) | Partly | **Not alone**: the labels are few and coupled to C1. Peter's position 5 is best realised as part of C1's output, scored on both in-domain error and declared-out-of-domain failures. |
 | **C4. Bond criterion from local interface fields at impact** (pressure, strain, temperature, oxide state → bonded or not) | Would need fields from simulations, but simulation interpretation is exactly what the ASI-against-jetting dispute is about | — | **No.** The reference would be a model, not a measurement. |
 | **C5. Bond strength or bonded fraction against velocity** | Tang2024/2025 (Al), Panova FIB tomography (Cu) | No: one material each | **No.** |
 
@@ -58,8 +58,11 @@ declaring the domain.
 
 ## Open checks before Peter decides
 
-- Read Assadi2003, Schmidt2006 and Assadi2011 in full (PDFs needed; Springer and ScienceDirect were blocked).
-  Their forms here are S-level.
+- Done 2026-11-03: Assadi2003, Vlcek2003 and Dykhuizen1998 read in full (PDFs from Peter). Assadi's Eq. 3 is
+  a linearisation around Cu, limited by its authors to small changes, and its process v_cr values are inferred
+  through CFD rather than measured. This confirms that Z1 is not an extrapolating model and changes nothing
+  in the recommendation.
+- Still needed: Schmidt2006 and Assadi2011 in full (Z2 coefficients F₁, F₂; the η-map). They are S-level here.
 - Confirm the Hassani2020 table of 20 combinations and its uncertainties (Elsevier; the accepted manuscript may
   be on OSTI or DSpace, but DSpace returned 429).
 - Inspect the HUGO-CS files for particle velocity and DE coverage (raw.githubusercontent.com works; needs file
