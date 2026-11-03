@@ -49,7 +49,7 @@ def test_cases_round_trip_and_validate() -> None:
     with pytest.raises(ValueError):
         validate_case(GapClosureCase("bad", push=0.05))  # does not close the gap
     with pytest.raises(ValueError):
-        case_from_dict({"kind": "hertz", "id": "y"})
+        case_from_dict({"kind": "ironing", "id": "y"})  # not a case kind (yet)
 
 
 def test_smoke_runs_and_measures_the_trade_off() -> None:
@@ -98,7 +98,7 @@ def test_simple_shear_is_exact_for_neo_hooke() -> None:
 
 def test_dev_suite_shows_the_stiffness_trade_off() -> None:
     ids = [c.id for c in dev_suite()]
-    assert ids == ["C0a-g3", "C0a-g5", "C0a-g6", "C0b-s05", "C0b-s2"]
+    assert ids == ["C0a-g3", "C0a-g5", "C0a-g6", "C0b-s05", "C0b-s2", "C2-g5", "C2-g6"]
     r = ev.evaluate(NEO, "medium", "dev")
     assert r["status"] == "ok", r["violations"]
     c = r["cases"]
@@ -124,3 +124,23 @@ def test_classical_contact_reproduces_ideal_gap_closure() -> None:
         full[k] = force[-1]
     ideal = float(reference.ideal_gap_force(case, case.push))
     assert solve.classical_extrapolated(full) == pytest.approx(ideal, rel=1e-9)  # measured 1.9e-10 (Newton tol 1e-10)
+
+
+def test_hertz_classical_reference_is_within_the_error_floor() -> None:
+    # step 3 acceptance: classical frictionless contact within 1 % of Hertz on a and p0 (dev mesh); no traction
+    # outside the contact
+    from schemeforge.arenas.contact.cases import HertzCase
+
+    m, v = ev.hertz_metrics(HertzCase("cl"), solve.hertz_classical(HertzCase("cl")))
+    assert v == [] and abs(m["a_err"]) < 0.01 and abs(m["p0_err"]) < 0.01 and m["leak_out"] < 1e-9
+
+
+def test_hertz_with_the_medium_shows_the_trade_off() -> None:
+    # a stiffer medium carries load outside the contact (wider apparent contact); a softer one costs Newton steps
+    from schemeforge.arenas.contact.cases import HertzCase
+
+    m5, v5 = ev.run_case(HertzCase("g5", gamma=1e-5), NEO)
+    m6, v6 = ev.run_case(HertzCase("g6", gamma=1e-6), NEO)
+    assert v5 == v6 == [] and m5["converged"] == m6["converged"] == 1.0
+    assert m5["a_err"] > m6["a_err"] and m6["newton_iters"] > m5["newton_iters"]
+    assert abs(m5["p0_err"]) < 0.02 and abs(m6["p0_err"]) < 0.02  # the peak pressure itself is close to Hertz

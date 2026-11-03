@@ -5,7 +5,7 @@ evaluate(fn, slot, suite, extra_cases) -> report (JSON-serializable dict), the s
     violations   hard-constraint violations (any -> rejected)
     cases        {case_id: {metric: value, "seconds": wall time}}
     metamorphic  {} (none yet)
-Suites: smoke (one C0a) and dev (C0a at three medium stiffnesses, C0b at two shears); promo follows in step 4
+Suites: smoke (one C0a) and dev (C0a at three medium stiffnesses, C0b at two shears, C2 Hertz at two); promo in step 4
 (docs/plans/2026-10-30-phase6.md).
 """
 
@@ -18,7 +18,8 @@ from typing import Any
 import numpy as np
 
 from . import constraints, reference
-from .cases import Case, GapClosureCase, SimpleShearCase, dev_suite, smoke_suite
+from .cases import Case, GapClosureCase, HertzCase, SimpleShearCase, dev_suite, smoke_suite
+from .metrics import edge_traction
 
 # slot -> hard-constraint checker. The solver wraps the candidate itself (solve.medium_material).
 SLOT_TABLE: dict[str, Callable[[Callable], list[str]]] = {"medium": constraints.check_medium}
@@ -26,7 +27,8 @@ SLOTS = tuple(SLOT_TABLE)
 SUITES = ("smoke", "dev")
 # columns `sforge zoo eval` prints per suite
 ZOO_COLUMNS = {"dev": [("C0a-g3", "leak_pre"), ("C0a-g3", "gap_res"), ("C0a-g5", "leak_pre"), ("C0a-g5", "gap_res"),
-                       ("C0a-g6", "gap_res"), ("C0a-g6", "newton_iters"), ("C0b-s2", "shear_parasitic")],
+                       ("C0a-g6", "gap_res"), ("C0b-s2", "shear_parasitic"), ("C2-g5", "a_err"),
+                       ("C2-g5", "p0_err"), ("C2-g6", "a_err"), ("C2-g6", "leak_out"), ("C2-g6", "newton_iters")],
                "smoke": [("smoke-C0a", "leak_pre"), ("smoke-C0a", "gap_res"), ("smoke-C0a", "force_err")]}
 
 
@@ -62,6 +64,29 @@ def simple_shear_metrics(case: SimpleShearCase, psi: Callable) -> tuple[dict[str
     return m, v
 
 
+def hertz_metrics(case: HertzCase, res) -> tuple[dict[str, float], list[str]]:
+    """C2 against Hertz for the measured total load P (rigid flat: a = sqrt(4PR/(pi E*)), p0 = 2P/(pi a)).
+    a_err: width from the second moment of the contact forces (Hertz: int p x^2 = P a^2 / 4; exact for consistent
+    forces on quadratic edges) over a, minus 1; it includes any traction outside the contact. p0_err: peak of the
+    recovered pressure (metrics.edge_traction) over p0, minus 1. p_l2: L2 error of p(x) over |x| < 1.5 a, relative.
+    leak_out: |force| transmitted beyond 1.2 a, over P (tension or pressure through the open gap)."""
+    load = res.load
+    es = case.E / (1.0 - case.nu**2)
+    a_h = float(np.sqrt(4.0 * load * case.R / (np.pi * es)))
+    p0_h = 2.0 * load / (np.pi * a_h)
+    x, f = res.x, res.f
+    p = edge_traction(x, f)
+    p_h = p0_h * np.sqrt(np.clip(1.0 - (x / a_h) ** 2, 0.0, None))
+    near = x < 1.5 * a_h
+    l2 = np.sqrt(np.trapezoid((p[near] - p_h[near]) ** 2, x[near]) / np.trapezoid(p_h[near] ** 2, x[near]))
+    a2 = float(np.sqrt(max(8.0 * float(np.sum(f * x**2)) / load, 0.0)))
+    m = {"converged": 1.0, "a_err": a2 / a_h - 1.0, "p0_err": float(p.max()) / p0_h - 1.0, "p_l2": float(l2),
+         "leak_out": 2.0 * float(np.abs(f[x > 1.2 * a_h]).sum()) / load, "load": load,
+         "newton_iters": float(sum(res.newton_iters)), "min_J_medium": res.min_j_medium}
+    v = [] if res.min_j_medium > 0.0 else ["medium inverted (min J <= 0)"]
+    return m, v
+
+
 def run_case(case: Case, psi: Callable) -> tuple[dict[str, float], list[str]]:
     """Metrics and violations of one case. A Newton failure is a result (converged = 0: soft media without
     regularization fail to close the gap, and robustness is what Target D measures), not a violation."""
@@ -74,6 +99,8 @@ def run_case(case: Case, psi: Callable) -> tuple[dict[str, float], list[str]]:
             return gap_closure_metrics(case, solve.gap_closure(psi, case))
         if isinstance(case, SimpleShearCase):
             return simple_shear_metrics(case, psi)
+        if isinstance(case, HertzCase):
+            return hertz_metrics(case, solve.hertz(psi, case))
         raise TypeError(type(case).__name__)
     except fem.tools.NewtonConvergenceError:
         return {"converged": 0.0}, []

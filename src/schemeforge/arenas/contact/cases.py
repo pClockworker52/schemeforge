@@ -43,8 +43,33 @@ class SimpleShearCase:
     gamma: float = 1e-5
 
 
-Case = GapClosureCase | SimpleShearCase
-KINDS = {"gap_closure": GapClosureCase, "simple_shear": SimpleShearCase}
+@dataclass(frozen=True)
+class HertzCase:
+    """C2: an elastic cylinder of radius R (parabolic profile y = gap + x^2 / (2R), as in Hertz theory; half model,
+    symmetry at x = 0, width W, height H) above a rigid flat at y = 0, the gap filled by the medium (bottom fixed).
+    The top is pushed down by `push`. Hertz (rigid flat): a = sqrt(4 P R / (pi E*)), p0 = 2 P / (pi a),
+    1/E* = (1 - nu^2) / E, with P the total load. Mesh: nx columns graded x = W s^2 towards the contact, ny rows in
+    the body (graded towards the contact), ny_medium rows in the medium. The judge adds a fixed HuHu-LuLu Hessian
+    regularization (strength kr * lmbda * W^2) until the regularization slot exists."""
+
+    id: str
+    R: float = 1.0
+    W: float = 1.0
+    H: float = 1.0
+    gap: float = 0.002
+    push: float = 0.006
+    steps: int = 12
+    nx: int = 32
+    ny: int = 16
+    ny_medium: int = 4
+    E: float = 1.0
+    nu: float = 0.3
+    gamma: float = 1e-6
+    kr: float = 5e-7
+
+
+Case = GapClosureCase | SimpleShearCase | HertzCase
+KINDS = {"gap_closure": GapClosureCase, "simple_shear": SimpleShearCase, "hertz": HertzCase}
 
 
 def smoke_suite() -> list[Case]:
@@ -52,10 +77,11 @@ def smoke_suite() -> list[Case]:
 
 
 def dev_suite() -> list[Case]:
-    """C0a over three decades of medium stiffness (the trade-off of PLAN §14.7), C0b at a small and a large shear."""
+    """C0a over three decades of medium stiffness (the trade-off of PLAN §14.7), C0b at a small and a large shear,
+    C2 Hertz at two medium stiffnesses."""
     return [GapClosureCase("C0a-g3", gamma=1e-3), GapClosureCase("C0a-g5", gamma=1e-5),
             GapClosureCase("C0a-g6", gamma=1e-6), SimpleShearCase("C0b-s05", shear=0.5),
-            SimpleShearCase("C0b-s2", shear=2.0)]
+            SimpleShearCase("C0b-s2", shear=2.0), HertzCase("C2-g5", gamma=1e-5), HertzCase("C2-g6", gamma=1e-6)]
 
 
 def case_from_dict(d: dict[str, Any]) -> Case:
@@ -81,6 +107,12 @@ def validate_case(case: Case) -> None:
             raise ValueError(f"{case.id}: push must close the gap and compress the column by less than half")
         if case.steps < 2 or min(case.nx, case.ny_body, case.ny_medium) < 1:
             raise ValueError(f"{case.id}: at least 2 steps and one cell per direction")
+        return
+    if isinstance(case, HertzCase):
+        if min(case.R, case.W, case.H, case.gap, case.E, case.gamma, case.kr) <= 0 or not 0.0 <= case.nu < 0.5:
+            raise ValueError(f"{case.id}: sizes, E, gamma and kr must be positive and 0 <= nu < 0.5")
+        if not case.gap < case.push < 0.1 * case.H or case.steps < 2:
+            raise ValueError(f"{case.id}: push must close the gap and stay small against H; at least 2 steps")
         return
     if isinstance(case, SimpleShearCase):
         if case.shear <= 0 or case.E <= 0 or case.gamma <= 0 or not 0.0 <= case.nu < 0.5:
