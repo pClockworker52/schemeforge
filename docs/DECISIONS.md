@@ -1,5 +1,45 @@
 # DECISIONS
 
+## Index
+
+One line per entry, in order. Generated from the `##` headings; regenerate when an entry is added.
+"Changed by" lists only changes that a later entry states explicitly; all other entries are in force as written.
+
+| Date | Decision | Track | Changed by |
+|---|---|---|---|
+| 2026-10-20 | [Plan v1.1 simplifications](#2026-10-20--plan-v11-simplifications) | repository |  |
+| 2026-10-20 | [Run everything inside WSL2](#2026-10-20--run-everything-inside-wsl2) | repository |  |
+| 2026-10-20 | [Held-out family sizes and the NF3 sweep](#2026-10-20--held-out-family-sizes-and-the-nf3-sweep) | Arena 1 (euler1d) |  |
+| 2026-10-20 | [Venv on the WSL file system; no memory limit yet](#2026-10-20--venv-on-the-wsl-file-system-no-memory-limit-yet) | repository |  |
+| 2026-10-20 | [Appendices A–C adaptations](#2026-10-20--appendices-ac-adaptations) | repository |  |
+| 2026-10-20 | [Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)](#2026-10-20--engine-build-our-own-openevolve-and-shinkaevolve-reviewed) | repository |  |
+| 2026-10-20 | [Gate 1 decisions (Peter)](#2026-10-20--gate-1-decisions-peter) | Arena 1 (euler1d) |  |
+| 2026-10-20 | [Zoo: Venkatakrishnan form and the Roe positivity failure](#2026-10-20--zoo-venkatakrishnan-form-and-the-roe-positivity-failure) | Arena 1 (euler1d) |  |
+| 2026-10-20 | [Sandbox validator scope](#2026-10-20--sandbox-validator-scope) | Arena 1 (euler1d) |  |
+| 2026-10-21 | [MAP-Elites grids fitted to the populated descriptor range](#2026-10-21--map-elites-grids-fitted-to-the-populated-descriptor-range) | Arena 1 (euler1d) |  |
+| 2026-10-21 | [Gate 2 decisions (Peter)](#2026-10-21--gate-2-decisions-peter) | Arena 1 (euler1d) |  |
+| 2026-10-21 | [Phase 3 revision (Peter)](#2026-10-21--phase-3-revision-peter) | Arena 1 (euler1d) |  |
+| 2026-10-22 | [After round 2 (Peter)](#2026-10-22--after-round-2-peter) | Arena 1 (euler1d) |  |
+| 2026-10-22 | [Judge v1.4: accepted breaker cases and long-run families (Peter)](#2026-10-22--judge-v14-accepted-breaker-cases-and-long-run-families-peter) | Arena 1 (euler1d) |  |
+| 2026-10-22 | [Target A gains A8 (long runs) (Peter)](#2026-10-22--target-a-gains-a8-long-runs-peter) | Arena 1 (euler1d) |  |
+| 2026-10-22 | [Step 3b(i) closed without an independent cheater (Peter)](#2026-10-22--step-3bi-closed-without-an-independent-cheater-peter) | Arena 1 (euler1d) |  |
+| 2026-10-24 | [Gate 3e (Peter)](#2026-10-24--gate-3e-peter) | Arena 1 (euler1d) |  |
+| 2026-10-24 | [Judge v1.5 contents (cloud session, implementing gate 3e D3/D4 and plan step 2)](#2026-10-24--judge-v15-contents-cloud-session-implementing-gate-3e-d3d4-and-plan-step-2) | Arena 1 (euler1d) |  |
+| 2026-10-24 | [Zoo members rejected under v1.5 (Peter)](#2026-10-24--zoo-members-rejected-under-v15-peter) | Arena 1 (euler1d) |  |
+| 2026-10-24 | [scaling constraint kept (Peter)](#2026-10-24--scaling-constraint-kept-peter) | Arena 1 (euler1d) |  |
+| 2026-10-28 | [evaluation timeouts raised for round-4 evolve (Peter, option 1)](#2026-10-28--evaluation-timeouts-raised-for-round-4-evolve-peter-option-1) | Arena 1 (euler1d) |  |
+| 2026-10-30 | [Round-4 breaker cases accepted into judge v1.6 (Peter)](#2026-10-30--round-4-breaker-cases-accepted-into-judge-v16-peter) | Arena 1 (euler1d) |  |
+| 2026-10-30 | [Judge v1.6 kept; rescore deferred (Peter)](#2026-10-30--judge-v16-kept-rescore-deferred-peter) | Arena 1 (euler1d) |  |
+| 2026-10-30 | [Benchmark release (Peter)](#2026-10-30--benchmark-release-peter) | repository | licence part: [Licence: GPL-3.0-or-later instead of MIT](#2026-10-30--licence-gpl-30-or-later-instead-of-mit-peter) |
+| 2026-10-30 | [Licence: GPL-3.0-or-later instead of MIT (Peter)](#2026-10-30--licence-gpl-30-or-later-instead-of-mit-peter) | repository |  |
+| 2026-10-30 | [Phase 6 plan approved (Peter)](#2026-10-30--phase-6-plan-approved-peter) | Arena 2 / all arenas |  |
+| 2026-10-30 | [Each arena is its own judge (Phase 6 step 1)](#2026-10-30--each-arena-is-its-own-judge-phase-6-step-1) | Arena 2 / all arenas |  |
+| 2026-11-03 | [Arena 2 paused; cold-spray question opened (Peter)](#2026-11-03--arena-2-paused-cold-spray-question-opened-peter) | cold spray |  |
+| 2026-11-03 | [Cold-spray track: discipline only (Peter)](#2026-11-03--cold-spray-track-discipline-only-peter) | cold spray |  |
+| 2026-11-03 | [Cold-spray retrospective test: rules (Peter)](#2026-11-03--cold-spray-retrospective-test-rules-peter) | cold spray |  |
+| 2026-11-03 | [Cold-spray track: local first (Peter)](#2026-11-03--cold-spray-track-local-first-peter) | cold spray | solver part: [OpenCourant instead of OpenRadioss](#2026-11-03--main-impact-solver-opencourant-instead-of-openradioss-peter) |
+| 2026-11-03 | [Main impact solver: OpenCourant instead of OpenRadioss (Peter)](#2026-11-03--main-impact-solver-opencourant-instead-of-openradioss-peter) | cold spray |  |
+
 ## 2026-10-20 — Plan v1.1 simplifications
 *Context:* The v1.0 plan had a few internal contradictions (mirror symmetry vs. the Koren limiter, judge hash not
 covering accepted cases) and more Phase 1–2 scope than the gates need.
