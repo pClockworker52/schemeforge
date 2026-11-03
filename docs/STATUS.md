@@ -1,7 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray research track opened  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-03 (WSL) — Phase 6 step 4: first real contact promo run (zoo ok)
-2026-11-03: **Phase 6 paused** at a clean checkpoint (DECISIONS "Arena 2 paused; cold-spray question opened"). Resume = step 6. Next: cold-spray research brief in a fresh session (docs/HANDOFF.md).
+2026-11-03: **Phase 6 paused** at a clean checkpoint (DECISIONS "Arena 2 paused; cold-spray question opened"). Resume = step 6. Next: cold-spray research in a fresh session, brief docs/plans/2026-11-03-coldspray-research-brief.md.
 Handoff 2026-10-30: docs/HANDOFF.md (Phase 6 steps 1–2 done; next: step 3, Hertz and the error floor).
 2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
 docs/judge/2026-10-30-v16-check.md (no member newly rejected, old-case dev and all promo identical to v1.5). The

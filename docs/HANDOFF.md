@@ -2,7 +2,7 @@
 
 **Now:** Phase 6 is paused after step 5 (DECISIONS 2026-11-03). The open question is Peter's cold-spray application:
 deposition efficiency and bonding, mechanistic, with the model stating its own range of validity. Start the next
-session fresh with: "Read docs/HANDOFF.md and docs/DECISIONS.md (2026-11-03), then work on the cold-spray question."
+session fresh with: "Read docs/plans/2026-11-03-coldspray-research-brief.md and follow it."
 Arena 2 resumes at step 6 (blind audit, Target D from docs/judge/contact_baseline.md, tag contact-v1.0).
 
 ---
