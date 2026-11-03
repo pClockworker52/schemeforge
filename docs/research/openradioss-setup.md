@@ -213,8 +213,11 @@ th_to_csv_linux64_gf BOULE1V4T01              # writes BOULE1V4T01.csv
    inside the deck).
 6. **Reproducibility:** pin `latest-20261011` (zip kept locally with its SHA-256). Move to the first formal
    `vYYYY.N` release when it exists, and re-run the smoke test plus the reference comparison after any upgrade.
-7. **Licence questions for Peter:** whether the Siemens permission for `hm_reader`, `H3D` and `hm_cfg_files`
-   ("solely in connection with OpenRadioss software") covers use via OpenCourant. Also note the CC BY-NC 4.0
-   status of the QA decks, which matters if we publish derived decks.
+7. **Licence (settled by Peter, 2026-11-03):** the risk from the Siemens-only parts (`hm_reader`, `H3D`,
+   `hm_cfg_files`, "solely in connection with OpenRadioss software") lies in redistributing or publishing things
+   that depend on them. Running OpenCourant locally for research distributes nothing, and our own input decks and
+   result numbers are ours. Rule: do not redistribute the package, its closed libraries or the cfg files, and do not
+   ship anything that bundles them. Before publishing a deck, check it is our own and not derived from the
+   CC BY-NC 4.0 QA decks.
 8. **Cross-check against the independent JAX code** (`src/schemeforge/research/impact_axisym.py`, rung 1) on a
    shared elastic or elastic-plastic case before any cold-spray number is produced.
