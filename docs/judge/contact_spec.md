@@ -47,6 +47,17 @@ Metrics: `shear_parasitic` = P_xy / (μ s), the medium's shear stress relative t
 exactly γ for the scaled neo-Hookean); `normal_parasitic` = P_yy / (μ s). Dev cases C0b-s05 and C0b-s2: s = 0.5 and
 2, γ = 1e-5.
 
+## C1, patch test (step 3)
+
+Adapted from Taylor & Papadopoulos (1991). In third-medium contact the medium's mesh connects the bodies, so the
+whole mesh is conforming by construction and non-matching contact interfaces do not occur; the analogue is the
+constant-stress patch test on distorted elements. C1 is C0a (confined) with 3 columns, 3 body rows, 3 medium rows
+and every corner node moved randomly by up to 0.3 cell sizes (interior nodes in x and y, side nodes along their
+side; the layer boundaries stay straight); mid-edge and centre nodes are placed after the move, so edges stay
+straight and Q2 reproduces the homogeneous solution exactly. γ = 1e-5, seed 11. Metric added to all gap-closure
+cases: `pressure_spread` = (max − min)/mean of the wall pressure at full push (0 exactly). Measured with the zoo
+neo-Hooke: force vs the exact solution 6e-13 … 5e-15, pressure spread 5e-9 (Newton tolerance).
+
 ## C2, Hertz (step 3)
 
 Elastic cylinder (half model, symmetry at x = 0) with the parabolic profile of Hertz theory, y = g + x²/(2R),

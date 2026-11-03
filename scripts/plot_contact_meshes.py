@@ -99,6 +99,33 @@ def gap_closure_figure():
     plt.close(fig)
 
 
+def patch_test_figure():
+    from schemeforge.arenas.contact.cases import dev_suite
+
+    c = next(k for k in dev_suite() if k.id == "C1")
+    body = solve._column(c.width, c.gap, c.gap + c.height, c.nx, c.ny_body, c.distort, c.seed)
+    medium = solve._column(c.width, 0.0, c.gap, c.nx, c.ny_medium, c.distort, c.seed + 1)
+    with Capture() as cap:
+        res = solve.gap_closure(NEO, c)
+    disp = displacement_lookup(cap.field)
+    m, _ = ev.gap_closure_metrics(c, res)
+    fig, axes = plt.subplots(1, 3, figsize=(10, 5), gridspec_kw={"width_ratios": [1, 1, 1.3]})
+    for ax, title, d, ylim in ((axes[0], "C1 undeformed", None, (-0.03, 1.13)),
+                               (axes[1], f"pushed {c.push}", disp, (-0.03, 1.13)),
+                               (axes[2], "medium layer, undeformed (zoom)", None, (-0.005, 0.11))):
+        draw(ax, [(body, BODY), (medium, MEDIUM)], d, nodes=True)
+        ax.axhline(0.0, color="k", lw=2)
+        ax.set_xlim(-0.02, c.width + 0.02)
+        ax.set_ylim(*ylim)
+        ax.set_title(title, fontsize=10)
+    legend(axes[2])
+    fig.suptitle(f"C1 patch test: C0a on distorted meshes (distort {c.distort}), gamma = {c.gamma:g}: wall pressure "
+                 f"spread {m['pressure_spread']:.1e}", fontsize=10)
+    fig.tight_layout()
+    fig.savefig(OUT / "contact_c1_mesh.png", dpi=150)
+    plt.close(fig)
+
+
 def hertz_meshes(c: HertzCase):
     surf = solve._surface(c)
     body = solve._curved_block(c, surf, lambda x: c.H + 0.0 * x, c.ny, grade=True)
@@ -177,6 +204,7 @@ def pressure_figure():
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     gap_closure_figure()
+    patch_test_figure()
     hertz_figures()
     pressure_figure()
     print("written:", *sorted(p.name for p in OUT.glob("contact_*.png")))
