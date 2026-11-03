@@ -42,6 +42,42 @@ physics.
 4. For C2, the bridging experiment is a process run that measures per-particle velocity, size and bond
    outcome together, on powders also tested by LIPIT. Without it, B6 and C3 stay unanswerable.
 
+## Steering hunches beyond the zoo
+
+The zoo is the bar to beat, not the source of new ideas. Nothing guarantees creativity. The process can make
+exploration explicit and measurable, so that a round shows whether it explored or only rephrased.
+
+**Assumption inventory.** Most zoo members (Z1–Z14) share these assumptions. Each hunch must name the one it
+breaks; the ledger records it.
+
+| # | Shared assumption | Evidence against or around it |
+|---|---|---|
+| H1 | Bonding is a single velocity threshold (binary) | Bond strength peaks near 1.3 v_cr and then falls [Tang2025 A]; threshold "not as sharp" on growth surfaces [Panova2026b F] |
+| H2 | The target is a fresh, polished substrate; impact history does not matter | Particle-on-particle v_cr ~1.3× [Panova2026b F]; bonded fraction ≤ 18 % [Panova2026a A]; build-up v_cr above single-bond v_cr [Reiser2024 F]. This is the multi-particle build-up regime of Peter's application |
+| H3 | Heating softens the material (temperature terms in Z1, Z2, Z6) | Titles only, not read: "Metals strengthen with increasing temperature at extreme strain rates" [Dowding2024 M]; "Pure metals thermally harden while alloys thermally soften" [Dowding2026 M]. If confirmed, the temperature terms may have the wrong sign for pure metals |
+| H4 | Oxide enters as a thickness at most | Hydroxide chemistry and structure shift v_cr [Lienhard2020 S]; oxide form sets local bond strength [Tang2024 S] |
+| H5 | Bulk handbook properties describe the powder | Microstructure and cold work change bonding [Lucas2025 M, Panova2026b F]; quasi-static properties are the "main inaccuracy" [Vlcek2003 F] |
+| H6 | Solid-state only; melting is an upper limit | Restricted nanoscale melting can bond [Khan2026 A] |
+| H7 | Normal impact, one particle at a time | Oblique-impact model [Schuh2026 F lists Liu2024]; particle–particle interaction during build-up [Reiser2024 F] |
+
+**Lenses from neighbouring fields**, each an explicit input to a hunch round (hunch-generator `lens`):
+explosive welding (weldability windows), ultrasonic and wire bonding, cold welding and tribology, adhesion and
+contact mechanics, shock physics and spall, rapid solidification and brazing kinetics, and the dynamics of
+impact cratering. In Arena 1, agents produced ideas the main session had not, but they drift back to familiar
+literature unless the lens forces them away.
+
+**Disagreement map: put the creativity into the experiment.** With 16 measured windows 2–25 % wide, a new
+mechanism and a curve fit can score alike. So, before any blind campaign (step 3 above):
+1. Evaluate the zoo and the registered hunches over candidate materials and conditions.
+2. Rank the conditions by how far the predictions spread, relative to the expected measurement window.
+3. Measure where they spread most.
+
+A hunch that wins there wins by evidence. Candidate regions visible now: the Al-alloy series (790–1290 m/s,
+Hassani2020), heated targets for pure metals against alloys (H3), and second-layer impacts (H2).
+
+**Guards.** Hunches are pre-registered with a mechanism, predicted value and kill criterion. Negative results go
+in the ledger. Breakers attack the leaders. Only the referee assigns "plausibly new", after a literature check.
+
 ## Upgrade trigger to "go: component arena" (C1, later C1 + C3)
 
 All three must hold:

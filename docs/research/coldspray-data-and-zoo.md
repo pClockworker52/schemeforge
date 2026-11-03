@@ -209,6 +209,9 @@ DOIs were checked on Crossref on 2026-11-03 unless marked otherwise.
 | Canales2020 | Canales, Cano, Dosta, Surf. Coat. Technol. 401 (2020) 126143. doi:10.1016/j.surfcoat.2020.126143 |
 | Chaban2021 | Chaban, Sun, Veysset, Nelson, Schuh, Appl. Phys. Lett. 119 (2021) 011903. doi:10.1063/5.0055274 (OSTI 1852492) |
 | Dowding2020 | Dowding et al., Acta Mater. 194 (2020) 40. doi:10.1016/j.actamat.2020.04.044 (OSTI 1658603, accepted manuscript) |
+| Dowding2024 | Dowding, Schuh, Nature 630 (2024) 91. doi:10.1038/s41586-024-07420-1 (title only, via Schuh2026) |
+| Dowding2026 | Dowding, Schuh, Phys. Rev. Lett. 136 (2026) 076101. doi:10.1103/2mm1-rx7q (title only, via Schuh2026) |
+| Liu2024 | Liu, Sun, Nelson, Schuh, "A model for oblique impacts on material surfaces", Acta Mater. 281 (2024) 120405 (title only, via Schuh2026) |
 | Dykhuizen1998 | Dykhuizen, Smith, J. Therm. Spray Technol. 7 (1998) 205. doi:10.1361/105996398770350945 (1-D isentropic nozzle model for particle velocity; harness, not zoo) |
 | Gilmore1999 | Gilmore et al., J. Therm. Spray Technol. 8 (1999) 576. doi:10.1361/105996399770350278 |
 | Grujicic2003 | Grujicic et al., Appl. Surf. Sci. 219 (2003) 211. doi:10.1016/s0169-4332(03)00643-3 |
