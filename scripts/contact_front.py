@@ -87,7 +87,7 @@ def plot(rows: list[dict], out: Path) -> None:
         ax.set_ylim(-0.05, 1.1)
         ax.grid(alpha=0.3)
     axes[0].legend(fontsize=8)
-    fig.suptitle("Arena 2 zoo front over the medium stiffness gamma (labels); gamma = 1e-7 fails Newton for both media",
+    fig.suptitle("Arena 2 zoo front over the medium stiffness gamma (labels); the neo-Hookean media fail at gamma = 1e-7",
                  fontsize=10)
     fig.tight_layout()
     fig.savefig(out, dpi=150)
