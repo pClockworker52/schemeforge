@@ -1,5 +1,7 @@
 # Proposal: a blind, pre-registered test of critical-velocity models with single-particle impacts
 
+**Parked (DECISIONS 2026-11-03 "Cold-spray track: local first"): an external campaign is the last resort.**
+
 Draft v0.1, 2026-11-03, for Peter to revise before sending. Intended reader: a group operating a laser-induced
 particle impact test (LIPIT), e.g. Cornell (Hassani), Tohoku (Ichikawa), Sandia, or Northwestern/MIT (Schuh).
 Background and evidence: [coldspray-go-nogo.md](coldspray-go-nogo.md), [coldspray-results-v1.md](coldspray-results-v1.md),

@@ -43,6 +43,16 @@ physics.
 4. For C2, the bridging experiment is a process run that measures per-particle velocity, size and bond
    outcome together, on powders also tested by LIPIT. Without it, B6 and C3 stay unanswerable.
 
+## Local-first order (DECISIONS 2026-11-03)
+
+1. Simulation pipeline with OpenRadioss and an independent JAX code: verification ladder, then mesh convergence
+   at the jet, then v_cr with setups frozen in advance.
+2. Model hunches (strength term, oxide CS-07, temperature sign), registered before testing.
+3. Frozen predictions, then the literature-blind hold-out set
+   ([coldspray-blind-literature.md](coldspray-blind-literature.md)).
+4. External blind campaign ([coldspray-campaign-proposal.md](coldspray-campaign-proposal.md)) only if local
+   evidence cannot decide.
+
 ## Steering hunches beyond the zoo
 
 The zoo is the bar to beat, not the source of new ideas. Nothing guarantees creativity. The process can make

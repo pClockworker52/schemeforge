@@ -368,3 +368,17 @@ pre-registered simulation setup as a zoo member (type 2) is planned later, with 
 main candidate, an independent small JAX code as cross-check) and a mesh-convergence check at the jet first.
 *Consequences:* A retrospective, explicitly non-blind test runs under docs/research/coldspray-preregistration.md,
 with predictions committed before scoring. Code lives in src/schemeforge/research/ (not an arena, not a judge).
+
+
+## 2026-11-03 — Cold-spray track: local first (Peter)
+*Context:* The retrospective test (docs/research/coldspray-results-v1.md) showed signal but left the
+strength-dependent models unrunnable; a blind-campaign proposal was drafted.
+*Decision:* Do everything that can be done locally first (simulation and modelling); approaching an external
+group is a last resort. Both solvers for the simulation track: OpenRadioss as the main code and a small
+independent JAX code as cross-check, each passing a verification ladder (elastic Hertz impact, Taylor bar,
+Assadi 2003 Cu cross-check) and a mesh-convergence test at the jet before any simulated v_cr is used. Local
+substitute for a blind test: a literature-blind hold-out set, frozen before reading
+(docs/research/coldspray-blind-literature.md), with role-separated extraction of inputs and outputs.
+*Consequences:* docs/research/coldspray-campaign-proposal.md is parked. Order: simulation pipeline,
+registered model hunches, frozen predictions, literature-blind scoring, external campaign only if this cannot
+decide.
