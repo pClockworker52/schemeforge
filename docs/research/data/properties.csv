@@ -1,0 +1,16 @@
+id,material,rho_kg_m3,Tm_K,cp_J_kgK,Cp_molar_J_molK,B_GPa,G_GPa,nu,C0_mps,s_hugoniot,JC_A_MPa,JC_B_MPa,JC_n,JC_C,JC_m,source,extraction,notes
+P-HG-Cu,Cu,8960,1357,384.6,,140,48,0.34,3952.8,1.49,90,292,0.31,0.025,1.09,HG2018a preprint (arXiv 1612.08081) Extended Data Table 1,printed,"simulation inputs; C0 here equals sqrt(B/rho), not a Hugoniot intercept"
+P-HG-Ni,Ni,8908,1728,444.2,,180,76,0.31,4495.2,1.44,163,648,0.33,0.006,1.44,HG2018a preprint (arXiv 1612.08081) Extended Data Table 1,printed,"simulation inputs; C0 here equals sqrt(B/rho), not a Hugoniot intercept"
+P-HG-Al,Al,2700,933,896.9,,76,26,0.35,5305.5,1.339,148.4,345.5,0.183,0.001,0.895,HG2018a preprint (arXiv 1612.08081) Extended Data Table 1,printed,"simulation inputs; C0 here equals sqrt(B/rho), not a Hugoniot intercept"
+P-HG-Ta,Ta,16690,3290,140.2,,200,69,0.34,3461.7,1.2,684.5,205.3,0.78,0.043,0.344,HG2018a preprint (arXiv 1612.08081) Extended Data Table 1,printed,"simulation inputs; C0 here equals sqrt(B/rho), not a Hugoniot intercept"
+P-WP-Al,Al,2699,933.47,,24.2,76,26,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Cu,Cu,8935,1357.77,,24.44,140,48,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Ni,Ni,8907,1728,,26.07,180,76,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Ti,Ti,4502,1941,,25.06,110,44,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Zn,Zn,7140,692.68,,25.47,70,43,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Sn,Sn,7289,505.08,,27.112,58,18,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),Sn: white (beta) tin density
+P-WP-Ag,Ag,10503,1234.93,,25.35,100,30,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Au,Au,19283,1337.33,,25.418,180,27,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-W,W,19254,3695,,24.27,310,161,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Ta,Ta,16678,3290,,25.36,200,69,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),
+P-WP-Fe,Fe,7874,1811,,25.1,170,82,,,,,,,,,"Wikipedia Template:Infobox element infobox for this element, retrieved 2026-11-03 (density cites Arblaster 2018)",printed (tertiary),

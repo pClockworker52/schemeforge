@@ -81,3 +81,29 @@ table before any zoo member is evaluated.
 
 The numbers are factual measurements from the cited papers, which remain the authority. Cite the primary source
 for any use. The table itself is part of this repository (GPL-3.0-or-later).
+
+---
+
+# Material properties (`properties.csv`)
+
+Version 0.1, 2026-11-03. Inputs that zoo members need (Z1: ρ, T_m, σ_u; Z2: σ_TS, ρ, c_p, T_m; Z6: B, ρ; Z7:
+C₀, B, dynamic σ_y, ε; Z9: ρ, C₀, Y_d). The table is incomplete on purpose: nothing is filled from memory.
+
+| Prefix | Source | Materials | Fields |
+|---|---|---|---|
+| P-HG | HG2018a preprint, Extended Data Table 1 (F) | Cu, Ni, Al, Ta | ρ, c_p, T_m, B, G, ν, C₀, Hugoniot s, Johnson–Cook A, B, n, C, m |
+| P-WP | Wikipedia element infoboxes, retrieved 2026-11-03 (tertiary; densities cite Arblaster 2018) | Al, Cu, Ni, Ti, Zn, Sn, Ag, Au, W, Ta, Fe | ρ, T_m, molar C_p, B, G |
+
+**Missing, and needed before any zoo member is evaluated:**
+- Strength data (σ_u or σ_TS, dynamic σ_y, failure strain ε) for every material.
+- Everything for the Al alloys 6061, 2024 and 7075.
+- Specific heat c_p for the P-WP rows. Converting molar C_p needs standard atomic weights; the Wikipedia
+  lookup was rate-limited, and I did not fill them from memory.
+- Hugoniot intercepts C₀ and slopes s. Hassani2020 takes these from Hugoniot data and estimates dynamic yield
+  strengths from restitution data, both in its supplementary information. That file was not in the accepted
+  manuscript and is the most valuable missing source, because it matches the v_cr table's own materials.
+
+**The property source changes predictions.** Cu density is 8960 (P-HG) against 8935 kg/m³ (P-WP), and the
+"C₀" in P-HG is sqrt(B/ρ), not a Hugoniot intercept. Strength values depend on temper and on how they were
+measured. The property source must therefore be fixed as part of pre-registration, before predictions are made
+(go/no-go note, step 2), and never chosen after seeing results.
