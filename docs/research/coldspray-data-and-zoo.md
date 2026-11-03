@@ -19,8 +19,8 @@ rate-limited (429). So the classic Elsevier and Springer papers (Schmidt 2006, A
 **S or M**: Schmidt's formula comes from a Sandia slide that reproduces it [Hall2015], not from the original.
 Read the originals before any of these becomes a zoo member.
 
-Update 2026-11-03 (same day): Peter supplied PDFs of Assadi2003, Vlcek2003 and Dykhuizen1998, now read in full
-(F).
+Update 2026-11-03 (same day): Peter supplied PDFs of Assadi2003, Vlcek2003, Dykhuizen1998, Schmidt2006 and the
+Hassani2020 accepted manuscript, now read in full (F). Assadi2011 remains unread (S).
 
 ---
 
@@ -79,6 +79,10 @@ Sandia [Murray2025 M] and McGill [Imbriglio2019 S].
 | Al 6061 | Al 6061 | 13±3 | co-deformation | 900–950 |
 | Al 2024 | Al 2024 | 14±3 | co-deformation | 1095–1220 |
 | Al 7075 | Al 7075 | 15±2 | co-deformation | 1200–1290 |
+
+Overlap with Z2's calibration set (Al, Ti, Sn, Cu, 316L, Ta at 25 µm, process v_cr): Al, Ti, Sn and Cu are
+in-sample in material, though not in quantity (LIPIT, ~10–15 µm, room temperature). Ni, Zn, Au, Ag and the
+three Al alloys are held out for Z2.
 
 What this table shows at a glance:
 - Window widths run from 15 m/s (Au) to 160 m/s (Ti–Cu), i.e. about 2–25 % of v_cr. That is the judge's noise
@@ -165,7 +169,7 @@ cover Al–Al only. So **no held-out material split is possible for bond strengt
 | # | Model | Inputs | Form (as verified) | Assumptions / basis | Claimed validity | Reported accuracy | Level |
 |---|---|---|---|---|---|---|---|
 | Z1 | Assadi2003 linearised v_cr | ρ (g/cm³), T_m (°C), σ_u (MPa), T_i (°C) | v_cr = 667 − 14ρ + 0.08 T_m + 0.1 σ_u − 0.4 T_i (Eq. 3; Table 2 gives the derivatives per K, which is equivalent for differences). Not a fit: a first-order Taylor expansion around the Cu reference (v_cr,ref = 570 m/s). The derivatives come from FE sensitivities of the peak interface temperature T_max (Appendix A, Eq. A.3) | Bonding when ASI is reached at the particle surface; FE of Cu–Cu (and Al) impacts, 5–100 µm | Authors: "valid only for small changes of involved parameters"; for Al a full FE run is needed | Cu: FE 545–580 against 570 m/s experiment. Al: Eq. 3 gives ~620, full FE 675, experiment 660 m/s. Fig. 14 values for other materials are "for qualitative comparison" only | F |
-| Z2 | Schmidt2006 generalized window | σ_u, ρ, c_p, T_m, T_i, d | v_cr = sqrt( 4F₁σ_u(1 − (T_i−T_R)/(T_m−T_R))/ρ + F₂ c_p (T_m − T_i) ), with v_cr ∝ d^(−n), n = 0.19 Cu, 0.14 316L | Fitting coefficients F₁, F₂ (values unverified); spray, ballistic and explosive-compaction data | Not verified | Not verified | S (form from Hall2015 F; n from Dowding2020 F) |
+| Z2 | Schmidt2006 generalized window | σ_TS, ρ, c_p, T_m, T_i (SI; T_R = 293 K), d | Eq. 8: v_cr = sqrt( F₁·4σ_TS(1 − (T_i−T_R)/(T_m−T_R))/ρ + F₂·c_p(T_m − T_i) ), F₁ = 1.2, F₂ = 0.3 for 25 µm particles. Size separately (Eqs. 9–10, T_i = 20 °C, 5–200 µm): v_cr = 900·d^(−0.19) (Cu), 950·d^(−0.14) (316L) | Mechanical term: tensile strength with Johnson–Cook thermal softening against hydrodynamic crater pressure. Thermal term: energy balance. The two halves are combined with weight 0.5. Matched pair, identical initial temperature. Same form with F₁ = 4.8, F₂ = 1.2 gives the erosion velocity; F₁ = 0.45, F₂ = 0.12 for 20 mm spheres | **Calibrated on 6 materials at 25 µm**: Al, Ti, Sn, 316L, Cu, Ta (Fig. 8; process v_cr from spray experiments, Sn and Ta notably better than Eq. 1). Authors: estimates only; strain rate, size and purity not included; tabled properties leave "a range of uncertainty" | Fig. 8: close agreement on the 6 calibration materials (in-sample) | F |
 | Z3 | Schmidt2009 refinement; Assadi2011 parameter maps | v_p/v_cr = η; gas pressure and temperature | Coating properties as a unique function of η; constant-η contours on a gas-temperature × pressure plane | Cu as worked example | — | — | S |
 | Z4 | Li2014 Eulerian window | V_f = sqrt(σ/ρ) | v_cr increases with the "material characteristic velocity" | Eulerian FE | — | — | S |
 | Z5 | ASI simulation criteria (Grujicic2003/2004; Assadi2003) | Constitutive model, impact velocity | v_cr ≈ velocity at onset of shear localisation in FE | Johnson–Cook-type plasticity, adiabatic | Correlates with v_cr for several metals (as cited) | — | S |

@@ -103,8 +103,9 @@ declaring the domain.
   window widths 2–25 % of v_cr). Against the upgrade trigger: 11 matched materials (< ~15 required), so the
   recommendation stands. The Al-alloy rows (790–1290 m/s at similar ρ and B) are the subset that can separate
   Z6 from strength-dependent laws. Running that comparison is a pre-registered hunch, not an estimate here.
-- Schmidt2006 is now the most important missing original: it is a strength- and temperature-dependent zoo
-  member, and its F₁, F₂ and calibration materials decide whether the Table 1 materials are in-sample for it.
+- Done: Schmidt2006 read. F₁ = 1.2, F₂ = 0.3, calibrated on 6 materials (Al, Ti, Sn, 316L, Cu, Ta) at 25 µm
+  using process v_cr. Held out for Z2 within Hassani2020: Ni, Zn, Au, Ag and the three Al alloys. Z2's
+  temperature term assumes thermal softening (Johnson–Cook), which is assumption H3.
   Assadi2011 (η-maps) is process-side and optional.
 - Done: HUGO-CS coverage counted (see data note). It cannot judge C2 (no velocity distributions) or C1
   (critical velocities mostly computed with Schmidt's formula; 5 marked as measured).
