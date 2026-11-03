@@ -84,6 +84,24 @@ contact, 4 medium rows; mid-nodes are placed on the curves (a chord placement mi
   γ = 1e-6 a_err −3.9 %, p0_err +0.9 %, 87 Newton iterations; γ = 1e-4 a_err +104 % (load carried through the open
   gap); γ = 1e-7 does not converge.
 
+## mesh_sens (step 3)
+
+PLAN §14.4 asks for the spread of the metrics over three mesh densities and over Q1/Q2. **Q1 does not apply with a
+medium:** the judge's HuHu-LuLu regularization (and the planned regularization slot) needs second derivatives, which
+Q1 elements do not have, and an unregularized soft medium fails Newton (step 1). The Q2 part,
+`evaluate.hertz_mesh_sensitivity`: C2 at (nx, ny) = (24, 12), (32, 16), (48, 20), spread max − min per metric.
+Zoo neo-Hooke (cloud, 2026-11-03):
+
+| γ | a_err | p0_err | p_l2 | leak_out | time per mesh |
+|---|---|---|---|---|---|
+| 1e-5 | +12.2 / +12.3 / +12.4 % | +0.07 / +0.12 / +0.20 % | 6.1 / 5.0 / 4.7 % | 0.7 / 1.6 / 2.1 % | 6.7 / 6.9 / 12.7 s |
+| 1e-6 | −3.8 / −3.9 / −3.5 % | +0.72 / +0.85 / +0.77 % | 6.7 / 10.4 / 4.7 % | 0.5 / 1.1 / 1.8 % | 6.5 / 9.2 / 17.4 s |
+
+Classical at (48, 20): a +0.2 %, p0 −0.3 %, p_l2 2.1 %. **a_err and p0_err are mesh-stable** (spread ≤ 0.4 points),
+fit for Target D thresholds. **p_l2 is not** (the node-to-node zigzag of soft media, see the pressure plot) and
+**leak_out grows with refinement** (the regularization's spurious tension is resolved better); thresholds on them
+need the fine mesh or a margin above the spread. mesh_sens costs about 30 s per medium: promo only (step 4).
+
 ## Known limits
 
 - The unconfined C0a (free sides) with an unregularized γ = 1e-6 medium fails Newton: the medium bulges sideways.
