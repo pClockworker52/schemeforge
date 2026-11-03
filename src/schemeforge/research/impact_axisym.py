@@ -125,27 +125,22 @@ class ImpactResult:
     v_cm: np.ndarray  # (n_steps,) centre-of-mass velocity, m/s
 
 
-def elastic_sphere_on_rigid_wall(radius: float, velocity: float, E: float, nu: float, rho: float,
-                                 n_u: int = 30, n_v: int = 60, cfl: float = 0.4,
-                                 t_end_factor: float = 1.6) -> ImpactResult:
-    """Rung 1: elastic sphere (initially touching) hits a rigid frictionless wall at `velocity` (m/s, > 0).
+def simulate(mesh: Mesh, E: float, nu: float, rho: float, velocity: float, z_wall: float, t_end: float,
+             fix_r: np.ndarray | None = None, cfl: float = 0.4) -> ImpactResult:
+    """Explicit elastic impact of a body moving at -`velocity` (m/s, > 0) onto a rigid frictionless wall z = z_wall.
 
-    t_end = t_end_factor * Hertz contact time (from hertz_reference) so that the rebound is captured.
+    fix_r: boolean (n_nodes,) of nodes with u_r = 0 besides the axis (e.g. a laterally confined plate).
     """
-    mesh = sphere_mesh(radius, n_u, n_v)
     X = jnp.asarray(mesh.X)
     conn = jnp.asarray(mesh.conn)
     Bbar, w, Nw = _element_operators(X, conn)
     D = elastic_D(E, nu)
     n = X.shape[0]
     mass = jax.ops.segment_sum((rho * Nw.sum(1)).ravel(), conn.ravel(), n)  # (n,) ring masses, kg
-    axis = jnp.isclose(X[:, 0], 0.0)
-    z_wall = -radius
-
-    h_min = characteristic_length(mesh)
-    c_d = math.sqrt(float(D[0, 0]) / rho)
-    dt = cfl * h_min / c_d
-    t_end = t_end_factor * hertz_reference(radius, velocity, E, nu, rho)["t_contact"]
+    fixed = jnp.isclose(X[:, 0], 0.0)
+    if fix_r is not None:
+        fixed = fixed | jnp.asarray(fix_r)
+    dt = cfl * characteristic_length(mesh) / math.sqrt(float(D[0, 0]) / rho)
     n_steps = int(math.ceil(t_end / dt))
 
     def f_int(u):
@@ -157,12 +152,10 @@ def elastic_sphere_on_rigid_wall(radius: float, velocity: float, E: float, nu: f
 
     def step(state, _):
         u, v = state
-        a = -f_int(u) / mass[:, None]
-        v_pred = v + dt * a
-        v_pred = v_pred.at[:, 0].set(jnp.where(axis, 0.0, v_pred[:, 0]))
+        v_pred = v - dt * f_int(u) / mass[:, None]
+        v_pred = v_pred.at[:, 0].set(jnp.where(fixed, 0.0, v_pred[:, 0]))
         z_pred = X[:, 1] + u[:, 1] + dt * v_pred[:, 1]
-        hit = z_pred < z_wall
-        vz_new = jnp.where(hit, (z_wall - X[:, 1] - u[:, 1]) / dt, v_pred[:, 1])
+        vz_new = jnp.where(z_pred < z_wall, (z_wall - X[:, 1] - u[:, 1]) / dt, v_pred[:, 1])
         force = jnp.sum(mass * (vz_new - v_pred[:, 1])) / dt
         v_new = v_pred.at[:, 1].set(vz_new)
         u_new = u + dt * v_new
@@ -175,6 +168,41 @@ def elastic_sphere_on_rigid_wall(radius: float, velocity: float, E: float, nu: f
     _, (force, z_cm, v_cm) = jax.lax.scan(jax.jit(step), (u0, v0), None, length=n_steps)
     t = dt * (np.arange(n_steps) + 1)
     return ImpactResult(t=t, force=np.asarray(force), z_cm=np.asarray(z_cm), v_cm=np.asarray(v_cm))
+
+
+def elastic_sphere_on_rigid_wall(radius: float, velocity: float, E: float, nu: float, rho: float,
+                                 n_u: int = 30, n_v: int = 60, cfl: float = 0.4,
+                                 t_end_factor: float = 1.6) -> ImpactResult:
+    """Rung 1: elastic sphere (initially touching) hits a rigid frictionless wall; t_end from the Hertz time."""
+    t_end = t_end_factor * hertz_reference(radius, velocity, E, nu, rho)["t_contact"]
+    return simulate(sphere_mesh(radius, n_u, n_v), E, nu, rho, velocity, -radius, t_end, cfl=cfl)
+
+
+def plate_mesh(radius: float, thickness: float, n_r: int, n_z: int) -> Mesh:
+    """Rectangle 0 <= r <= radius, 0 <= z <= thickness, uniform quadrilaterals (rung 0)."""
+    r = np.linspace(0.0, radius, n_r + 1)
+    z = np.linspace(0.0, thickness, n_z + 1)
+    rr, zz = np.meshgrid(r, z, indexing="ij")
+    X = np.stack([rr.ravel(), zz.ravel()], axis=1)
+    idx = np.arange((n_r + 1) * (n_z + 1)).reshape(n_r + 1, n_z + 1)
+    conn = np.stack([idx[:-1, :-1].ravel(), idx[1:, :-1].ravel(), idx[1:, 1:].ravel(), idx[:-1, 1:].ravel()], 1)
+    return Mesh(X=X, conn=conn)
+
+
+def confined_plate_on_rigid_wall(thickness: float, velocity: float, E: float, nu: float, rho: float,
+                                 n_z: int = 100, n_r: int = 4, cfl: float = 0.4) -> tuple[ImpactResult, dict]:
+    """Rung 0: laterally confined plate (u_r = 0 everywhere: uniaxial strain) hits a rigid wall.
+
+    Exact 1D solution: stress rho c_d V during contact, contact time 2 L / c_d, rebound velocity V
+    (c_d = sqrt((lambda + 2 mu) / rho)). The force is per full ring of radius r_plate = thickness.
+    """
+    mesh = plate_mesh(thickness, thickness, n_r, n_z)
+    c_d = math.sqrt(float(elastic_D(E, nu)[0, 0]) / rho)
+    area = math.pi * thickness**2
+    res = simulate(mesh, E, nu, rho, velocity, 0.0, 3.0 * thickness / c_d, fix_r=np.ones(len(mesh.X), bool),
+                   cfl=cfl)
+    exact = {"stress": rho * c_d * velocity, "force": rho * c_d * velocity * area, "t_contact": 2 * thickness / c_d}
+    return res, exact
 
 
 def hertz_reference(radius: float, velocity: float, E: float, nu: float, rho: float) -> dict[str, float]:
