@@ -1,6 +1,6 @@
 # STATUS
-Phase: 6 — Arena 2 judge and zoo (started 2026-10-30; Phase 3 closed)  Judges: euler1d-v1.6 (2590e3e), contact-v0.2.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
-Last session: 2026-10-30 (WSL) — benchmark-v1.0 released (GPL-3.0-or-later)
+Phase: 6 — Arena 2 judge and zoo (started 2026-10-30; Phase 3 closed)  Judges: euler1d-v1.6 (2590e3e), contact-v0.6.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
+Last session: 2026-11-03 (WSL) — Phase 6 step 4: first real contact promo run (zoo ok)
 Handoff 2026-10-30: docs/HANDOFF.md (Phase 6 steps 1–2 done; next: step 3, Hertz and the error floor).
 2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
 docs/judge/2026-10-30-v16-check.md (no member newly rejected, old-case dev and all promo identical to v1.5). The
@@ -31,8 +31,17 @@ uniform to 5e-9; zoo dev r-20261103-082551-03b8. Mesh plots: scripts/plot_contac
 (contact-v0.5.dev): a_err and p0_err mesh-stable (<= 0.4 points), p_l2 and leak_out mesh-sensitive; Q1 not
 applicable (the regularization needs Q2); promo-only (~30 s per medium). **Step 3 done.** Step 4 built (contact-v0.6.dev,
 dcb372b): full hard constraints (tangent, non-negative, compression, unit scaling), held-out families GF/SF/HF/HX,
-promo suite with mesh_sens and max_step; test-seed run 114 s, all instances converge. **Open: the first real promo run
-(zoo, real seed) in WSL.** Then step 5 (zoo, trade-off front).
+promo suite with mesh_sens and max_step; test-seed run 114 s, all instances converge.
+**Phase 6 step 4** (2026-11-03, WSL, main eeee641, pytest 296, contact-v0.6.dev b1c0a79d integrity ok, euler1d-v1.6
+integrity ok): first real promo run of the contact zoo. Zoo neo_hooke dev r-20261103-123419-802b ok, 22.7 s, no
+violations, converged 1 on all cases: C0a-g3 leak_pre 0.0187 / gap_res 0.0316, C0a-g5 1.95e-4 / 6.53e-4, C0a-g6
+gap_res 8.23e-5, C0b-s2 shear_parasitic 1.00e-5, C2-g5 a_err 0.123 / p0_err 0.00121, C2-g6 a_err -0.039 / leak_out
+0.011 / 87 Newton iterations, C1 pressure_spread 5.14e-9. Promo r-20261103-123550-7e5a **ok**, 70.1 s, seed
+fingerprint d4f3b5e7dedec0f6, no violations, pass_rate 1.0 and converged 1 (worst) in all families (GF 10, SF 10, HF 6,
+HX 1). Medians: GF leak_pre 3.08e-4, gap_res 1.04e-3; SF shear_parasitic 2.47e-4; HF a_err -0.0059, p0_err 0.0042;
+HX max_step 0.25, mesh_sens_a_err 0.0066. Worst values: GF force_err 0.115, gap_res 0.046; HF a_err 0.119, leak_out
+0.053, 87 Newton iterations. No family with violations or converged < 1. WSL git has no GitHub credentials; push via
+Windows git. Next: step 5 (zoo, trade-off front).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
