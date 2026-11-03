@@ -354,3 +354,17 @@ baseline) and hunch predictions for unmeasured materials; choose a blind LIPIT c
 most. Upgrade to a component arena (slot v_cr(props_p, props_s, d, T) -> (v_cr, in_domain)) only when the open
 table reaches ~15 matched materials, a held-out set is frozen by someone other than the searcher, and the reference
 separates the zoo members beyond the measurement windows. Arena 2 stays paused.
+
+
+## 2026-11-03 — Cold-spray retrospective test: rules (Peter)
+*Context:* "Discipline only" step 2. The v_cr table (v0.1) and the property table (with Hassani 2020 Table S1)
+exist; several sources disagree and the impact-fitted Y_d is partly circular.
+*Decision:* (1) Property source: matched first (Table S1, then the HG2018a preprint table, then handbook rows),
+each value flagged with its source. (2) Impact-fitted Y_d: allowed, flagged; for any future blind material it
+must come only from impacts below that material's v_cr. (3) Quantity: single-impact v_cr at room temperature.
+(4) Score: distance outside the measured window divided by the window midpoint, in-domain and out-of-domain
+reported separately. Simulation: published simulation predictions enter now as frozen zoo entries (type 1); a
+pre-registered simulation setup as a zoo member (type 2) is planned later, with a free solver (OpenRadioss as
+main candidate, an independent small JAX code as cross-check) and a mesh-convergence check at the jet first.
+*Consequences:* A retrospective, explicitly non-blind test runs under docs/research/coldspray-preregistration.md,
+with predictions committed before scoring. Code lives in src/schemeforge/research/ (not an arena, not a judge).

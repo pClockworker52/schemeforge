@@ -1,0 +1,164 @@
+model,row,particle,substrate,v_pred_mps,regime_pred,in_domain,note
+Z6_a015,H20-10,Cu,Cu,578.6,,True,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a015,H20-11,Ni,Ni,665.7,,True,"B P-H20-Ni (E, nu); rho P-H20-Ni"
+Z6_a015,H20-12,Ti,Ti,732.3,,True,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a015,H20-13,Zn,Zn,476.3,,True,"B P-H20-Zn (E, nu); rho P-H20-Zn"
+Z6_a015,H20-14,Au,Au,391.8,,True,"B P-H20-Au (E, nu); rho P-H20-Au"
+Z6_a015,H20-15,Ag,Ag,477.7,,True,"B P-H20-Ag (E, nu); rho P-H20-Ag"
+Z6_a015,H20-16,Sn,Sn,429.4,,True,"B P-H20-Sn (E, nu); rho P-H20-Sn"
+Z6_a015,H20-17,Al,Al,805.1,,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015,H20-18,Al 6061,Al 6061,750.8,,True,"B P-H20-Al6061 (E, nu); rho P-H20-Al6061"
+Z6_a015,H20-19,Al 2024,Al 2024,755.8,,True,"B P-H20-Al2024 (E, nu); rho P-H20-Al2024"
+Z6_a015,H20-20,Al 7075,Al 7075,751.8,,True,"B P-H20-Al7075 (E, nu); rho P-H20-Al7075"
+Z6_a015,DW-01,Al,Al,805.1,,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015,DW-02,Al,Al,805.1,,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015,DW-03,Al,Al,805.1,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015,DW-04,Al,Al,805.1,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015,DW-05,Al,Al,805.1,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015,DW-06,Ti,Ti,732.3,,False,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a015,DW-07,Ti,Ti,732.3,,True,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a015,DW-08,Ti,Ti,732.3,,True,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a015,DW-09,Ti,Ti,732.3,,False,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a015,CH-01,Al,Al,805.1,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015,CH-02,Sn,Sn,429.4,,False,"B P-H20-Sn (E, nu); rho P-H20-Sn"
+Z6_a015,CH-03,Ti,Ti,732.3,,False,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a015,PA-01,Cu,Cu,578.6,,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a015,PA-02,Cu,Cu,578.6,,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a015,PA-03,Cu,Cu,578.6,,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a014_sim,H20-10,Cu,Cu,540.1,,True,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a014_sim,H20-11,Ni,Ni,621.3,,True,"B P-H20-Ni (E, nu); rho P-H20-Ni"
+Z6_a014_sim,H20-12,Ti,Ti,683.5,,True,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a014_sim,H20-13,Zn,Zn,444.6,,True,"B P-H20-Zn (E, nu); rho P-H20-Zn"
+Z6_a014_sim,H20-14,Au,Au,365.7,,True,"B P-H20-Au (E, nu); rho P-H20-Au"
+Z6_a014_sim,H20-15,Ag,Ag,445.9,,True,"B P-H20-Ag (E, nu); rho P-H20-Ag"
+Z6_a014_sim,H20-16,Sn,Sn,400.7,,True,"B P-H20-Sn (E, nu); rho P-H20-Sn"
+Z6_a014_sim,H20-17,Al,Al,751.4,,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a014_sim,H20-18,Al 6061,Al 6061,700.8,,True,"B P-H20-Al6061 (E, nu); rho P-H20-Al6061"
+Z6_a014_sim,H20-19,Al 2024,Al 2024,705.5,,True,"B P-H20-Al2024 (E, nu); rho P-H20-Al2024"
+Z6_a014_sim,H20-20,Al 7075,Al 7075,701.7,,True,"B P-H20-Al7075 (E, nu); rho P-H20-Al7075"
+Z6_a014_sim,DW-01,Al,Al,751.4,,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a014_sim,DW-02,Al,Al,751.4,,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a014_sim,DW-03,Al,Al,751.4,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a014_sim,DW-04,Al,Al,751.4,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a014_sim,DW-05,Al,Al,751.4,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a014_sim,DW-06,Ti,Ti,683.5,,False,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a014_sim,DW-07,Ti,Ti,683.5,,True,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a014_sim,DW-08,Ti,Ti,683.5,,True,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a014_sim,DW-09,Ti,Ti,683.5,,False,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a014_sim,CH-01,Al,Al,751.4,,False,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a014_sim,CH-02,Sn,Sn,400.7,,False,"B P-H20-Sn (E, nu); rho P-H20-Sn"
+Z6_a014_sim,CH-03,Ti,Ti,683.5,,False,"B P-H20-Ti (E, nu); rho P-H20-Ti"
+Z6_a014_sim,PA-01,Cu,Cu,540.1,,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a014_sim,PA-02,Cu,Cu,540.1,,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a014_sim,PA-03,Cu,Cu,540.1,,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a015_C0,H20-10,Cu,Cu,586.5,,True,P-H20-Cu
+Z6_a015_C0,H20-11,Ni,Ni,688.5,,True,P-H20-Ni
+Z6_a015_C0,H20-12,Ti,Ti,740.5,,True,P-H20-Ti
+Z6_a015_C0,H20-13,Zn,Zn,454.5,,True,P-H20-Zn
+Z6_a015_C0,H20-14,Au,Au,460.5,,True,P-H20-Au
+Z6_a015_C0,H20-15,Ag,Ag,490.5,,True,P-H20-Ag
+Z6_a015_C0,H20-16,Sn,Sn,388.5,,True,P-H20-Sn
+Z6_a015_C0,H20-17,Al,Al,807.0,,True,P-H20-Al
+Z6_a015_C0,H20-18,Al 6061,Al 6061,802.5,,True,P-H20-Al6061
+Z6_a015_C0,H20-19,Al 2024,Al 2024,805.5,,True,P-H20-Al2024
+Z6_a015_C0,H20-20,Al 7075,Al 7075,780.0,,True,P-H20-Al7075
+Z6_a015_C0,DW-01,Al,Al,807.0,,True,P-H20-Al
+Z6_a015_C0,DW-02,Al,Al,807.0,,True,P-H20-Al
+Z6_a015_C0,DW-03,Al,Al,807.0,,False,P-H20-Al
+Z6_a015_C0,DW-04,Al,Al,807.0,,False,P-H20-Al
+Z6_a015_C0,DW-05,Al,Al,807.0,,False,P-H20-Al
+Z6_a015_C0,DW-06,Ti,Ti,740.5,,False,P-H20-Ti
+Z6_a015_C0,DW-07,Ti,Ti,740.5,,True,P-H20-Ti
+Z6_a015_C0,DW-08,Ti,Ti,740.5,,True,P-H20-Ti
+Z6_a015_C0,DW-09,Ti,Ti,740.5,,False,P-H20-Ti
+Z6_a015_C0,CH-01,Al,Al,807.0,,False,P-H20-Al
+Z6_a015_C0,CH-02,Sn,Sn,388.5,,False,P-H20-Sn
+Z6_a015_C0,CH-03,Ti,Ti,740.5,,False,P-H20-Ti
+Z6_a015_C0,PA-01,Cu,Cu,586.5,,False,P-H20-Cu
+Z6_a015_C0,PA-02,Cu,Cu,586.5,,False,P-H20-Cu
+Z6_a015_C0,PA-03,Cu,Cu,586.5,,False,P-H20-Cu
+DW_size,H20-12,Ti,Ti,759.6,,True,Dowding2020 fit
+DW_size,H20-17,Al,Al,908.5,,True,Dowding2020 fit
+DW_size,DW-01,Al,Al,963.1,,True,Dowding2020 fit
+DW_size,DW-02,Al,Al,900.1,,True,Dowding2020 fit
+DW_size,DW-03,Al,Al,833.0,,True,Dowding2020 fit
+DW_size,DW-04,Al,Al,784.5,,True,Dowding2020 fit
+DW_size,DW-05,Al,Al,746.4,,True,Dowding2020 fit
+DW_size,DW-06,Ti,Ti,853.2,,True,Dowding2020 fit
+DW_size,DW-07,Ti,Ti,766.4,,True,Dowding2020 fit
+DW_size,DW-08,Ti,Ti,721.8,,True,Dowding2020 fit
+DW_size,DW-09,Ti,Ti,651.6,,True,Dowding2020 fit
+DW_size,CH-01,Al,Al,891.1,,False,Dowding2020 fit
+DW_size,CH-03,Ti,Ti,772.1,,False,Dowding2020 fit
+Assadi2003_FE,H20-10,Cu,Cu,562.5,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,H20-17,Al,Al,675.0,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,DW-01,Al,Al,675.0,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,DW-02,Al,Al,675.0,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,DW-03,Al,Al,675.0,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,DW-04,Al,Al,675.0,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,DW-05,Al,Al,675.0,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,CH-01,Al,Al,675.0,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,PA-01,Cu,Cu,562.5,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,PA-02,Cu,Cu,562.5,,False,process-quantity FE value (Assadi2003)
+Assadi2003_FE,PA-03,Cu,Cu,562.5,,False,process-quantity FE value (Assadi2003)
+baseline_LOMO,H20-10,Cu,Cu,696.5,,True,median of 10 other materials
+baseline_LOMO,H20-11,Ni,Ni,660.0,,True,median of 10 other materials
+baseline_LOMO,H20-12,Ti,Ti,611.5,,True,median of 10 other materials
+baseline_LOMO,H20-13,Zn,Zn,696.5,,True,median of 10 other materials
+baseline_LOMO,H20-14,Au,Au,696.5,,True,median of 10 other materials
+baseline_LOMO,H20-15,Ag,Ag,696.5,,True,median of 10 other materials
+baseline_LOMO,H20-16,Sn,Sn,696.5,,True,median of 10 other materials
+baseline_LOMO,H20-17,Al,Al,611.5,,True,median of 10 other materials
+baseline_LOMO,H20-18,Al 6061,Al 6061,611.5,,True,median of 10 other materials
+baseline_LOMO,H20-19,Al 2024,Al 2024,611.5,,True,median of 10 other materials
+baseline_LOMO,H20-20,Al 7075,Al 7075,611.5,,True,median of 10 other materials
+baseline_LOMO,DW-01,Al,Al,611.5,,True,median of 10 other materials
+baseline_LOMO,DW-02,Al,Al,611.5,,True,median of 10 other materials
+baseline_LOMO,DW-03,Al,Al,611.5,,False,median of 10 other materials
+baseline_LOMO,DW-04,Al,Al,611.5,,False,median of 10 other materials
+baseline_LOMO,DW-05,Al,Al,611.5,,False,median of 10 other materials
+baseline_LOMO,DW-06,Ti,Ti,611.5,,False,median of 10 other materials
+baseline_LOMO,DW-07,Ti,Ti,611.5,,True,median of 10 other materials
+baseline_LOMO,DW-08,Ti,Ti,611.5,,True,median of 10 other materials
+baseline_LOMO,DW-09,Ti,Ti,611.5,,False,median of 10 other materials
+baseline_LOMO,CH-01,Al,Al,611.5,,False,median of 10 other materials
+baseline_LOMO,CH-02,Sn,Sn,696.5,,False,median of 10 other materials
+baseline_LOMO,CH-03,Ti,Ti,611.5,,False,median of 10 other materials
+baseline_LOMO,PA-01,Cu,Cu,696.5,,False,median of 10 other materials
+baseline_LOMO,PA-02,Cu,Cu,696.5,,False,median of 10 other materials
+baseline_LOMO,PA-03,Cu,Cu,696.5,,False,median of 10 other materials
+Z9_regime,H20-01,Al,Ni,,splatting,True,R = 0.151
+Z9_regime,H20-02,Al,Ti,,splatting,True,R = 0.205
+Z9_regime,H20-03,Al,Cu,,splatting,True,R = 0.368
+Z9_regime,H20-04,Cu,W,,splatting,True,R = 0.0284
+Z9_regime,H20-05,Sn,Cu,,splatting,True,R = 0.194
+Z9_regime,H20-06,Cu,Al,,penetration,True,R = 2.72
+Z9_regime,H20-07,W,Cu,,penetration,True,R = 35.2
+Z9_regime,H20-08,Ti,Cu,,co-deformation,True,R = 1.79
+Z9_regime,H20-09,Cu,Ti,,co-deformation,True,R = 0.558
+Z9_regime,H20-10,Cu,Cu,,co-deformation,True,R = 1
+Z9_regime,H20-11,Ni,Ni,,co-deformation,True,R = 1
+Z9_regime,H20-12,Ti,Ti,,co-deformation,True,R = 1
+Z9_regime,H20-13,Zn,Zn,,co-deformation,True,R = 1
+Z9_regime,H20-14,Au,Au,,co-deformation,True,R = 1
+Z9_regime,H20-15,Ag,Ag,,co-deformation,True,R = 1
+Z9_regime,H20-16,Sn,Sn,,co-deformation,True,R = 1
+Z9_regime,H20-17,Al,Al,,co-deformation,True,R = 1
+Z9_regime,H20-18,Al 6061,Al 6061,,co-deformation,True,R = 1
+Z9_regime,H20-19,Al 2024,Al 2024,,co-deformation,True,R = 1
+Z9_regime,H20-20,Al 7075,Al 7075,,co-deformation,True,R = 1
+Z9_regime,DW-01,Al,Al,,co-deformation,True,R = 1
+Z9_regime,DW-02,Al,Al,,co-deformation,True,R = 1
+Z9_regime,DW-03,Al,Al,,co-deformation,True,R = 1
+Z9_regime,DW-04,Al,Al,,co-deformation,True,R = 1
+Z9_regime,DW-05,Al,Al,,co-deformation,True,R = 1
+Z9_regime,DW-06,Ti,Ti,,co-deformation,True,R = 1
+Z9_regime,DW-07,Ti,Ti,,co-deformation,True,R = 1
+Z9_regime,DW-08,Ti,Ti,,co-deformation,True,R = 1
+Z9_regime,DW-09,Ti,Ti,,co-deformation,True,R = 1
+Z9_regime,CH-01,Al,Al,,co-deformation,False,R = 1
+Z9_regime,CH-02,Sn,Sn,,co-deformation,False,R = 1
+Z9_regime,CH-03,Ti,Ti,,co-deformation,False,R = 1
+Z9_regime,PA-01,Cu,Cu,,co-deformation,True,R = 1
+Z9_regime,PA-02,Cu,Cu,,co-deformation,True,R = 1
+Z9_regime,PA-03,Cu,Cu,,co-deformation,True,R = 1
