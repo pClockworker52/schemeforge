@@ -275,6 +275,9 @@ def zoo_eval(
         key = columns
 
         def value(r, c, m):
+            if suite == ZooSuite.promo:  # family medians
+                v = r.get("families", {}).get(c, {}).get(m)
+                return v["median"] if isinstance(v, dict) else None
             return r.get("cases", {}).get(c, {}).get(m)
     elif suite == ZooSuite.promo:  # family medians
         key = [("RF1", "l1_smooth"), ("RF1", "shock_width"), ("RF2", "tv_increase"), ("NF1", "shock_pos_err"),
