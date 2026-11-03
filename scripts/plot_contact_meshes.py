@@ -92,7 +92,8 @@ def gap_closure_figure():
         ax.set_xlabel("x")
     axes[0].set_ylabel("y")
     legend(axes[0])
-    fig.suptitle(f"C0a gap closure, laterally confined, gamma = 1e-3: medium left {res.medium_thickness:.4f}", fontsize=10)
+    fig.suptitle(f"C0a gap closure, laterally confined, gamma = 1e-3: medium left {res.medium_thickness:.4f}",
+                 fontsize=10)
     fig.tight_layout()
     fig.savefig(OUT / "contact_c0a_mesh.png", dpi=150)
     plt.close(fig)
