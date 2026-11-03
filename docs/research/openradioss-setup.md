@@ -111,7 +111,7 @@ export PATH=$OPENCOURANT_PATH/exec:$PATH
 
 `ldd` shows no missing libraries for starter, engine and MPI engine once `env.sh` is sourced.
 
-## 3. Smoke test (done: serial, 4-rank MPI, converters)
+## 3. Smoke tests (done: serial, 4-rank MPI, converters, axisymmetric ALE)
 
 **Deck:** `qa-tests/miniqa/INTERF/INT_7/small_boule/data/BOULE1V4_0000.rad` + `BOULE1V4_0001.rad` +
 `qadiags.inc`, at commit `cb760c2`. Readme: "Ball impact on the wall with /INTER/TYPE7". The model has
@@ -177,6 +177,79 @@ th_to_csv_linux64_gf BOULE1V4T01              # writes BOULE1V4T01.csv
   ENERGY"`, `"KINETIC ENERGY"`, momenta, `"CONTACT ENERGY"`, `"HOURGLASS ENERGY"`, `"PLASTIC WORK"`, …, and the
   per-part `BOULE … IE/KE/…` columns). It is directly readable from Python (`csv` / `numpy`).
 
+### 3.3 Axisymmetric ALE deck: copper rod impact (Taylor-type)
+
+**Deck:** `qa-tests/miniqa/ALE2D/bar2_v41/data/BAR2V41B_0000.rad` + `BAR2V41B_0001.rad` + `qadiags.inc` at
+commit `cb760c2` (readme: "ALE 2D IMPACT 227M/S TEST ALE ELASTOPLAST"; © Siemens, CC BY-NC 4.0, not committed).
+`BAR2V41BD02` in the same folder is an old generated deck that is not included, so it was not used.
+
+- `/ANALY` N2D3D = 1 (axisymmetric), one part of 250 `/QUAD` elements (CELL_TYPE 9), 306 nodes, `/ALE/MAT` with
+  `/ALE/GRID/DONEA`, `/MAT/LAW3` (HYDPLA) "CUIVRE" with linear hardening (a = 0.004, b = 0.001, n = 1). `/PROP/TYPE14`
+  q_a = q_b = 0, i.e. the defaults 1.10 and 0.05 (RG p.1703–1704).
+- Rod R₀ = 0.32 cm, L₀ = 3.24 cm, `/INIVEL` v_z = −0.0227 onto a face held by `/BCS` at z = 0.
+- **Units, inferred:** the `/BEGIN` card says kg–m–s, but the values only fit **g–cm–µs** (ρ = 8.93, E = 1.17 Mbar,
+  v = 0.0227 cm/µs = 227 m/s, t_end = 80 µs). Check: mass 1.481 g, ½ m v² = 38.2 J, and the listing's initial
+  KE 3.779e‑4 g·cm²/µs² = 37.8 J.
+
+```bash
+. ~/opt/opencourant/latest-20261011/env.sh; export OMP_NUM_THREADS=1
+starter_linux64_gf -i BAR2V41B_0000.rad -np 1     # exit 0, 0 errors, 1 warning (100214 /IOFLAG field); 0.43 s
+engine_linux64_gf  -i BAR2V41B_0001.rad           # NORMAL TERMINATION, 4349 cycles, elapsed 0.42 s, 1 core
+```
+
+**Against the shipped reference.** The reference listing was produced by upstream commit `440deeba` (2022-11),
+not by this build, and the printed rows are **not bit-identical**:
+
+- the cycle numbers of all 44 printed rows match, and so does the mass;
+- the initial time step differs by 1.7 % (0.04451 vs 0.04529);
+- time differs by ≤ 0.15 % and IE by ≤ 0.10 %;
+- KE differs by ≤ 1.2 % relative, at late times when KE is near zero.
+
+At the QA extract point (cycle 4300) cycle, time, time step and IE agree to the printed digits. KE is 9.718e‑8
+vs 9.767e‑8, an absolute difference of 4.9e‑10, below the QA's default `Zero_Tolerance 5.0e-8`
+(`qa-tests/scripts/or_QA.constants`). So the run plausibly passes the shipped QA criterion. I did not run the QA
+script itself.
+
+**Animation copy.** For the plots, a local copy of the engine deck was run with `/ANIM/DT` every 1 µs (81 frames)
+instead of 10 µs. Its energy rows are identical to the unmodified run. Converted with `anim_to_vtk` (after
+gunzip) and `th_to_csv`. The VTK files carry `2DELEM_Plastic_Strain` and `2DELEM_Pressure`, requested in the
+deck by `/ANIM/ELEM/EPSP` and `/ANIM/ELEM/P`. Figures made by
+[`openradioss/scripts/plot_bar2.py`](openradioss/scripts/plot_bar2.py) (with
+[`vtkread.py`](openradioss/scripts/vtkread.py)):
+`python plot_bar2.py <vtk_dir> <BAR2V41BT01.csv> <out_dir>` (numpy, matplotlib, pillow).
+
+| Quantity (t = 80 µs) | Value |
+|---|---|
+| L / L₀ | 0.665 (2.156 cm) |
+| max. radius R / R₀ | 2.20 (0.703 cm) |
+| max. equivalent plastic strain | 2.35 (at the impact face) |
+| plastic work / initial KE | 0.97 |
+| energy balance (IE + KE) | −2.0 % (listing ERROR column −2.0 %); hourglass energy 0, external work 0 |
+| peak cell pressure, frames at 1–8 µs | 4.9 GPa |
+
+![Energy history and rod shape](openradioss/figures/bar2_history.png)
+
+*(a)* Kinetic energy goes into internal energy, and the rod is essentially at rest by 75 µs. The dashed total
+loses 2.0 %. This is not hourglass energy (zero); ALE advection is a likely source, not checked. *(b)* The
+radius saturates at about 50 µs, the length at about 70 µs.
+
+![Plastic strain](openradioss/figures/bar2_plastic_strain.png)
+
+Equivalent plastic strain on the deformed ALE mesh, mirrored about the axis for readability (the model is the
+half r ≥ 0). Strain concentrates in a thin layer at the impact face; the mushroom foot spreads to 2.2 R₀.
+
+![Pressure wave](openradioss/figures/bar2_pressure.png)
+
+Pressure (positive in compression, TM p.94) in the first 8 µs: a compression front of about 0.4 cm/µs runs up
+the rod. **Not understood:** behind the front the sign alternates, down to about −4 GPa (tension) near the face
+at 2 µs. That is unexpected for a rod held against the face. Possible causes are ringing on this coarse mesh
+(5 radial × 50 axial cells, frames 1 µs apart) or how `/BCS` holds the face nodes. Not investigated; to check
+before trusting pressure or interface tension in our own decks (item 1 in section 5).
+
+Animation (81 frames, 10 fps, 0.8 MB): [bar2_plastic_strain.gif](openradioss/figures/bar2_plastic_strain.gif)
+
+![Plastic strain animation](openradioss/figures/bar2_plastic_strain.gif)
+
 ## 4. What did not work or was not done
 
 - **The prompt's premise:** "official OpenRadioss sources" no longer exist (section 1.1). Peter decided to use the fork.
@@ -191,8 +264,10 @@ th_to_csv_linux64_gf BOULE1V4T01              # writes BOULE1V4T01.csv
 
 ## 5. What we still need to check
 
-1. **Axisymmetric support in practice:** run `qa-tests/miniqa/ALE2D/bar2_v41` (`/ANALY` N2D3D = 1, ALE, LAW3
-   copper). Then check that LAW4 (JC + `/EOS/GRUNEISEN`) is accepted on `/QUAD` elements under N2D3D = 1.
+1. **Axisymmetric support in practice:** `ALE2D/bar2_v41` runs (axisymmetric, ALE, LAW3 on `/QUAD`; section 3.3).
+   Still open: (a) whether LAW4 (JC + `/EOS/GRUNEISEN`) is accepted on `/QUAD` elements under N2D3D = 1;
+   (b) the alternating-sign pressure behind the front in 3.3 (mesh refinement, `/BCS` versus rigid wall,
+   bulk viscosity); (c) the −2 % energy drift under ALE.
    RG says only "solid elements" for LAW4, and TM lists LAW2 for "brick, shell, truss and beam", not quads.
    Look for the RD-E 0800 "Hopkinson Bar" example cited under `/ANALY`.
 2. **Rigid-wall contact for particle on substrate:** `/RWALL/PLANE` (sliding flag, friction) versus
