@@ -102,6 +102,29 @@ fit for Target D thresholds. **p_l2 is not** (the node-to-node zigzag of soft me
 **leak_out grows with refinement** (the regularization's spurious tension is resolved better); thresholds on them
 need the fine mesh or a margin above the spread. mesh_sens costs about 30 s per medium: promo only (step 4).
 
+## Step 4: hard constraints, held-out families, promo
+
+**Hard constraints (complete for the medium slot):** on the 40 deformation probes, in addition to the step-1 checks,
+the tangent (Hessian w.r.t. C) is finite; the energy is non-negative (rest is the minimum); it is strictly positive
+for det F < 1 (the medium resists compression); and it scales with the moduli: ψ(C, cμ, cλ, γ) = c ψ(C, μ, λ, γ) to
+1e-9 for c = 1e-6, 1e6 (an absolute constant or epsilon fails; Arena 1's v1.5 lesson). Batch independence holds by
+construction: felupe.constitution.jax maps ψ over cells and quadrature points, so a candidate sees one C at a time.
+
+**Held-out families** (`families.py`; seed ~/.schemeforge/heldout_seed, never read in the cloud session; salt
+"contact"):
+
+| Family | n | Instance parameters (random per instance) |
+|---|---|---|
+| GF gap closure | 10 | gap 0.03–0.2, height 0.6–1.5, width 0.1–0.4, push = gap + 2–8 % of height, 8 steps, 2–4 medium rows, E 0.1–10 (log), ν 0.15–0.45, γ 1e-6–1e-3 (log), distortion 0–0.35 |
+| SF simple shear | 10 | shear 0.1–3, E, ν, γ as GF |
+| HF Hertz | 6 | R 0.5–2 (log), W = H = R, gap 0.15–0.3 % of R, indentation 0.3–0.5 % of R beyond the gap, 12 steps, 28–36 columns, E, ν as GF, γ 1e-6–1e-5 (log) |
+| HX Hertz | 1 | as HF; adds mesh_sens_* (three meshes) and `max_step` = 1 / fewest of 1, 2, 3, 4, 6, 8, 12 equal steps that converge |
+
+Promo report: family aggregates (n, pass rate; per metric median, mean, p90, worst; `converged` and `max_step` are
+higher-is-better), seed fingerprint; instances are stripped by the parent and stored outside the repo. A test-seed
+run with the zoo neo-Hooke (not the real seed) takes 114 s; every instance converges; HX: max_step 0.5,
+mesh_sens_a_err 0.0014.
+
 ## Known limits
 
 - The unconfined C0a (free sides) with an unregularized γ = 1e-6 medium fails Newton: the medium bulges sideways.

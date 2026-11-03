@@ -29,8 +29,10 @@ C2-g6 a_err -3.9 %, 87 Newton iterations. Spec: docs/judge/contact_spec.md. C1 p
 distorted meshes (TMC meshes are conforming, so non-matching interfaces do not occur), exact to 1e-13, wall pressure
 uniform to 5e-9; zoo dev r-20261103-082551-03b8. Mesh plots: scripts/plot_contact_meshes.py, docs/judge/figures/. mesh_sens done
 (contact-v0.5.dev): a_err and p0_err mesh-stable (<= 0.4 points), p_l2 and leak_out mesh-sensitive; Q1 not
-applicable (the regularization needs Q2); promo-only (~30 s per medium). **Step 3 done.** Next: step 4 (hard
-constraints, promo metrics incl. mesh_sens and max_step, held-out families: the held-out seed lives on Peter's PC).
+applicable (the regularization needs Q2); promo-only (~30 s per medium). **Step 3 done.** Step 4 built (contact-v0.6.dev,
+dcb372b): full hard constraints (tangent, non-negative, compression, unit scaling), held-out families GF/SF/HF/HX,
+promo suite with mesh_sens and max_step; test-seed run 114 s, all instances converge. **Open: the first real promo run
+(zoo, real seed) in WSL.** Then step 5 (zoo, trade-off front).
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;

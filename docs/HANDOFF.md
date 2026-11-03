@@ -28,7 +28,7 @@ every number below has its run id there or in the linked file.
 | 1 skeleton + generic plumbing | done: each arena is its own judge (hash, integrity, tag); `--arena` required in CLI/MCP; Arena 1 zoo dev identical before/after (21/21) | DECISIONS "Each arena is its own judge"; docs/judge/2026-10-30-phase6-step1-euler1d-check.md |
 | 2 exact small cases | done: C0a confined gap closure (exact for any medium, FE agrees ≤ 1e-9), C0b simple shear (exact from ψ), wall pressure from reactions, classical ContactRigidPlane + penalty extrapolation (2e-10) | docs/judge/contact_spec.md; zoo dev run r-20261030-082524-e9a2 (cloud registry) |
 | 3 Hertz C2 + patch test C1, error floor | done (contact-v0.5.dev): Hertz, error floor, C1 on distorted meshes, mesh_sens | docs/judge/contact_spec.md |
-| 4 constraints, metrics, held-out families | **next** (held-out generation needs the seed on Peter's PC) | plan step 4 |
+| 4 constraints, metrics, held-out families | built (contact-v0.6.dev); **first real promo run in WSL open** | contact_spec.md §Step 4 |
 | 5 zoo + trade-off front (stop if no trade-off) | open | |
 | 6 blind audit, Target D pre-registration, tag contact-v1.0 | open | |
 | 7 search readiness: engine tables, prompts, calibration run, hunch preview | open | |
