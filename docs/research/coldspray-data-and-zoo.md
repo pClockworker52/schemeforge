@@ -117,8 +117,25 @@ allows leave-one-material-out validation, but with very few degrees of freedom.
 | Legoux2007 | Substrate temperature effect | Al, Zn, Sn | Source of the process v_cr values compared in Panova2026b | M |
 | Ichikawa2015 | Substrate oxide thickness against DE | Al-based | Thicker substrate oxide → lower DE | S |
 | Zhang2025 JMP | Reduced-order DE model validated by experiment | Al | 10 validation runs on two systems (per a TMS abstract) | S |
-| HUGO-CS (Price2026) | Literature compilation: 4,383 experiments, 144 features, 1,124 sources; 1,765 hand-labelled | Many alloys, compositions resolved | Selected for **mechanical-property** papers (SCOPUS). DE is a target, but only 16.2 % of DE values carry an uncertainty. **Whether particle velocity is a field is unchecked** (github.com was blocked; raw.githubusercontent.com works, but I could not list file names) | F (paper) |
+| HUGO-CS (Price2026) | Literature compilation: 4,383 experiments, 144 features, 1,124 sources; 1,765 hand-labelled | Many alloys, compositions resolved | Selected for **mechanical-property** papers (SCOPUS). Only 16.2 % of DE values carry an uncertainty. Coverage counted in `HUGO-CS.json` (below) | F (paper and data file) |
 | Prior compilations (Table 1 of Price2026) | 11 datasets, mean 45 experiments; largest Yin 2024, 137 experiments from 27 articles | — | Mostly not machine-readable | F |
+
+**HUGO-CS coverage** (counted 2026-11-03 in `HUGO-CS/Dataset/HUGO-CS.json` from github.com/sprice134/HUGO,
+main branch; a field counts as filled when it is non-empty):
+
+| Field | Experiments (of 4,383) |
+|---|---|
+| Process gas pressure / temperature | 3,817 / 3,814 |
+| Powder mean size / D50 / D10 | 1,606 / 1,150 / 829 |
+| Particle velocity (one value) / impact velocity | 603 / 129 |
+| Deposition efficiency | 557 (343 hand-labelled, 214 LLM-extracted) |
+| Critical velocity | 159, from 35 articles; mostly **calculated**: "Calculated from/via Schmidt et al." 35, "Literature" or "Estimated from literature" 33, semi-empirical equation 10, KSS software 9, FLUENT 5; "experimentally determined" 5 |
+| DE **and** particle velocity | 147, from 32 articles (Ti 34, Al 31, Cu 29, Fe 21, Co 12, Ta 6, Ni 5, Zn 5) |
+| DE, particle velocity **and** a size spread (D10 or std) | 32 |
+
+So HUGO-CS holds no velocity distributions, only a single (mean) velocity, and does not record whether it was
+measured or computed. Its critical velocities are mostly outputs of Z2 itself: using them as a judge for Z2
+would be circular.
 
 **What bulk DE data lack mechanistically.** A DE value integrates over particle size, velocity and temperature
 distributions, oxide state, a growing rough and hardened surface, and nozzle effects. Dowding2020 [F] argues the
