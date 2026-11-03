@@ -29,6 +29,7 @@ Distinct matched materials: 11 (Al, Cu, Ni, Ti, Zn, Au, Ag, Sn, Al 6061, Al 2024
 | `id` | Row id, prefix = source |
 | `particle`, `substrate` | Material names as printed |
 | `particle_condition`, `substrate_condition` | Only what the source states; blank = not stated in the text I read |
+| `oxide_state`, `oxide_source` | Native oxide or passivation state as stated by a source I read in full; "not reported" otherwise (36 of 41 rows, 2026-11-03). Main missing source: HG2019b (Al, Ag, Au native oxide) |
 | `d_um`, `d_um_spread` | Particle diameter (µm) and its spread as printed (± value or sieve range) |
 | `T_substrate_K` | Substrate temperature; "room" = not heated |
 | `vcr_low_mps`, `vcr_high_mps` | Lower and upper bound of the critical-velocity window (m/s) |
