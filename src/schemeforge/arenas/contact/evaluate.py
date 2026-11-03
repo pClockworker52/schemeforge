@@ -91,6 +91,23 @@ def hertz_metrics(case: HertzCase, res) -> tuple[dict[str, float], list[str]]:
     return m, v
 
 
+MESH_SENS_SIZES = ((24, 12), (32, 16), (48, 20))  # (nx, ny) coarse, dev, fine; spec §mesh_sens
+MESH_SENS_METRICS = ("a_err", "p0_err", "p_l2", "leak_out")
+
+
+def hertz_mesh_sensitivity(psi: Callable, case: HertzCase,
+                           sizes: tuple[tuple[int, int], ...] = MESH_SENS_SIZES) -> dict[str, float]:
+    """mesh_sens: spread (max - min) of each C2 metric over the meshes `sizes`, as `mesh_sens_<metric>`; 1.0 for all if
+    any mesh does not converge. About 30 s per medium, so it belongs in promo (step 4), not in dev. Measured for the
+    zoo neo-Hooke (spec): a_err and p0_err move by <= 0.4 points, p_l2 and leak_out are mesh-sensitive."""
+    from dataclasses import replace
+
+    runs = [run_case(replace(case, nx=nx, ny=ny), psi)[0] for nx, ny in sizes]
+    if not all(r.get("converged") == 1.0 for r in runs):
+        return {f"mesh_sens_{k}": 1.0 for k in MESH_SENS_METRICS}
+    return {f"mesh_sens_{k}": float(max(r[k] for r in runs) - min(r[k] for r in runs)) for k in MESH_SENS_METRICS}
+
+
 def run_case(case: Case, psi: Callable) -> tuple[dict[str, float], list[str]]:
     """Metrics and violations of one case. A Newton failure is a result (converged = 0: soft media without
     regularization fail to close the gap, and robustness is what Target D measures), not a violation."""

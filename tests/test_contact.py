@@ -158,3 +158,11 @@ def test_patch_test_on_distorted_meshes() -> None:
     assert v == [] and m["pressure_spread"] < 1e-7
     with pytest.raises(ValueError):
         validate_case(GapClosureCase("bad", distort=0.6))
+
+
+def test_hertz_width_and_peak_are_mesh_stable() -> None:
+    # step 3 mesh_sens: the width and peak-pressure errors barely move between the coarse and the dev mesh
+    from schemeforge.arenas.contact.cases import HertzCase
+
+    m = ev.hertz_mesh_sensitivity(NEO, HertzCase("g5", gamma=1e-5), sizes=((24, 12), (32, 16)))
+    assert m["mesh_sens_a_err"] < 0.01 and m["mesh_sens_p0_err"] < 0.01
