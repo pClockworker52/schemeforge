@@ -27,7 +27,7 @@ every number below has its run id there or in the linked file.
 |---|---|---|
 | 1 skeleton + generic plumbing | done: each arena is its own judge (hash, integrity, tag); `--arena` required in CLI/MCP; Arena 1 zoo dev identical before/after (21/21) | DECISIONS "Each arena is its own judge"; docs/judge/2026-10-30-phase6-step1-euler1d-check.md |
 | 2 exact small cases | done: C0a confined gap closure (exact for any medium, FE agrees ≤ 1e-9), C0b simple shear (exact from ψ), wall pressure from reactions, classical ContactRigidPlane + penalty extrapolation (2e-10) | docs/judge/contact_spec.md; zoo dev run r-20261030-082524-e9a2 (cloud registry) |
-| 3 Hertz C2 + patch test C1, error floor | **next** | plan §3 step 3 |
+| 3 Hertz C2 + patch test C1, error floor | Hertz and error floor done (contact-v0.3.dev); **C1 patch test and Q1/Q2 mesh_sens next** | docs/judge/contact_spec.md §C2 |
 | 4 constraints, metrics, held-out families | open | |
 | 5 zoo + trade-off front (stop if no trade-off) | open | |
 | 6 blind audit, Target D pre-registration, tag contact-v1.0 | open | |
@@ -38,7 +38,7 @@ Code: src/schemeforge/arenas/contact/ (`cases.py`, `solve.py` FElupe models, `re
 Candidate contract: `psi_medium(C, p)` in jax.numpy, p = {mu, lmbda, gamma}. Spike timings and scripts:
 docs/spikes/2026-10-30-phase6-tooling.md, scripts/spikes/.
 
-## Step 3, concretely (start here)
+## Step 3 (Hertz done 2026-11-03; remaining: items 4 and the Q1/Q2 part of 3)
 
 1. Hertz C2 as decided (D2): elastic cylinder, half model, on a **rigid** flat, medium between, medium bottom fixed;
    1/E* = (1 − ν²)/E; a/R ≤ 0.1, flat ≥ 20 a wide. Start from scripts/spikes/phase6_hertz_felupe.py (its geometry is

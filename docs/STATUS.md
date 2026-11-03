@@ -21,7 +21,12 @@ identical before/after, 21/21 (docs/judge/2026-10-30-phase6-step1-euler1d-check.
 confined (exact homogeneous solution for any medium; FE agrees to 1e-9 or better), C0b simple shear (exact from psi),
 wall pressure from reactions (exact for uniform pressure), classical ContactRigidPlane + penalty extrapolation (2e-10).
 Spec: docs/judge/contact_spec.md. Zoo neo_hooke dev r-20261030-082524-e9a2 (cloud registry): leak_pre 0.0187 / 1.95e-4 and gap_res
-0.0316 / 6.5e-4 at gamma 1e-3 / 1e-5, shear_parasitic 1e-5. Next: step 3 (Hertz C2, patch test C1, judge error floor).
+0.0316 / 6.5e-4 at gamma 1e-3 / 1e-5, shear_parasitic 1e-5. Step 3 partly done (2026-11-03, judge contact-v0.3.dev,
+f84d504): C2 Hertz on a rigid flat with medium + classical reference; judge error floor (classical vs Hertz) dev
+mesh a +0.9 % / p0 -0.5 %, 0.3 % at 128 columns; fixed HuHu regularization kr = 5e-7 (5e-6 adds ~4 % p0 tension,
+5e-8 fails on finer meshes); dev suite 26.4 s, zoo dev r-20261103-072519-256c (cloud registry): C2-g5 a_err +12 %,
+C2-g6 a_err -3.9 %, 87 Newton iterations. Spec: docs/judge/contact_spec.md. Open in step 3: C1 patch test
+(non-matching meshes), Q1/Q2 mesh_sens. Then step 4.
 Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
 desktop session on 2026-10-28; restart it before round-4 evolve.
 2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
