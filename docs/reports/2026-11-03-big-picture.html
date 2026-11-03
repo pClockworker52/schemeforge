@@ -1,0 +1,124 @@
+<title>schemeforge big picture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, verdict box up front, figures and tables at full column width (as the earlier versions). */
+:root{
+  --paper:#f6f7f9; --ink:#1a2330; --mute:#5d6878; --line:#d5dae2; --panel:#eceff4;
+  --accent:#2b5c8a; --ok:#2f8a4c; --warn:#b7791f; --bad:#b9412f;
+  --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141a22; --ink:#e4e8ee; --mute:#9aa5b4; --line:#2e3846; --panel:#1c2430;
+  --accent:#7fb0de; --ok:#5cc07c; --warn:#e0a84a; --bad:#e87866; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);margin:0}
+main{max-width:860px;margin:0 auto;padding-block:28px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:650;line-height:1.25;text-wrap:balance}
+h1{font-size:2.1rem;margin:0 0 .2em}
+h2{font-size:1.45rem;margin:2.4em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+h3{font-size:1.1rem;margin:1.6em 0 .4em}
+p,li{max-width:68ch}
+.sub{color:var(--mute);margin:0 0 1.6em}
+code,.id{font-family:var(--mono);font-size:.88em}
+.verdict{background:var(--panel);border-left:4px solid var(--accent);padding:16px 20px;margin:1.4em 0}
+.verdict p{margin:.4em 0}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.scroll{overflow-x:auto;margin:1em 0}
+table{border-collapse:collapse;font-size:.92rem;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--mute);font-size:.8rem;letter-spacing:.03em}
+.pill{display:inline-block;padding:0 8px;border-radius:9px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.pill.ok{color:var(--ok);border:1px solid var(--ok)}
+.pill.warn{color:var(--warn);border:1px solid var(--warn)}
+.pill.bad{color:var(--bad);border:1px solid var(--bad)}
+.pill.mute{color:var(--mute);border:1px solid var(--line)}
+figure{margin:1.4em 0}
+figure img{display:block;width:100%;max-width:100%;height:auto;border:1px solid var(--line);background:#fff;border-radius:4px}
+figcaption{color:var(--mute);font-size:.88rem;margin-top:.5em;max-width:68ch}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:1em 0}
+.cols>div{min-width:0;border-top:3px solid var(--line);padding-top:8px}
+.cols>div.ok{border-color:var(--ok)}.cols>div.warn{border-color:var(--warn)}.cols>div.bad{border-color:var(--bad)}
+.cols h3{margin-top:.2em}
+ul.tight li{margin:.4em 0}
+.note{color:var(--mute);font-size:.9rem}
+</style>
+
+<main>
+<p class="eyebrow">schemeforge · state on 2026-11-03 · Phase 6, Arena 2 judge · judges euler1d-v1.6 and contact-v0.6.dev · earlier versions: 21, 24 and 29 October</p>
+<h1>The big picture</h1>
+<p class="sub">Arena 1 is closed and published. This page is about the second arena: a judge for third-medium contact, what it can already do, and what it is for.</p>
+
+<div class="verdict">
+<p class="eyebrow">Short answer</p>
+<p><strong>The Arena 2 judge exists and is exact where it can be. Four of its seven steps are done; the next step decides whether there is anything worth searching for.</strong></p>
+<p>The judge runs a candidate contact medium through gap closure, shear, a patch test and Hertz contact, and compares it with exact solutions and with a classical contact reference. Where the answer is exact, the judge reproduces it to round-off; for Hertz its own error floor is about 1 % on the dev mesh. The published medium already shows the trade-off the search will attack.</p>
+<p><strong>Next:</strong> the first real held-out run (on Peter's PC, running now), then the zoo of published media and the trade-off front: if the zoo shows no trade-off, Arena 2 stops there.</p>
+</div>
+
+<h2>1. Since 29 October</h2>
+<div class="scroll"><table>
+<tr><th>Step</th><th>What came out</th><th></th></tr>
+<tr><td><b>Arena 1 closed</b></td><td>All hunches closed. H-0019 (no scheme can be sharp, smooth and Newton-convergent at once) is refuted: two round-2 limiters do all three, at the price of overshoot and long-run accuracy. The negative-result note is final.</td><td><span class="pill ok">done</span></td></tr>
+<tr><td><b>Judge euler1d-v1.6</b></td><td>Three round-4 breaker cases added to dev. Zoo scores and every verdict identical to v1.5.</td><td><span class="pill ok">done</span></td></tr>
+<tr><td><b>Benchmark release</b></td><td><code>benchmark-v1.0</code> on GitHub under GPL-3.0: judge, zoo, results, how to score your own scheme. The held-out seed stays private; scoring on request.</td><td><span class="pill ok">done</span></td></tr>
+<tr><td><b>Phase 6 plan</b></td><td>Seven steps to Gate 6, including a stop condition (the trade-off must exist) and a search-readiness step with a hunch preview.</td><td><span class="pill ok">approved</span></td></tr>
+<tr><td><b>Phase 6 steps 1–4</b></td><td>The arena and its judge, described below.</td><td><span class="pill warn">real promo run pending</span></td></tr>
+</table></div>
+
+<h2>2. What Arena 2 is about</h2>
+<p>When two bodies touch in a finite-element model, the contact is usually enforced with special constraints that are hard to make robust. <b>Third-medium contact</b> instead fills the gap with a fictitious, very soft material. As the gap closes, the medium is squeezed and stiffens, and it carries the contact force. It is simple and works inside any standard solver, which is why it is used in topology optimisation.</p>
+<p>Its weakness is a trade-off in the medium's stiffness γ. A stiffer medium transmits force through the open gap before contact (leak) and leaves a residual layer after it; a softer medium behaves more like ideal contact but makes Newton's method struggle. The search candidate is the medium's energy ψ(C): a few lines of <code>jax.numpy</code>. The question for Phase 7 is whether an energy exists that does better on both sides.</p>
+
+<h2>3. The judge so far</h2>
+<div class="scroll"><table>
+<tr><th>Case</th><th>What it tests</th><th>How exact the judge is</th></tr>
+<tr><td>C0a gap closure</td><td>A column pushed through a medium-filled gap onto a wall: force before contact, residual gap, force after</td><td>Exact solution for any candidate; finite elements agree to 1e-9 or better</td></tr>
+<tr><td>C0b simple shear</td><td>Shear stress the medium resists (ideal: none)</td><td>Evaluated exactly from ψ</td></tr>
+<tr><td>C1 patch test</td><td>C0a on randomly distorted elements: constant pressure must stay constant</td><td>Exact to 1e-13; pressure uniform to 5e-9</td></tr>
+<tr><td>C2 Hertz</td><td>An elastic cylinder pressed onto a flat through the medium: contact width, peak pressure, profile, leak</td><td>Classical contact within 1 % of the Hertz formula (dev mesh), 0.3 % on fine meshes</td></tr>
+</table></div>
+<p>Around these: hard constraints that reject a broken medium before any case runs (non-finite, negative energy, no resistance to compression, a hidden absolute constant), held-out families generated from the secret seed, and a promo suite that also measures mesh sensitivity and the largest load step that still converges. The dev suite runs in under 30 s per candidate.</p>
+
+<figure>
+<img src="figures/contact_c2_mesh_contact_zone.png" alt="Hertz contact zone: undeformed and deformed quadratic mesh of body and medium near the contact">
+<figcaption>Hertz near the contact, as the judge meshes it (blue body, orange medium). Below, under load, the medium is squeezed to nearly nothing up to almost exactly the Hertz contact width (red line); beyond it the gap stays open.</figcaption>
+</figure>
+
+<h2>4. What it has shown</h2>
+<p>For the published neo-Hookean medium (zoo dev run <span class="id">r-20261103-082551-03b8</span>, cloud registry):</p>
+<div class="scroll"><table>
+<tr><th>Medium stiffness γ</th><th>Gap closure: force leak before contact</th><th>Gap closure: residual gap</th><th>Hertz: contact width error</th><th>Hertz: Newton iterations</th></tr>
+<tr><td>1e-3</td><td>1.9 %</td><td>3.2 %</td><td>—</td><td>—</td></tr>
+<tr><td>1e-4</td><td>—</td><td>—</td><td>+104 % (load carried through the open gap)</td><td>56</td></tr>
+<tr><td>1e-5</td><td>0.02 %</td><td>0.07 %</td><td>+12 %</td><td>62</td></tr>
+<tr><td>1e-6</td><td>—</td><td>0.008 %</td><td>−3.9 %</td><td>87</td></tr>
+<tr><td>1e-7</td><td colspan="4">Newton fails in Hertz</td></tr>
+</table></div>
+<figure>
+<img src="figures/contact_c2_pressure.png" alt="Hertz pressure profiles: classical contact, medium at gamma 1e-5 and 1e-6, and the Hertz formula">
+<figcaption>Contact pressure on the flat. The classical reference follows Hertz closely; the soft medium (γ = 1e-6) matches it on average but zigzags from node to node, an artifact the profile metric picks up.</figcaption>
+</figure>
+<div class="cols">
+<div class="ok"><h3>The trade-off is real</h3><p>Softer media leak less and close better, and they cost Newton steps until they fail. That is the precondition for a search, already visible with one zoo member.</p></div>
+<div class="warn"><h3>The judge has its own trade-off</h3><p>Until the regularization slot exists, the judge adds a fixed Hessian regularization. Too strong adds a fake 4 % tension outside the contact; too weak and Newton fails on fine meshes. The chosen value (0.3 % artifact) is documented and can be revisited.</p></div>
+<div class="bad"><h3>Not every metric is trustworthy yet</h3><p>Contact width and peak pressure are stable across meshes (within 0.4 points). The profile error and the leak outside contact move with the mesh, so targets should rest mainly on the first two.</p></div>
+</div>
+
+<h2>5. What comes next</h2>
+<ul class="tight">
+<li><b>Now (WSL):</b> the first real held-out run of the zoo, with the secret seed.</li>
+<li><b>Step 5, the decisive one:</b> the published media (Wriggers 2013, Bluhm 2021, the FElupe variants, FElupe's mixed formulation) and classical penalty contact, each over a sweep of γ, plotted as a front. <b>If the front shows no trade-off, Arena 2 stops</b> with a short report, before any search money is spent.</li>
+<li><b>Step 6:</b> blind audit of the references by an independent agent, Target D pre-registered from the front, judge tagged <code>contact-v1.0</code>.</li>
+<li><b>Step 7:</b> the engine and agents set up for this arena, a calibration run that must rediscover known media, and a preview of the agents' hunches with the closest published relative named for each.</li>
+<li><b>Then Gate 6</b> (Peter), and Phase 7: the actual search for a better medium.</li>
+</ul>
+<p><b>What to hope for.</b> The field is young (published mainly since 2013), the medium's energy has few established forms, and the trade-off is practically painful. That gives the agents more room than Arena 1's forty-year-old limiters, and natural sources for transfer: foams, granular media and tissue all stiffen under compression in their own ways. Whether a hunch turns out new is decided only by the referee after a literature check.</p>
+<p class="note">Sources: docs/STATUS.md, docs/DECISIONS.md, docs/plans/2026-10-30-phase6.md, docs/judge/contact_spec.md, docs/spikes/2026-10-30-phase6-tooling.md, docs/results/arena1-negative.md, BENCHMARK.md; figures from scripts/plot_contact_meshes.py. Earlier versions of this page: docs/reports/2026-10-21-, 2026-10-24- and 2026-10-29-big-picture.html.</p>
+</main>
