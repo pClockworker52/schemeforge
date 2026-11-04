@@ -83,6 +83,49 @@ Plate L = R = 10 µm, V = 500 m/s, default bulk viscosity.
 
 *Unconfined plate, 500 m/s, mirrored about the axis. Feature check only; the material values are nominal.*
 
+### 2.1 Why the centre lifts off the wall (run J7)
+
+J7 is a squat disc (R = L = 10 µm) on a frictionless, non-adhesive rigid wall, with no failure model (Pmin =
+−10³⁰). Underside gap and bottom-layer pressure, read by node ID from the 0.25 ns frames:
+
+| t (ns) | gap at r₀ = 0 / 0.5R / 0.74R (nm) | bottom-layer p at r₀ = 0 / 0.24R / 0.5R / 0.74R (GPa) | outer radius (µm) |
+|---|---|---|---|
+| 0.5 | 0 / 0 / 0 | 19.7 / 19.7 / 19.7 / 19.4 | 10.4 |
+| 1.5 | 0 / 0 / 0 | 19.7 / 19.5 / 10.4 / 4.4 | 11.4 |
+| 2.5 | 0 / 0 / 0 | 0.2 / 2.9 / 2.0 / 1.3 | 12.4 |
+| 3.0 | 99 / 0 / 0 | −0.4 / −0.5 / −0.2 / 0.6 | 12.9 |
+| 4.5 | 846 / 186 / 39 | −1.5 / −1.5 / −1.0 / −0.3 | 14.2 |
+| 5.0 | 1502 / 418 / 96 | 1.9 / 1.3 / 0.0 / −0.2 | 14.6 |
+| 12.5 | 1249 / 3 / 0 | 0.0 / −0.5 / 1.5 / 0.9 | 19.5 |
+
+1. **Impact shock (0–2 ns).** The face is loaded to about 19.7 GPa (Hugoniot estimate 20.6 GPa). The shock runs up the disc at U ≈ c₀ + S₁V ≈ 4.7 km/s. Behind it the material is at rest axially and compressed by about V/U ≈ 10 %.
+2. **Lateral release from the free side face.** The cylinder's side is free, so a release fan runs inward from the edge. The bottom-layer pressure drops at 0.74R by 1 ns, at 0.5R by 1.5 ns, at 0.24R by 2 ns and on the axis by 2.5 ns (about 4 km/s inward). Behind it the material flows **outward along the wall** (arrows in the GIF): the rim pancakes and slides, so the outer radius grows from 10 to 19.5 µm. This ring stays on the wall because its motion is mostly radial.
+3. **Focusing on the axis (≈ 2.5–3 ns).** The inward release meets itself on the axis and the pressure there goes negative. The highly compressed central column springs back (stored EOS compression and elastic energy) and pushes the underside up. **The centre leaves the wall at about 2.7 ns**, before the 1D picture would predict it: there, the release from the top face is back at the wall only at 2L/U ≈ 4.3 ns.
+4. **Top-face release (≈ 4.3–4.5 ns).** It arrives and adds tension (−1.5 GPa in the bottom layer). The centre underside briefly moves up at about 1.2 km/s, and the gap reaches 1.5 µm at 5 ns.
+5. **Afterwards** the thinned centre rings like a free plate: the gap swings between 1.1 and 1.8 µm with a period of about 3.5 ns. The rim (r₀ ≥ 0.74R) stays in or near contact and keeps sliding outward.
+
+**Is it physical?** The mechanisms are: shock, release from the free edge, cylindrical focusing on the axis, and
+springback of the compressed core. These are ordinary wave mechanics, and the axis is where the release waves from
+all around the edge meet. For this idealised problem, then, a central gap with the rim still sliding is the
+expected answer, not a solver artefact.
+
+What is idealised or not converged:
+- **No adhesion.** Any tension at the interface separates it. Real bonding would hold where bonded, which is exactly the cold-spray question.
+- **Frictionless wall.**
+- **No spall model.** The disc carries −1.5 GPa of tension; a failure model could open a spall plane instead.
+- **Coarse mesh and default bulk viscosity.** 50 × 50 cells; the ringing amplitude and the 1.2 km/s spike are not mesh-converged.
+- **Nominal material values.**
+- **Geometry.** A real particle is a sphere, so contact grows from a point and the release comes from the moving contact edge, not from a fixed side face.
+
+For orientation only (general knowledge, not checked in this session): single-particle cold-spray impacts are
+often described with an unbonded centre and bonding in an outer ring. The same release-wave picture is the usual
+explanation.
+
+![Pressure, velocity and underside gap](opencourant/figures/opt1_liftoff.gif)
+
+*Left: pressure (red compression, blue tension; scale −3 to 20 GPa), velocity arrows, mirrored. Right: underside
+gap at three initial radii; the dotted line marks 2L/U, when the top-face release returns to the wall in 1D.*
+
 ## 3. Rung 0: elastic confined plate (comparison with the JAX code)
 
 E = 70 GPa, ν = 0.35, ρ = 2700 kg/m³, L = R = 10 µm, n_r = 4, V = 100 m/s.
