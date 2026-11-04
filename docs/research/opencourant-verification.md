@@ -363,7 +363,7 @@ replaces the element: warning 1222, "QUAD FORMULATION 17, IS NOT AVAILABLE WITH 
 SET TO 2". **In 2D axisymmetric runs the verified 4-point element is Lagrangian only. ALE and Euler parts use the
 area-weighted element**, the one that fails rung 1. That matters for the jet, where ALE was one of the options for
 extreme distortion. In 2D axisymmetric, ALE would need its own verification (a Hertz-type or disc case run as ALE)
-before use. SPH or 3D are the alternatives.
+before use. SPH is the alternative (3D dropped, open item 8).
 
 ## 6. Rules for our own decks (from the above)
 
@@ -385,4 +385,4 @@ before use. SPH or 3D are the alternatives.
 5. Rigid wall at very small impact speeds injects energy (§5.2, V = 0.2 m/s). Not relevant for cold spray; note before using the wall for slow contact.
 6. Warning 312 (`/BCS` + rigid wall on the same nodes): harmless here; check again with friction or sliding.
 7. The QA copper rod ([openradioss-setup.md](openradioss-setup.md) §3.3) is ALE, so it can only use the area-weighted element (§5.4). Its tension behind the front is unexplained; an ALE verification case would cover it.
-8. **Decision needed (Peter):** how to handle the extreme distortion at the jet, given that the verified 2D element is Lagrangian only: Lagrangian with `Isolid = 17` (plus erosion or remeshing), ALE after its own verification, SPH, or 3D.
+8. **Jet distortion (Peter, 2026-11-04: 3D dropped).** A third dimension does not reduce mesh distortion at the jet, and a normal impact is axisymmetric. Remaining options: Lagrangian with `Isolid = 17` plus erosion or remeshing (first, cheapest); 2D ALE after its own verification; SPH after its own verification.
