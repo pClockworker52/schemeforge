@@ -27,6 +27,10 @@ out-of-sample evidence that can be produced locally.
 - **B4.** Any value from a listed paper that reaches the modeller before step 2 is logged below, and the
   affected rows are reported separately.
 - **B5.** The list is closed. Papers found later go to a new list with its own freeze date.
+- **B6 (adopted 2026-11-04, DECISIONS "Blind test rule B6").** If a paper prints no window bounds and they cannot
+  be digitized, the window is v_cr ± the paper's stated velocity uncertainty. If no uncertainty is stated, only
+  sign- and rank-based verdicts are scored. B6 applies only to papers whose predictions are frozen after
+  2026-11-04; B10 stays scored as in coldspray-results-b10.md.
 
 ## Hold-out papers (experimental, single-particle, metallic)
 
