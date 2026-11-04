@@ -94,7 +94,7 @@ C₀, B, dynamic σ_y, ε; Z9: ρ, C₀, Y_d). The table is incomplete on purpos
 
 | Prefix | Source | Materials | Fields |
 |---|---|---|---|
-| P-HG | HG2018a preprint, Extended Data Table 1 (F) | Cu, Ni, Al, Ta | ρ, c_p, T_m, B, G, ν, C₀, Hugoniot s, Johnson–Cook A, B, n, C, m |
+| P-HG | HG2018a preprint, Extended Data Table 1 (F) | Cu, Ni, Al, Ta | ρ, c_p, T_m, B, G, ν, C₀, Hugoniot s, Grüneisen γ₀, Johnson–Cook A, B, n, C, m, reference strain rate and temperature (γ₀ and the last two added 2026-11-04) |
 | P-WP | Wikipedia element infoboxes, retrieved 2026-11-03 (tertiary; densities cite Arblaster 2018) | Al, Cu, Ni, Ti, Zn, Sn, Ag, Au, W, Ta, Fe | ρ, T_m, molar C_p, B, G |
 | **P-H20** | **Hassani2020 supplementary information, Table S1** (supplied by Peter; F) | Al, Ni, Cu, W, Ti, Zn, Sn, Au, Ag, Al 6061, Al 2024, Al 7075 | ρ, ν, E, Hugoniot C₀ (from Marsh 1980), macroscale dynamic yield (plate impact, 5 metals, cited), **microscale dynamic yield Y_d ± uncertainty** |
 
