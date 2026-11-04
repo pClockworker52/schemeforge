@@ -8,6 +8,10 @@ project.** Peter chose (2026-11-03, option 1) to use **OpenCourant**, a communit
 OpenRadioss code. Everything below refers to OpenCourant unless stated otherwise. DECISIONS and the prompt were not
 edited; that is Peter's call.
 
+**Usage rule (Peter, 2026-11-03):** use OpenCourant as installed, locally (`~/opt/opencourant/latest-20261011`).
+Never commit its binaries, libraries or result files. Keep the shipped QA decks (CC BY-NC 4.0) out of the repository;
+cite them by path and commit only.
+
 ## 1. Verified facts (checked 2026-11-03)
 
 ### 1.1 Status of OpenRadioss
@@ -107,7 +111,7 @@ export PATH=$OPENCOURANT_PATH/exec:$PATH
 
 `ldd` shows no missing libraries for starter, engine and MPI engine once `env.sh` is sourced.
 
-## 3. Smoke test (done, serial)
+## 3. Smoke tests (done: serial, 4-rank MPI, converters, axisymmetric ALE)
 
 **Deck:** `qa-tests/miniqa/INTERF/INT_7/small_boule/data/BOULE1V4_0000.rad` + `BOULE1V4_0001.rad` +
 `qadiags.inc`, at commit `cb760c2`. Readme: "Ball impact on the wall with /INTER/TYPE7". The model has
@@ -137,30 +141,133 @@ engine_linux64_gf  -i BOULE1V4_0001.rad
 
 Run directory (temporary, not kept in the repo): the session scratchpad, `run_serial/`.
 
+### 3.1 MPI run (4 ranks)
+
+Same inputs, in a fresh directory:
+
+```bash
+. ~/opt/opencourant/latest-20261011/env.sh
+export OMP_NUM_THREADS=1
+starter_linux64_gf -i BOULE1V4_0000.rad -np 4
+mpiexec -n 4 --bind-to core engine_linux64_gf_ompi -i BOULE1V4_0001.rad
+```
+
+| Item | Value |
+|---|---|
+| Cores | 4 SPMD domains × 1 thread (listing: "NUMBER OF SPMD DOMAINS 4", "THREADS PER DOMAIN 1"), Open MPI 4.1.6 |
+| Starter | exit 0; wall 0.45 s |
+| Engine | exit 0, "NORMAL TERMINATION", 2098 cycles; engine elapsed 0.47 s, `mpiexec` wall 0.62 s. The model is too small for MPI to help: 4 ranks are slower than 1 rank |
+| Against reference and serial | All 6 printed energy rows are **identical** to the reference and to the serial run (`/PARITH/ON` in the engine deck) |
+| Extra outputs | One restart file per domain: `BOULE1V4_000{0,1}_000{1..4}.rst` |
+
+### 3.2 Output conversion
+
+```bash
+gunzip -k BOULE1V4A00?.gz                     # needed: anim_to_vtk on a .gz file exits 1 with no output
+for f in BOULE1V4A00?; do anim_to_vtk_linux64_gf $f > $f.vtk; done
+th_to_csv_linux64_gf BOULE1V4T01              # writes BOULE1V4T01.csv
+```
+
+- `anim_to_vtk`: 8 legacy ASCII VTK files (`UNSTRUCTURED_GRID`, about 7 kB each), 154 points, 115 cells. Fields:
+  `TIME`, `CYCLE`, `NODE_ID`, `ELEMENT_ID`, `PART_ID`, `EROSION_STATUS`. **No stress, strain or temperature fields**,
+  because this deck requests no `/ANIM/ELEM` or `/ANIM/NODA` output. Our own decks must request them, e.g. plastic
+  strain, temperature and pressure. Observation: the `FieldData` `CYCLE` reads 0 even in `A008` (TIME 0.130053);
+  use `TIME`, not `CYCLE`.
+- `th_to_csv`: "CONVERSION COMPLETED"; `BOULE1V4T01.csv` has 131 rows and named columns (`"time"`, `"INTERNAL
+  ENERGY"`, `"KINETIC ENERGY"`, momenta, `"CONTACT ENERGY"`, `"HOURGLASS ENERGY"`, `"PLASTIC WORK"`, …, and the
+  per-part `BOULE … IE/KE/…` columns). It is directly readable from Python (`csv` / `numpy`).
+
+### 3.3 Axisymmetric ALE deck: copper rod impact (Taylor-type)
+
+**Deck:** `qa-tests/miniqa/ALE2D/bar2_v41/data/BAR2V41B_0000.rad` + `BAR2V41B_0001.rad` + `qadiags.inc` at
+commit `cb760c2` (readme: "ALE 2D IMPACT 227M/S TEST ALE ELASTOPLAST"; © Siemens, CC BY-NC 4.0, not committed).
+`BAR2V41BD02` in the same folder is an old generated deck that is not included, so it was not used.
+
+- `/ANALY` N2D3D = 1 (axisymmetric), one part of 250 `/QUAD` elements (CELL_TYPE 9), 306 nodes, `/ALE/MAT` with
+  `/ALE/GRID/DONEA`, `/MAT/LAW3` (HYDPLA) "CUIVRE" with linear hardening (a = 0.004, b = 0.001, n = 1). `/PROP/TYPE14`
+  q_a = q_b = 0, i.e. the defaults 1.10 and 0.05 (RG p.1703–1704).
+- Rod R₀ = 0.32 cm, L₀ = 3.24 cm, `/INIVEL` v_z = −0.0227 onto a face held by `/BCS` at z = 0.
+- **Units, inferred:** the `/BEGIN` card says kg–m–s, but the values only fit **g–cm–µs** (ρ = 8.93, E = 1.17 Mbar,
+  v = 0.0227 cm/µs = 227 m/s, t_end = 80 µs). Check: mass 1.481 g, ½ m v² = 38.2 J, and the listing's initial
+  KE 3.779e‑4 g·cm²/µs² = 37.8 J.
+
+```bash
+. ~/opt/opencourant/latest-20261011/env.sh; export OMP_NUM_THREADS=1
+starter_linux64_gf -i BAR2V41B_0000.rad -np 1     # exit 0, 0 errors, 1 warning (100214 /IOFLAG field); 0.43 s
+engine_linux64_gf  -i BAR2V41B_0001.rad           # NORMAL TERMINATION, 4349 cycles, elapsed 0.42 s, 1 core
+```
+
+**Against the shipped reference.** The reference listing was produced by upstream commit `440deeba` (2022-11),
+not by this build, and the printed rows are **not bit-identical**:
+
+- the cycle numbers of all 44 printed rows match, and so does the mass;
+- the initial time step differs by 1.7 % (0.04451 vs 0.04529);
+- time differs by ≤ 0.15 % and IE by ≤ 0.10 %;
+- KE differs by ≤ 1.2 % relative, at late times when KE is near zero.
+
+At the QA extract point (cycle 4300) cycle, time, time step and IE agree to the printed digits. KE is 9.718e‑8
+vs 9.767e‑8, an absolute difference of 4.9e‑10, below the QA's default `Zero_Tolerance 5.0e-8`
+(`qa-tests/scripts/or_QA.constants`). So the run plausibly passes the shipped QA criterion. I did not run the QA
+script itself.
+
+**Animation copy.** For the plots, a local copy of the engine deck was run with `/ANIM/DT` every 1 µs (81 frames)
+instead of 10 µs. Its energy rows are identical to the unmodified run. Converted with `anim_to_vtk` (after
+gunzip) and `th_to_csv`. The VTK files carry `2DELEM_Plastic_Strain` and `2DELEM_Pressure`, requested in the
+deck by `/ANIM/ELEM/EPSP` and `/ANIM/ELEM/P`. Figures made by
+[`openradioss/scripts/plot_bar2.py`](openradioss/scripts/plot_bar2.py) (with
+[`vtkread.py`](openradioss/scripts/vtkread.py)):
+`python plot_bar2.py <vtk_dir> <BAR2V41BT01.csv> <out_dir>` (numpy, matplotlib, pillow).
+
+| Quantity (t = 80 µs) | Value |
+|---|---|
+| L / L₀ | 0.665 (2.156 cm) |
+| max. radius R / R₀ | 2.20 (0.703 cm) |
+| max. equivalent plastic strain | 2.35 (at the impact face) |
+| plastic work / initial KE | 0.97 |
+| energy balance (IE + KE) | −2.0 % (listing ERROR column −2.0 %); hourglass energy 0, external work 0 |
+| peak cell pressure, frames at 1–8 µs | 4.9 GPa |
+
+![Energy history and rod shape](openradioss/figures/bar2_history.png)
+
+*(a)* Kinetic energy goes into internal energy, and the rod is essentially at rest by 75 µs. The dashed total
+loses 2.0 %. This is not hourglass energy (zero); ALE advection is a likely source, not checked. *(b)* The
+radius saturates at about 50 µs, the length at about 70 µs.
+
+![Plastic strain](openradioss/figures/bar2_plastic_strain.png)
+
+Equivalent plastic strain on the deformed ALE mesh, mirrored about the axis for readability (the model is the
+half r ≥ 0). Strain concentrates in a thin layer at the impact face; the mushroom foot spreads to 2.2 R₀.
+
+![Pressure wave](openradioss/figures/bar2_pressure.png)
+
+Pressure (positive in compression, TM p.94) in the first 8 µs: a compression front of about 0.4 cm/µs runs up
+the rod. **Not understood:** behind the front the sign alternates, down to about −4 GPa (tension) near the face
+at 2 µs. That is unexpected for a rod held against the face. Possible causes are ringing on this coarse mesh
+(5 radial × 50 axial cells, frames 1 µs apart) or how `/BCS` holds the face nodes. Not investigated; to check
+before trusting pressure or interface tension in our own decks (item 1 in section 5).
+
+Animation (81 frames, 10 fps, 0.8 MB): [bar2_plastic_strain.gif](openradioss/figures/bar2_plastic_strain.gif)
+
+![Plastic strain animation](openradioss/figures/bar2_plastic_strain.gif)
+
 ## 4. What did not work or was not done
 
 - **The prompt's premise:** "official OpenRadioss sources" no longer exist (section 1.1). Peter decided to use the fork.
 - First starter run: `ERROR ID 100002 Include file qadiags.inc not found`. My mistake: I had copied only the two
   `.rad` files. Fixed by copying `qadiags.inc` (a comment-only include).
-- **MPI run (4 ranks) and the converters (`anim_to_vtk`, `th_to_csv`) were not run.** The Claude Code auto-mode
-  permission classifier blocked further execution of the downloaded binaries ("Code from External"). Planned
-  commands, for Peter or a session with that permission:
-  ```bash
-  starter_linux64_gf -i BOULE1V4_0000.rad -np 4
-  mpiexec -n 4 --bind-to core engine_linux64_gf_ompi -i BOULE1V4_0001.rad
-  gunzip -k BOULE1V4A0*.gz       # the converter README takes plain A-files; whether it reads .gz is untested
-  for f in BOULE1V4A0??; do anim_to_vtk_linux64_gf $f > ${f}.vtk; done
-  th_to_csv_linux64_gf BOULE1V4T01   # add /TH/TITLE to the engine deck for full column names
-  ```
-  Converter usage is from `OpenCourant/Tools` `output_converters/{anim_to_vtk,th_to_csv}/README.md`.
+- The MPI run and the converters were blocked at first by the Claude Code auto-mode classifier ("Code from
+  External"). After Peter allowed them, they ran (3.1, 3.2).
+- `anim_to_vtk` does not read gzipped animation files: gunzip first.
 - The manuals are Altair Radioss **2022**, the only ones linked by the fork. There is no OpenCourant-specific
   manual yet.
 - No source build, no Apptainer image (not needed).
 
 ## 5. What we still need to check
 
-1. **Axisymmetric support in practice:** run `qa-tests/miniqa/ALE2D/bar2_v41` (`/ANALY` N2D3D = 1, ALE, LAW3
-   copper). Then check that LAW4 (JC + `/EOS/GRUNEISEN`) is accepted on `/QUAD` elements under N2D3D = 1.
+1. **Axisymmetric support in practice:** `ALE2D/bar2_v41` runs (axisymmetric, ALE, LAW3 on `/QUAD`; section 3.3).
+   Still open: (a) whether LAW4 (JC + `/EOS/GRUNEISEN`) is accepted on `/QUAD` elements under N2D3D = 1;
+   (b) the alternating-sign pressure behind the front in 3.3 (mesh refinement, `/BCS` versus rigid wall,
+   bulk viscosity); (c) the −2 % energy drift under ALE.
    RG says only "solid elements" for LAW4, and TM lists LAW2 for "brick, shell, truss and beam", not quads.
    Look for the RD-E 0800 "Hopkinson Bar" example cited under `/ANALY`.
 2. **Rigid-wall contact for particle on substrate:** `/RWALL/PLANE` (sliding flag, friction) versus
@@ -175,13 +282,17 @@ Run directory (temporary, not kept in the repo): the session scratchpad, `run_se
    element variables: PEEQ, T, pressure) gives the jet and interface quantities we will converge on.
 5. **Parameter sweeps (impact velocity) from Python:** the decks are plain text. The plan is to generate the starter
    deck from a template (`/INIVEL` or `/IMPVEL` value), run starter + engine via `subprocess` in one directory per
-   case, then parse the `T01` time history (via `th_to_csv`) and the `.out` energy rows. Check: run-time scaling with
+   case, then parse the `T01` time history (`th_to_csv` works, 3.2), the VTK fields (`anim_to_vtk`, with
+   `/ANIM/ELEM` requests added) and the `.out` energy rows. Check: run-time scaling with
    mesh size, `-np`/`OMP_NUM_THREADS` choice, and the `qa-tests/miniqa/PYTHON/FUNCT_PYTHON` feature (Python functions
    inside the deck).
 6. **Reproducibility:** pin `latest-20261011` (zip kept locally with its SHA-256). Move to the first formal
    `vYYYY.N` release when it exists, and re-run the smoke test plus the reference comparison after any upgrade.
-7. **Licence questions for Peter:** whether the Siemens permission for `hm_reader`, `H3D` and `hm_cfg_files`
-   ("solely in connection with OpenRadioss software") covers use via OpenCourant. Also note the CC BY-NC 4.0
-   status of the QA decks, which matters if we publish derived decks.
+7. **Licence (settled by Peter, 2026-11-03):** the risk from the Siemens-only parts (`hm_reader`, `H3D`,
+   `hm_cfg_files`, "solely in connection with OpenRadioss software") lies in redistributing or publishing things
+   that depend on them. Running OpenCourant locally for research distributes nothing, and our own input decks and
+   result numbers are ours. Rule: do not redistribute the package, its closed libraries or the cfg files, and do not
+   ship anything that bundles them. Before publishing a deck, check it is our own and not derived from the
+   CC BY-NC 4.0 QA decks.
 8. **Cross-check against the independent JAX code** (`src/schemeforge/research/impact_axisym.py`, rung 1) on a
    shared elastic or elastic-plastic case before any cold-spray number is produced.
