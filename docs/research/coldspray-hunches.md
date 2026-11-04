@@ -47,3 +47,6 @@ its registration, never on the rows of `data/vcr_lipit.csv` v0.1, which inspired
   results: B10 (2026-11-04) not refuted (direction agrees), support undetermined; see coldspray-results-b10.md
   author: claude (with Peter)
 ```
+
+CS-08 and CS-09 are in [coldspray-preregistration-b10.md](coldspray-preregistration-b10.md). CS-10 (combined
+strength + oxide energy balance, registered 2026-11-04) is in [coldspray-hunch-cs10.md](coldspray-hunch-cs10.md).
