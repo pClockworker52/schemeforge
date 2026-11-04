@@ -44,5 +44,6 @@ its registration, never on the rows of `data/vcr_lipit.csv` v0.1, which inspired
     or two metals besides Al.
   label: variant of HG2019b (label set 2026-11-03 after reading HG2019b; referee to confirm)
   status: open
+  results: B10 (2026-11-04) not refuted (direction agrees), support undetermined; see coldspray-results-b10.md
   author: claude (with Peter)
 ```
