@@ -15,7 +15,7 @@ is used or copied.
 | Question | Answer |
 |---|---|
 | JC + Mie–Grüneisen on axisymmetric quads? | **Yes.** `/MAT/LAW4` + `/EOS/GRUNEISEN` on `/QUAD` with N2D3D = 1 is accepted and runs; confined and unconfined plates at 500 m/s; pressure peak −4 % of the Hugoniot estimate. |
-| Adiabatic heating? | **LAW4 built-in temperature works** (T from internal energy, 293 → 880 K peak in the confined plate). **`/HEAT/MAT` does not give a usable temperature on axisymmetric quads**: T stays near 0 K (not even T₀), with or without engine `/THERMAL`. So no Taylor–Quinney fraction for now. |
+| Adiabatic heating? | **LAW4's built-in temperature is exactly plastic-work heating** (ΔT = ∫σ_y dε_p/ρc_p, checked to 0.4 % with a constant yield stress, §2.2), **plus** bulk-viscosity work when q is on, **plus** reversible compression heating when `/EOS/GRUNEISEN` is used. **`/HEAT/MAT`** gives T ≈ 0 on axisymmetric quads (unusable in 2D). On 3D bricks it works but **ignores EFRAC** for LAW4 (0.9 and 0.5 give the same T), so a Taylor–Quinney fraction β needs ρc_p/β instead. |
 | Rung 0 (elastic) against the exact solution? | **Agrees.** Contact time error +1.05/+0.36/−0.04/−0.31 % and rebound 0.965/0.978/0.986/0.991 V at 25/50/100/200 elements (variant A, closest to the JAX settings). JAX: +1.9/+0.9/+0.7/+0.4 %, 0.966/0.979/0.987/0.992 V (reproduced here). |
 | Plateau force | **+0.66 % at every mesh**: a finite-strain effect, ≈ 0.42 × V/c_d, which vanishes as V → 0. Quads have no small-strain option (starter error 1223). JAX is linear and exact. |
 | Rung 0p (elastic-plastic two-wave) | **Agrees with the closed form** with q ≈ 0: wall stress σ₂ to 0.9997 at 200 elements, plastic front speed 0.993 c_b, elastic front 0.997 c_d; ε_p behind the plastic wave 1.05 (q ≈ 0) and 0.986 (default q) of the closed form. |
@@ -82,6 +82,36 @@ Plate L = R = 10 µm, V = 500 m/s, default bulk viscosity.
 ![JC + Grüneisen plate, plastic strain and temperature](opencourant/figures/opt1_jc_gruneisen.gif)
 
 *Unconfined plate, 500 m/s, mirrored about the axis. Feature check only; the material values are nominal.*
+
+### 2.2 What the LAW4 temperature contains (exact check)
+
+The source sets the update (`engine/source/materials/mat/mat004/m4law.F`, lines 223–239, commit `cb760c2`):
+- **without thermal analysis:** `TEMPEL = TEMPEL + SIGY*DPLA/RHOCP`, i.e. plastic work with factor 1;
+- **with thermal analysis on a Lagrangian mesh:** `FHEAT = FHEAT + SIGY*DPLA*VOL` as the heat source, with no EFRAC factor in that line.
+
+Check: Johnson–Cook with B = C = 0 gives a constant yield stress A = 300 MPa, so each element must heat by exactly
+A·ε_p/ρc_p. Confined plate (2D, 20 × 2) and confined brick column (3D, 20 bricks) at 500 m/s, time-step scale
+0.4 ([`tcheck.py`](opencourant/scripts/tcheck.py), [`results/temperature_check.csv`](opencourant/results/temperature_check.csv)):
+
+| Case | EOS | bulk viscosity | `/HEAT/MAT` | ΔT median (K) | A·ε_p/ρc_p (K) | ratio |
+|---|---|---|---|---|---|---|
+| 2D | none (LAW4 default) | ≈ 0 | – | 13.09 | 13.14 | **0.996** |
+| 2D | none | default | – | 43.99 | 7.37 | 5.97 |
+| 2D | Grüneisen | ≈ 0 | – | 91.50 | 14.69 | 6.31 |
+| 2D | Grüneisen | default | – | 129.65 | 6.74 | 19.2 |
+| 3D | none | ≈ 0 | – | 12.97 | 13.02 | **0.996** |
+| 3D | Grüneisen | ≈ 0 | – | 91.83 | 14.15 | 6.51 |
+| 3D | none | ≈ 0 | EFRAC 0.9 (+ `/THERMAL`) | 12.90 | 13.01 | **0.998** |
+| 3D | none | ≈ 0 | EFRAC 0.5 (+ `/THERMAL`) | 12.90 | 13.01 | **0.998** |
+
+- **Plastic-work heating is exact** (to 0.4 %) when nothing else adds energy.
+- **Bulk viscosity adds its dissipated work** to the temperature: 6× here. In a shock that is the irreversible jump the q term represents, but its size is set by q_a and q_b, not by the material.
+- **The Grüneisen EOS adds compression heating:** +78 K at about 10 % compression with γ₀ = 1.99, of the order of T·γ·ΔV/V ≈ 60 K. It is reversible and falls on release (J1: 880 K peak, 705 K later).
+- **EFRAC has no effect** with LAW4, consistent with the source line. In adiabatic runs, β·W/ρc_p can be obtained by entering ρc_p/β.
+- **q ≈ 0 doubles ε_p** in this coarse shock (14.7 K vs 6.7 K of plastic heating), as in rung 0p: ringing behind the jump causes extra yielding.
+
+For cold spray, the interface temperature is meant to come from plastic work. The other two parts should
+therefore be either kept small (q small, at a fine mesh) or reported separately (EOS compression heating).
 
 ### 2.1 Why the centre lifts off the wall (run J7)
 
@@ -214,12 +244,12 @@ no closed form here; it is listed for later comparison with the JAX code once th
 2. Remember that axisymmetric time-history output is per radian (×2π for the ring).
 3. Use time-step scale 0.4 (`/DT`) or keep the element aspect ratio ≤ about 10 if default bulk viscosity is on.
 4. Verification against linear solutions: q ≈ 0 and V ≤ 10 m/s (finite-strain excess ≤ 0.07 %).
-5. Temperature in 2D: LAW4 built-in only, until `/HEAT/MAT` is understood. Report that it includes compression energy.
+5. Temperature: LAW4 built-in (2D and 3D). Enter ρc_p/β for a Taylor–Quinney fraction β, because EFRAC is ignored. Keep bulk viscosity small, because its work heats the material. Report the EOS compression heating separately.
 6. Velocity sweeps: plain text decks, starter + engine via `subprocess`, one directory per case (`ocdeck.run`); about 0.1–4 s per run at these sizes.
 
 ## 6. Open items
 
-1. `/HEAT/MAT` on axisymmetric quads (T ≈ 0): test on 3D bricks; look for a 2D thermal option. This blocks a Taylor–Quinney fraction.
+1. `/HEAT/MAT` on axisymmetric quads (T ≈ 0): works on bricks (§2.2), so this is a 2D limitation. In 2D use the LAW4 built-in update with ρc_p/β for a Taylor–Quinney fraction β.
 2. JC + Grüneisen against a closed form: a confined plate with an EOS has a Hugoniot solution (elastic precursor + shock). That would be rung 0p with LAW4 instead of LAW2, and the JAX code would need an EOS.
 3. Warning 312 (`/BCS` + rigid wall on the same nodes): harmless here; check again with friction or sliding.
 4. The tension behind the front in the QA copper rod ([openradioss-setup.md](openradioss-setup.md) §3.3): rung 0p shows clean fronts with q ≈ 0 and with q default on our meshes, so the cause there is more likely the coarse QA mesh or the `/BCS`-held face than the solver. Not re-run.

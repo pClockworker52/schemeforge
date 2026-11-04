@@ -130,13 +130,35 @@ def _group(gid: int, title: str, ids) -> list[str]:
 
 
 def write_plate_deck(path_root: str, name: str, mat, *, thickness: float, radius: float, n_z: int, n_r: int,
-                     velocity: float, t_end: float, dt_th: float, dt_anim: float | None = None,
-                     confine_r: bool = True, q: tuple[float, float] | None = (1e-30, 1e-30),
-                     anim_fields: tuple[str, ...] = ("P", "EPSP", "VONM"),
-                     dt_scale: float | None = None, ismstr: int = 0,
-                     thermal: bool = False) -> tuple[str, str]:
-    """Write <name>_0000.rad and <name>_0001.rad into directory path_root; return both paths."""
+                     confine_r: bool = True, **kw) -> tuple[str, str]:
+    """Plate 0 <= r <= radius, 0 <= z <= thickness on the wall z = 0; see write_deck for the keywords."""
     rz, quads = plate_mesh(radius, thickness, n_r, n_z)
+    return write_deck(path_root, name, mat, rz, quads, confine_r=confine_r, **kw)
+
+
+def sphere_mesh(radius: float, n_u: int, n_v: int, grade: float = 2.0):
+    """The JAX code's sphere mesh (impact_axisym.sphere_mesh), shifted so the south pole touches z = 0.
+
+    Half-disk r >= 0 by the elliptical square-to-disk map, nodes graded towards the axis and the south pole.
+    Returns nodes (n, 2) as (r, z) and quads (e, 4) with 1-based ids, counter-clockwise in (r, z).
+    """
+    u = (np.arange(n_u + 1) / n_u) ** grade
+    v = -1.0 + 2.0 * (np.arange(n_v + 1) / n_v) ** grade
+    uu, vv = np.meshgrid(u, v, indexing="ij")
+    r = radius * uu * np.sqrt(1.0 - vv**2 / 2.0)
+    z = radius * vv * np.sqrt(1.0 - uu**2 / 2.0) + radius
+    rz = np.stack([r.ravel(), z.ravel()], axis=1)
+    idx = np.arange(1, (n_u + 1) * (n_v + 1) + 1).reshape(n_u + 1, n_v + 1)
+    quads = np.stack([idx[:-1, :-1].ravel(), idx[1:, :-1].ravel(), idx[1:, 1:].ravel(), idx[:-1, 1:].ravel()], 1)
+    return rz, quads
+
+
+def write_deck(path_root: str, name: str, mat, rz: np.ndarray, quads: np.ndarray, *, velocity: float,
+               t_end: float, dt_th: float, dt_anim: float | None = None, confine_r: bool = False,
+               q: tuple[float, float] | None = (1e-30, 1e-30), anim_fields: tuple[str, ...] = ("P", "EPSP", "VONM"),
+               dt_scale: float | None = None, ismstr: int = 0, thermal: bool = False) -> tuple[str, str]:
+    """Write <name>_0000.rad and <name>_0001.rad for an axisymmetric body (nodes rz (n, 2) in m, quads (e, 4)
+    1-based, counter-clockwise in (r, z)) moving at -velocity onto the rigid wall z = 0; return both paths."""
     nn = len(rz)
     s = ["#RADIOSS STARTER", f"# schemeforge rung deck, written by ocdeck.py: {name}",
          "/BEGIN", name, _i(2026) + _i(0),
