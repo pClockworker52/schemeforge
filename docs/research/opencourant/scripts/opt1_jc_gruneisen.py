@@ -4,7 +4,10 @@ Material values are nominal copper-like numbers for a feature check only (not ve
 Temperature comes from LAW4's built-in adiabatic update (no /HEAT/MAT; see opencourant-verification.md).
 Writes a GIF of plastic strain and temperature on the deformed mesh (mirrored about the axis).
 
-Usage: python opt1_jc_gruneisen.py <work_dir> <out_gif>
+Usage: python opt1_jc_gruneisen.py <work_dir> <out_gif> [isolid]
+
+isolid 0 (default 1-point quad) keeps the element temperature output working; isolid 17 (4-point quad, the
+verified element) computes temperature internally but writes T = T0 to the animation (see the doc).
 """
 
 import os
@@ -33,12 +36,12 @@ BLUE_SEQ = LinearSegmentedColormap.from_list("b", ["#cde2fb", "#6da7ec", "#256ab
 ORANGE_SEQ = LinearSegmentedColormap.from_list("o", ["#fbe3d6", "#f2a27f", "#eb6834", "#a23a12"])
 
 
-def main(work, out_gif):
+def main(work, out_gif, isolid="17"):
     name = "J7"
     d = os.path.join(work, name)
     oc.write_plate_deck(d, name, oc.JohnsonCookGruneisen(**CU, heat_efrac=None), thickness=L, radius=L, n_z=50,
                         n_r=50, velocity=V, t_end=5 * L / CU["c0"], dt_th=1e-11, dt_anim=0.25e-9, confine_r=False,
-                        q=None, anim_fields=("P", "EPSP", "TEMP", "VONM"))
+                        q=None, anim_fields=("P", "EPSP", "TEMP", "VONM"), isolid=int(isolid))
     info = oc.run(d, name)
     print({k: v for k, v in info.items() if "tail" not in k})
     frames = [vtkread.read(v) for v in oc.convert_anim(d, name)]
@@ -74,7 +77,7 @@ def main(work, out_gif):
             ax.set_xlabel("r (µm)")
         for ax in axs:
             ax.set_ylabel("z (µm)")
-        axs[0].set_title(f"Cu-like JC + Grüneisen plate, {V:.0f} m/s, t = {fr['time'] * 1e9:4.1f} ns", loc="left",
+        axs[0].set_title(f"Cu-like JC + Grüneisen plate, {V:.0f} m/s, Isolid {isolid}, t = {fr['time'] * 1e9:4.1f} ns", loc="left",
                          fontsize=8.5)
         return []
 
@@ -83,4 +86,4 @@ def main(work, out_gif):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:3])
+    main(*sys.argv[1:4])

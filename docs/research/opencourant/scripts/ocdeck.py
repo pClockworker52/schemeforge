@@ -10,6 +10,10 @@ Material blocks:
     PlasticLinear(E, nu, rho, sigma_y, E_t)                     /MAT/LAW2 with n = 1, c = 0, m = 0
     JohnsonCookGruneisen(...)                                   /MAT/LAW4 + /EOS/GRUNEISEN (+ /HEAT/MAT)
 
+Element: Isolid = 17 by default, the 4-point quad (engine q4forc2). The default 1-point quad (Isolid = 0, engine
+qforc2) is area-weighted in axisymmetric runs (nodal mass rho*A/4, 1/r terms with A/(4 r_mean)); it fails the Hertz
+rung (about 5x too stiff) and does not conserve axial momentum in free flight. See opencourant-verification.md.
+
 Bulk viscosity: OpenCourant replaces q_a = q_b = 0 by its defaults 1.10 and 0.05 (Reference Guide 2022,
 /PROP/TYPE14). `q=None` keeps those defaults; `q=(qa, qb)` sets them (use a tiny value such as 1e-30 for "off").
 """
@@ -156,7 +160,8 @@ def sphere_mesh(radius: float, n_u: int, n_v: int, grade: float = 2.0):
 def write_deck(path_root: str, name: str, mat, rz: np.ndarray, quads: np.ndarray, *, velocity: float,
                t_end: float, dt_th: float, dt_anim: float | None = None, confine_r: bool = False,
                q: tuple[float, float] | None = (1e-30, 1e-30), anim_fields: tuple[str, ...] = ("P", "EPSP", "VONM"),
-               dt_scale: float | None = None, ismstr: int = 0, thermal: bool = False) -> tuple[str, str]:
+               dt_scale: float | None = None, ismstr: int = 0, thermal: bool = False,
+               isolid: int = 17) -> tuple[str, str]:
     """Write <name>_0000.rad and <name>_0001.rad for an axisymmetric body (nodes rz (n, 2) in m, quads (e, 4)
     1-based, counter-clockwise in (r, z)) moving at -velocity onto the rigid wall z = 0; return both paths."""
     nn = len(rz)
@@ -169,7 +174,7 @@ def write_deck(path_root: str, name: str, mat, rz: np.ndarray, quads: np.ndarray
     s += ["/QUAD/1"] + ["".join(_i(x) for x in [e + 1, *q4]) for e, q4 in enumerate(quads)]
     s += ["/PART/1", "plate", _i(1) + _i(1) + _i(0)]
     qa, qb = (0.0, 0.0) if q is None else q
-    s += ["/PROP/TYPE14/1", "plate solid", _i(0) + _i(ismstr) + _i(0) * 6 + _f(0.0), _f(qa) + _f(qb) + _f(0.0) + _f(0.0) + _f(0.0),
+    s += ["/PROP/TYPE14/1", "plate solid", _i(isolid) + _i(ismstr) + _i(0) * 6 + _f(0.0), _f(qa) + _f(qb) + _f(0.0) + _f(0.0) + _f(0.0),
           _f(0.0) + _f(0.0) + _f(0.0) + _f(0.0) + _f(0.0), _i(0) + _i(0) + _i(0)]
     s += _material_cards(mat)
     s += _group(1, "all nodes", range(1, nn + 1))

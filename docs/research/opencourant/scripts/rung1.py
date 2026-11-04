@@ -2,7 +2,8 @@
 
 Same case as impact_axisym.elastic_sphere_on_rigid_wall: sphere radius R, touching the wall at t = 0, speed V,
 graded square-to-disk mesh (n_u, n_v), run to 1.6 Hertz contact times. Metrics, identical for both codes:
-    contact  = last time with F > 1e-3 F_Hertz, divided by t_Hertz
+    contact  = end of the main contact pulse: first time after the force peak with F < 1e-3 F_Hertz, / t_Hertz
+               (the last-time-above-threshold definition of rung 0 picks up later re-contacts of the ringing sphere)
     peak     = max F / F_Hertz
     approach = max centre-of-mass approach / d_Hertz
     rebound  = centre-of-mass velocity at the end / V   (Hertz: 1; less = energy left in vibrations)
@@ -21,7 +22,7 @@ import sys
 import numpy as np
 
 E, NU, RHO, R, V = 70e9, 0.35, 2700.0, 10e-6, 20.0
-MESHES = ((15, 30), (30, 60), (60, 120))
+MESHES = ((10, 20), (15, 30), (20, 40))  # both codes; 30 x 60 needs ~2 h per OpenCourant run (dt ~2e-14 s)
 THRESH = 1e-3
 
 
@@ -54,9 +55,14 @@ def hertz():
     return {"t_contact": t, "F_max": k * d_max**1.5, "d_max": d_max, "t": np.array(ts), "F": np.array(fs)}
 
 
+def contact_end(t, f, f_ref):
+    k = int(np.argmax(f))
+    below = np.nonzero(f[k:] < THRESH * f_ref)[0]
+    return float(t[k + below[0]]) if len(below) else float("nan")
+
+
 def metrics(t, f, v, z_appr, H):
-    on = t[f > THRESH * H["F_max"]]
-    return {"contact": float(on.max() / H["t_contact"]), "peak": float(f.max() / H["F_max"]),
+    return {"contact": contact_end(t, f, H["F_max"]) / H["t_contact"], "peak": float(f.max() / H["F_max"]),
             "approach": float(z_appr.max() / H["d_max"]), "rebound": float(v[-1] / V)}
 
 
@@ -66,13 +72,13 @@ def run_oc(work, out_csv, out_npy):
 
     H = hertz()
     rows, store = [], {}
-    for var, q, dts in (("A_q0_dt0.4", (1e-30, 1e-30), 0.4), ("C_default", None, None)):
-        for n_u, n_v in MESHES:
-            name = f"S{var[0]}{n_u:03d}"
+    for var, q, dts, iso in (("I17_q0_dt0.4", (1e-30, 1e-30), 0.4, 17), ("I0_q0_dt0.4", (1e-30, 1e-30), 0.4, 0)):
+        for n_u, n_v in (MESHES if iso == 17 else MESHES[1:2]):
+            name = f"S{iso:02d}{n_u:03d}"
             d = os.path.join(work, name)
             rz, quads = oc.sphere_mesh(R, n_u, n_v)
             oc.write_deck(d, name, oc.Elastic(E, NU, RHO), rz, quads, velocity=V, t_end=1.6 * H["t_contact"],
-                          dt_th=H["t_contact"] / 2000, q=q, dt_scale=dts)
+                          dt_th=H["t_contact"] / 2000, q=q, dt_scale=dts, isolid=iso)
             info = oc.run(d, name)
             if not info.get("normal"):
                 rows.append({"code": "OpenCourant", "variant": var, "n_u": n_u, "n_v": n_v,
@@ -120,8 +126,31 @@ def run_jax(out_npy):
     np.save(out_npy, out, allow_pickle=True)
 
 
+def recompute(oc_npy, jax_npy, oc_csv):
+    """Recompute the contact time from saved traces (both codes) after a metric change; rewrite the OC csv."""
+    oc = np.load(oc_npy, allow_pickle=True).item()
+    jx = np.load(jax_npy, allow_pickle=True).item()
+    rows = list(csv.DictReader(open(oc_csv)))
+    for r in rows:
+        key = f"{r['variant']}|{r['n_u']}"
+        if key in oc:
+            tf, f, _, _ = oc[key]
+            r["contact"] = contact_end(tf, f, 1.0)
+            print("OC", key, round(r["contact"], 4))
+    with open(oc_csv, "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+    for n, d in jx.items():
+        d["contact"] = contact_end(d["t"], d["f"], 1.0)
+        print("JAX", n, round(d["contact"], 4))
+    np.save(jax_npy, jx, allow_pickle=True)
+
+
 if __name__ == "__main__":
-    if sys.argv[1] == "oc":
+    if sys.argv[1] == "recompute":
+        recompute(*sys.argv[2:5])
+    elif sys.argv[1] == "oc":
         run_oc(*sys.argv[2:5])
     else:
         run_jax(sys.argv[2])

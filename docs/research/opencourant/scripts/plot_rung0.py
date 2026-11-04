@@ -48,7 +48,8 @@ for ax in (a, b):
     ax.set_xlabel("t / (2L/c_d)")
 a.axhline(1.0, color=INK2, lw=0.8)
 a.set_ylim(-0.1, 1.6)
-a.text(0.5, 0.45, "OpenCourant plateau 1.0066\n(all meshes; finite strain)\nJAX plateau 1.0000", ha="center",
+oc_plateau = np.mean([float(r["plateau"]) for r in rows if r["variant"] == "A_q0_dt0.4"])
+a.text(0.5, 0.45, f"OpenCourant plateau {oc_plateau:.4f}\n(all meshes; finite strain)\nJAX plateau 1.0000", ha="center",
        va="bottom", fontsize=7.5, color=INK2)
 a.set_ylabel("wall force / (ρ c_d V πL²)")
 a.set_title(f"(a) Wall force, {N} elements through the thickness", loc="left")
