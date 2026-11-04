@@ -22,6 +22,7 @@ is used or copied.
 | **Axisymmetric element** | **Use `Isolid = 17`** (4-point quad). The default 2D solid is area-weighted. It fails the Hertz sphere (about 5 × too stiff, mesh-independent) and loses axial momentum in free flight; it passes only the 1D cases. With `Isolid = 17` OpenCourant agrees with the JAX code on the unconfined disc (to 0.004 V) and on the Hertz sphere (to about 1 %). **Lagrangian only**: with ALE the starter falls back to the area-weighted element (§5.4). §5 |
 | Rung 1 (Hertz sphere) | **Agrees with the JAX code** (contact, peak, approach and rebound within about 1 % at 10 × 20, 15 × 30, 20 × 40). Both are 4–5 % short of quasi-static Hertz at 20 m/s and approach it at lower speed (dynamic effect). |
 | Jet distortion (open item 8) | **SPH is 3D-only** (source: no N2D use, 3D kernel only). **No Lagrangian remeshing for `/QUAD`** (`/ADMESH` is shells only). **Option 1 (Lagrangian, `Isolid = 17`, Al–Al, 500–1000 m/s):** the mesh fails at the jet root at 5–37 % of the penetration time on the finest mesh, earlier with refinement; edge quantities are not converged (rerun with sourced γ₀ = 2.17: same conclusion). A bonding criterion cannot be evaluated before failure. §8 |
+| 3D SPH ladder (Peter, 2026-11-04) | **S0 and S0p pass** (h = 1.12 s, the starter default; default artificial viscosity). **Hertz S1 is not a clean pass:** it needs surface-conforming particles; at 20 m/s it converges toward JAX (within 2–3 % at R/64, peak 4 % low), at 2 m/s it is still 7–10 % off at R/64. Quarter symmetry = half model. Cost 4.6 µs/particle-cycle (1 thread), 0.9 µs at 8 workers. **Two SPH parts are kernel-welded** (tension and shear across the interface), so the Al–Al interaction is a decision for Peter. §9 |
 | Pitfalls found | (1) The rigid-wall force output `FNZ` is ∫σ dr, not a force, in axisymmetric runs. (2) Default quadratic bulk viscosity + default time-step scale goes unstable (zero volume at cycle 0) on 50:1 quads. (3) Default bulk viscosity costs 5–7 % rebound velocity in the elastic case. (4) Axisymmetric time-history internal energy (and the ERR % energy-balance column) reads zero: energy balance cannot be checked from it. (5) With `Isolid = 17` the temperature is computed but not written out. |
 
 ## 1. Method
@@ -388,6 +389,11 @@ before use. SPH is the alternative (3D dropped, open item 8).
 7. The QA copper rod ([openradioss-setup.md](openradioss-setup.md) §3.3) is ALE, so it can only use the area-weighted element (§5.4). Its tension behind the front is unexplained; an ALE verification case would cover it.
 8. **Jet distortion (Peter, 2026-11-04: 3D dropped).** A third dimension does not reduce mesh distortion at the jet, and a normal impact is axisymmetric. Remaining options: Lagrangian with `Isolid = 17` plus erosion or remeshing (first, cheapest); 2D ALE after its own verification; SPH after its own verification.
 9. **3D question is back (Peter):** SPH is 3D-only (§8.1), there is no 2D Lagrangian remeshing (§8.2), and 2D Lagrangian fails at the jet root before a converged edge criterion is available (§8.3). Options after jetting onset: 3D SPH (ladder in §8.4), or 2D ALE after its own verification.
+10. **3D SPH (§9), open for Peter:**
+    - the particle–substrate interaction method (§9.8);
+    - whether S1 passes (20 m/s within 2–3 % at R/64 with the peak 4 % low; 2 m/s 7–10 % off at R/64);
+    - the time-step scale (0.9 is as accurate as 0.3 in S0; check on an impact rung before using it);
+    - ξ in tension.
 
 ## 8. Jet distortion: facts and the option-1 diagnostic (Peter's guidance, 2026-11-04)
 
@@ -396,7 +402,7 @@ before use. SPH is the alternative (3D dropped, open item 8).
 - **Starter and engine accept it without warning.** A minimal SPH deck (`/SPHCEL` particles in the YZ plane, `/PROP/TYPE34`, `/ANALY` N2D3D = 1) runs to normal termination; the only warning is an optional-card notice.
 - **The SPH code never uses the 2D flag.** In the 67 SPH source files (`engine/source/elements/sph/*` and the starter SPH routines, commit `cb760c2`), `N2D` appears once, in `spstres.F` line 278, where it is only passed on to the material driver. It enters no kinematics, no kernel and no force.
 - **The only kernel is the 3D cubic spline:** `W = (1 − 1.5 q² + 0.75 q³) · INVPI/(H*H*H)` (`engine/source/elements/sph/weight.F`, lines 54 and 99–101). There is no 2D normalisation (10/(7πh²)) and no axisymmetric (r-weighted) variant anywhere in the SPH sources.
-- The Reference Guide 2022 gives no statement of 2D support for SPH; `/PROP/TYPE34` offers a "3D expansion of h" (p.1753).
+- **The Reference Guide says so directly** (2022, p.42, "Smooth Particle Hydrodynamics (SPH)"): "The SPH formulation is only available in 3D analysis." (Found 2026-11-04 while setting up §9; the first pass of §8.1 missed this sentence.) `/PROP/TYPE34` also offers only a "3D expansion of h" (p.1753).
 
 **SPH in OpenCourant is 3D-only.** With `/ANALY` N2D3D = 1 it runs silently but computes a 3D particle slab
 without axisymmetric terms, which is wrong for our problem and not flagged. Per Peter's guidance this brings back
@@ -481,7 +487,239 @@ flat; a coarse-mesh run that survives is not a converged one (see below).*
 Per Peter's guidance, a 3D-only SPH stops the SPH route in 2D. It brings back the 3D question for everything
 after jetting onset (bonded area, erosion, second impacts). That question is Peter's. Facts for it:
 - **What 3D would be for.** A third dimension does not cure Lagrangian distortion (Peter, §7 item 8). In 3D the point would be SPH (mesh-free, so no distortion failure) or 3D ALE with the 8-node brick, which is not the area-weighted 2D element. Neither is verified here.
-- **Cost, estimate only, not measured.** Quarter symmetry with particle spacing R/16 gives about 4.3 × 10³ particles in the particle and about 5.8 × 10⁴ in a 3R × 2R substrate region. With a stable step of about 3·10⁻¹¹ s, 2 D/V at 750 m/s is about 1.8 × 10³ cycles, minutes per run on one machine. Halving the spacing costs about 16×. The SPH cost per particle and cycle in OpenCourant has not been measured.
+- **Cost:** superseded by the measured numbers in §9.3. Original estimate: Quarter symmetry with particle spacing R/16 gives about 4.3 × 10³ particles in the particle and about 5.8 × 10⁴ in a 3R × 2R substrate region. With a stable step of about 3·10⁻¹¹ s, 2 D/V at 750 m/s is about 1.8 × 10³ cycles, minutes per run on one machine. Halving the spacing costs about 16×. The SPH cost per particle and cycle in OpenCourant has not been measured.
 - **Verification ladder if 3D SPH is chosen:** the same rungs in 3D (confined column against the exact 1D solution, the two-wave case, Hertz against JAX and `Isolid = 17`), and convergence in particle spacing.
 
 ALE in 2D stays last (§5.4).
+
+## 9. 3D SPH verification ladder (Peter's decision, 2026-11-04)
+
+DECISIONS 2026-11-04, "Post-onset simulation route: 3D SPH, no OpenCourant fork": everything after jetting onset
+goes to 3D SPH in OpenCourant, with quarter symmetry for normal impacts, after its own verification ladder. Branch
+`coldspray/opencourant-sph`. Decks are written by [`sphdeck.py`](opencourant/scripts/sphdeck.py); the rungs are
+[`sph_rung0.py`](opencourant/scripts/sph_rung0.py) (S0), [`sph_rung0p.py`](opencourant/scripts/sph_rung0p.py)
+(S0p) and [`sph_rung1.py`](opencourant/scripts/sph_rung1.py) (S1). Run times are engine wall-clock on Peter's
+laptop (Intel i9-14900HX: 8 performance + 16 efficiency cores, 32 threads, WSL2).
+
+**Status:**
+- **S0 (confined column, elastic) passes.**
+- **S0p (two-wave, elastic–perfectly-plastic) passes.**
+- **S1 (Hertz, quarter symmetry): not a clean pass.** It needs a surface-conforming sphere; a plain lattice sphere fails. At 20 m/s it converges toward JAX and `Isolid = 17` (within 2–3 % at R/64, but the peak force stalls 4 % low). At 2 m/s it is still 7–10 % off at R/64 (§9.6).
+- **Quarter symmetry is exact to plotting accuracy** against a half model (§9.7).
+- **Al–Al not started: stop for Peter.** SPH–SPH particle–substrate interaction in OpenCourant is a kernel coupling that welds the two bodies, so it carries tension and shear across the interface (§9.8). For a jetting and bonding diagnostic that has no defensible default.
+
+### 9.1 SPH settings (candidates for the frozen setup)
+
+| Setting | Chosen | Why | Tested alternatives |
+|---|---|---|---|
+| Particle arrangement | Cubic net, spacing s, particles at cell centres | Symmetry planes at cell boundaries (s/2 from the nearest particles) then mirror the lattice exactly (§9.2 item 3). | – (the manual's close-packed net would put particles on the symmetry planes) |
+| Free curved surfaces | **Surface-conforming:** lattice interior; particles within s of the surface moved radially onto the sphere of radius R − s/2; pairs closer than s/2 merged (0.5 % of particles); particle mass = body mass / N | A plain lattice sphere has a stepped pole (steps of s), and Hertz then fails, worse with refinement (§9.6) | plain lattice |
+| Smoothing length h | **h = (√2 m/ρ)^(1/3) = 2^(1/6) s ≈ 1.12 s**, the starter's own default | Flat S0 plateau at every spacing, contact time and rebound converge, cheapest (about 54 neighbours) | 1.25 s (S0 worse), 1.5 s (manual's cubic-net advice: unstable at 200 particles in S0, plateau drifts +1.3 %) |
+| Artificial viscosity | **Defaults, q_a (β) = 2, q_b (α) = 1** (Monaghan) | Without it S0 goes unstable at 100 and 200 particles (plateau 0.94, contact +10 %) | off (1e-30) |
+| Tensile-instability correction ξ | **0 (default, off)** | Changes nothing in S0 (no tension), costs +70 %. Its effect in tension (rebound, jets) is untested; see §9.8 | 0.3 (Monaghan 2000; the manual's recommended value is an equation lost in the text extraction) |
+| Kernel correction order | 0 (default) | – | not varied |
+| Conservative smoothing α_cs | 0 (default) | – | not varied |
+| Time-step scale | /DT 0.3 (manual: "0.3 is recommended", Theory Manual p.446) | Scale 0.9 gives the same S0 results to four digits at a third of the cost; not yet checked on impact rungs | 0.9 |
+| Wall contact | `/RWALL/PLANE`, frictionless, all particle nodes secondary | The particle centre stops at the wall | `/SPHBCS` mirror plane: too stiff and sticky (§9.6) |
+| Symmetry | `/SPHBCS/SLIDE` planes on fixed frames, at cell boundaries | Quarter = half model (§9.7) | – |
+| Particle–substrate interaction (Al–Al) | **open: Peter** | §9.8 | – |
+
+### 9.2 Pitfalls found
+
+1. **A particle mass on `/SPHCEL` silently overrides h.** With a mass on the `/SPHCEL` line, the starter sets the particle type to "mass input" and replaces the property's h by (√2 m/ρ)^(1/3) (`starter/source/elements/sph/spinih.F`, lines 88–93). The listing still prints the property's h. Give the mass only in `/PROP/TYPE34`.
+2. **q = 0 means default.** As for solids, `/PROP/TYPE34` replaces q_a = 0 by 2 and q_b = 0 by 1 (`hm_read_prop34.F`); "off" needs 10⁻³⁰.
+3. **Symmetry ghosts are single reflections.** One ghost per particle per plane, none across two planes, so there are no corner ghosts on the quarter model's z axis (`spsym.F`). A particle lying on a plane meets its own ghost at zero distance. Planes therefore go at cell boundaries.
+4. **Two SPH parts interact through the kernel like one body.** There is no part filter in the neighbour search or in the force routine `spforcp.F`; the only interaction between SPH parts is the kernel (RG p.42: FE–SPH interaction goes through `/INTER/TYPE7`). Shown in §9.8.
+5. **No internal energy for SPH** (RG: "Internal energy (IE) is not available for SPH"). The listing's energy-error column is therefore meaningless; it reads −14 % to −86 % in the elastic Hertz runs.
+6. **SPH is 3D-only:** RG p.42 states it explicitly (added to §8.1).
+7. Our own: `ocdeck.convert_anim` re-read old `.vtk` files when a run was repeated in the same directory; fixed.
+
+### 9.3 Cost, measured (replaces the §8.4 estimate)
+
+Single thread, µs per particle and cycle (engine wall-clock / (particles × cycles)):
+
+| Case | h | µs |
+|---|---|---|
+| Quarter sphere, 34 332 particles, 2 symmetry planes | 1.12 s | 4.6 |
+| Column, 4 symmetry planes (many ghosts) | 1.12 s | 5.4–6.1 |
+| Column | 1.25 s | 7.5–8.6 |
+| Column | 1.5 s | 10–11.5 |
+| Column, ξ = 0.3 | 1.12 s | 10.3 (with other runs on the machine) |
+
+Parallel, quarter sphere at s = R/32 (34 332 particles), wall-clock µs per particle and cycle:
+
+| Workers | 1 | 4 | 8 | 16 |
+|---|---|---|---|---|
+| OpenMP threads (`-nt`) | 4.59 | 1.46 | 0.91 | 0.75 |
+| MPI ranks | – | 1.41 | 0.89 | 0.79 |
+
+Beyond 8 workers the gain is small: the CPU has 8 performance cores. Stable time step, elastic Al, h = 1.12 s,
+scale 0.3: dt ≈ 2.15·10⁻⁵ s/m × s (2.15·10⁻¹² s at s = 0.1 µm).
+
+**Updated estimate for the Al–Al diagnostic** (not run):
+- **Model:** quarter symmetry; substrate block 3R × 3R × 2R (quarter), particle and substrate at the same spacing.
+- **Particle counts:** R/16 about 7.8·10⁴ particles, R/24 about 2.6·10⁵, R/32 about 6.2·10⁵.
+- **Cycles:** 2 D/V at 750 m/s is 53 ns. With dt at 0.6× the elastic value (compression stiffens and h shrinks; an assumption) that is about 6.6·10³, 9.9·10³ and 1.3·10⁴ cycles.
+- **Wall-clock at 8 workers:** about 8 min, 40 min and 2 h. With scale 0.9 (if the impact rungs confirm it) a third of that.
+
+The earlier §8.4 estimate ("about 1.8·10³ cycles, minutes per run" at R/16) used dt ≈ 3·10⁻¹¹ s. The measured
+step at R/16 is 1.3·10⁻¹¹ s at scale 0.3 (4·10⁻¹¹ s at 0.9).
+
+### 9.4 Rung S0: confined column (elastic) against the exact 1D solution
+
+Rung-0 parameters: E = 70 GPa, ν = 0.35, ρ = 2700 kg/m³, L = 10 µm, V = 100 m/s.
+- **Column:** n_z particles along z, 4 × 4 in the cross-section. Lateral motion is blocked on every particle (`/BCS`), and four `/SPHBCS/SLIDE` planes close the lateral faces, so the kernel sees an infinite slab.
+- **Wall:** `/RWALL/PLANE` through the bottom particle layer; the column starts in contact.
+- **Force:** the `/TH/RWALL` FNZ column is a force in 3D. It equals d(momentum)/dt to 4 digits (in 2D it was not, §5).
+- **Exact:** plateau ρ c_d V, contact time 2L/c_d, rebound V.
+
+| Particles along L | h | plateau / ρc_dV | contact / (2L/c_d) | rebound / V | cycles | engine (s, 1 thread) |
+|---|---|---|---|---|---|---|
+| 25 | 1.12 s | 0.9948 | 1.0112 | 0.888 | 541 | 1.3 |
+| 50 | 1.12 s | 0.9955 | 1.0075 | 0.925 | 1081 | 5.2 |
+| 100 | 1.12 s | 0.9956 | 1.0065 | 0.949 | 2160 | 21 |
+| 200 | 1.12 s | 0.9957 | 1.0050 | 0.964 | 4319 | 75 |
+| 200 | 1.25 s | 0.9919 | 1.0112 | 0.963 | 3879 | 93 |
+| 200 | 1.5 s | 1.0103 | 0.9983 | **0.906** | 3313 | 108 |
+| 100 | 1.5 s, q off | 0.944 | 1.107 | 0.896 | 674 | 13 |
+
+All variants: [`results/sph_s0.csv`](opencourant/results/sph_s0.csv) (also the 0.9 time-step scale, the 8 × 8
+cross-section and ξ = 0.3).
+
+- **Plateau:** −0.43 % at every spacing, against the small-strain exact value. The 2D quads gave +0.69 % (finite strain, §3). Both are within 0.7 % of the exact value, but on opposite sides. The 1.1 % gap between them does not change with spacing, so it comes from how each formulation treats finite strain, not from resolution. It is not explained further here.
+- **Contact time:** converges to the exact value from above: +1.1 % → +0.5 %.
+- **Rebound:** 0.888 → 0.964, still rising (about first order; errors 11, 7.5, 5.2, 3.6 %). The quads with q ≈ 0 reach 0.991. SPH needs its artificial viscosity, which costs rebound in this purely elastic problem.
+- 8 × 8 instead of 4 × 4 particles in the cross-section: identical to 3–4 digits, so the lateral planes are clean.
+
+### 9.5 Rung S0p: elastic–perfectly-plastic two-wave case
+
+Same column, LAW2 with Y = 100 MPa and no hardening, V = 50 m/s; closed form as rung 0p (§4). Profile of −σ_zz per
+particle layer at t = 0.75 L/c_d.
+
+| Particles | h | wall plateau / σ₂ | profile σ₂ | profile σ_HEL | plastic front / c_b | elastic front / c_d | ε_p behind wave / exact |
+|---|---|---|---|---|---|---|---|
+| 25 | 1.12 s | 0.991 | 0.983 | – | 0.902 | 1.100 | 0.987 |
+| 50 | 1.12 s | 0.994 | 0.992 | 1.190 | 0.942 | 1.057 | 0.988 |
+| 100 | 1.12 s | 0.994 | 0.993 | 1.127 | 0.965 | 1.029 | 0.986 |
+| 200 | 1.12 s | 0.994 | 0.995 | 1.121 | 0.979 | 1.011 | 0.988 |
+| 200 | quad, `Isolid = 17`, default q (§4) | 1.004 | 0.994 | 1.093 | 0.998 | 1.025 | 0.986 |
+
+[`results/sph_s0p.csv`](opencourant/results/sph_s0p.csv) (also h = 1.5 s, which converges more slowly).
+
+- **Plateau and plastic strain agree with the closed form to about 0.5–1.5 % at every spacing.** At 200 particles they match the quads with default viscosity: σ₂ 0.995 vs 0.994, ε_p 0.988 vs 0.986, rebound 0.812 vs 0.812.
+- **The fronts converge to the right speeds:** plastic 0.90 → 0.98 c_b, elastic 1.10 → 1.01 c_d.
+- **The elastic precursor overshoots by 12 %** (quads: 9 %), and the overshoot shrinks with spacing. It is the usual ringing at a sharp front with artificial viscosity.
+
+![SPH S0 and S0p](opencourant/figures/sph_s0.png)
+
+### 9.6 Rung S1: Hertz sphere, quarter symmetry
+
+Same physics and metrics as rung 1 (§5): R = 10 µm, E = 70 GPa, ν = 0.35, ρ = 2700 kg/m³, V = 20 m/s and 2 m/s,
+touching the wall at t = 0, run to 1.6 t_Hertz. Metrics: contact (end of the main pulse, F < 10⁻³ F_Hertz), peak,
+max approach, rebound.
+- **Contact at 10⁻² F_Hertz added:** SPH force tails (a few edge particles leaving the wall late, under 1 % of F_Hertz) move the 10⁻³ end of contact by up to 15 %.
+- **Model:** quarter sphere, h = 1.12 s, default viscosity, time-step scale 0.3, frictionless `/RWALL/PLANE` on the particle nodes; force from d(momentum)/dt × 4.
+- **References** (rung 1): JAX 20 × 40 at 20 m/s, 0.953 / 1.073 / 0.957 / 0.9996 (contact / peak / approach / rebound; contact at 10⁻²: 0.940); `Isolid = 17` 20 × 40, 0.956 / 1.075 / 0.958 / 0.9996. At 2 m/s (15 × 30): JAX 0.972 / 1.045 / 0.983, `Isolid = 17` 0.975 / 1.043 / 0.994.
+
+**A plain lattice sphere fails, and gets worse with refinement.** With a cubic net the bottom of the sphere is a set
+of flat terraces one spacing high. The Hertz approach at 20 m/s is 0.195 µm, which is 0.3 s at R/16 and 0.6 s at
+R/32, so the load goes through the few particles on the lowest terrace (4 per full sphere by construction).
+
+| Surface | Wall | s | contact | peak | approach | rebound |
+|---|---|---|---|---|---|---|
+| lattice | rigid wall | R/16 | 1.469 | 0.515 | 1.322 | 0.979 |
+| lattice | rigid wall | R/32 | no end (force tail) | 0.982 | **1.888** | 0.904 |
+| lattice | mirror plane | R/16 | 1.341 | 0.661 | 1.284 | 0.967 |
+| lattice | mirror plane | R/32 | 1.140 | 1.095 | 1.481 | **0.521** |
+
+The full lattice model at R/16 gives the same numbers as the half model (1.459 / 0.528 / 1.324), so the missing
+corner ghosts of the quarter model are not the cause.
+
+**With the surface particles moved onto the sphere** (§9.1), particle heights near the pole follow r²/2R, and the
+contact grows continuously as Hertz assumes. Quarter sphere, rigid wall:
+
+| V | s | particles | a_Hertz / s | d_Hertz / s | contact | contact (10⁻²) | peak | approach | rebound | engine (threads) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 20 | R/16 | 4 269 | 2.2 | 0.31 | 1.107 | 0.964 | 1.193 | 1.122 | 0.925 | 29 s (4) |
+| 20 | R/32 | 34 239 | 4.5 | 0.62 | 1.019 | 0.964 | 1.030 | 1.014 | 0.985 | 7 min (4) |
+| 20 | R/64 | 274 126 | 8.9 | 1.25 | **0.975** | **0.964** | **1.027** | **0.986** | **0.980** | 94 min (8) |
+| 2 | R/16 | 4 269 | 0.9 | 0.05 | 1.335 | 1.328 | 0.812 | 1.322 | 0.975 | 41 s (4) |
+| 2 | R/32 | 34 239 | 1.8 | 0.10 | 1.133 | 1.116 | 0.928 | 1.151 | 0.985 | 16 min (4) |
+| 2 | R/64 | 274 126 | 3.6 | 0.20 | 1.066 | 1.037 | 0.957 | 1.069 | 0.992 | 122 min (8) |
+
+Run times were measured with other runs sharing the CPU (the R/64 runs overlapped each other), so they are upper
+bounds. The second-finest spacing (R/32) takes 7–16 min, well under the 2 h limit. Table:
+[`results/sph_s1.csv`](opencourant/results/sph_s1.csv) (all variants).
+
+![SPH S1 Hertz](opencourant/figures/sph_s1.png)
+
+![SPH S1 contact zone](opencourant/figures/sph_s1_contact.gif)
+
+*Left: particle centres in the slice 0 < y < s (mirrored), pressure, s = R/32, 20 m/s; the blue ticks mark the
+Hertz contact radius at maximum approach. Right: wall force against Hertz and JAX.*
+
+At 20 m/s:
+- **Contact time and approach converge toward JAX and `Isolid = 17`.** The gap to JAX halves per refinement: contact +16 %, +7 %, +2.3 %; approach +17 %, +6 %, +3.0 %.
+- **The main pulse has converged:** the contact time at 10⁻² F_Hertz is 0.964 at all three spacings, 2.5 % above JAX (0.940).
+- **The peak force stalls about 4 % below JAX** (1.030, 1.027 vs 1.073), close to Hertz (1.0).
+- **Rebound 0.98–0.985** against 0.9996 in JAX, the cost of the artificial viscosity, as in S0.
+- **The mirror-plane wall fails:** it is too stiff (contact 0.67–0.75) and sticky (rebound 0.63), because the kernel couples the sphere to its mirror image within 2h, in tension too. It is rejected as a wall. It is a preview of §9.8.
+- ξ = 0.3 at R/16: peak −2.7 %, the other metrics within 0.4 %, a longer force tail.
+
+At 2 m/s:
+- **Every metric converges toward JAX and `Isolid = 17`, but slowly.** At R/64 they are still 7–10 % off: contact 1.335 → 1.133 → 1.066 (JAX 0.972), peak 0.81 → 0.93 → 0.96 (1.045), approach 1.32 → 1.15 → 1.07 (0.983).
+- **The cause is resolution.** The Hertz contact radius is only 0.9, 1.8 and 3.6 spacings, and the approach 0.05–0.2 s.
+- **The next spacing is out of reach.** R/128 would be about 2.2·10⁶ particles and about 16 × the R/64 cost, roughly 30 h on this machine.
+
+**Verdict on S1: not a clean pass. Peter decides.**
+- **20 m/s:** contact time and approach converge to within 2–3 % of JAX and `Isolid = 17` at R/64, and the main pulse (contact at 10⁻²) is converged at +2.5 %. The peak force stalls 4 % below JAX.
+- **2 m/s:** still 7–10 % off at the finest affordable spacing.
+- **What this means for cold spray:** a Hertz contact (approach ≪ spacing) is the hardest case for particle methods. In a cold-spray impact the approach is of order R, i.e. tens of spacings, so this rung is more demanding than the application. It still means SPH cannot resolve the early, elastic contact stage at affordable spacing. Hence the failure is reported here rather than worked around.
+
+### 9.7 Quarter symmetry against a half model
+
+Same case at R/32, 20 m/s, surface-conforming, rigid wall: quarter model (planes x = 0 and y = 0) against a half model
+(plane x = 0 only, 68 478 particles).
+
+| Model | contact | contact (10⁻²) | peak | approach | rebound |
+|---|---|---|---|---|---|
+| quarter | 1.019 | 0.964 | 1.030 | 1.014 | 0.985 |
+| half | 0.993 | 0.971 | 1.031 | 1.012 | 0.986 |
+
+- **The force histories lie on top of each other.** Peak, approach and rebound agree to 0.15 %.
+- **The contact-time differences come from the tail only:** 2.5 % at 10⁻³ F_Hertz, 0.7 % at 10⁻².
+- The quarter model has no corner ghosts on its z axis (§9.2 item 3), which is exactly where the contact is. At R/16 on the plain lattice the quarter model differs from the half and full models by 0.6 % in contact and 2.5 % in peak; the half and full models agree to 0.1 %.
+
+**Quarter symmetry is exact for this normal impact to within about 1 % on every metric**, and to 0.15 % on peak,
+approach and rebound at R/32. It halves the cost.
+
+### 9.8 Particle–substrate interaction: why Al–Al is not started
+
+**Test** ([`sph_twopart.py`](opencourant/scripts/sph_twopart.py),
+[`results/sph_twopart.csv`](opencourant/results/sph_twopart.csv)):
+- A striker column of length L (part 1, −V) hits a target column of length 2L (part 2, at rest). Same material, lateral confinement and h = 1.12 s as S0; 50 particles per L.
+- **Exact 1D:** the striker stops at t = 2L/c_d and stays at rest. Between 2L/c_d and 2·(2L/c_d) the target's near end is also at rest, with zero stress at the interface. After that the near end moves away at V. The target's mean velocity is V/2 from 2L/c_d on.
+
+| t / (2L/c_d) | 1.0 | 1.5 | 2.0 | 2.5 | 3.0 | 3.5 | 4.0 |
+|---|---|---|---|---|---|---|---|
+| striker v / V, exact | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| striker v / V, SPH | −0.02 | −0.00 | −0.02 | **−0.48** | **−0.93** | −0.53 | −0.07 |
+| target mean v / V, SPH (exact −0.5) | −0.49 | −0.50 | −0.49 | −0.26 | −0.04 | −0.24 | −0.47 |
+
+**The two parts are welded.** When the target's near end starts to move away, it pulls the striker along through the
+kernel; momentum goes back and forth between the parts. There is no part filter in the neighbour search or the force
+routine (§9.2 item 4), so particles of different parts within 2h ≈ 2.2 s of each other act like one continuum:
+- **Tension across the interface:** no separation within the kernel range.
+- **Shear across the interface:** the velocity gradient is taken across both parts, so the interface is no-slip.
+- **No setting changes this.** The only SPH–SPH interaction is the kernel; `/INTER/TYPE7` needs a main surface of segments, which SPH parts do not have (RG p.42: FE–SPH interaction goes through TYPE7).
+
+**Why this stops the Al–Al diagnostic.** Jetting starts at the contact edge, from the shear and the material squeezed
+out between particle and substrate. A welded, no-slip interface changes exactly that. It also builds adhesion into
+every contact, which would prejudge the bonding question the diagnostic is meant to inform. This is a setting with
+no defensible default, so per Peter's guidance I stop here.
+
+**Options for Peter** (none tested beyond the above):
+1. **SPH particle and SPH substrate, kernel interface as is.** It is the only all-SPH route. Results would read as "welded-interface" jetting, and only quantities before any separation would be interpretable. The weld would have to be stated with every result.
+2. **SPH particle on a Lagrangian 3D brick substrate, `/INTER/TYPE7`** (SPH particles as secondary nodes). The contact separates and slides, but the substrate jet is again a Lagrangian mesh, with the distortion failure of §8 now in 3D. It would need its own rung (Hertz with TYPE7 instead of the rigid wall).
+3. **`Sol2SPH` substrate:** bricks that convert to SPH particles when they distort (RG `/SPHGLO` Isol2sph, `/PROP/SOLID`). The contact is TYPE7 until conversion and a kernel weld afterwards, so it combines the problems of 1 and 2. Unverified.
+4. A code change for a separable SPH–SPH contact is excluded by the no-fork decision.

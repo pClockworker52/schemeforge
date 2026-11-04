@@ -259,6 +259,8 @@ def convert_anim(run_dir: str, name: str) -> list[str]:
     env, exe = _env(), f"{OC_ROOT}/exec"
     paths = []
     for g in sorted(glob.glob(os.path.join(run_dir, f"{name}A[0-9][0-9][0-9]*"))):
+        if g.endswith(".vtk"):  # output of an earlier conversion in the same directory
+            continue
         plain = g[:-3] if g.endswith(".gz") else g
         if g.endswith(".gz"):
             with gzip.open(g, "rb") as fi, open(plain, "wb") as fo:
