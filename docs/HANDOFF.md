@@ -1,83 +1,126 @@
-# Handoff — 2026-11-03 (Phase 6 paused; replaces the 2026-10-30 version)
+# Handoff — 2026-11-04 (cold-spray track; replaces the 2026-11-03 version, which is in git history)
 
-**Now:** Phase 6 is paused after step 5 (DECISIONS 2026-11-03). The open question is Peter's cold-spray application:
-deposition efficiency and bonding, mechanistic, with the model stating its own range of validity. Start the next
-session fresh with: "Read docs/plans/2026-11-03-coldspray-research-brief.md and follow it."
-Arena 2 resumes at step 6 (blind audit, Target D from docs/judge/contact_baseline.md, tag contact-v1.0).
+**Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read
+docs/STATUS.md (top entries) and the DECISIONS index (top of docs/DECISIONS.md). Branch:
+`claude/exciting-fermi-qy077p`.
 
----
+**Arena 2 is paused** at Phase 6 step 5; resuming means step 6 (blind audit, Target D, tag contact-v1.0). Arena 1
+is released as benchmark-v1.0.
 
+## 1. Where the cold-spray track stands
 
-The short version for the next session. The working record is docs/STATUS.md; decisions are in docs/DECISIONS.md;
-every number below has its run id there or in the linked file.
+Peter's application: multi-particle cold spray with coating build-up; deposition efficiency and bonding; a
+mechanistic model that states its own range of validity.
 
-## Where things stand
+- **Verdict of the research brief: "go: discipline only"** (DECISIONS 2026-11-03). No arena and no search yet. Use
+  the schemeforge process (pre-registered hunches with kill criteria, held-out data, ledger, referee labels) to
+  develop models. Notes:
+  - questions: docs/research/coldspray-questions.md;
+  - data and zoo: docs/research/coldspray-data-and-zoo.md;
+  - plan: docs/research/coldspray-go-nogo.md (assumption inventory H1–H7, local-first order, upgrade trigger).
+- **Local first** (DECISIONS 2026-11-03). An external blind campaign is the last resort; its draft is parked
+  (docs/research/coldspray-campaign-proposal.md).
+- **Data** (docs/research/data/, README there):
+  - `vcr_lipit.csv`: 49 single-impact critical-velocity rows, 11 matched materials, source and extraction mode
+    per row, oxide state for 20 rows, conflicting secondary quotes flagged (Q rows);
+  - `properties.csv`: Hassani 2020 Table S1 first, then the HG2018a preprint table (incl. γ₀, Johnson–Cook),
+    then handbook rows;
+  - `vcr_process_oxide_cu.csv`: Cu process v_cr against oxide thickness (HG2019b Table 1).
+- **Retrospective test v1** (docs/research/coldspray-results-v1.md; rules: coldspray-preregistration.md;
+  commits abce3f6 → 045409d → 2324a43):
+  - CS-02 (sound speed alone cannot rank Al alloys): supported;
+  - CS-03 (sound-speed law beats a property-free baseline): supported;
+  - CS-01 and CS-05: inconclusive;
+  - CS-06 (process FE values below single-impact windows): refuted;
+  - judge-noise check: the data separate the sound-speed law from a constant on 8 of 9 held-out rows.
+- **First literature-blind result, B10** (Na et al. 2025, Al 6061 in five heat treatments;
+  docs/research/coldspray-results-b10.md; freeze 060fff8 → outcomes 94fd173 → scorer f770a8b → scores b31cdae):
+  - CS-08 (strength raises v_cr within one alloy): **refuted**;
+  - CS-07 (oxide): not refuted, support undetermined;
+  - CS-09: undetermined (no window bounds printed; rule B6 now covers this for future papers);
+  - the sound-speed law under-predicts this powder by 8–16 %.
+- **Strength-dependent zoo members** (Assadi, Schmidt, spall law) still lack tensile strength and failure strain
+  for the impact-tested powders. B10 used the paper's static compression strength (Peter's rule BP1).
 
-- **Arena 1 (euler1d) is closed.** Four rounds, no Target A promotion; nearest miss c-4ece6bb6f7 fails only A4
-  (Newton 0.85). Write-up: docs/results/arena1-negative.md. All hunches closed (H-0019 refuted, H-0024 inconclusive).
-- **Judges:** `euler1d-v1.6` (tagged; B-0042/52/54 in dev; the 20-candidate rescore is deferred, DECISIONS
-  2026-10-30). `contact-v0.2.dev` (untagged, Phase 6 in progress).
-- **Benchmark released:** `benchmark-v1.0`, GPL-3.0-or-later, https://github.com/pClockworker52/schemeforge/releases/tag/benchmark-v1.0.
-  Held-out seed stays private; scoring on request (BENCHMARK.md).
-- **Phase 6 (Arena 2, third-medium contact):** plan docs/plans/2026-10-30-phase6.md, approved (D1–D5, step 7 added).
-  Steps 1 and 2 done, steps 3–7 open.
+## 2. Rules that must not be broken
 
-## Git
+- **Blind test** (docs/research/coldspray-blind-literature.md, rules B1–B6):
+  - the modelling session never opens a hold-out paper or its outcomes before its predictions are committed;
+  - inputs are extracted by a separate session (prompt: coldspray-extraction-prompt.md), and its CSV is
+    leak-scanned (velocity units, rebound, critical, comparatives) before anyone reads it;
+  - outcomes are extracted after the freeze (prompt: coldspray-extraction-prompt-step3.md);
+  - the scoring script is committed before outcomes are read;
+  - a post-hoc number is labelled post hoc;
+  - verdicts follow the frozen rules even when that leaves them undetermined.
+- **Pre-registration:** predictions and rules committed before scoring; git order is the proof. Frozen files
+  (`predictions_v1.csv`, `predictions_b10.csv`, the preregistration docs) are never edited after scoring.
+- **Simulation** (DECISIONS 2026-11-03/04): no simulated v_cr is used before the verification ladder and a mesh- or
+  particle-convergence check pass; no erosion or element deletion as a production method.
+- **Iron rules of CLAUDE.md:**
+  - never call a result novel (labels: rediscovery / variant of X / plausibly new, the last by the referee only);
+  - record negative results;
+  - no invented values: unsourced inputs stay blank or are flagged.
+- **Licence:** OpenCourant's hm_reader, H3D and hm_cfg_files are Siemens-licensed. Local research use only; do not
+  commit binaries or QA decks (CC BY-NC).
 
-- Work branch `claude/exciting-fermi-qy077p` is **9 commits ahead of main** (Phase 6 steps 1–2, plan, licence
-  files already on main). Before anything else in WSL: `git fetch origin && git merge origin/claude/exciting-fermi-qy077p`,
-  `uv sync --extra contact`, `uv run pytest -q` (289 passed in the cloud), push main.
-- `uv sync` alone does not install FElupe: Arena 2 needs `--extra contact` (felupe 11.3.0, tensortrax 0.30.0).
+## 3. Sessions and branches
 
-## Phase 6: what exists
+| Session | Role | Branch it pushes | Must not |
+|---|---|---|---|
+| Cloud (this one, modeller) | models, predictions, scoring, notes | `claude/exciting-fermi-qy077p` | read blind papers or outcomes before a freeze |
+| WSL A | OpenCourant: verification, simulations | `coldspray/opencourant-sph` (current), earlier `coldspray/opencourant-verification` | open blind papers |
+| WSL B | blind extraction (inputs; outcomes after freeze) | `coldspray/blind-inputs`, `coldspray/b10-outcomes` | edit anything but its CSV |
 
-| Step | State | Where |
-|---|---|---|
-| 1 skeleton + generic plumbing | done: each arena is its own judge (hash, integrity, tag); `--arena` required in CLI/MCP; Arena 1 zoo dev identical before/after (21/21) | DECISIONS "Each arena is its own judge"; docs/judge/2026-10-30-phase6-step1-euler1d-check.md |
-| 2 exact small cases | done: C0a confined gap closure (exact for any medium, FE agrees ≤ 1e-9), C0b simple shear (exact from ψ), wall pressure from reactions, classical ContactRigidPlane + penalty extrapolation (2e-10) | docs/judge/contact_spec.md; zoo dev run r-20261030-082524-e9a2 (cloud registry) |
-| 3 Hertz C2 + patch test C1, error floor | done (contact-v0.5.dev): Hertz, error floor, C1 on distorted meshes, mesh_sens | docs/judge/contact_spec.md |
-| 4 constraints, metrics, held-out families | built (contact-v0.6.dev); **first real promo run in WSL open** | contact_spec.md §Step 4 |
-| 5 zoo + trade-off front (stop if no trade-off) | open | |
-| 6 blind audit, Target D pre-registration, tag contact-v1.0 | open | |
-| 7 search readiness: engine tables, prompts, calibration run, hunch preview | open | |
+All earlier branches are merged into `claude/exciting-fermi-qy077p` (last: a5fd07e).
 
-Code: src/schemeforge/arenas/contact/ (`cases.py`, `solve.py` FElupe models, `reference.py` exact solutions,
-`metrics.py`, `constraints.py`, `evaluate.py`, `zoo/medium/neo_hooke.py`); tests/test_contact.py (11 tests).
-Candidate contract: `psi_medium(C, p)` in jax.numpy, p = {mu, lmbda, gamma}. Spike timings and scripts:
-docs/spikes/2026-10-30-phase6-tooling.md, scripts/spikes/.
+## 4. Simulation status
 
-## Step 3 (Hertz done 2026-11-03; remaining: items 4 and the Q1/Q2 part of 3)
+- **JAX code** (src/schemeforge/research/impact_axisym.py, tests/test_impact_axisym.py), 2D axisymmetric, elastic
+  only:
+  - rung 0 (confined plate) passes against the exact 1D solution (ccec9db);
+  - rung 1 (Hertz sphere) agrees with OpenCourant `Isolid = 17` to about 1 %. Both sit 4–5 % short of Hertz at
+    20 m/s and approach it at lower speed (a dynamic effect).
+- **OpenCourant latest-20261011** (fork of the withdrawn OpenRadioss; DECISIONS 2026-11-03), installed in WSL at
+  ~/opt/opencourant/latest-20261011. docs/research/openradioss-setup.md and opencourant-verification.md cover it:
+  - **2D axisymmetric must use `Isolid = 17`**; the default element is area-weighted and fails Hertz. §6 there
+    lists the deck rules;
+  - Johnson–Cook + Mie–Grüneisen runs on 2D quads;
+  - temperature is computed but not written out with `Isolid = 17` (open item);
+  - **2D Lagrangian fails at the jet root**, earlier with refinement (also with γ₀ = 2.17);
+  - SPH is 3D-only; there is no 2D remeshing.
+- **Decision 2026-11-04:** everything after jetting onset goes to **3D SPH in OpenCourant** (quarter symmetry), no
+  fork. 2D ALE comes last. A 2D-axisymmetric cross-check, if needed, is built in the JAX code later.
+- **WSL A's current task** (message given 2026-11-04):
+  - 3D SPH ladder: confined column (measure cost first), two-wave, Hertz against JAX and `Isolid = 17`, quarter
+    against half model, particle-spacing convergence;
+  - then an Al–Al jet-onset diagnostic, with no v_cr claimed;
+  - results go into opencourant-verification.md §9.
 
-1. Hertz C2 as decided (D2): elastic cylinder, half model, on a **rigid** flat, medium between, medium bottom fixed;
-   1/E* = (1 − ν²)/E; a/R ≤ 0.1, flat ≥ 20 a wide. Start from scripts/spikes/phase6_hertz_felupe.py (its geometry is
-   two bodies; change the lower body to the fixed medium base).
-2. Pressure p(x) from the wall reactions with `metrics.edge_traction`; compare a, p0, p(x) with the Hertz formula and
-   with the classical reference (`ContactRigidPlane` on the cylinder, penalty extrapolation as in
-   `solve.gap_closure_classical`).
-3. Three meshes and Q1/Q2 → `mesh_sens`; the judge's error floor = classical vs formula, written into the spec.
-   Acceptance: classical within 1 % of Hertz on a and p0 at the finest mesh, dev Hertz ≤ 15 s.
-4. C1 patch test with non-matching meshes (uniform pressure).
-5. Judge commit with a version bump (contact-v0.3.dev), `sforge zoo eval --arena contact --suite dev`, STATUS.
+## 5. Next steps (in order)
 
-## Traps (cost time before)
+1. **Merge WSL A's SPH ladder results** when pushed; check them against the JAX code where cases overlap.
+2. **Blind set:** 10 papers still pending (B02–B07, B12–B14, B16; Peter is fetching them).
+   - For each paper whose inputs arrive: leak-scan, merge, register any new hunch, freeze predictions (commit),
+     then outcomes via the step-3 prompt, then score.
+   - B09 is process-level (splat tests), not single-impact; B01, B08, B11, B15 contain no v_cr.
+3. **Model development:**
+   - a combined strength + oxide hunch with a stated mechanism. A relative is Na2025's Eq. 6 (Lienhard rule of
+     mixtures), which is now known and not blind;
+   - register it before the next blind papers are frozen.
+4. **Data gaps:**
+   - the primary HG2018b (*Scripta Mater.* 145, 9) for Al, Ni, Cu, Zn (conflicting quotes);
+   - tensile strength and failure strain of the tested powders;
+   - c_p for the handbook rows (atomic weights: no fill from memory).
+5. **Simulation type 2** (a pre-registered setup as a zoo member) only after the 3D SPH ladder and convergence pass.
 
-- **Integrity is per arena now.** A change under arenas/contact/ never blocks euler1d, but any uncommitted judge file
-  refuses scoring in its own arena: commit judge changes before `sforge eval`.
-- **Unconfined soft media fail Newton** (γ = 1e-6, no regularization: the medium bulges sideways). Confine, or wait
-  for the regularization slot. A Newton failure is recorded as `converged = 0`, not a violation.
-- **Penalty contact error ∝ 1/k**: never compare a single penalty run with an exact value; extrapolate over three k.
-- **Quadratic edge forces are 1/6, 2/3, 1/6 of a uniform load**: recover pressure with `edge_traction`, never by
-  dividing by a tributary length.
-- **Memory:** Arena 1 stateful reconstructions need 4.4 GB per worker (SFORGE_MAX_PARALLEL=3 on the PC); Arena 2 needs
-  0.2–0.5 GB.
-- **`sforge case accept` only works in an interactive terminal** (Peter), not inside an agent session.
-- **The sforge MCP server does not connect from the Windows desktop app**; agent runs go from a WSL `claude` session.
-- **Cloud vs PC registries differ**: cloud run ids (r-20261030-…) exist only in the cloud session; WSL repeats checks
-  that need the PC's registry or the held-out seed.
+## 6. Key files
 
-## Open decisions / later
-
-- When to run the deferred euler1d-v1.6 rescore (only if a round 5 or the benchmark leaderboard needs it).
-- Optional: a "coffee" link (GitHub Sponsors or Ko-fi): Peter creates the account, then `.github/FUNDING.yml` and one
-  README line.
-- 17 round-4 breaker cases stay in quarantine.
+| What | Where |
+|---|---|
+| Decisions (index at top, regenerate with `python scripts/decisions_index.py`) | docs/DECISIONS.md |
+| Plan and assumption inventory | docs/research/coldspray-go-nogo.md |
+| Data tables and their README | docs/research/data/ |
+| Zoo code, scorers (not judges) | src/schemeforge/research/coldspray*.py |
+| Hunches | docs/research/coldspray-hunches.md, coldspray-preregistration*.md |
+| Blind set and prompts | docs/research/coldspray-blind-literature.md, coldspray-extraction-prompt*.md |
+| Solver verification | docs/research/opencourant-verification.md, openradioss-setup.md |
