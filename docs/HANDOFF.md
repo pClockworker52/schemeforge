@@ -100,7 +100,9 @@ All earlier branches are merged into `claude/exciting-fermi-qy077p` (last: a5fd0
 
 ## 5. Next steps (in order)
 
-1. **Merge WSL A's SPH ladder results** when pushed; check them against the JAX code where cases overlap.
+1. **SPH ladder merged** (f156b94; S0, S0p pass, S1 not clean, SPH parts kernel-welded). Route A + B decided
+   (DECISIONS 2026-11-04). Next: Peter approves CS-11 (docs/research/coldspray-hunch-cs11.md, draft) and decides S1;
+   then WSL A runs rungs F0 and W0, then the CS-11 sweep. No Al–Al run before the CS-11 freeze commit.
 2. **Blind set:** 10 papers still pending (B02–B07, B12–B14, B16; Peter is fetching them).
    - For each paper whose inputs arrive: leak-scan, merge, register any new hunch, freeze predictions (commit),
      then outcomes via the step-3 prompt, then score.
