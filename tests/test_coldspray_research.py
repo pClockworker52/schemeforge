@@ -67,3 +67,24 @@ def test_predictions_do_not_read_windows(rows, props):
     a = [p for p in cs.predict(rows, props) if p["model"] != "baseline_LOMO"]
     b = [p for p in cs.predict(blank, props) if p["model"] != "baseline_LOMO"]
     assert a == b
+
+
+def test_cs10_nnls2_exact_and_bounded():
+    from schemeforge.research.coldspray_cs10 import nnls2
+
+    x1, x2 = [1.0, 2.0, 3.0], [1.0, 0.0, 1.0]
+    assert nnls2(x1, x2, [2 * a + 3 * b for a, b in zip(x1, x2, strict=True)]) == pytest.approx((2.0, 3.0))
+    # a negative unconstrained coefficient is clipped to the bound
+    b1, b2 = nnls2(x1, x2, [2 * a - 3 * b for a, b in zip(x1, x2, strict=True)])
+    assert b2 == 0.0 and b1 > 0.0
+
+
+def test_cs10_fit_frozen_constants():
+    from schemeforge.research.coldspray_cs10 import calibration_data, fit
+
+    rows = calibration_data()
+    assert [r["cond_id"] for r in rows] == [f"B10-c{i}" for i in range(1, 6)]
+    m = fit(rows)
+    # frozen in docs/research/coldspray-cs10-fit.md
+    assert m.beta == pytest.approx(0.3774, rel=1e-3)
+    assert m.gamma == pytest.approx(3.190e11, rel=1e-3)
