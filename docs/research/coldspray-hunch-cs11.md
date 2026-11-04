@@ -1,9 +1,10 @@
-# Cold spray: hunch CS-11 (interface bracket for simulated jetting onset), registration draft
+# Cold spray: hunch CS-11 (interface bracket for simulated jetting onset), registration (frozen)
 
 Drafted 2026-11-04 on Peter's decision to bracket the particle–substrate interface (route A + B, DECISIONS
-2026-11-04 "SPH particle–substrate interface: bracket, bond decided afterwards"). **Status: draft.** It becomes
-frozen when Peter approves it, and that commit must come before any Al–Al run of either setup. Git order is the
-proof. Research track, not a ledger arena. Solver background: opencourant-verification.md §8 and §9.
+2026-11-04 "SPH particle–substrate interface: bracket, bond decided afterwards"). **Status: frozen**
+2026-11-04, approved by Peter as written. This commit comes before any Al–Al run of either setup; git order is the
+proof. **This file is not edited after the first Al–Al run.** Rung S1 is accepted at 20 m/s (DECISIONS 2026-11-04
+"Rung S1 accepted at 20 m/s"). Research track, not a ledger arena. Solver background: opencourant-verification.md §8 and §9.
 
 ## Why
 
@@ -26,7 +27,7 @@ both bounds or not at all.
 
 ```yaml
 - id: CS-11
-  registered: draft 2026-11-04 (frozen on Peter's approval, before any Al-Al run)
+  registered: 2026-11-04 (approved by Peter as written; frozen before any Al-Al run)
   assumption_broken: >-
     The assumption of every published cold-spray impact simulation read so far that one chosen interface
     treatment (the solver's default contact or a coupling) is adequate for the jetting-onset question.
@@ -56,7 +57,7 @@ both bounds or not at all.
     - published SPH/CEL cold-spray studies: not checked for an interface comparison; referee to search
   provenance: Raised by the kernel-weld finding (opencourant-verification.md §9.8), before any Al-Al run.
   label: none yet (referee)
-  status: draft
+  status: open
   author: claude (with Peter)
 ```
 
@@ -64,7 +65,7 @@ both bounds or not at all.
 mechanism). Either outcome is useful. A refutation means simulated jetting onset needs an interface model, and that
 is a negative result for the ledger.
 
-## Frozen protocol (on approval)
+## Frozen protocol
 
 ### Common to W and F
 
