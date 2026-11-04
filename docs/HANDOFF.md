@@ -9,6 +9,8 @@ is released as benchmark-v1.0.
 
 ## 1. Where the cold-spray track stands
 
+Update 2026-11-04 (2nd cloud session): step 3 below done (CS-10).
+
 Peter's application: multi-particle cold spray with coating build-up; deposition efficiency and bonding; a
 mechanistic model that states its own range of validity.
 
@@ -103,10 +105,11 @@ All earlier branches are merged into `claude/exciting-fermi-qy077p` (last: a5fd0
    - For each paper whose inputs arrive: leak-scan, merge, register any new hunch, freeze predictions (commit),
      then outcomes via the step-3 prompt, then score.
    - B09 is process-level (splat tests), not single-impact; B01, B08, B11, B15 contain no v_cr.
-3. **Model development:**
-   - a combined strength + oxide hunch with a stated mechanism. A relative is Na2025's Eq. 6 (Lienhard rule of
-     mixtures), which is now known and not blind;
-   - register it before the next blind papers are frozen.
+3. **Model development:** CS-10 (combined strength + oxide energy balance) is registered (3f181ed) and fitted on B10
+   (2ce15c6; beta 0.3774, gamma 3.19e11 Pa, frozen): docs/research/coldspray-hunch-cs10.md and coldspray-cs10-fit.md.
+   B10 cannot determine it (leave-one-out no better than a constant; beta fragile). Add CS-10 to every blind freeze
+   from now on, with its input rule (static compression strength, else Tabor HV/3; numeric oxide thickness, else no
+   prediction). The referee must still compare it with Na2025 Eq. 6 (not read in the modelling session).
 4. **Data gaps:**
    - the primary HG2018b (*Scripta Mater.* 145, 9) for Al, Ni, Cu, Zn (conflicting quotes);
    - tensile strength and failure strain of the tested powders;
