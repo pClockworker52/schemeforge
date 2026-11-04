@@ -102,7 +102,8 @@ All earlier branches are merged into `claude/exciting-fermi-qy077p` (last: a5fd0
 
 1. **SPH ladder merged** (f156b94; S0, S0p pass, S1 not clean, SPH parts kernel-welded). Route A + B decided
    (DECISIONS 2026-11-04). CS-11 approved and frozen, S1 accepted at 20 m/s (DECISIONS 2026-11-04).
-   Next: WSL A runs rungs F0 and W0, the SPH material-failure check, then the CS-11 sweep.
+   CS-11 result (§10): inconclusive, both bounds not computable in OpenCourant. Drafts CS-12 (interface blanket,
+   surface-expansion criterion) and CS-13 (conduction regularises the edge) await Peter.
 2. **Plan revision 2** (DECISIONS 2026-11-04, coldspray-go-nogo.md): the interface law is the core; blind papers
    with oxide series (B14, B06, B05) come first.
 3. **Blind set:** 10 papers still pending (B02–B07, B12–B14, B16; Peter is fetching them).
