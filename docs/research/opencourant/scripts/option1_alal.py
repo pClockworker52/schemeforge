@@ -6,10 +6,10 @@ reached). Reports the failure time as a fraction of D/V and the equivalent plast
 just before failure. No critical velocity is derived from this (Peter, open item 8).
 
 Material: LAW4 (Johnson-Cook) + /EOS/GRUNEISEN, Al. Values from docs/research/data/properties.csv:
-  P-HG-Al (HG2018a preprint, Extended Data Table 1): rho, T_m, c_p, nu, C0 = sqrt(B/rho), s, JC A, B, n, C, m
+  P-HG-Al (HG2018a preprint, Extended Data Table 1): rho, T_m, c_p, nu, C0 = sqrt(B/rho), s, gamma0 = 2.17,
+  JC A, B, n, C, m, reference strain rate 1 1/s, T_ref = 293 K
   P-H20-Al (Hassani2020 Table S1): E = 70 GPa (consistent with B = 76, G = 26 of P-HG-Al)
-  Not in either source, flagged: gamma0 = 2 s - 1 (common Hugoniot-slope approximation); JC reference strain
-  rate 1 1/s.
+  (The first sweep used the placeholder gamma0 = 2 s - 1 = 1.678; replaced 2026-11-04, see section 8.3.)
 Temperature: computed but not written out with Isolid = 17 (opencourant-verification.md section 5.3).
 
 Usage: python option1_alal.py run <work_dir> <out_csv> [V ...]      (velocities in m/s; default 500 750 1000)
@@ -31,9 +31,10 @@ from ocdeck import _f, _group, _i, _material_cards  # noqa: E402
 
 R = 10e-6
 S_HUG = 1.339
+GAMMA0 = float(os.environ.get("GAMMA0", "2.17"))  # P-HG-Al; env override only to reproduce the 1.678 sweep
 AL = oc.JohnsonCookGruneisen(E=70e9, nu=0.35, rho=2700.0, A=148.4e6, B=345.5e6, n=0.183, C=0.001, eps_dot0=1.0,
                              m=0.895, T_melt=933.0, rho_cp=2700.0 * 896.9, T_r=293.0, c0=5305.5, S1=S_HUG,
-                             gamma0=2 * S_HUG - 1, heat_efrac=None)
+                             gamma0=GAMMA0, heat_efrac=None)
 MESHES = {"coarse": 8, "medium": 16, "fine": 32}  # n = core cells across the particle radius / 2 ... see ogrid
 
 

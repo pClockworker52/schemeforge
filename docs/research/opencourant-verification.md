@@ -21,7 +21,7 @@ is used or copied.
 | Rung 0p (elastic-plastic two-wave) | **Agrees with the closed form** with q ≈ 0: wall stress σ₂ to 0.9997 at 200 elements, plastic front speed 0.993 c_b, elastic front 0.997 c_d; ε_p behind the plastic wave 1.05 (q ≈ 0) and 0.986 (default q) of the closed form. |
 | **Axisymmetric element** | **Use `Isolid = 17`** (4-point quad). The default 2D solid is area-weighted. It fails the Hertz sphere (about 5 × too stiff, mesh-independent) and loses axial momentum in free flight; it passes only the 1D cases. With `Isolid = 17` OpenCourant agrees with the JAX code on the unconfined disc (to 0.004 V) and on the Hertz sphere (to about 1 %). **Lagrangian only**: with ALE the starter falls back to the area-weighted element (§5.4). §5 |
 | Rung 1 (Hertz sphere) | **Agrees with the JAX code** (contact, peak, approach and rebound within about 1 % at 10 × 20, 15 × 30, 20 × 40). Both are 4–5 % short of quasi-static Hertz at 20 m/s and approach it at lower speed (dynamic effect). |
-| Jet distortion (open item 8) | **SPH is 3D-only** (source: no N2D use, 3D kernel only). **No Lagrangian remeshing for `/QUAD`** (`/ADMESH` is shells only). **Option 1 (Lagrangian, `Isolid = 17`, Al–Al, 500–1000 m/s):** the mesh fails at the jet root at 6–40 % of the penetration time on the finest mesh, earlier with refinement; edge quantities are not converged. A bonding criterion cannot be evaluated before failure. §8 |
+| Jet distortion (open item 8) | **SPH is 3D-only** (source: no N2D use, 3D kernel only). **No Lagrangian remeshing for `/QUAD`** (`/ADMESH` is shells only). **Option 1 (Lagrangian, `Isolid = 17`, Al–Al, 500–1000 m/s):** the mesh fails at the jet root at 5–37 % of the penetration time on the finest mesh, earlier with refinement; edge quantities are not converged (rerun with sourced γ₀ = 2.17: same conclusion). A bonding criterion cannot be evaluated before failure. §8 |
 | Pitfalls found | (1) The rigid-wall force output `FNZ` is ∫σ dr, not a force, in axisymmetric runs. (2) Default quadratic bulk viscosity + default time-step scale goes unstable (zero volume at cycle 0) on 50:1 quads. (3) Default bulk viscosity costs 5–7 % rebound velocity in the elastic case. (4) Axisymmetric time-history internal energy (and the ERR % energy-balance column) reads zero: energy balance cannot be checked from it. (5) With `Isolid = 17` the temperature is computed but not written out. |
 
 ## 1. Method
@@ -412,6 +412,9 @@ uses the area-weighted element (§5.4).
 
 ### 8.3 Option 1 diagnostic: Lagrangian `Isolid = 17`, no erosion
 
+**Rerun with the sourced γ₀ = 2.17 (2026-11-04): the conclusion does not change.** Failure still comes earlier
+with refinement at every speed and the edge strain is still not converged. Details below.
+
 **Set-up** ([`option1_alal.py`](opencourant/scripts/option1_alal.py)):
 - **Particle:** Al sphere, R = 10 µm, O-grid mesh (square core plus mapped layers, regular quads along the whole lower surface).
 - **Substrate:** Al block 5R × 5R. Cell size h is matched to the particle within 1.5R of the contact, then graded; bottom fixed.
@@ -419,9 +422,9 @@ uses the area-weighted element (§5.4).
 - **Element and models:** `Isolid = 17`, default bulk viscosity, no erosion, no failure model (P_min = −10³⁰).
 
 **Material:** LAW4 + `/EOS/GRUNEISEN` from `docs/research/data/properties.csv`.
-- **P-HG-Al** (HG2018a preprint, Extended Data Table 1): ρ = 2700, T_m = 933 K, c_p = 896.9 J/(kg K), ν = 0.35, C₀ = 5305.5 m/s (√(B/ρ), as the preprint uses it), s = 1.339, JC A = 148.4 MPa, B = 345.5 MPa, n = 0.183, C = 0.001, m = 0.895.
+- **P-HG-Al** (HG2018a preprint, Extended Data Table 1): ρ = 2700, T_m = 933 K, c_p = 896.9 J/(kg K), ν = 0.35, C₀ = 5305.5 m/s (√(B/ρ), as the preprint uses it), s = 1.339, **γ₀ = 2.17**, JC A = 148.4 MPa, B = 345.5 MPa, n = 0.183, C = 0.001, m = 0.895, reference strain rate 1 s⁻¹, T_ref = 293 K.
 - **P-H20-Al** (Hassani2020 Table S1): E = 70 GPa.
-- **Not in either source, flagged:** γ₀ = 2s − 1 = 1.678 (Hugoniot-slope approximation) and JC reference strain rate 1 s⁻¹.
+- **γ₀ history:** the first sweep (commit `01a1f6b`) used a placeholder γ₀ = 2s − 1 = 1.678 because no sourced value was in the table. Peter added the preprint values on 2026-11-04 (γ₀ = 2.17; the reference strain rate 1 s⁻¹ and T_ref = 293 K were already the values used). All nine runs were repeated with γ₀ = 2.17; the table below is that rerun. The placeholder results are kept in [`results/option1_alal_gamma1678.csv`](opencourant/results/option1_alal_gamma1678.csv) and [`results/option1_alal_eval_gamma1678.csv`](opencourant/results/option1_alal_eval_gamma1678.csv).
 
 **Runs:**
 - V = 500, 750, 1000 m/s × h = 0.625, 0.3125, 0.156 µm (R/16, R/32, R/64).
@@ -430,46 +433,47 @@ uses the area-weighted element (§5.4).
 - **Reference contact time t_p:** the end of penetration, when the particle's axial velocity crosses zero. It is taken from the coarse run, which reaches it at all speeds; it is mesh-insensitive (500 m/s: 0.590 coarse, 0.598 medium).
 - **Edge quantities:** maximum equivalent plastic strain within 2.5 h of the contact edge (the outermost particle rim node on the substrate surface), at t_eval = min(t_stop, t_p).
 
-| V (m/s) | mesh (h) | outcome | t_stop / t_p | t_eval / (D/V) | contact radius a/R | ε_p edge, particle | ε_p edge, substrate | engine (s) |
-|---|---|---|---|---|---|---|---|---|
-| 500 | coarse (0.625 µm) | reached 2 D/V | – | 0.59 | 1.22 | 1.12 | 1.32 | 4.8 |
-| 500 | medium (0.312 µm) | reached 2 D/V | – | 0.59 | 1.19 | 2.03 | 1.72 | 49 |
-| 500 | fine (0.156 µm) | **dt collapse** | **0.40** | 0.23 | 1.00 | 2.11 | 3.92 | 65 |
-| 750 | coarse (0.625 µm) | reached 2 D/V | – | 0.91 | 1.40 | 1.64 | 4.78 | 8.5 |
-| 750 | medium (0.312 µm) | **dt collapse** | **0.49** | 0.45 | 1.28 | 2.02 | 9.69 | 33 |
-| 750 | fine (0.156 µm) | **dt collapse** | **0.08** | 0.07 | 0.61 | 2.34 | 1.90 | 8.9 |
-| 1000 | coarse (0.625 µm) | reached 2 D/V | – | 1.32 | 1.51 | 2.36 | 18.2 | 11 |
-| 1000 | medium (0.312 µm) | **dt collapse** | **0.10** | 0.13 | 0.79 | 1.94 | 7.04 | 1.5 |
-| 1000 | fine (0.156 µm) | **dt collapse** | **0.06** | 0.07 | 0.60 | 1.55 | 2.00 | 7.4 |
+| V (m/s) | mesh (h) | outcome | t_stop / t_p | t_eval / (D/V) | contact radius a/R | ε_p edge, particle | ε_p edge, substrate | engine (s) | γ₀ = 1.678: t_stop / t_p |
+|---|---|---|---|---|---|---|---|---|---|
+| 500 | coarse (0.625 µm) | reached 2 D/V | – | 0.59 | 1.22 | 1.13 | 1.33 | 5.9 | – |
+| 500 | medium (0.312 µm) | reached 2 D/V | – | 0.59 | 1.19 | 2.06 | 1.73 | 59 | – |
+| 500 | fine (0.156 µm) | **dt collapse** | **0.37** | 0.21 | 0.96 | 2.14 | 3.68 | 65 | 0.40 |
+| 750 | coarse (0.625 µm) | reached 2 D/V | – | 0.91 | 1.40 | 1.64 | 4.92 | 9.9 | – |
+| 750 | medium (0.312 µm) | **dt collapse** | **0.20** | 0.18 | 0.91 | 1.56 | 6.00 | 3.8 | 0.49 |
+| 750 | fine (0.156 µm) | **dt collapse** | **0.08** | 0.06 | 0.56 | 2.16 | 2.01 | 7.0 | 0.08 |
+| 1000 | coarse (0.625 µm) | reached 2 D/V | – | 1.33 | 1.51 | 2.35 | 17.3 | 14 | – |
+| 1000 | medium (0.312 µm) | **dt collapse** | **0.10** | 0.13 | 0.82 | 2.97 | 1.57 | 1.5 | 0.10 |
+| 1000 | fine (0.156 µm) | **dt collapse** | **0.05** | 0.06 | 0.55 | 1.47 | 1.72 | 5.6 | 0.06 |
 
-t_p / (D/V) = 0.590, 0.918, 1.325 at 500, 750, 1000 m/s. Tables:
+t_p / (D/V) = 0.593, 0.920, 1.333 at 500, 750, 1000 m/s (γ₀ = 1.678: 0.590, 0.918, 1.325). Tables:
 [`results/option1_alal.csv`](opencourant/results/option1_alal.csv) (per run) and
 [`results/option1_alal_eval.csv`](opencourant/results/option1_alal_eval.csv) (evaluation).
 
 ![Edge plastic strain until failure](opencourant/figures/option1_edge_strain.png)
 
-![Al on Al, 750 m/s, medium mesh, up to the time-step collapse](opencourant/figures/option1_al750_medium.gif)
+![Al on Al, 500 m/s, medium mesh, to 2 D/V](opencourant/figures/option1_al500_medium.gif)
 
-*750 m/s, medium mesh, mirrored, until the run stops at 0.45 D/V. A thin substrate jet forms at r ≈ 1.3–1.7 R
-along the particle; its cells collapse.*
+*500 m/s, medium mesh, mirrored, to 2 D/V (this run survives). The substrate edge cells at r ≈ R are sheared
+flat; a coarse-mesh run that survives is not a converged one (see below).*
 
 **Where the runs fail** ([`option1_failure.py`](opencourant/scripts/option1_failure.py)):
-- Every collapse that could be located is controlled by a **substrate surface cell at the contact edge** (centroid z ≈ 0, 0.10–0.23 R from the edge), with a smallest interior angle of 0.1–0.5° (aspect 5–21), i.e. a collapsed cell.
-- The surviving coarse runs end with edge cells at about 2° and dt ≈ 0.18–0.2 dt₀.
+- Every collapse that could be located is controlled by a **substrate surface cell at the contact edge** (centroid z ≈ 0, 0.09–0.15 R from the edge), with a smallest interior angle of 0.3–0.5° (aspect 7–17), i.e. a collapsed cell. (γ₀ = 1.678: 0.10–0.23 R, 0.1–0.5°.)
+- The surviving runs end with controlling substrate cells at 1.8–4.7° and dt ≈ 0.17–0.36 dt₀ (500 m/s coarse: a particle cell at 26°, 0.57 dt₀).
 - **It is element distortion at the root of the jet, not contact stiffness.**
 - Medium 1000 m/s stopped before the first 500-cycle printout, so its controlling cell is not in the listing.
 - The threshold dt₀/30 is a choice. The controlling cells were already near zero angle, so a lower threshold would gain little time (not tested).
 
 **Convergence:**
-- **The failure time does not converge; it gets earlier with refinement at every speed.** At 500 m/s: none, none, 0.40 t_p. At 750: none, 0.49, 0.08 t_p. At 1000: none, 0.10, 0.06 t_p.
-- Finer cells at the edge are crushed sooner, as expected at a moving shear singularity. The observed drop is more than 2× per halving of h (750 m/s: 0.49 → 0.08 t_p).
-- The edge plastic strain is not mesh-converged either. At 500 m/s at t_p: 1.12 (coarse) and 2.03 (medium); fine fails at 0.40 t_p with 2.11. The substrate edge strain varies by up to 10× between meshes at the same speed.
+- **The failure time does not converge; it gets earlier with refinement at every speed.** At 500 m/s: none, none, 0.37 t_p. At 750: none, 0.20, 0.08 t_p. At 1000: none, 0.10, 0.05 t_p.
+- Finer cells at the edge are crushed sooner, as expected at a moving shear singularity.
+- The edge plastic strain is not mesh-converged either. At 500 m/s at t_p: 1.13 (coarse) and 2.06 (medium); fine fails at 0.37 t_p with 2.14. The substrate edge strain varies by up to 10× between meshes at the same speed.
+- **Effect of γ₀ (1.678 → 2.17):** eight of nine runs change by at most 0.03 t_p in failure time, and most edge strains by under 10 %. The edge values of failing runs move more (1000 m/s medium, particle: 1.94 → 2.97), as expected for values read off a collapsing cell. The exception is medium 750 m/s, which now fails at 0.20 t_p instead of 0.49 t_p. A failure time that moves by a factor 2.5 under a 30 % change of an EOS parameter that barely affects the other runs is itself a sign that it is set by a collapsing cell, not by the physics.
 - **Temperature:** not available. `Isolid = 17` does not write it out (§5.3). The values would come only from LAW4's built-in update (plastic work plus q work plus EOS heating, §2.1).
 
 **Answer to Peter's question (no critical velocity is claimed):**
 - **No.** In 2D Lagrangian with the verified element, a jetting or shear-instability criterion at the contact edge cannot be evaluated mesh-converged before the mesh fails.
-- On the finest mesh the run fails at 6–40 % of the penetration time, in most cases before a jet has formed (contact radius 0.6–1.0 R).
-- On the medium mesh at 750 m/s a jet is visible before failure. It would disappear under refinement, because the refined runs fail earlier.
+- On the finest mesh the run fails at 5–37 % of the penetration time, in most cases before a jet has formed (contact radius 0.6–1.0 R).
+- With γ₀ = 1.678 the medium 750 m/s run showed a thin substrate jet before failing at 0.49 t_p. With γ₀ = 2.17 it fails at 0.20 t_p, before a jet, so that observation did not even survive a change of γ₀, let alone refinement.
 - Coarse meshes survive to t_p, but their edge values are not converged and so cannot carry a criterion.
 
 ### 8.4 What the SPH result means for the plan
