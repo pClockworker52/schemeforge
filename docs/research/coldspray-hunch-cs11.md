@@ -87,6 +87,16 @@ is a negative result for the ledger.
   velocities. J\* = 1.25 and 2.0 are sensitivity values.
 - Reported, without a verdict: the same metric for the substrate body (J_s); edge equivalent plastic strain at t_e,
   as in §8.3; the full J(V) curves.
+- **Bracket width against measured oxide effects** (reported, no verdict). Δ is compared, as Δ and as Δ / 812 m/s,
+  with the measured oxide effects known now:
+  - Lienhard2020: about +14 % v_cr for Al at +2–3 nm (exposed, second-hand via Veysset2021);
+  - B10: the 77 m/s spread across five heat treatments, and the group contrast of −30.5 m/s.
+
+  The reading is fixed now:
+  - Δ well above these effects: the unknown interface law swamps everything the oxide does, so a simulation says
+    nothing about oxide effects unless it carries an explicit interface law.
+  - Δ at or below them: the simulated onset is not arbitrary, but oxide effects still need an explicit law to be
+    seen.
 
 ### Sweep and convergence
 
@@ -115,6 +125,14 @@ is a negative result for the ledger.
   force is meaningful. Pass: at R/32, peak force and maximum approach within 5 % of two-body Hertz. Rebound is
   reported but has no pass threshold, because the weld holds the sphere.
 - A failed rung stops the sweep for that setup and goes to Peter.
+
+## Where CS-11 sits in the plan
+
+The long-term target is the **interface law** (oxide fracture, fresh-metal contact, bond or separation), not the
+onset velocity (coldspray-go-nogo.md, local-first order revision 2). CS-11 measures only **how much the unknown law
+matters** between its two bounds; it does not say what the law is. The first explicit candidate law is an oxide
+interphase of SPH particles (option C of opencourant-verification.md §9.8). It will be registered as its own hunch
+after the SPH material-failure check, and judged on oxide series it has not seen.
 
 ## What CS-11 cannot show
 

@@ -103,20 +103,23 @@ All earlier branches are merged into `claude/exciting-fermi-qy077p` (last: a5fd0
 1. **SPH ladder merged** (f156b94; S0, S0p pass, S1 not clean, SPH parts kernel-welded). Route A + B decided
    (DECISIONS 2026-11-04). Next: Peter approves CS-11 (docs/research/coldspray-hunch-cs11.md, draft) and decides S1;
    then WSL A runs rungs F0 and W0, then the CS-11 sweep. No Al–Al run before the CS-11 freeze commit.
-2. **Blind set:** 10 papers still pending (B02–B07, B12–B14, B16; Peter is fetching them).
+2. **Plan revision 2** (DECISIONS 2026-11-04, coldspray-go-nogo.md): the interface law is the core; blind papers
+   with oxide series (B14, B06, B05) come first.
+3. **Blind set:** 10 papers still pending (B02–B07, B12–B14, B16; Peter is fetching them).
    - For each paper whose inputs arrive: leak-scan, merge, register any new hunch, freeze predictions (commit),
      then outcomes via the step-3 prompt, then score.
    - B09 is process-level (splat tests), not single-impact; B01, B08, B11, B15 contain no v_cr.
-3. **Model development:** CS-10 (combined strength + oxide energy balance) is registered (3f181ed) and fitted on B10
+4. **Model development:** CS-10 (combined strength + oxide energy balance) is registered (3f181ed) and fitted on B10
    (2ce15c6; beta 0.3774, gamma 3.19e11 Pa, frozen): docs/research/coldspray-hunch-cs10.md and coldspray-cs10-fit.md.
    B10 cannot determine it (leave-one-out no better than a constant; beta fragile). Add CS-10 to every blind freeze
    from now on, with its input rule (static compression strength, else Tabor HV/3; numeric oxide thickness, else no
    prediction). The referee must still compare it with Na2025 Eq. 6 (not read in the modelling session).
-4. **Data gaps:**
+5. **Data gaps:**
    - the primary HG2018b (*Scripta Mater.* 145, 9) for Al, Ni, Cu, Zn (conflicting quotes);
    - tensile strength and failure strain of the tested powders;
    - c_p for the handbook rows (atomic weights: no fill from memory).
-5. **Simulation type 2** (a pre-registered setup as a zoo member) only after the 3D SPH ladder and convergence pass.
+6. **Simulation type 2** (a pre-registered setup as a zoo member) only after the 3D SPH ladder and convergence pass,
+   and only with a stated interface law (plan revision 2).
 
 ## 6. Key files
 

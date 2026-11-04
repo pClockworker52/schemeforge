@@ -43,15 +43,50 @@ physics.
 4. For C2, the bridging experiment is a process run that measures per-particle velocity, size and bond
    outcome together, on powders also tested by LIPIT. Without it, B6 and C3 stay unanswerable.
 
-## Local-first order (DECISIONS 2026-11-03)
+## Local-first order, revision 2 (DECISIONS 2026-11-04 "Cold-spray plan revision: the interface law is the core")
 
-1. Simulation pipeline with OpenRadioss and an independent JAX code: verification ladder, then mesh convergence
-   at the jet, then v_cr with setups frozen in advance.
-2. Model hunches (strength term, oxide CS-07, temperature sign), registered before testing.
-3. Frozen predictions, then the literature-blind hold-out set
+**Why the order changed.** The original step 1 ended in "v_cr with setups frozen in advance". That is not
+reachable as written. A simulated v_cr is always "simulation plus interface law", and no affordable simulation
+resolves the interface (5–20 nm oxide against particle spacings of about 0.2 µm). OpenCourant made this explicit:
+two SPH bodies are welded by the kernel; bricks with `/INTER/TYPE7` never weld (opencourant-verification.md §9.8).
+The evidence so far points the same way:
+- strength alone was refuted on B10 (CS-08);
+- the oxide term carries most of CS-10's excess over Z6, in-sample;
+- oxide-free Au and lightly oxidised Ag lie below Z6.
+
+So the core of the single-impact problem is the **interface law**: oxide fracture, fresh-metal contact, bond or
+separation. It is a closure the simulation needs, not something the simulation can supply.
+
+**Order:**
+1. **Interface bracket, CS-11** ([coldspray-hunch-cs11.md](coldspray-hunch-cs11.md)): welded against frictionless
+   interface for simulated jetting onset, after the prerequisite rungs F0 and W0. It decides whether the simulation
+   path needs an interface law at all, and how large the law's effect is compared with measured oxide effects.
+2. **Interface-law hunches.** At most one or two parameters each, mechanism first, registered with a kill
+   criterion against oxide-series data the law has not seen. First candidate: an oxide interphase of SPH particles
+   (option C of §9.8), after a check of how OpenCourant handles SPH material failure (the no-erosion rule
+   applies). A simulated v_cr is quoted only with a stated interface law, or with both bracket bounds.
+3. **Closed-form track in parallel.** CS-07 and CS-10 are scored on every blind paper. CS-10's γ term is a
+   closed-form interface law, so closed form and simulation should agree on the oxide effect. That agreement is
+   itself a test.
+4. **Blind papers ordered by oxide content.** B14 (Al oxide/hydroxide; partly exposed), B06 (oxide fracture), and
+   B05 (impurities) if they carry thickness values come first. The others follow as before
    ([coldspray-blind-literature.md](coldspray-blind-literature.md)).
-4. External blind campaign ([coldspray-campaign-proposal.md](coldspray-campaign-proposal.md)) only if local
-   evidence cannot decide.
+5. **External campaign.** If the blind papers bring fewer than two unseen oxide series, the campaign
+   ([coldspray-campaign-proposal.md](coldspray-campaign-proposal.md), item 2: Cu at three oxygen levels) moves from
+   last resort to the next step.
+6. **Multi-particle build-up and deposition efficiency** come after the single-impact interface law. The law
+   carries over to them; the second-impact assumption (H2) adds its own problem.
+
+Unchanged: the blind rules B1–B6, pre-registration, the verification ladder before any simulated number, no
+erosion as a production method, no OpenCourant fork, local first.
+
+**The guard this revision needs.** One seen oxide series (B10) and one partly exposed series (B14) cannot judge an
+interface law with parameters. Fitting it to them would be the trap this note warns about: fitting a handful of
+numbers. Hence the limit of one or two parameters, the unseen-series rule, and the campaign trigger in step 5.
+
+*Revision 1 (DECISIONS 2026-11-03, superseded in order, not in method):* simulation pipeline (verification ladder,
+mesh convergence at the jet, v_cr with frozen setups) → model hunches → frozen predictions and the literature-blind
+set → external campaign only if local evidence cannot decide.
 
 ## Steering hunches beyond the zoo
 
@@ -102,6 +137,20 @@ Then the slot would be `v_cr(props_p, props_s, d, T) -> (v_cr, in_domain)`. The 
 in-domain held-out materials, plus a penalty for confident predictions on materials later found out of domain.
 The zoo is Z1, Z2, Z6, Z7 and a constant baseline. The first target: beat Z6 on held-out materials while
 declaring the domain.
+
+## Upgrade trigger for the interface component (added 2026-11-04, revision 2)
+
+The component is an interface law inside a fixed, verified simulation harness, or its closed-form counterpart
+(CS-10's oxide term). Its reference is measured v_cr across oxide states, which is a measurement. That answers the
+objection to C4 above, where the reference would have been a model. All three must hold:
+- **Oxide series:** at least two held-out series on different metals, each with at least three states, numeric
+  oxide thickness, and windows wider apart than their brackets.
+- **Harness:** the simulation passes its verification ladder, including the interface rungs (F0, W0 of CS-11).
+- **Resolving power:** the CS-11 bracket width is reported against the measured oxide effects, so that the judge's
+  resolving power is known.
+
+Even then, each evaluation is a simulation sweep of hours to days. A swarm search stays out of reach;
+hand-registered hunches are the expected mode.
 
 ## Open checks before Peter decides
 
