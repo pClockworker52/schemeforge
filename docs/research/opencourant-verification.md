@@ -504,9 +504,9 @@ laptop (Intel i9-14900HX: 8 performance + 16 efficiency cores, 32 threads, WSL2)
 **Status:**
 - **S0 (confined column, elastic) passes.**
 - **S0p (two-wave, elastic–perfectly-plastic) passes.**
-- **S1 (Hertz, quarter symmetry): not a clean pass.** It needs a surface-conforming sphere; a plain lattice sphere fails. At 20 m/s it converges toward JAX and `Isolid = 17` (within 2–3 % at R/64, but the peak force stalls 4 % low). At 2 m/s it is still 7–10 % off at R/64 (§9.6).
+- **S1 (Hertz, quarter symmetry): accepted at 20 m/s by Peter** (DECISIONS 2026-11-04, "Rung S1 accepted at 20 m/s; CS-11 approved"), with stated limits: the peak force is about 4 % low, rebound is reduced by the artificial viscosity, and contacts much smaller than the particle spacing are not resolved. It needs a surface-conforming sphere; a plain lattice sphere fails. At 20 m/s it converges toward JAX and `Isolid = 17` (within 2–3 % at R/64, peak 4 % low). **The 2 m/s case is recorded as not passed** (still 7–10 % off at R/64) and is not pursued (§9.6).
 - **Quarter symmetry is exact to plotting accuracy** against a half model (§9.7).
-- **Al–Al not started: stop for Peter.** SPH–SPH particle–substrate interaction in OpenCourant is a kernel coupling that welds the two bodies, so it carries tension and shear across the interface (§9.8). For a jetting and bonding diagnostic that has no defensible default.
+- **Al–Al not started here: stop for Peter.** SPH–SPH particle–substrate interaction in OpenCourant is a kernel coupling that welds the two bodies, so it carries tension and shear across the interface (§9.8). For a jetting and bonding diagnostic that has no defensible default. Peter's decision: bracket the interface (route A + B, hunch CS-11); continued in §10.
 
 ### 9.1 SPH settings (candidates for the frozen setup)
 
@@ -723,3 +723,44 @@ no defensible default, so per Peter's guidance I stop here.
 2. **SPH particle on a Lagrangian 3D brick substrate, `/INTER/TYPE7`** (SPH particles as secondary nodes). The contact separates and slides, but the substrate jet is again a Lagrangian mesh, with the distortion failure of §8 now in 3D. It would need its own rung (Hertz with TYPE7 instead of the rigid wall).
 3. **`Sol2SPH` substrate:** bricks that convert to SPH particles when they distort (RG `/SPHGLO` Isol2sph, `/PROP/SOLID`). The contact is TYPE7 until conversion and a kernel weld afterwards, so it combines the problems of 1 and 2. Unverified.
 4. A code change for a separable SPH–SPH contact is excluded by the no-fork decision.
+
+## 10. Hunch CS-11: interface bracket, rungs F0 and W0, sweep (Peter's decision, 2026-11-04)
+
+DECISIONS 2026-11-04, "SPH particle–substrate interface: bracket, bond decided afterwards" (route A + B) and "Rung S1
+accepted at 20 m/s; CS-11 approved". The protocol is frozen in
+[coldspray-hunch-cs11.md](coldspray-hunch-cs11.md) (commit `f08456a`, before any Al–Al run) and is followed here in
+its order: F0, W0, the SPH failure check, the cost of one F run at R/16 and the 48 h rule, then the sweep. Branch
+`coldspray/opencourant-sph`.
+
+### 10.1 Setups and scripts
+
+- [`sph_interface.py`](opencourant/scripts/sph_interface.py) writes both setups, quarter symmetry, block 3R × 3R × 2R (quarter), bottom fixed:
+  - **W:** SPH sphere on an SPH block (cubic net, same spacing s, same §9.1 settings). The lowest sphere particle starts one spacing above the top block layer (the two lattices "touch").
+  - **F:** SPH sphere on 8-node bricks, `/INTER/TYPE7` with the sphere's particles as secondary nodes and the block's top face as main surface, friction 0. Bricks of edge s for x, y ≤ 1.5R and z ≥ −1.5R, graded (ratio 1.2) outside. The lowest sphere particle starts at the gap height, so contact starts at t = 0.
+- [`sph_f0w0.py`](opencourant/scripts/sph_f0w0.py): rungs F0 and W0 (rung-1 material and radius: E = 70 GPa, ν = 0.35, ρ = 2700 kg/m³, R = 10 µm, 20 m/s). Reference: two-body Hertz, E* = E / (2 (1 − ν²)), t_Hertz = 37.8 ns, d_Hertz = 0.257 µm (0.41 s at R/16, 0.82 s at R/32), contact radius a = 1.60 µm. Force = −d(ZMOM)/dt of the sphere × 4; approach from the integrated centre-of-mass velocity.
+- [`cs11_sweep.py`](opencourant/scripts/cs11_sweep.py): the Al–Al sweep (§10.5).
+- Results: [`results/cs11_f0w0.csv`](opencourant/results/cs11_f0w0.csv).
+
+### 10.2 Rung F0 (SPH sphere on TYPE7 bricks): passes; element, gap and stiffness frozen
+
+| run | element | gap | Stfac | peak / F_H | approach / d_H | contact (1 %) / t_H | rebound / V | engine |
+|---|---|---|---|---|---|---|---|---|
+| R/16 | `Isolid = 17` | s/2 | 1 | 0.981 | 1.081 | 1.074 | 0.942 | 3.5 min, 3 threads |
+| R/16 | `Isolid = 17` | s/2 | 10 | 1.039 | 1.025 | 1.017 | 0.940 | 3.9 min, 3 threads |
+| R/16 | `Isolid = 17` | s/10 | 10 | 1.038 | 1.024 | 1.015 | 0.939 | 3.1 min, 3 threads |
+| **R/32** | `Isolid = 17` | **s/2** | **10** | **1.037** | **0.987** | 0.956 | **0.992** | 24 min, 8 threads |
+
+**Pass** (frozen thresholds: at R/32 peak and approach within 5 % of Hertz, rebound > 0.9 V). R/32: 34 239
+particles, 198 000 bricks, 10 052 cycles.
+
+**Frozen for setup F:**
+- **Element `Isolid = 17`** (H8C, 2 × 2 × 2 Gauss points, constant-pressure default `Icpre = 1`), the formulation verified in 2D (§5), default bulk viscosity (1.10, 0.05), `Ismstr` default. `Isolid = 24` (HEPH) and `Isolid = 1` (Belytschko) were started at R/16 and stopped: with either, the engine runs at a nodal time step of 4.3·10⁻¹³ s set by the brick node on the impact axis, 30× below the SPH time step and independent of the contact stiffness. With `Isolid = 17` the step stays at the SPH value (1.3·10⁻¹¹ s at R/16). The cause was not traced.
+- **Gap s/2** (constant, `Igap = 1000`): the particle's surface is s/2 outside its centre, so first contact is where the SPH surface meets the brick face. s/10 gives the same metrics to 0.1 % (approach is measured from first contact), so the choice does not matter for the rung. The starter warns that s/2 exceeds half the smallest main edge; that warning is about self-contact and does not apply.
+- **Stiffness `Istf = 1000`, Stfac = 10** (penalty stiffness 10 × B A²/V of the main brick, i.e. 10 B s per particle). With Stfac = 1 the penalty compliance adds 8 % to the approach at R/16 (estimate: penetration ≈ p₀ s / B ≈ 0.05 s against d_H = 0.41 s), at Stfac = 10 it adds under 1 %. The time step drops by 15 % at R/32 (contact nodal step 5.9·10⁻¹² s against 6.7·10⁻¹² s SPH).
+- Other TYPE7 fields at their defaults (no friction, `Inacti` none, `VIS_S` = 0.05 critical damping of the penalty).
+
+### 10.4 SPH material failure: are failed particles deleted? (for the oxide-interphase option)
+
+- **Reference Guide:** the only statement is in the failure-model compatibility table, `/FAIL` comment 4 (RG p.1303): "Failure models can be used for SPH simulation for all materials compatible with SPH formulation." The RG does not say what happens to a failed particle. The only explicit SPH deletion in the RG is the time-step option `/DT/SPHCEL/DEL` (p.3036): "The SPH cell which is controlling the time step is removed".
+- **Source (OpenCourant engine, `elements/sph/spmall3.F`, `sphprep.F`):** when the failure model sets a particle's `OFF` flag to 0, `spmall3.F` sets `KXSP(2,I) = 0` and requests a new neighbour search (`ISPHBUC = 1`) and a contact update (`IDEL7NOK = 1`). `sphprep.F` puts only particles with `KXSP(2,N) ≠ 0` into the neighbour sort. **A failed particle is therefore taken out of the kernel interaction**: it neither gives nor receives SPH forces. Its node is not removed (no code path deletes the node or its mass was found), so it keeps its mass and moves freely; whether it stays a TYPE7 secondary node was not traced.
+- **For option C (oxide interphase):** a layer of interphase particles with a failure model would, on failure, drop out of the kernel coupling, so the weld between particle and substrate opens where the interphase has failed. That is the behaviour the option needs. It is not yet verified by a run, and the free nodes of failed particles carry mass and momentum through the gap.

@@ -84,7 +84,8 @@ def _frame(fid, origin, normal):
 
 
 def write_deck(d, name, bodies: list[Body], *, t_end, dt_th, sym=(), z_wall=None, dt_scale=None,
-               dt_anim=None, anim=("P", "EPSP", "VONM", "DENS"), sphglo=None, print_every=-200, extra_engine=()):
+               dt_anim=None, anim=("P", "EPSP", "VONM", "DENS"), sphglo=None, print_every=-200, extra_engine=(),
+               extra_starter=(), th_parts=None, dt_min=0.0):
     s = ["#RADIOSS STARTER", f"# schemeforge SPH deck, written by sphdeck.py: {name}", "/BEGIN", name,
          _i(2026) + _i(0), f"{'kg':>20}{'m':>20}{'s':>20}", f"{'kg':>20}{'m':>20}{'s':>20}", "/NODE"]
     nid, ranges = 0, []
@@ -120,10 +121,12 @@ def write_deck(d, name, bodies: list[Body], *, t_end, dt_th, sym=(), z_wall=None
         s += ["/TH/RWALL/2", "wall", "DEF", _i(1)]
     if sphglo is not None:
         s += ["/SPHGLO", _f(sphglo[0]) + _i(0) + _i(sphglo[1]) + _i(sphglo[2])]
-    s += ["/TH/PART/1", "parts", "DEF", "".join(_i(p) for p in range(1, len(bodies) + 1)), "/END"]
+    s += list(extra_starter)  # e.g. a brick substrate with /INTER/TYPE7 (sph_interface.py); ids must not clash
+    parts = th_parts or range(1, len(bodies) + 1)
+    s += ["/TH/PART/1", "parts", "DEF", "".join(_i(p) for p in parts), "/END"]
     e = ["#RADIOSS ENGINE", f"/RUN/{name}/1", _f(t_end), "/TFILE/4", _f(dt_th), "/TH/TITLE", f"/PRINT/{print_every}"]
     if dt_scale is not None:
-        e += ["/DT", _f(dt_scale) + _f(0.0)]
+        e += ["/DT", _f(dt_scale) + _f(dt_min)]  # dt_min > 0: the run stops below it (time-step collapse)
     if dt_anim:
         e += ["/ANIM/DT", _f(0.0) + _f(dt_anim)] + [f"/ANIM/ELEM/{f}" for f in anim] + ["/ANIM/VECT/VEL"]
     e += list(extra_engine)
