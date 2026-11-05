@@ -7,6 +7,9 @@ docs/STATUS.md (top entries) and the DECISIONS index (top of docs/DECISIONS.md).
 **Arena 2 is paused** at Phase 6 step 5; resuming means step 6 (blind audit, Target D, tag contact-v1.0). Arena 1
 is released as benchmark-v1.0.
 
+**Procedure (2026-11-05):** docs/research/coldspray-procedure.md (who writes where; tasks for other sessions in
+docs/research/tasks/; HANDOFF updated at session end only).
+
 ## 1. Where the cold-spray track stands
 
 Update 2026-11-04 (2nd cloud session): step 3 below done (CS-10).
