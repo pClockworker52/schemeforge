@@ -1,7 +1,6 @@
 """Tests for the CS-14 blanket cell (rung R0/R1 helpers): lattice, fragment metric, a small free-film run."""
 
 import numpy as np
-import pytest
 
 from schemeforge.research import blanket_dem as bd
 
