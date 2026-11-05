@@ -83,3 +83,6 @@ For comparison, also in-sample on B10: constant 26.9 (leave-one-out 33.7), CS-10
   well above the constant baseline.
 - **Z18_Yd matches the published fit** but is no better than a constant in-sample (29.0 against 26.9). Its
   advantage in the paper's Fig. 8 rests on comparing alternatives, not on beating a constant.
+- **T3 predictions** (Al 6061, 15 µm, oxide 17 → 25 nm, strength of the as-received powder held fixed):
+  Z18_Yd +127.3 m/s, Z18_static +91.9 m/s. With CS-10 (+37) and CS-12 (0), there are four frozen predictions for
+  one thickness series.
