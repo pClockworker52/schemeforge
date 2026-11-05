@@ -4,7 +4,7 @@ Procedure: [../coldspray-procedure.md](../coldspray-procedure.md). Pull `claude/
 newest open task, push to the branch named in the task. Write only the files the task names. Blind rules
 (coldspray-blind-literature.md) bind you as before.
 
-## Task 2026-11-05-b1: Na et al. 2025 (B10), Eq. 6 (open)
+## Task 2026-11-05-b1: Na et al. 2025 (B10), Eq. 6 (closed: done in the cloud session from Peter's PDF, docs/research/coldspray-reading-na2025.md)
 
 B10 is unblinded and scored, so the full text may be read. From your PDF (sha256 a4cdccfe...), extract:
 1. Eq. 6 (the combined strength + oxide model) **exactly as printed**, with every symbol defined as in the paper;
