@@ -24,6 +24,7 @@ is used or copied.
 | Jet distortion (open item 8) | **SPH is 3D-only** (source: no N2D use, 3D kernel only). **No Lagrangian remeshing for `/QUAD`** (`/ADMESH` is shells only). **Option 1 (Lagrangian, `Isolid = 17`, Al–Al, 500–1000 m/s):** the mesh fails at the jet root at 5–37 % of the penetration time on the finest mesh, earlier with refinement; edge quantities are not converged (rerun with sourced γ₀ = 2.17: same conclusion). A bonding criterion cannot be evaluated before failure. §8 |
 | 3D SPH ladder (Peter, 2026-11-04) | **S0 and S0p pass** (h = 1.12 s, the starter default; default artificial viscosity). **Hertz S1 is not a clean pass:** it needs surface-conforming particles; at 20 m/s it converges toward JAX (within 2–3 % at R/64, peak 4 % low), at 2 m/s it is still 7–10 % off at R/64. Quarter symmetry = half model. Cost 4.6 µs/particle-cycle (1 thread), 0.9 µs at 8 workers. **Two SPH parts are kernel-welded** (tension and shear across the interface), so the Al–Al interaction is a decision for Peter. §9 |
 | CS-11 interface bracket (Peter, 2026-11-04) | **F0 passes** (SPH sphere on `Isolid = 17` bricks, TYPE7, gap s/2, Stfac 10: R/32 peak 1.037, approach 0.987, rebound 0.99). **W0 fails** (SPH on SPH: R/32 peak 1.19, approach 0.68; depends on the start position). Al–Al F sweep (R/16, 400–1200 m/s): every run stops on contact-edge brick collapse at 0.115–0.17 D/V; J ≤ 1.06, no crossing of 1.5. At R/32 F is unevaluable (collapse before 0.1 D/V). **CS-11 inconclusive.** Failed SPH particles leave the kernel interaction (source). §10 |
+| CS-13 rung H0 (Peter, 2026-11-05) | **Fails.** OpenCourant has **no heat conduction on 2D quads** (`Isolid = 17` or 0): an initial 100 K step does not change at all (RG `/THERMAL`: solid, shell and SPH only; no quad conduction routine in the source). The same deck on 3D bricks matches erfc to 0.017 % at h = 0.156 µm. k = 237 W/(m K) sourced (HG2018a). No impact run made; fallback (JAX) is Peter's decision. §11 |
 | Pitfalls found | (1) The rigid-wall force output `FNZ` is ∫σ dr, not a force, in axisymmetric runs. (2) Default quadratic bulk viscosity + default time-step scale goes unstable (zero volume at cycle 0) on 50:1 quads. (3) Default bulk viscosity costs 5–7 % rebound velocity in the elastic case. (4) Axisymmetric time-history internal energy (and the ERR % energy-balance column) reads zero: energy balance cannot be checked from it. (5) With `Isolid = 17` the temperature is computed but not written out. |
 
 ## 1. Method
@@ -382,7 +383,7 @@ before use. SPH is the alternative (3D dropped, open item 8).
 ## 7. Open items
 
 1. **Temperature output with `Isolid = 17`** (§5.3): computed but written as T₀ in animation and `/TH/QUAD`. Report to OpenCourant, with a minimal deck (`tcheck.py` case, `isolid=17`). Until then, temperature fields need a workaround.
-2. `/HEAT/MAT` on axisymmetric quads (T ≈ 0): works on bricks (§2.1), so this is a 2D limitation. In 2D use the LAW4 built-in update with ρc_p/β for a Taylor–Quinney fraction β.
+2. `/HEAT/MAT` on axisymmetric quads (T ≈ 0): works on bricks (§2.1), so this is a 2D limitation. **Explained 2026-11-05 (§11.2):** 2D quads have no conduction routine; the nodal temperature is never updated. In 2D use the LAW4 built-in update with ρc_p/β for a Taylor–Quinney fraction β.
 3. JC + Grüneisen against a closed form: a confined plate with an EOS has a Hugoniot solution (elastic precursor + shock). That would be rung 0p with LAW4 instead of LAW2, and the JAX code would need an EOS.
 4. Rung 1 at 30 × 60 and finer: about 2 h per OpenCourant run on one core (pole cells force dt ≈ 2·10⁻¹⁴ s). A mesh with less grading at the pole, or MPI, would make it affordable.
 5. Rigid wall at very small impact speeds injects energy (§5.2, V = 0.2 m/s). Not relevant for cold spray; note before using the wall for slow contact.
@@ -395,7 +396,8 @@ before use. SPH is the alternative (3D dropped, open item 8).
     - ~~whether S1 passes~~ decided: accepted at 20 m/s with stated limits; 2 m/s recorded as not passed;
     - the time-step scale (0.9 is as accurate as 0.3 in S0; check on an impact rung before using it);
     - ξ in tension.
-11. **CS-11 (§10), open for Peter:** accept "inconclusive"; whether an OpenCourant interface route remains without a fork (§10.6). The `Isolid = 24`/`1` nodal time-step collapse with TYPE7 + SPH (§10.2) is not traced.
+11. **CS-11 (§10):** ~~accept "inconclusive"~~ decided by Peter 2026-11-05 (inconclusive, no further runs). Still not traced: the `Isolid = 24`/`1` nodal time-step collapse with TYPE7 + SPH (§10.2).
+12. **CS-13 (§11), open for Peter:** H0 fails (no conduction on 2D quads); JAX fallback or a 3D protocol change.
 
 ## 8. Jet distortion: facts and the option-1 diagnostic (Peter's guidance, 2026-11-04)
 
@@ -860,3 +862,54 @@ result is recorded here.
 **Decisions for Peter:**
 1. Accept CS-11 as inconclusive (both setups not evaluable), recorded here.
 2. Whether any OpenCourant interface route is left without a fork. The candidates seen so far all carry a known problem: brick erosion at the contact edge (excluded by CS-11's "no erosion"); `Sol2SPH`, where bricks convert to SPH particles and the interface becomes the kernel weld again; and option C, which inherits W0's contact problem. Or the interface question moves to a route outside OpenCourant.
+
+## 11. Hunch CS-13: heat conduction at the contact edge; rung H0 fails (Peter's decision, 2026-11-05)
+
+DECISIONS 2026-11-05: CS-11 closed as inconclusive; CS-12 and CS-13 approved and frozen. Protocol:
+[coldspray-hunch-cs13.md](coldspray-hunch-cs13.md). Order followed: source k, add it to the deck, rung H0, then
+(only if H0 passes) the §8.3 diagnostic with conduction. **H0 fails, so no impact run was made.** This goes to
+Peter; the JAX fallback is his decision.
+
+### 11.1 Thermal conductivity, sourced
+
+- **Pure Al: k = 237 W/(m K)**, `properties.csv` row P-HG-Al, new column `k_W_mK`. Source: HG2018a preprint (arXiv 1612.08081), Extended Data Table 1, row "Conductivity (W/m K)", printed, a simulation input of that paper (the table cites its refs 31–34). **Condition:** no temperature is printed with it. The same table gives the ρ, c_p and Johnson–Cook values already used (P-HG-Al), so κ = k/(ρ c_p) = 9.79·10⁻⁵ m²/s is internally consistent with the §8.3 deck.
+- **Al 6061: not sourced.** HG2018a covers pure Al only; nothing was filled from memory (noted under "Still missing" in the data README).
+- **In the deck:** `/HEAT/MAT` with ρc_p = 2700 × 896.9 J/(m³ K) and AS = 237 W/(m K), BS = 0, engine `/THERMAL` ([`h0_conduction.py`](opencourant/scripts/h0_conduction.py)). The impact deck (`option1_alal.py`) is unchanged, because H0 failed.
+
+### 11.2 Rung H0: conduction alone against erfc
+
+**Case** ([`h0_conduction.py`](opencourant/scripts/h0_conduction.py), [`results/cs13_h0.csv`](opencourant/results/cs13_h0.csv)):
+- Bar 0 ≤ z ≤ 20 µm, one element across, all nodes fixed.
+- Initial nodal temperature 393 K for z < L/2 and 293 K for z > L/2 (`/INITEMP`); the node at L/2 gets the mean.
+- Al LAW4 + Grüneisen + `/HEAT/MAT` as above, run to 10 ns, where √(κt) = 0.97 µm, far from the ends.
+- Exact: T = T0 + (T1 − T0)/2 · erfc((z − L/2) / (2√(κt))).
+- Output: `/TH/NODE TEMP` along one edge, plus `/ANIM/NODA/TEMP` and `/ANIM/ELEM/TEMP`.
+- Metric: max |T − T_exact| / (T1 − T0) over the nodes.
+
+| element | h = 0.625 µm | h = 0.3125 µm | h = 0.156 µm (finest) | temperature written out | max change of T over the run |
+|---|---|---|---|---|---|
+| **axisymmetric `/QUAD`, `Isolid = 17`** (the CS-13 element) | 0.323 | 0.409 | **0.454** | yes (nodal TEMP) | **0.0 K** |
+| axisymmetric `/QUAD`, `Isolid = 0` (diagnostic) | 0.323 | — | — | yes | 0.0 K |
+| 3D `/BRICK`, `Isolid = 17` (control) | 0.0028 | 0.00068 | 0.00017 | yes | 45 K |
+
+**H0 fails** (frozen threshold: within 2 % at the finest spacing). On axisymmetric quads the temperature is now
+written out: the nodal temperature from `/INITEMP` comes through `/TH/NODE TEMP`, so that part of the old open item
+is solved, but only because the field is nodal. **It never changes:** no heat is conducted, with either quad
+formulation. The error grows with refinement only because a sharp step deviates more from a resolved erfc. The
+same deck on 3D bricks matches erfc to 0.28 % at the coarsest spacing and converges at second order. So the deck,
+the card and the sourced k are right, and the gap is the 2D element.
+
+![CS-13 rung H0](opencourant/figures/cs13_h0.png)
+
+**Why (documentation and source):**
+- RG `/THERMAL` (engine), comment 2: "Works for thermal analysis with solid, shell and sph elements." 2D quads are not listed. The engine prints "FINITE ELEMENT THERMAL ANALYSIS" and, in the earlier J4/J5 runs, "TEMPERATURE (SOLID ONLY)".
+- Source: the brick force routine `elements/solid/solide/sforc3.F` calls the finite-element conduction routine `STHERM` when thermal analysis is on (`JTHE < 0`). The quad force routines `qforc2.F` (`Isolid = 0`) and `q4forc2.F` (`Isolid = 17`) call no conduction routine, and the source tree has conduction routines for solids (8-, 4-, 10-, 20-node), thick shells, shells and SPH, but none for quads. The only 2D heat path is the ALE finite-volume one (`ale/atherm.F`, RG `/HEAT/MAT` Iform = 0), and with ALE the starter replaces `Isolid = 17` by the area-weighted quad that fails the Hertz rung (§5.4).
+- This also explains the 2026-11-03 result "`/HEAT/MAT` gives T ≈ 0 on quads" (§2, runs J2–J6): with `/HEAT/MAT` the temperature becomes a nodal field that nothing in 2D updates (T₀ from `/HEAT/MAT` was not applied either; `/INITEMP` is). The other old item, LAW4's element temperature not written out with `Isolid = 17` (§5.3), is not fixed by this. It does not matter for conduction, which in 2D is absent anyway.
+
+### 11.3 What goes to Peter
+
+- **CS-13 cannot be tested with OpenCourant in 2D.** The prerequisite rung fails because 2D quads have no heat conduction at all, not because of an accuracy problem. By the protocol this goes to Peter before any impact run.
+- **Options** (for Peter; none run here):
+  1. **The JAX 2D-axisymmetric code**, the fallback named in CS-13 and DECISIONS 2026-11-04. It would need conduction added and its own H0.
+  2. **OpenCourant 3D bricks**, where conduction works (H0 control above). The CS-13 test is specified as the §8.3 2D runs, so this would be a protocol change. A 3D quarter model at R/64 is far more expensive: §10.5 shows the 3D brick edge failing in the same way.
+- The sourced k and the H0 deck are ready for either route.
