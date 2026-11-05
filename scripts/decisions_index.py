@@ -18,6 +18,8 @@ TRACKS = {
     "2026-11-03 — Arena 2 paused; cold-spray question opened (Peter)": "Arena 2 / cold spray",
 }
 
+COLD_SPRAY_KEYS = ("Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1")
+
 
 def slug(heading: str) -> str:
     """GitHub-style anchor of a heading."""
@@ -27,8 +29,7 @@ def slug(heading: str) -> str:
 def track(h: str) -> str:
     if h in TRACKS:
         return TRACKS[h]
-    cold = ("Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1", "Cold-spray procedure")
-    if any(k in h for k in cold):
+    if any(k in h for k in COLD_SPRAY_KEYS):
         return "cold spray"
     if any(k in h for k in ("Arena 2", "Phase 6", "Each arena")):
         return "Arena 2 / all arenas"
