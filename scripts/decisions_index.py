@@ -27,7 +27,7 @@ def slug(heading: str) -> str:
 def track(h: str) -> str:
     if h in TRACKS:
         return TRACKS[h]
-    if any(k in h for k in ("Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray")):
+    if any(k in h for k in ("Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1")):
         return "cold spray"
     if any(k in h for k in ("Arena 2", "Phase 6", "Each arena")):
         return "Arena 2 / all arenas"

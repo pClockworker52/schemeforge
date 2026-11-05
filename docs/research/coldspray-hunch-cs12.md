@@ -1,8 +1,7 @@
-# Cold spray: hunch CS-12 (bonding as local dissolution of the interface blanket), registration draft
+# Cold spray: hunch CS-12 (bonding as local dissolution of the interface blanket), registration (frozen)
 
 Drafted 2026-11-04. Idea: Peter (the interface as a Markov blanket). Criterion: cold pressure welding by surface
-expansion (Bay; from memory, not read in this track). **Status: draft.** It is frozen when Peter approves it, and
-no test below is run or read before that commit. Research track, not a ledger arena. Background: CS-11 outcome
+expansion (Bay; from memory, not read in this track). **Status: frozen** 2026-11-05, approved by Peter as written. This commit comes before any test is run or read. Research track, not a ledger arena. Background: CS-11 outcome
 (opencourant-verification.md §10.6) and plan revision 2 (coldspray-go-nogo.md).
 
 ## The picture
@@ -24,7 +23,7 @@ prediction here that this one does not, and are not part of the hunch.
 
 ```yaml
 - id: CS-12
-  registered: draft 2026-11-04 (frozen on Peter's approval)
+  registered: 2026-11-04, frozen 2026-11-05 (approved by Peter as written)
   assumption_broken: >-
     H1 (bonding is a single particle-level velocity threshold): here bonding is a local, area-wise state change of
     the interface. Also the method assumption raised by CS-11 (proposed H8: a solver contact or coupling option
@@ -67,7 +66,7 @@ prediction here that this one does not, and are not part of the hunch.
     - HG2019b (oxide removal), CS-07, CS-10 (thickness enters; CS-12 minimal says it does not)
   provenance: Peter's Markov-blanket idea after CS-11 (2026-11-04); criterion C from the cold-welding lens.
   label: none yet (referee); expected at most "variant of Bay applied to cold spray"
-  status: draft
+  status: open
   author: Peter (idea), claude (formulation)
 ```
 

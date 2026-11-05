@@ -1,7 +1,7 @@
-# Cold spray: hunch CS-13 (heat conduction gives the contact edge its length scale), registration draft
+# Cold spray: hunch CS-13 (heat conduction gives the contact edge its length scale), registration (frozen)
 
-Drafted 2026-11-04 (perspective A after CS-11). **Status: draft.** It is frozen when Peter approves it, and that
-commit comes before any run with conduction. Research track, not a ledger arena. Background:
+Drafted 2026-11-04 (perspective A after CS-11). **Status: frozen** 2026-11-05, approved by Peter as written. This commit comes
+before any run with conduction. Research track, not a ledger arena. Background:
 opencourant-verification.md §8.3 (2D Lagrangian), §10.5 (3D, setup F).
 
 ## Observation behind it
@@ -24,7 +24,7 @@ LIPIT size effect to thermal diffusion, which fits.
 
 ```yaml
 - id: CS-13
-  registered: draft 2026-11-04 (frozen on Peter's approval)
+  registered: 2026-11-04, frozen 2026-11-05 (approved by Peter as written)
   assumption_broken: >-
     The adiabatic assumption of the impact simulations (and of most published cold-spray impact models at
     micrometre scale), which proposed H8 depends on: the edge problem is well posed without heat conduction.
@@ -72,7 +72,7 @@ LIPIT size effect to thermal diffusion, which fits.
   provenance: Perspective A after CS-11 (2026-11-04), from the "fails earlier with refinement" pattern of §8.3 and
     §10.5.
   label: none yet (referee); expected "rediscovery" for the numerics, possibly "variant of" for its use here
-  status: draft
+  status: open
   author: claude (with Peter)
 ```
 

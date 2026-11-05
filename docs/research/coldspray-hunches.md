@@ -50,7 +50,7 @@ its registration, never on the rows of `data/vcr_lipit.csv` v0.1, which inspired
 
 CS-08 and CS-09 are in [coldspray-preregistration-b10.md](coldspray-preregistration-b10.md). CS-10 (combined
 strength + oxide energy balance, registered 2026-11-04) is in [coldspray-hunch-cs10.md](coldspray-hunch-cs10.md).
-CS-11 (interface bracket; frozen, outcome inconclusive per opencourant-verification.md §10.6) is in
-[coldspray-hunch-cs11.md](coldspray-hunch-cs11.md). Drafts awaiting Peter: CS-12 (bonding as local dissolution of
+CS-11 (interface bracket; frozen; inconclusive, DECISIONS 2026-11-05; see opencourant-verification.md §10.6) is in
+[coldspray-hunch-cs11.md](coldspray-hunch-cs11.md). Frozen 2026-11-05: CS-12 (bonding as local dissolution of
 the interface blanket, criterion: surface expansion) in [coldspray-hunch-cs12.md](coldspray-hunch-cs12.md), and
 CS-13 (heat conduction gives the contact edge its length scale) in [coldspray-hunch-cs13.md](coldspray-hunch-cs13.md).

@@ -105,6 +105,7 @@ breaks; the ledger records it.
 | H5 | Bulk handbook properties describe the powder | Microstructure and cold work change bonding [Lucas2025 M, Panova2026b F]; quasi-static properties are the "main inaccuracy" [Vlcek2003 F] |
 | H6 | Solid-state only; melting is an upper limit | Restricted nanoscale melting can bond [Khan2026 A] |
 | H7 | Normal impact, one particle at a time | Oblique-impact model [Schuh2026 F lists Liu2024]; particle–particle interaction during build-up [Reiser2024 F] |
+| H8 | A solver's contact or coupling option can represent the particle–substrate interface (method assumption; added 2026-11-05) | CS-11 (opencourant-verification.md §10): SPH–SPH kernel coupling has no defined contact at reachable spacings (W0 fails); TYPE7 on bricks never bonds and its edge bricks collapse earlier with refinement. Neither bound of the bracket is computable in OpenCourant |
 
 **Lenses from neighbouring fields**, each an explicit input to a hunch round (hunch-generator `lens`):
 explosive welding (weldability windows), ultrasonic and wire bonding, cold welding and tribology, adhesion and
