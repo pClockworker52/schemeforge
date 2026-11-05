@@ -88,3 +88,29 @@ weak to detect this.
 3. The R0 E_f check stays (equal within 2 % across n_t = 4, 8, 16).
 
 The square-lattice code path is replaced, not kept as an option; the diagnostic numbers above are its record.
+
+## R0 results (triangular lattice, amendment 1)
+
+Code: `src/schemeforge/research/blanket_dem.py` (`run_r0`); tests: `tests/test_blanket_dem.py` (lattice, metric unit
+test with prescribed cuts, a small free-film run), all passing before the runs.
+
+| n_t | seed | E_f | σ_f | brittle (amendment 1 check) | final stress | engine |
+|---|---|---|---|---|---|---|
+| 4 | 0 / 1 / 2 | 1.1592 | 0.01913 / 0.02029 / 0.01913 | yes / yes / yes | 0 | about 1 s |
+| 8 | 0 / 1 / 2 | 1.1565 | 0.0191 (all three) | **no / no / no** | 0 | about 5 s |
+| 16 | 0 / 1 / 2 | 1.1520 | 0.01908 / 0.01966 / 0.01908 | yes / yes / yes | 0 | about 72 s |
+
+- **E_f check passes:** 1.159, 1.157, 1.152, a spread of 0.6 %. All three agree with the exact value for a
+  triangular lattice with nearest-neighbour springs, 2k/√3 = 1.1547.
+- **σ_f is set by the weakest bonds:** about E_f · 0.95 ε_b in every run, the lower edge of the ±5 % scatter.
+- **The brittleness check fails at n_t = 8, in all three seeds.** The first crack starts at the left grip
+  (column 0, row 0) and runs at about 60° along a lattice direction to the top surface (row 7), breaking eight
+  bonds. It stops there. The stress drops to 0.54 σ_f, rises again, and the film separates completely at strain
+  peak + 0.25 ε_b, just outside the frozen window of 0.2 ε_b.
+- **Diagnosis (not a verdict):**
+  - the grips hold whole end columns in x, so the corner where the crack starts is a stress concentration of the
+    test, not of the film;
+  - the triangular lattice prefers cracks along its 60° directions, so a crack started at a corner runs inclined
+    and can arrest.
+
+**By the frozen rule (amendment 1, change 2), R1 is not run. This goes to Peter.**
