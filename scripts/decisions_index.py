@@ -18,7 +18,9 @@ TRACKS = {
     "2026-11-03 — Arena 2 paused; cold-spray question opened (Peter)": "Arena 2 / cold spray",
 }
 
-COLD_SPRAY_KEYS = ("Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1", "Campaign trigger")
+COLD_SPRAY_KEYS = (
+    "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1", "Campaign trigger",
+)
 
 
 def slug(heading: str) -> str:
