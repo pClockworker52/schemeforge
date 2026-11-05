@@ -58,3 +58,19 @@ CS-13b (protocol amendment of CS-13: 3D setup F with conduction, after H0 failed
 [coldspray-hunch-cs13b.md](coldspray-hunch-cs13b.md); blocked before its runs, no verdict
 (opencourant-verification.md §12). CS-13c (brick particle on brick substrate, k = 0 twin) is frozen (2026-11-05) in
 [coldspray-hunch-cs13c.md](coldspray-hunch-cs13c.md).
+
+## Labels after the literature search (2026-11-05)
+
+Source: docs/research/coldspray-literature-interface.md (external AI; many claims S-level). Proposed labels, for the
+referee to confirm; the frozen hunch files are not edited.
+
+| Hunch | Proposed label | Closest relatives | Note |
+|---|---|---|---|
+| CS-10 | variant of Lienhard2020 (oxide term ∝ t_ox/d) and of Na2025 Eq. 6 | Lienhard2020 (B14, form known second-hand only), Na2025 | To confirm after B14's freeze and from Na2025 Eq. 6 (WSL B task). |
+| CS-12 | variant of Bay (cold pressure welding) applied to cold spray | Bay 1979/1983; Kebriaei, Vladimirov & Reese 2014 (FE interface element with Bay-evolving cohesive strength, roll bonding); Rahmati 2021 (explicit oxide shell + cohesive contact in cold spray) | Markov-blanket framing not found in prior art; it adds no testable content beyond (b), (c). **T1 is exposed** (ring pattern documented) and was never discriminating; only T3 and T2 remain. Open: whether Bay's Y' or p_E depends on cover-layer thickness (the report contradicts itself; primary Bay 1983 not read, host blocked). |
+| CS-13 (13b, 13c) | rediscovery (thermal regularisation of adiabatic shear bands) | Needleman 1988, Batra & Kim 1991, Grady & Kipp 1987 | Prior evidence for the counter-mechanism: HG2018a shows jetting without thermal softening; Li 2006 (S) reports Lagrangian distortion persisting with conduction. Expect CS-13c refuted or inconclusive. |
+| Idea C (explosive welding, not registered) | rediscovery | HG2018a (Walsh kinematics applied to the sphere), Grujicic 2003 | New lead: Deribas' lower limit V ≥ k₁ √(H_V/ρ), k₁ 0.6–1.2 by surface cleanliness, a candidate closed-form zoo member (strength-based; B10 refuted strength alone). |
+| Idea D (rebound, not registered) | rediscovery | Wu 2006, HG2017 (PRL), Tiamiyu 2022, Tang 2025 (PNAS, open SI) | Data lead: restitution curves in HG2017 and Tang 2025 SI. |
+
+To check before relying on them: Assadi 2003's reported conduction comparison (we have the full text), the Grady–Kipp
+formula (plugging Al values gives a centimetre-scale width), the Kebriaei citation.
