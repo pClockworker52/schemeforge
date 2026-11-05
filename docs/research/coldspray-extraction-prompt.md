@@ -36,6 +36,11 @@ in your messages:
 - the range of impact velocities tested, or the number of impacts (both can hint at the answer);
 - comparisons such as "higher than", "lower than", "shifted", "reduced", or any qualitative result about bonding;
 - figure captions or text that contain such information.
+- **anything observed at the particle–substrate interface after impact** (added 2026-11-05 for CS-12 and CS-14):
+  oxide fracture mode (cracking, fragmentation, delamination, ductile thinning), fragment size, spacing or
+  geometry, oxide left in the contact or in the jet, bonded-area, bonded-fraction or oxide-residue maps, and
+  interface micrographs (FIB, TEM, lift-off). The **initial** oxide state of the powder and the substrate (thickness,
+  structure, composition before impact) remains an input and should be extracted.
 
 If an input can only be stated together with an outcome (for example a table mixing both), leave the input blank
 and write `withheld: mixed with outcome` in `notes`. If a paper has no metal-on-metal single-particle impact
