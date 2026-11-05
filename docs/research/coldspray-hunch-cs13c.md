@@ -1,7 +1,7 @@
-# Cold spray: CS-13c, protocol amendment of CS-13 (3D brick particle on brick substrate, k = 0 twin), registration draft
+# Cold spray: CS-13c, protocol amendment of CS-13 (3D brick particle on brick substrate, k = 0 twin), registration (frozen)
 
-Drafted 2026-11-05. **Status: draft.** It is frozen when Peter approves it, and that commit comes before any run of
-this protocol. Hunch statement and mechanism: unchanged from [coldspray-hunch-cs13.md](coldspray-hunch-cs13.md).
+Drafted 2026-11-05. **Status: frozen** 2026-11-05, approved by Peter (with the check-E fallback below). This commit
+comes before any run of this protocol. Hunch statement and mechanism: unchanged from [coldspray-hunch-cs13.md](coldspray-hunch-cs13.md).
 This file replaces the test protocol of [CS-13b](coldspray-hunch-cs13b.md). CS-13b was blocked before its runs and
 has no verdict (opencourant-verification.md §12). CS-13's original 2D protocol stays for the JAX route.
 
@@ -18,7 +18,7 @@ has no verdict (opencourant-verification.md §12). CS-13's original 2D protocol 
   peak changes from 737 to 534 K before any conduction acts (§12.2). With both twins on the same heat path, **the
   only difference between them is k**.
 
-## Frozen protocol (on approval)
+## Frozen protocol
 
 ### Setup
 
@@ -50,6 +50,9 @@ has no verdict (opencourant-verification.md §12). CS-13's original 2D protocol 
     more than 5 %;
   - no element's temperature may exceed T_melt = 933 K (P-HG-Al) unless its own plastic work accounts for it.
     The engine's local plastic-work energy is the reference, with a 10 % tolerance.
+
+  If OpenCourant gives no per-element plastic-work output, the second clause is reported only, and the
+  total-energy bound stays binding.
 
   A run that fails E is invalid. If any run needed for a verdict is invalid, CS-13c is inconclusive.
 

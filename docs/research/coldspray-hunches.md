@@ -56,5 +56,5 @@ the interface blanket, criterion: surface expansion) in [coldspray-hunch-cs12.md
 CS-13 (heat conduction gives the contact edge its length scale) in [coldspray-hunch-cs13.md](coldspray-hunch-cs13.md).
 CS-13b (protocol amendment of CS-13: 3D setup F with conduction, after H0 failed on 2D quads) is frozen (2026-11-05) in
 [coldspray-hunch-cs13b.md](coldspray-hunch-cs13b.md); blocked before its runs, no verdict
-(opencourant-verification.md §12). CS-13c (brick particle on brick substrate, k = 0 twin) is a draft in
+(opencourant-verification.md §12). CS-13c (brick particle on brick substrate, k = 0 twin) is frozen (2026-11-05) in
 [coldspray-hunch-cs13c.md](coldspray-hunch-cs13c.md).
