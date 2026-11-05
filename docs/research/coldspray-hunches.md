@@ -54,3 +54,5 @@ CS-11 (interface bracket; frozen; inconclusive, DECISIONS 2026-11-05; see openco
 [coldspray-hunch-cs11.md](coldspray-hunch-cs11.md). Frozen 2026-11-05: CS-12 (bonding as local dissolution of
 the interface blanket, criterion: surface expansion) in [coldspray-hunch-cs12.md](coldspray-hunch-cs12.md), and
 CS-13 (heat conduction gives the contact edge its length scale) in [coldspray-hunch-cs13.md](coldspray-hunch-cs13.md).
+CS-13b (protocol amendment of CS-13: 3D setup F with conduction, after H0 failed on 2D quads) is a draft in
+[coldspray-hunch-cs13b.md](coldspray-hunch-cs13b.md).
