@@ -10,6 +10,9 @@ is released as benchmark-v1.0.
 **Procedure (2026-11-05):** docs/research/coldspray-procedure.md (who writes where; tasks for other sessions in
 docs/research/tasks/; HANDOFF updated at session end only).
 
+**Priority (DECISIONS 2026-11-05, stop rule):** data side first: oxide-series blind papers (B14, B06, B05), the
+literature search, the campaign check. CS-13c is the last OpenCourant protocol for the thermal question.
+
 ## 1. Where the cold-spray track stands
 
 Update 2026-11-04 (2nd cloud session): step 3 below done (CS-10).
