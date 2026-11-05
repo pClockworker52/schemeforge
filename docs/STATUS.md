@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray track: discipline only, local first (DECISIONS 2026-11-03/04)  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-04 (cloud) — cold-spray: retrospective test v1, first blind result (B10), solver route; handoff docs/HANDOFF.md
+2026-11-05 (cloud, 13th): CS-14 rung: DEM cell built (blanket_dem.py), R0 on a triangular lattice (E_f passes; cracks start at the grips and arrest), figures in docs/research/figures/cs14/. CS-14b frozen: CS-14 clarified as an interface submodel; method changed to a continuum film with cohesive cracks; DEM rung superseded. Next: continuum rung protocol, frozen before any run.
 2026-11-05 (cloud, 12th): CS-14 frozen with review notes 1, 2, 4, 5 folded in (length scales named, consequence reworded, interface strength open, mechanism split).
 2026-11-05 (cloud, 11th): CS-14 drafted (Peter: blanket-only DEM cell; t/w, Y', p_E vs oxide thickness 5-25 nm), with review notes; awaiting Peter.
 2026-11-05 (cloud, 10th): zoo member Z18 (Na2025 Eq. 6) registered (bd85147) and fitted: Z18_Yd k = 0.062 reproduces Na (896 vs 887), in-sample RMS 29.0 (constant 26.9); Z18_static k = 0.07139, RMS 72.5, predicted B10 contrast +95 vs -30.5 (fails on its own calibration data). docs/research/coldspray-zoo-z18.md.

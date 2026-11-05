@@ -77,3 +77,6 @@ formula (plugging Al values gives a centimetre-scale width), the Kebriaei citati
 
 CS-14 (Peter: simulate the interface blanket alone in a small DEM cell; t/w, Y', p_E against oxide thickness) is
 frozen (2026-11-05) in [coldspray-hunch-cs14.md](coldspray-hunch-cs14.md), with review notes.
+CS-14b (method amendment and clarification of CS-14: CS-14 is a nanometre-scale interface submodel, not the
+whole-particle model; the oxide becomes a continuum film with cohesive cracks instead of DEM) is frozen
+(2026-11-05) in [coldspray-hunch-cs14b.md](coldspray-hunch-cs14b.md).

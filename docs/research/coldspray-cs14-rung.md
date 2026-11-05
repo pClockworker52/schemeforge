@@ -124,3 +124,9 @@ The curves show one more thing: **the 4-row film also arrests.** It drops to 0.0
 separates only at 1.35 ε_b. Its brittleness check passed only because the stress briefly fell below 0.1 σ_f. At
 8 rows, a second crack runs parallel to the first, also at 60° from the bottom of the held grip. So in R0 every
 crack starts at the grip.
+
+## Status: superseded (2026-11-05)
+
+CS-14b ([coldspray-hunch-cs14b.md](coldspray-hunch-cs14b.md)) replaces the DEM method by a continuum film with
+cohesive cracks. This DEM rung is closed with R0 as reported above; R1 is not run, and the amendment-2 question
+(the R0 brittleness check) is closed with it. The code and figures stay as a record.
