@@ -136,13 +136,24 @@ def write_deck(d, name, bodies: list[Body], *, t_end, dt_th, sym=(), z_wall=None
     return ranges
 
 
-def run(d, name, threads=1, np_mpi=1):
-    """Starter + engine. threads = OpenMP threads per process (-nt), np_mpi > 1 uses the MPI engine."""
+def _capped(cmd, vmem_gb, timeout_s):
+    """cmd under a virtual-memory cap, no core dumps and a hard time limit. An OpenCourant engine that runs away
+    (e.g. /THERMAL with /HEAT/MAT on the bricks but not on the SPH material: >15 GB in seconds) otherwise gets the
+    whole WSL VM OOM-killed; core dumps of GB-sized processes go through Windows' crash capture and take minutes."""
+    q = " ".join(f"'{c}'" for c in cmd)
+    lim = f"ulimit -c 0; ulimit -v {int(vmem_gb * 1024 * 1024)}"
+    return ["bash", "-c", f"{lim}; exec timeout -s KILL {int(timeout_s)} {q}"]
+
+
+def run(d, name, threads=1, np_mpi=1, vmem_gb=10.0, timeout_s=4 * 3600):
+    """Starter + engine. threads = OpenMP threads per process (-nt), np_mpi > 1 uses the MPI engine.
+    Both run under a virtual-memory cap of vmem_gb (per process) and a hard limit of timeout_s (_capped)."""
     env, exe = _env(), f"{OC_ROOT}/exec"
     env["OMP_NUM_THREADS"] = str(threads)
     out = {}
     t0 = time.perf_counter()
-    r = subprocess.run([f"{exe}/starter_linux64_gf", "-i", f"{name}_0000.rad", "-np", str(np_mpi)], cwd=d, env=env,
+    r = subprocess.run(_capped([f"{exe}/starter_linux64_gf", "-i", f"{name}_0000.rad", "-np", str(np_mpi)], vmem_gb,
+                               timeout_s), cwd=d, env=env,
                        capture_output=True, text=True)
     out["starter_rc"], out["starter_s"], out["starter_tail"] = r.returncode, time.perf_counter() - t0, r.stdout[-800:]
     if r.returncode != 0:
@@ -153,7 +164,7 @@ def run(d, name, threads=1, np_mpi=1):
                f"{name}_0001.rad", "-nt", str(threads)]
     else:
         cmd = [f"{exe}/engine_linux64_gf", "-i", f"{name}_0001.rad", "-nt", str(threads)]
-    r = subprocess.run(cmd, cwd=d, env=env, capture_output=True, text=True)
+    r = subprocess.run(_capped(cmd, vmem_gb, timeout_s), cwd=d, env=env, capture_output=True, text=True)
     out["engine_rc"], out["engine_s"], out["engine_tail"] = r.returncode, time.perf_counter() - t0, r.stdout[-800:]
     out["normal"] = "NORMAL TERMINATION" in r.stdout
     subprocess.run([f"{exe}/th_to_csv_linux64_gf", f"{name}T01"], cwd=d, env=env, capture_output=True)
