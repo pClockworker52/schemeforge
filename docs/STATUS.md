@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray track: discipline only, local first (DECISIONS 2026-11-03/04)  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-04 (cloud) — cold-spray: retrospective test v1, first blind result (B10), solver route; handoff docs/HANDOFF.md
+2026-11-05 (cloud, 11th): CS-14 drafted (Peter: blanket-only DEM cell; t/w, Y', p_E vs oxide thickness 5-25 nm), with review notes; awaiting Peter.
 2026-11-05 (cloud, 10th): zoo member Z18 (Na2025 Eq. 6) registered (bd85147) and fitted: Z18_Yd k = 0.062 reproduces Na (896 vs 887), in-sample RMS 29.0 (constant 26.9); Z18_static k = 0.07139, RMS 72.5, predicted B10 contrast +95 vs -30.5 (fails on its own calibration data). docs/research/coldspray-zoo-z18.md.
 2026-11-05 (cloud, 9th): read Na2025 (F): Eq. 6 = Lienhard jet rule of mixtures (oxide t0/t, t = 100 nm jet; k = 0.062 on AR; Yd from CoR). CS-10 relabelled relative, not variant. T3 now a three-way decider: Na Eq. 6 ~ +126 m/s, CS-10 ~ +37, CS-12 0 (Al 6061, 17 -> 25 nm). WSL B task b1 closed.
 2026-11-05 (cloud, 8th): read Zhang & Bay 1997 (F): CS-12(b) is a hybrid of Bay's film and cover-layer mechanisms; thickness enters only via t/w of a cover layer; several literature-report claims not confirmed (docs/research/coldspray-reading-zhangbay1997.md).
