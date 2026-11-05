@@ -75,5 +75,5 @@ referee to confirm; the frozen hunch files are not edited.
 To check before relying on them: Assadi 2003's reported conduction comparison (we have the full text), the Grady–Kipp
 formula (plugging Al values gives a centimetre-scale width), the Kebriaei citation.
 
-CS-14 (Peter: simulate the interface blanket alone in a small DEM cell; t/w, Y', p_E against oxide thickness) is a
-draft in [coldspray-hunch-cs14.md](coldspray-hunch-cs14.md), with review notes.
+CS-14 (Peter: simulate the interface blanket alone in a small DEM cell; t/w, Y', p_E against oxide thickness) is
+frozen (2026-11-05) in [coldspray-hunch-cs14.md](coldspray-hunch-cs14.md), with review notes.

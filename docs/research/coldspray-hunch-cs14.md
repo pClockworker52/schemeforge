@@ -1,14 +1,14 @@
-# Cold spray: hunch CS-14 (simulate the blanket alone in a small cell), registration draft
+# Cold spray: hunch CS-14 (simulate the blanket alone in a small cell), registration (frozen)
 
-Drafted 2026-11-05. Idea and content: Peter. **Status: draft.** It is frozen when Peter approves it, and that commit
-comes before any run. Research track, not a ledger arena. Background: CS-12 (coldspray-hunch-cs12.md), Zhang & Bay
+Drafted 2026-11-05. Idea and content: Peter. **Status: frozen** 2026-11-05, approved by Peter with review notes 1, 2,
+4 and 5 folded in. This commit comes before any run. Research track, not a ledger arena. Background: CS-12 (coldspray-hunch-cs12.md), Zhang & Bay
 1997 (coldspray-reading-zhangbay1997.md), Na2025 / Z18 (coldspray-zoo-z18.md).
 
-## Hunch (as given by Peter)
+## Hunch (Peter's text, with review notes 1, 2, 4, 5 folded in)
 
 ```yaml
 - id: CS-14
-  registered: draft 2026-11-05 (frozen on Peter's approval)
+  registered: 2026-11-05, frozen 2026-11-05 (approved by Peter)
   assumption_broken: >-
     That the interface law has to be fitted to v_cr. Here it is derived from the oxide mechanics.
   statement: >-
@@ -17,13 +17,26 @@ comes before any run. Research track, not a ledger arena. Background: CS-12 (col
     surface stretch Y and normal pressure p (from the bulk simulation or from analytic estimates). Outputs: the
     fragment geometry (t/w), the threshold stretch Y' and the extrusion pressure p_E, each as a function of oxide
     thickness.
+  length_scales: >-
+    (note 1) With t and w as the only lengths, w ∝ t follows from dimensional analysis, so a constant t/w would be
+    trivial. The cell therefore contains these additional lengths, each a fixed value across the 5-25 nm sweep:
+    the DEM grain size d_g (nanometre scale), the cohesive length of the oxide-metal interface, the plastic length
+    of the metal substrate (from its flow stress and modulus), and the cell width (about 1 um). Their values are
+    set and recorded in the rung commit, before the thickness sweep, and are not changed afterwards.
+  mechanism_split: >-
+    (note 5) In Zhang & Bay 1997, Y' belongs to the thin-film mechanism (threshold, no extrusion pressure) and
+    t/w and p_E to the cover-layer mechanism (no threshold, extrusion through cracks). The outputs are read
+    accordingly: t/w and p_E decide the cover-layer reading; Y' decides the film reading. Each is reported
+    separately against the prediction.
   mechanism: >-
     A brittle film on a stretched substrate cracks into fragments, and fresh metal extrudes through the gaps
     (Zhang & Bay 1997). If the crack spacing scales with film thickness, t/w stays constant and thickness drops out.
   predicted_effect:
     - {metric: "t/w, Y' and p_E over oxide thickness 5-25 nm at fixed oxide type", direction: same,
        size: "within +-10 %"}
-  consequence: Supports CS-12 against CS-10 and Z18.
+  consequence: >-
+    (note 2) Supports the mechanism of CS-12(c). T3, a v_cr measurement, remains the decisive test between CS-12,
+    CS-10 and Z18.
   kill_criterion: >-
     Refuted if t/w or p_E changes by more than 25 % over 5-25 nm. Inconclusive if the rung fails.
   rung_first: >-
@@ -32,17 +45,19 @@ comes before any run. Research track, not a ledger arena. Background: CS-12 (col
   open:
     - Grain-bond strength of the oxide at about 1e9 /s; only Lienhard's 870 MPa is available (via Na2025).
     - A thin amorphous oxide may be ductile rather than brittle.
+    - (note 4) The oxide-metal interface strength: shear-lag fragmentation assumes the film stays bonded; if it
+      delaminates instead, the fragment pattern changes. No sourced value.
   known_relatives:
     - bonded-particle models (Potyondy & Cundall)
     - shear-lag film fragmentation
     - Zhang & Bay 1997
     - Rahmati 2021
   label: none yet (referee)
-  status: draft
+  status: open
   author: Peter
 ```
 
-## Review notes (claude, for Peter before freezing; not part of the hunch)
+## Review notes (claude; notes 1, 2, 4, 5 accepted and folded in above; 3, 6, 7, 8 not adopted, kept for the record)
 
 1. **The prediction is almost guaranteed unless the cell has a second length scale.** If the only lengths in the
    problem are the oxide thickness t and the fragment width w, dimensional analysis forces w ∝ t, so t/w is constant
