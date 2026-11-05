@@ -71,9 +71,20 @@ separation. It is a closure the simulation needs, not something the simulation c
 4. **Blind papers ordered by oxide content.** B14 (Al oxide/hydroxide; partly exposed), B06 (oxide fracture), and
    B05 (impurities) if they carry thickness values come first. The others follow as before
    ([coldspray-blind-literature.md](coldspray-blind-literature.md)).
-5. **External campaign.** If the blind papers bring fewer than two unseen oxide series, the campaign
-   ([coldspray-campaign-proposal.md](coldspray-campaign-proposal.md), item 2: Cu at three oxygen levels) moves from
-   last resort to the next step.
+5. **External campaign: only for registered predictions that disagree** (trigger revised 2026-11-05, DECISIONS
+   "Campaign trigger"). A campaign is not used to collect data from which a model is then formulated. It is the
+   lab's half of theory-first work: the measurement that decides between hunches that are already frozen.
+   - **Trigger:** once the pending oxide papers (B14, B06, B05) are scored, if CS-12's test T3 (v_cr against oxide
+     thickness at a fixed oxide type) is still undecided for lack of an unseen series, a measurement request goes
+     out. It asks for exactly that series, with the frozen CS-10 and CS-12 predictions attached.
+   - **Who:** one of the LIPIT groups, as a request for a specific measurement, not a proposal for a programme
+     ([coldspray-campaign-proposal.md](coldspray-campaign-proposal.md) item 2 is the template: Cu at three oxygen
+     levels; Al at three thicknesses of one oxide type works equally well).
+   - **Later requests** follow the same rule: each names the frozen hunches it decides between and their predicted
+     values.
+   - **Exception:** direct observations of interface states (where the oxide breaks, how far it stretches, what
+     stays in the contact) may be asked for to formulate an interface law. They come first from published FIB and
+     TEM work.
 6. **Multi-particle build-up and deposition efficiency** come after the single-impact interface law. The law
    carries over to them; the second-impact assumption (H2) adds its own problem.
 
