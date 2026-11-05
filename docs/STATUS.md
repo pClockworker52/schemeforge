@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray track: discipline only, local first (DECISIONS 2026-11-03/04)  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-04 (cloud) — cold-spray: retrospective test v1, first blind result (B10), solver route; handoff docs/HANDOFF.md
+2026-11-05 (cloud, 8th): read Zhang & Bay 1997 (F): CS-12(b) is a hybrid of Bay's film and cover-layer mechanisms; thickness enters only via t/w of a cover layer; several literature-report claims not confirmed (docs/research/coldspray-reading-zhangbay1997.md).
 2026-11-05 (cloud, 7th): campaign trigger revised (DECISIONS "Campaign trigger"; go-nogo step 5): a measurement request only to decide frozen, conflicting predictions (CS-12 T3 vs CS-10), after B14/B06/B05 are scored.
 2026-11-05 (cloud, 6th): external literature search merged (51e147b) with exposure header; B4 exposure log added; labels proposed (CS-12 variant of Bay, CS-13 rediscovery, CS-10 likely variant of Lienhard2020); CS-12 T1 exposed. Bay 1983 primary not read (host blocked, environment change declined). WSL B task: Na2025 Eq. 6.
 2026-11-05 (cloud, 5th): stop rule for the OpenCourant thermal path, data side first (DECISIONS 2026-11-05).
