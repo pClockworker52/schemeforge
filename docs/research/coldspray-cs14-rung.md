@@ -114,3 +114,13 @@ test with prescribed cuts, a small free-film run), all passing before the runs.
     and can arrest.
 
 **By the frozen rule (amendment 1, change 2), R1 is not run. This goes to Peter.**
+
+Figures (`scripts/plot_cs14_r0.py`, docs/research/figures/cs14/):
+- `cell.png`: the R1 cell and the shear-lag window;
+- `r0_curves.png`: R0 stress–strain curves, seed 0;
+- `r0_nt8.gif`, `r0_nt8_step34.png`, `r0_nt8_final.png`: R0 at 8 rows, at true scale.
+
+The curves show one more thing: **the 4-row film also arrests.** It drops to 0.05 σ_f, reloads to 0.59 σ_f and
+separates only at 1.35 ε_b. Its brittleness check passed only because the stress briefly fell below 0.1 σ_f. At
+8 rows, a second crack runs parallel to the first, also at 60° from the bottom of the held grip. So in R0 every
+crack starts at the grip.

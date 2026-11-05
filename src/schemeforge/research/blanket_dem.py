@@ -156,7 +156,7 @@ def _break_until_stable(x, alive, film, relax, args_fn, max_breaks=100_000):
     return x, alive, n
 
 
-def run_r0(n_t: int, seed: int, length_over_t: int = 8, n_steps: int = 60) -> dict:
+def run_r0(n_t: int, seed: int, length_over_t: int = 8, n_steps: int = 60, record: bool = False) -> dict:
     """Free film in tension. Returns E_f (initial slope) and sigma_f (peak mean stress), force per unit length."""
     film = build_film(n_t, length_over_t * n_t, seed)
     x0 = jnp.asarray(film.x0)
@@ -168,6 +168,7 @@ def run_r0(n_t: int, seed: int, length_over_t: int = 8, n_steps: int = 60) -> di
     x = x0
     length = float(film.x0[film.right[0], 0] - film.x0[film.left[0], 0])
     curve = []
+    frames = []
     for k in range(1, n_steps + 1):
         eps = 1.5 * EPS_B * k / n_steps
         args = lambda a, e=eps: (a, e, x0, bi, bj, r0, left, right, pin)  # noqa: E731
@@ -176,6 +177,8 @@ def run_r0(n_t: int, seed: int, length_over_t: int = 8, n_steps: int = 60) -> di
         force = K_PEN * float(jnp.sum((x0[right, 0] + eps * length) - x[right, 0]))
         strain = float(jnp.mean(x[right, 0]) - jnp.mean(x[left, 0])) / length - 1.0
         curve.append((strain, force / thickness(n_t)))
+        if record:
+            frames.append((eps, np.asarray(x), np.asarray(alive)))
     c = np.array(curve)
     e_f = c[0, 1] / c[0, 0]
     ip = int(c[:, 1].argmax())
@@ -183,7 +186,10 @@ def run_r0(n_t: int, seed: int, length_over_t: int = 8, n_steps: int = 60) -> di
     # amendment 1: brittle if the stress falls below 0.1 sigma_f before strain exceeds the peak strain + 0.2 eps_b
     after = c[(c[:, 0] > c[ip, 0]) & (c[:, 0] <= c[ip, 0] + 0.2 * EPS_B)]
     brittle = bool(len(after) and after[:, 1].min() < 0.1 * sigma_f)
-    return {"n_t": n_t, "seed": seed, "E_f": e_f, "sigma_f": sigma_f, "brittle": brittle, "curve": c}
+    out = {"n_t": n_t, "seed": seed, "E_f": e_f, "sigma_f": sigma_f, "brittle": brittle, "curve": c}
+    if record:
+        out["frames"], out["film"] = frames, film
+    return out
 
 
 def fragments(film: Film, alive: np.ndarray, min_size: int | None = None) -> list[dict]:
