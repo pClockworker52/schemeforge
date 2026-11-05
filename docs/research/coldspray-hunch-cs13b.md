@@ -1,6 +1,6 @@
-# Cold spray: CS-13b, protocol amendment of CS-13 (3D setup F instead of 2D quads), registration draft
+# Cold spray: CS-13b, protocol amendment of CS-13 (3D setup F instead of 2D quads), registration (frozen)
 
-Drafted 2026-11-05. **Status: draft.** It is frozen when Peter approves it, and that commit comes before any
+Drafted 2026-11-05. **Status: frozen** 2026-11-05, approved by Peter as written. This commit comes before any
 conductive impact run. Hunch statement and mechanism: unchanged from [coldspray-hunch-cs13.md](coldspray-hunch-cs13.md)
 (frozen 2026-11-05). This file replaces only the test protocol, for OpenCourant.
 
@@ -12,7 +12,7 @@ converges. The edge failure CS-13 is about also occurs in 3D: in setup F of CS-1
 edge collapse at 0.07–0.17 D/V, earlier with refinement (§10.5). So the test moves to setup F. The 2D protocol of
 CS-13 stays valid for the JAX route; if both are ever run, they are reported separately.
 
-## Frozen protocol (on approval)
+## Frozen protocol
 
 ### Setup
 
