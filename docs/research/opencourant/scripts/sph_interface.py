@@ -148,9 +148,11 @@ def th_nodes(tid, title, ids, var=("X", "Y", "VX", "VY")):
 
 
 def write_case(d, name, setup, mat, R, n_r, V, *, t_end, dt_th, fs: FSettings | None = None, dt_anim=None,
-               anim=("P", "EPSP", "VONM"), dt_scale=0.3, dt_min=0.0, th_sub=None, w_dist_over_s=1.0):
+               anim=("P", "EPSP", "VONM"), dt_scale=0.3, dt_min=0.0, th_sub=None, w_dist_over_s=1.0,
+               extra_starter=(), extra_engine=()):
     """Write the deck of one W or F case; returns a dict of geometry facts.
 
+    extra_starter / extra_engine: cards appended to the starter (after the bodies and the substrate) and engine decks.
     th_sub = (depth, radius): also write a /TH/NODE (X, Y, VX, VY) for every particle node and for the substrate
     nodes with z >= -depth and sqrt(x^2 + y^2) <= radius (jetting metric J of CS-11)."""
     fs = fs or FSettings()
@@ -183,7 +185,8 @@ def write_case(d, name, setup, mat, R, n_r, V, *, t_end, dt_th, fs: FSettings | 
         extra = list(extra) + th_nodes(81, "particle nodes", range(1, len(sph.xyz) + 1))
         extra += th_nodes(82, "substrate nodes near the surface", info["th_sub_ids"])
     sd.write_deck(d, name, bodies, t_end=t_end, dt_th=dt_th, sym=planes, dt_scale=dt_scale, dt_anim=dt_anim,
-                  anim=anim, extra_starter=extra, th_parts=th_parts, dt_min=dt_min)
+                  anim=anim, extra_starter=list(extra) + list(extra_starter), th_parts=th_parts, dt_min=dt_min,
+                  extra_engine=extra_engine)
     info["s"] = s
     info["particle_xyz0"] = sph.xyz
     return info

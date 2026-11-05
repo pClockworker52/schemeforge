@@ -25,6 +25,7 @@ is used or copied.
 | 3D SPH ladder (Peter, 2026-11-04) | **S0 and S0p pass** (h = 1.12 s, the starter default; default artificial viscosity). **Hertz S1 is not a clean pass:** it needs surface-conforming particles; at 20 m/s it converges toward JAX (within 2–3 % at R/64, peak 4 % low), at 2 m/s it is still 7–10 % off at R/64. Quarter symmetry = half model. Cost 4.6 µs/particle-cycle (1 thread), 0.9 µs at 8 workers. **Two SPH parts are kernel-welded** (tension and shear across the interface), so the Al–Al interaction is a decision for Peter. §9 |
 | CS-11 interface bracket (Peter, 2026-11-04) | **F0 passes** (SPH sphere on `Isolid = 17` bricks, TYPE7, gap s/2, Stfac 10: R/32 peak 1.037, approach 0.987, rebound 0.99). **W0 fails** (SPH on SPH: R/32 peak 1.19, approach 0.68; depends on the start position). Al–Al F sweep (R/16, 400–1200 m/s): every run stops on contact-edge brick collapse at 0.115–0.17 D/V; J ≤ 1.06, no crossing of 1.5. At R/32 F is unevaluable (collapse before 0.1 D/V). **CS-11 inconclusive.** Failed SPH particles leave the kernel interaction (source). §10 |
 | CS-13 rung H0 (Peter, 2026-11-05) | **Fails.** OpenCourant has **no heat conduction on 2D quads** (`Isolid = 17` or 0): an initial 100 K step does not change at all (RG `/THERMAL`: solid, shell and SPH only; no quad conduction routine in the source). The same deck on 3D bricks matches erfc to 0.017 % at h = 0.156 µm. k = 237 W/(m K) sourced (HG2018a). No impact run made; fallback (JAX) is Peter's decision. §11 |
+| CS-13b (task 2026-11-05-a) | **Blocked, no verdict.** Rung H0-SPH fails narrowly (2.5 % at s = 0.156 µm against 2 %; first order). The prescribed fallback, conductive bricks with an adiabatic SPH particle, cannot run: without a particle `/HEAT/MAT` the engine exhausts memory (WSL OOM); with one, the particle overheats to 9·10⁴ K whatever k and EFRAC are (energy allows ≤ 357 K at 800 m/s). None of the 24 runs made; options for Peter. §12 |
 | Pitfalls found | (1) The rigid-wall force output `FNZ` is ∫σ dr, not a force, in axisymmetric runs. (2) Default quadratic bulk viscosity + default time-step scale goes unstable (zero volume at cycle 0) on 50:1 quads. (3) Default bulk viscosity costs 5–7 % rebound velocity in the elastic case. (4) Axisymmetric time-history internal energy (and the ERR % energy-balance column) reads zero: energy balance cannot be checked from it. (5) With `Isolid = 17` the temperature is computed but not written out. |
 
 ## 1. Method
@@ -913,3 +914,63 @@ the card and the sourced k are right, and the gap is the 2D element.
   1. **The JAX 2D-axisymmetric code**, the fallback named in CS-13 and DECISIONS 2026-11-04. It would need conduction added and its own H0.
   2. **OpenCourant 3D bricks**, where conduction works (H0 control above). The CS-13 test is specified as the §8.3 2D runs, so this would be a protocol change. A 3D quarter model at R/64 is far more expensive: §10.5 shows the 3D brick edge failing in the same way.
 - The sourced k and the H0 deck are ready for either route.
+
+## 12. Hunch CS-13b: 3D setup F with conduction; rung H0-SPH fails, and the conductive runs are blocked (task 2026-11-05-a)
+
+Task: [tasks/wsl-a.md](tasks/wsl-a.md), task 2026-11-05-a. Protocol:
+[coldspray-hunch-cs13b.md](coldspray-hunch-cs13b.md), frozen in `9a36aae`. Order followed: rung H0-SPH, then the
+24 runs. **H0-SPH fails narrowly (2.5 % against 2 %), so the particle has to stay adiabatic. OpenCourant cannot run
+that mix: setup F with conduction in the bricks and an adiabatic SPH particle either exhausts memory or overheats
+the particle far beyond what the impact's energy allows. None of the 24 runs was made.** This is an impossible step
+under the frozen protocol, so it goes to Peter.
+
+### 12.1 Rung H0-SPH: conduction in SPH particles against erfc
+
+**Case** ([`h0_sph.py`](opencourant/scripts/h0_sph.py), [`results/cs13b_h0_sph.csv`](opencourant/results/cs13b_h0_sph.csv)):
+- The H0 slab of §11.2 (L = 20 µm, 393 K | 293 K step at L/2, k = 237 W/(m K), to 10 ns) as SPH particles: a cubic net of spacing s in a column 12 s × 12 s, §9.1 settings (h = 2^(1/6) s, dt scale 0.3), every particle fixed, no symmetry planes.
+- Measured on the particle column nearest the axis, 6 s from the free sides. Output: `/TH/NODE TEMP`, `/ANIM/NODA/TEMP`, `/ANIM/ELEM/TEMP`.
+- **The step is set as two SPH parts with different `/HEAT/MAT` T0.** With thermal analysis on, the starter sets every SPH particle's temperature to its `/HEAT/MAT` T0 and ignores `/INITEMP` (starter `spinit3.F`, "INITIALISATION OF THERMAL BEHAVIOR"; a first run with `/INITEMP` stayed at 293 K everywhere). Both parts are the same material, and the SPH conduction loop (engine `sptemp.F`) has no part filter, so they conduct as one body.
+
+| s | 0.625 µm | 0.3125 µm | 0.156 µm (finest) |
+|---|---|---|---|
+| max \|T − T_exact\| / ΔT | 0.129 | 0.052 | **0.025** |
+| κ fitted to the profile / κ | 0.83 | 0.95 | 0.97 |
+| engine (8 threads) | 4 s | 17 s | 68 s |
+
+**H0-SPH fails** (frozen threshold: within 2 % at the finest spacing; the temperature is written out). The error
+converges at first order and comes from too low an effective diffusivity, which approaches κ with refinement. Neighbouring particles pair up in
+temperature (e.g. 352.2 / 352.8, 333.2 / 333.8 K at 0.31 µm), the mark of the wide two-pass Laplacian (`sptemp.F`
+computes a gradient first, then its divergence). By the protocol, the particle stays adiabatic and the test goes ahead.
+
+### 12.2 Setup F with conductive bricks and an adiabatic particle: not runnable
+
+Probe at R/16, 800 m/s ([`cs13b_probe.py`](opencourant/scripts/cs13b_probe.py),
+[`results/cs13b_probe.csv`](opencourant/results/cs13b_probe.csv)). It sits outside the 24 runs and is a
+**diagnostic**:
+
+| variant | particle `/HEAT/MAT` | stop / (D/V) | stop element | particle T max | particle T median / 99 % | particles > T_melt (933 K) | particle ε_p max | brick T max | brick ε_p max |
+|---|---|---|---|---|---|---|---|---|---|
+| adiabatic (no `/THERMAL`) | — | 0.1150 | brick (3161, 8729) | 392 K | 295 / 364 K | 0 of 4269 | 0.52 | 737 K | 1.34 |
+| bricks k = 237, particle k = 0 | T0 293 K, k 0, EFRAC 1 | 0.1132 | brick (3161, 8729) | **89 909 K** | 406 / 48 897 K | **1161** | 0.13 | 534 K | 1.31 |
+| as above, particle EFRAC = 0 | T0 293 K, k 0, EFRAC 0 | 0.1132 | brick (3161, 8729) | 89 909 K | identical | 1161 | 0.13 | 534 K | 1.31 |
+| bricks k = 237, **no** particle `/HEAT/MAT` (the protocol as written) | — | — | — | engine passes 15 GB within seconds; the kernel OOM-kills it and the WSL VM goes down (three times, 10:15–10:19 CET; bisected under a memory cap in a separate session) | | | | | |
+
+- **The protocol as written cannot run.** With `/THERMAL`, `/HEAT/MAT` on the bricks and none on the SPH material, the engine's memory runs away. Adding `/HEAT/MAT` to the particle, or removing it from the bricks, makes it run (≈ 400 MB).
+- **With a particle `/HEAT/MAT`, the particle's temperature is non-physical.** The whole kinetic energy at 800 m/s, 320 kJ/kg, heats Al by at most 357 K. The particle instead reaches 9·10⁴ K, and a quarter of its particles pass the melting point by 2.1 ns, starting at the impact axis. k = 0 does not help (no conduction), and neither does EFRAC = 0 (the result is bit-identical, so the SPH heat source ignores EFRAC). Above T_melt the Johnson–Cook flow stress vanishes, so the particle's mechanics change: its peak ε_p drops from 0.52 to 0.13.
+- **The heating path also changes in the bricks.** Adiabatic LAW4 takes T from the element internal energy (RG LAW2/LAW4 comment 11). With `/HEAT/MAT`, T is nodal and heated by the strain energy, and the brick peak falls from 737 K to 534 K in the conductive run. A conductive-minus-adiabatic difference would therefore mix conduction with a change of heat source. A brick k = 0 twin would separate the two, but it is not run here because the particle problem comes first.
+- **The stop element is a brick in every variant** (the same two elements, 3161 and 8729), and the stop time moves by only 1.6 %. So the particle artifact does not reach the stop at R/16, but it changes the particle that loads the edge.
+
+### 12.3 Outcome and what goes to Peter
+
+**Status of CS-13b: blocked before its runs; no verdict.** Rung H0-SPH fails (2.5 %), and the setup the protocol then
+prescribes (conductive bricks, adiabatic particle) either crashes or corrupts the particle. The frozen verdict rule
+needs the 24 runs, so it was not applied.
+
+**Options** (for Peter; none run here):
+1. **Particle with `/HEAT/MAT` (k = 0), as is.** This runs, but the particle melts by an artifact, so the adiabatic twin is no longer the same particle, and the twin control in the verdict rule stops meaning "conduction made the difference". Not recommended.
+2. **Rigid or elastic particle.** Any particle material whose mechanics do not depend on T (e.g. LAW1 elastic with `/HEAT/MAT`, k = 0) would remove the artifact from the loading side. This is a protocol change, because the edge failure would then come from a different impactor.
+3. **Brick particle instead of SPH.** Conduction works on bricks (§11.2 control), and with TYPE7 between two brick bodies both sides use one consistent heat path. This is also a protocol change, and it reintroduces the particle-side brick collapse that SPH was chosen to avoid (§8.3).
+4. **JAX route** (CS-13's original 2D protocol, with conduction added and its own H0), as already named in CS-13.
+
+**Safety change in the scripts:** every engine and starter run through `sphdeck.run` now runs under a
+virtual-memory cap, with core dumps off and a hard time limit, so a runaway run is killed instead of the WSL VM.
