@@ -5,7 +5,27 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-05-a: CS-13b (open)
+## Task 2026-11-05-b: CS-13c (open)
+
+Protocol: [../coldspray-hunch-cs13c.md](../coldspray-hunch-cs13c.md), frozen in commit 15fe42f. Follow it exactly and
+in this order:
+
+1. **Rung B0:** elastic brick sphere on an elastic brick block, two TYPE7 contacts, 20 m/s, R/16 and R/32, against
+   two-body Hertz. Choose and report the gap and Stfac; they are then frozen.
+2. **Rung H0-k0:** the §11.2 brick slab with `/HEAT/MAT` and k = 0. The temperature may change by at most 0.1 K.
+3. **Check whether OpenCourant writes per-element plastic work.** If it does not, the second clause of check E is
+   reported only, as the protocol says.
+4. **The 24 runs** (500 / 800 / 1100 m/s × R/16, R/24, R/32, R/48 × twins k = 237 and k = 0), plus one run per
+   velocity at R/16 without `/HEAT/MAT`, reported only.
+   - Check E in every run.
+   - Keep the memory and time caps.
+   - Budget stop: one R/48 run over 1 h, stop and report.
+5. **Metrics P1–P3,** with the controlling element's body recorded, and P2 for both bodies. Then apply the frozen
+   verdict rule exactly as written.
+
+Results go in opencourant-verification.md **§13**. A failed rung or an impossible step goes to Peter.
+
+## Task 2026-11-05-a: CS-13b (closed: blocked, §12)
 
 Protocol: [../coldspray-hunch-cs13b.md](../coldspray-hunch-cs13b.md), frozen in commit 9a36aae. Follow it exactly and
 in this order:

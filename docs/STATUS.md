@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray track: discipline only, local first (DECISIONS 2026-11-03/04)  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-04 (cloud) — cold-spray: retrospective test v1, first blind result (B10), solver route; handoff docs/HANDOFF.md
+2026-11-05 (cloud, 4th): CS-13c frozen (15fe42f); WSL A task 2026-11-05-b in docs/research/tasks/wsl-a.md.
 2026-11-05 (WSL, merged by cloud): CS-13b blocked before its runs, no verdict (opencourant-verification.md §12, 19d6316): H0-SPH fails 2.5 %; conductive bricks + adiabatic SPH particle crashes (OOM) or overheats the particle (9e4 K). Options to Peter.
 2026-11-05 (cloud, 3rd): CS-13b frozen (9a36aae); procedure changed (docs/research/coldspray-procedure.md, DECISIONS 2026-11-05); WSL A task in docs/research/tasks/wsl-a.md.
 2026-11-05 (cloud, 2nd): merged §11 (ed656b6): CS-13 rung H0 fails, OpenCourant has no conduction on 2D quads (bricks pass); k(Al) = 237 sourced. Drafted CS-13b (3D setup F, conductive vs adiabatic twins, 500/800/1100 m/s, R/16-R/48, 6 % rule for the 1.5 refinement step, adiabatic-twin control, H0-SPH rung). Awaiting Peter.
