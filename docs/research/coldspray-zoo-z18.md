@@ -55,3 +55,31 @@ Outside the domain, the prediction is still made and scored as out of domain.
   the fit.
 - **Label:** Na2025 / Lienhard2020 as published; Z18_static is a variant (a different strength input and a refitted
   k).
+
+## Fit result (fit commit; all numbers in-sample on B10)
+
+Code: `src/schemeforge/research/coldspray_z18.py`. Output: `data/z18_fit.csv`. C₀ = 5350 m/s and B = 67.6 GPa (rule P1).
+
+**Frozen: k_static = 0.07139** (Z18_static). Z18_Yd keeps k = 0.062.
+
+| Condition | Measured | Z18_static | Z18_static, leave-one-out | Z18_Yd (k = 0.062) |
+|---|---|---|---|---|
+| c1 | 887 | 971.4 | 999.6 | 895.7 |
+| c2 | 820 | 875.9 | 890.1 | 795.3 |
+| c3 | 880 | 757.5 | 735.5 | 828.7 |
+| c4 | 875 | 855.0 | 850.2 | 848.9 |
+| c5 | 897 | 872.9 | 866.8 | 911.1 |
+| RMS | | 72.5 | 89.4 | 29.0 |
+| Δ (S − W), measured −30.5 | | +95.2 | | −17.4 |
+
+For comparison, also in-sample on B10: constant 26.9 (leave-one-out 33.7), CS-10 23.0 (34.9).
+
+- **Z18_Yd reproduces the paper:** 895.7 against Na's 887 for the as-received powder. The 1 % gap comes from the P1
+  values of C₀ and B (5350, 67.6 GPa) against Na's (5300, 67.55 GPa).
+- **Z18_static fails on its own calibration data.** With static compression strength, the strength drop between the
+  groups (351 → 219 MPa) is much larger than in Y_d (246 → 163–198 MPa). The oxide term cannot offset it, so the
+  predicted contrast has the wrong sign (+95 against −30.5). This is the B10 result for CS-08 again, now inside
+  Eq. 6. Z18_static is kept frozen as registered and scored like every member, but it starts with an in-sample RMS
+  well above the constant baseline.
+- **Z18_Yd matches the published fit** but is no better than a constant in-sample (29.0 against 26.9). Its
+  advantage in the paper's Fig. 8 rests on comparing alternatives, not on beating a constant.

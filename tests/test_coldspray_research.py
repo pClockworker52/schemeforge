@@ -88,3 +88,16 @@ def test_cs10_fit_frozen_constants():
     # frozen in docs/research/coldspray-cs10-fit.md
     assert m.beta == pytest.approx(0.3774, rel=1e-3)
     assert m.gamma == pytest.approx(3.190e11, rel=1e-3)
+
+
+def test_z18_reproduces_na2025_and_frozen_fit():
+    from schemeforge.research import coldspray_z18 as z
+
+    # Na2025 printed constants reproduce the as-received value (887 m/s) to within the rounding of k
+    v_ar = z.v_cr(0.062, 5300.0, 67.55e9, 246.3e6, 16.8)
+    assert v_ar == pytest.approx(887.0, abs=3.0)
+    # rule of mixtures limits
+    assert z.sigma_eff(200e6, 0.0) == pytest.approx(200e6)
+    assert z.sigma_eff(200e6, 100.0) == pytest.approx(870e6)
+    # frozen Z18_static constant (docs/research/coldspray-zoo-z18.md, fit commit)
+    assert z.report()["k_static"] == pytest.approx(0.07139, rel=1e-3)
