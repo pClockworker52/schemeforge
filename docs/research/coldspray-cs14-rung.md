@@ -68,3 +68,23 @@ follows from that. That is recorded, not decided after the fact.
   design; the interface is perfectly plastic and does not delaminate).
 - Extrusion of metal through the cracks (p_E). That needs a resolved substrate and its own rung, R2, registered
   before it is run.
+
+## Amendment 1 (2026-11-05, after the first R0 run, before any R1 run)
+
+**Finding (R0, n_t = 4, seed 0, square lattice as frozen above; diagnostic):** E_f = 1.380, peak stress 0.0257 at
+strain 0.0185. After the peak, the stress does **not** fall to zero. It stays on a sawtooth plateau of 0.019–0.022 up
+to strain 0.03 (1.5 ε_b). When the horizontal bonds of a column break, the two diagonal bonds per cell across the cut
+stretch at about half the crack opening divided by their length. Their combined x-capacity is comparable to the
+horizontals', so the crack is bridged and the film never separates. **A square lattice with central-force diagonals
+is not a brittle film.** The frozen R0 check (E_f equal across thicknesses) would have passed regardless; it was too
+weak to detect this.
+
+**Changes (before any R1 run):**
+1. **Lattice:** triangular (close-packed), nearest-neighbour bonds only, spacing a = 1, rows √3/2 apart, odd rows
+   offset by a/2. Film thickness t = n_t · √3/2; stress = force / t. Everything else as above (k, ε_b, scatter,
+   substrate tie, loading, fragment metric with columns as the x index).
+2. **R0 gains a brittleness check:** after the peak, the stress must fall below 0.1 σ_f before the imposed strain
+   exceeds the peak strain by 0.2 ε_b. If it does not, the film is not brittle and R1 is not run.
+3. The R0 E_f check stays (equal within 2 % across n_t = 4, 8, 16).
+
+The square-lattice code path is replaced, not kept as an option; the diagnostic numbers above are its record.
