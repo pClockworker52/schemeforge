@@ -113,3 +113,18 @@ def test_blind2_oxide_parsing_and_no_fill():
     preds = predict()
     # models without their inputs give no value, never a filled one
     assert all(p["v_pred_mps"] == "" for p in preds if p["model"] in ("CS-10", "Z18_static", "Z18_Yd"))
+
+
+def test_blind2_score_rules():
+    from schemeforge.research import coldspray_blind2_score as sc
+
+    assert sc._uncertainty("velocity uncertainty +-2 %", 800.0) == pytest.approx(16.0)
+    assert sc._uncertainty("velocity uncertainty +- 25 m/s", 800.0) == 25.0
+    assert sc._uncertainty("", 800.0) is None
+    # synthetic outcomes: CS-16 sign rule and CS-07 sign rule
+    m = {"B02-c1": (470.0, 490.0, 480.0), "B02-c2": (450.0, 470.0, 460.0)}
+    assert sc.verdicts(m)["CS16"] == "refuted"
+    m = {k: (790.0, 810.0, 800.0) for k in (*sc.D_SERIES, "B14-c7")}
+    assert sc.verdicts(m)["CS07_B14"].startswith("refuted")
+    m["B14-c7"] = (900.0, 920.0, 910.0)
+    assert sc.verdicts(m)["CS07_B14"] == "supported (exposed)"
