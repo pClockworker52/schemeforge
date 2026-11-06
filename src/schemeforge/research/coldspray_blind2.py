@@ -124,3 +124,36 @@ def write() -> int:
 
 if __name__ == "__main__":
     print(write())
+
+
+# ---- CS-16 (addendum to the B02/B14 pre-registration): substrate hardness raises v_cr for matched Cu ----
+HV_PER_MPA = 1.0 / 9.807
+B02_SUBSTRATE_HV_MPA = {"B02-c1": 622.0, "B02-c2": 1032.0}  # Vickers as printed (blind_inputs.csv), MPa
+PA_ROWS = {"PA-01": 98.0, "PA-02": 142.0}  # Panova2026b substrate hardness (HV), same 19 um Cu powder (seen data)
+
+
+def cs16_exponent() -> float:
+    """n in v_cr ~ HV_substrate^n, from PA-01 and PA-02 (vcr_lipit.csv midpoints)."""
+    mids = {r.id: r.mid for r in load_rows() if r.id in PA_ROWS}
+    return math.log(mids["PA-02"] / mids["PA-01"]) / math.log(PA_ROWS["PA-02"] / PA_ROWS["PA-01"])
+
+
+def cs16_predict() -> dict[str, float]:
+    """v_cr (m/s) for B02-c1, B02-c2 scaled from PA-01: v = v_PA01 (HV / 98)^n."""
+    n = cs16_exponent()
+    v01 = next(r.mid for r in load_rows() if r.id == "PA-01")
+    out = {k: v01 * (mpa * HV_PER_MPA / PA_ROWS["PA-01"]) ** n for k, mpa in B02_SUBSTRATE_HV_MPA.items()}
+    out["delta_pred"] = out["B02-c2"] - out["B02-c1"]
+    out["n"] = n
+    return out
+
+
+def write_cs16() -> dict[str, float]:
+    p = cs16_predict()
+    with open(DATA / "predictions_b02_cs16.csv", "w", newline="") as fh:
+        w = csv.writer(fh, lineterminator="\n")
+        w.writerow(["model", "row", "v_pred_mps", "substrate_HV", "exponent_n", "delta_pred_mps"])
+        for k in ("B02-c1", "B02-c2"):
+            w.writerow(["CS-16", k, f"{p[k]:.1f}", f"{B02_SUBSTRATE_HV_MPA[k] * HV_PER_MPA:.1f}", f"{p['n']:.4f}",
+                        f"{p['delta_pred']:.1f}"])
+    return p

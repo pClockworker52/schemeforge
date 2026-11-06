@@ -82,3 +82,5 @@ whole-particle model; the oxide becomes a continuum film with cohesive cracks in
 (2026-11-05) in [coldspray-hunch-cs14b.md](coldspray-hunch-cs14b.md).
 CS-13c result (2026-11-05, opencourant-verification.md §13): **refuted** by both clauses of its frozen rule. The thermal
 question in OpenCourant is closed (stop rule, DECISIONS 2026-11-05).
+CS-16 (substrate hardness raises v_cr for matched Cu; v ~ HV^0.381 from Panova2026b; B02: +102 m/s hard - soft) is frozen
+(2026-11-07) in the addendum of [coldspray-preregistration-b02-b14.md](coldspray-preregistration-b02-b14.md).

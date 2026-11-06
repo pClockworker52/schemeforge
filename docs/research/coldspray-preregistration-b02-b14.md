@@ -96,3 +96,38 @@ extraction of B02's outcomes. No other change is allowed after this commit.
 
 The outcomes of B02 and B14 are extracted after this commit, with the step-3 prompt, into `data/vcr_lipit.csv`
 with prefixes `B-B02-` and `B-B14-`, then scored by a script committed separately before the outcomes are read.
+
+## Addendum 1 (2026-11-07, before step 3): hunch CS-16 on B02
+
+Registered on Peter's instruction, as the B02 addendum allowed above, before any outcome of B02 is extracted. Code:
+`cs16_predict` in `coldspray_blind2.py`. Predictions: `data/predictions_b02_cs16.csv`. The frozen
+`predictions_b02_b14.csv` is unchanged.
+
+```yaml
+- id: CS-16
+  registered: 2026-11-07 (frozen in this addendum)
+  assumption_broken: >-
+    H2 in part (the substrate's state does not matter) and the substrate-free form of every zoo member: Z6, the
+    baseline, CS-10 and Z18 use particle properties only.
+  statement: >-
+    For matched Cu, a harder substrate raises v_cr, as v_cr ~ HV_substrate^n with n fitted on two seen rows of the
+    same 19 um Cu powder (Panova2026b PA-01, 98 HV, 567 m/s; PA-02, 142 HV, 653 m/s): n = 0.3808.
+  mechanism: >-
+    A harder substrate deforms less and forms a smaller crater, so less of the jetting and interface stretch comes
+    from the substrate side; the particle must arrive faster to reach the same interface state.
+  predictions: {B02-c1 (soft, 63.4 HV): 480.4, B02-c2 (hard, 105.2 HV): 582.6, Delta_pred = c2 - c1: +102.2}
+  kill_criterion: >-
+    w = B02's median window width (rule B6 where not printed). Refuted if Delta_meas <= 0, or if
+    |Delta_meas - Delta_pred| > w + 0.5 Delta_pred. Supported if |Delta_meas - Delta_pred| <= w and
+    Delta_pred > w. Inconclusive otherwise. The absolute values are scored by rule S1, with no verdict.
+  caveats:
+    - PA-02's substrate is a polished cold-sprayed Cu layer, so microstructure changes with hardness.
+    - Panova's v_cr is the mean of the last two rebounds and the first two bonds, not an equal-count window.
+    - Fitted on two points; B02-c1 (63 HV) lies below the fitted range (98-142 HV), an extrapolation.
+    - Partly exposed: a "half-hard Cu 539-588" quote attributed to B02, B03 and HG2018b together is known.
+  known_relatives: [Panova2026b (substrate hardness and growth surface), Hassani2020 (impact ratio, Z9), Lucas 2025
+    (B02 itself, unread)]
+  label: none yet (referee)
+  status: open
+  author: claude (with Peter)
+```
