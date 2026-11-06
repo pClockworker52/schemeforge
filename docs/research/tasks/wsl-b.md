@@ -26,7 +26,8 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) wit
 - **Source:** the same thesis chapters you used in step 1 (Lucas 2025 ch. 4 for B02; Lienhard 2022 ch. 2 for B14).
   Say in `read_from` which table, figure or page.
 - **Window:** v_cr_low / v_cr_high / v_cr_mid exactly as printed, and `vcr_definition` exactly as the source defines
-  it. If no bounds are printed, leave them blank and give the stated velocity uncertainty in `notes` (rule B6). If
+  it. If no bounds are printed, leave them blank and write the stated velocity uncertainty in `notes` in exactly
+  this form: `velocity uncertainty +-X m/s` or `velocity uncertainty +-X %` (rule B6; the scoring script reads it). If
   values exist only in a figure, digitize them and say so (`digitized (+-x m/s)`).
 - **Notes:** the items withheld in step 1. For B02: Table 2 of ch. 4 (failure strain, bulk sound speed, bulk
   modulus). For B14: the treatment table (thesis Table 2.1). Also anything the source says about why the
