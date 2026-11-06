@@ -80,3 +80,5 @@ frozen (2026-11-05) in [coldspray-hunch-cs14.md](coldspray-hunch-cs14.md), with 
 CS-14b (method amendment and clarification of CS-14: CS-14 is a nanometre-scale interface submodel, not the
 whole-particle model; the oxide becomes a continuum film with cohesive cracks instead of DEM) is frozen
 (2026-11-05) in [coldspray-hunch-cs14b.md](coldspray-hunch-cs14b.md).
+CS-13c result (2026-11-05, opencourant-verification.md §13): **refuted** by both clauses of its frozen rule. The thermal
+question in OpenCourant is closed (stop rule, DECISIONS 2026-11-05).
