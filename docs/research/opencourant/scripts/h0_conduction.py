@@ -9,10 +9,12 @@ and conductivity AS = k = 237 W/(m K) (P-HG-Al, properties.csv); engine /THERMAL
   quad   2D axisymmetric (/ANALY N2D3D = 1), /QUAD with Isolid = 17 (the CS-13 element), mesh r in [0, h];
   brick  3D /BRICK Isolid = 17, cross-section h x h (control: shows whether the deck and the card work).
 Output: /TH/NODE TEMP on the nodes of one edge (r = 0 or x = y = 0), /ANIM/NODA/TEMP and /ANIM/ELEM/TEMP.
+CS-13c rung H0-k0: the brick case with K_W_MK=0; pass: the temperature changes by at most 0.1 K over the run
+(max_dT_run_K, over all edge nodes and TH samples).
 Metric: max over nodes |T - T_exact| / (T1 - T0) at t_end; pass (frozen, CS-13): within 2 % at the finest spacing,
 and the temperature written out.
 
-Usage: python h0_conduction.py <work_dir> <out_csv> <quad|brick> <h_um> [...]
+Usage: [K_W_MK=k] python h0_conduction.py <work_dir> <out_csv> <quad|brick> <h_um> [...]
 """
 
 import csv
@@ -27,6 +29,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import ocdeck as oc  # noqa: E402
 import option1_alal as o1  # noqa: E402
+import sphdeck as sd  # noqa: E402
 from ocdeck import _f, _group, _i, _material_cards  # noqa: E402
 
 L = 20e-6
@@ -42,7 +45,7 @@ def exact(z, t):
     return np.array([T0 + 0.5 * (T1 - T0) * erfc((zz - L / 2) / (2 * math.sqrt(KAPPA * t))) for zz in z])
 
 
-def write(d, name, elem, h):
+def write(d, name, elem, h, k_cond=K_AL):
     nz = int(round(L / h))
     z = np.linspace(0, L, nz + 1)
     s = ["#RADIOSS STARTER", f"# CS-13 rung H0, written by h0_conduction.py: {name}", "/BEGIN", name, _i(2026) + _i(0),
@@ -69,7 +72,7 @@ def write(d, name, elem, h):
     s += ["/PART/1", "slab", _i(1) + _i(1) + _i(0)]
     s += ["/PROP/TYPE14/1", "slab solid", _i(17) + _i(0) * 7 + _f(0.0), _f(0.0) * 5, _f(0.0) * 5, _i(0) * 3]
     s += _material_cards(o1.AL)
-    s += ["/HEAT/MAT/1", _f(T0) + _f(RHO_CP) + _f(K_AL) + _f(0.0), _f(0.0) + _f(0.0) + _f(0.0) + _f(1.0)]
+    s += ["/HEAT/MAT/1", _f(T0) + _f(RHO_CP) + _f(k_cond) + _f(0.0), _f(0.0) + _f(0.0) + _f(0.0) + _f(1.0)]
     all_ids = range(1, len(xyz) + 1)
     s += _group(1, "all nodes", all_ids) + ["/BCS/1", "all fixed", "   111 000" + _i(0) + _i(1)]
     hot = [i + 1 for i, p in enumerate(xyz) if p[2] < L / 2 - 1e-3 * h]
@@ -88,14 +91,14 @@ def write(d, name, elem, h):
     return z, edge
 
 
-def run_case(work, elem, h_um):
+def run_case(work, elem, h_um, k=K_AL):
     h = h_um * 1e-6
-    name = f"H0{elem[0]}{int(round(h_um * 1000)):04d}"
+    name = f"H0{elem[0]}{int(round(h_um * 1000)):04d}" + ("" if k == K_AL else f"k{int(round(k))}")
     d = os.path.join(work, name)
-    z, edge = write(d, name, elem, h)
+    z, edge = write(d, name, elem, h, k)
     t0 = time.perf_counter()
-    res = oc.run(d, name)
-    row = {"name": name, "element": elem, "h_um": h_um, "nz": len(z) - 1, "normal": res.get("normal")}
+    res = sd.run(d, name, threads=1, vmem_gb=4, timeout_s=1800)  # capped (§12)
+    row = {"name": name, "element": elem, "k_W_mK": k, "h_um": h_um, "nz": len(z) - 1, "normal": res.get("normal")}
     if not res.get("normal"):
         row["failed"] = " ".join(res.get("engine_tail", res.get("starter_tail", "")).split())[-300:]
         return row
@@ -106,7 +109,8 @@ def run_case(work, elem, h_um):
     Te = exact(z, t)
     err = np.abs(T - Te) / (T1 - T0)
     row.update({"t_end_ns": t * 1e9, "T_min": float(T.min()), "T_max": float(T.max()),
-                "T_at_quarter": float(T[len(z) // 4]), "max_err_over_dT": float(err.max()),
+                "T_at_quarter": float(T[len(z) // 4]),
+                "max_dT_run_K": float(np.abs(a[:, cols] - a[0, cols]).max()), "max_err_over_dT": float(err.max()),
                 "max_err_central_over_dT": float(err[np.abs(z - L / 2) < 4 * math.sqrt(KAPPA * t)].max()),
                 "l_th_um": math.sqrt(KAPPA * t) * 1e6, "engine_s": res.get("engine_s"),
                 "wall_s": time.perf_counter() - t0})
@@ -117,9 +121,10 @@ def run_case(work, elem, h_um):
 
 def main():
     work, out_csv, elem = sys.argv[1:4]
+    k = float(os.environ.get("K_W_MK", K_AL))
     rows = list(csv.DictReader(open(out_csv))) if os.path.exists(out_csv) else []
     for h in [float(x) for x in sys.argv[4:]]:
-        row = run_case(work, elem, h)
+        row = run_case(work, elem, h, k)
         print({k: (round(x, 5) if isinstance(x, float) else x) for k, x in row.items()}, flush=True)
         rows.append(row)
         keys = list(dict.fromkeys(k for r in rows for k in r))

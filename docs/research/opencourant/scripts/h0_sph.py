@@ -39,10 +39,14 @@ L, T0, T1, K_AL, RHO_CP, KAPPA, T_END = h0.L, h0.T0, h0.T1, h0.K_AL, h0.RHO_CP, 
 N_W = 12  # column width in spacings
 
 
-def heat_cards(mat_id, t_init=T0, k=K_AL):
-    """/HEAT/MAT for material mat_id: T0 = t_init, rho c_p, AS = k, BS = 0; T1 = 0, AL = BL = 0, EFRAC = 1."""
+def heat_cards(mat_id, t_init=T0, k=K_AL, t_melt=0.0):
+    """/HEAT/MAT for material mat_id: T0 = t_init, rho c_p, AS = k, BS = 0; T1 = t_melt, AL = BL = 0, EFRAC = 1.
+
+    T1 matters whenever the material softens with temperature: with /HEAT/MAT the Johnson-Cook T* is
+    (T - T_ref) / (T1 - T_ref) (engine mmain.F90), and T1 = 0 is read as 1e20, which switches thermal softening
+    off. Pure conduction rungs (H0) do not depend on it."""
     return [f"/HEAT/MAT/{mat_id}", _f(t_init) + _f(RHO_CP) + _f(k) + _f(0.0),
-            _f(0.0) + _f(0.0) + _f(0.0) + _f(1.0)]
+            _f(t_melt) + _f(0.0) + _f(0.0) + _f(1.0)]
 
 
 def write(d, name, s):

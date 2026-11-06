@@ -26,6 +26,7 @@ is used or copied.
 | CS-11 interface bracket (Peter, 2026-11-04) | **F0 passes** (SPH sphere on `Isolid = 17` bricks, TYPE7, gap s/2, Stfac 10: R/32 peak 1.037, approach 0.987, rebound 0.99). **W0 fails** (SPH on SPH: R/32 peak 1.19, approach 0.68; depends on the start position). Al–Al F sweep (R/16, 400–1200 m/s): every run stops on contact-edge brick collapse at 0.115–0.17 D/V; J ≤ 1.06, no crossing of 1.5. At R/32 F is unevaluable (collapse before 0.1 D/V). **CS-11 inconclusive.** Failed SPH particles leave the kernel interaction (source). §10 |
 | CS-13 rung H0 (Peter, 2026-11-05) | **Fails.** OpenCourant has **no heat conduction on 2D quads** (`Isolid = 17` or 0): an initial 100 K step does not change at all (RG `/THERMAL`: solid, shell and SPH only; no quad conduction routine in the source). The same deck on 3D bricks matches erfc to 0.017 % at h = 0.156 µm. k = 237 W/(m K) sourced (HG2018a). No impact run made; fallback (JAX) is Peter's decision. §11 |
 | CS-13b (task 2026-11-05-a) | **Blocked, no verdict.** Rung H0-SPH fails narrowly (2.5 % at s = 0.156 µm against 2 %; first order). The prescribed fallback, conductive bricks with an adiabatic SPH particle, cannot run: without a particle `/HEAT/MAT` the engine exhausts memory (WSL OOM); with one, the particle overheats to 9·10⁴ K whatever k and EFRAC are (energy allows ≤ 357 K at 800 m/s). None of the 24 runs made; options for Peter. §12 |
+| CS-13c (task 2026-11-05-b) | **Refuted** by both clauses of the frozen rule. Brick particle on brick substrate, both bodies conductive (k = 237) against a k = 0 twin. Rungs B0 (frozen gap s/10, Stfac 1) and H0-k0 pass; check E passes in all 51 runs. t_f still falls 22–37 % from R/32 to R/48 and edge ε_p rises 35–66 %; the twins agree within 3.5 %. The particle side fails first in every run. A first campaign with `/HEAT/MAT` T1 = 0 (softening off) was discarded. §13 |
 | Pitfalls found | (1) The rigid-wall force output `FNZ` is ∫σ dr, not a force, in axisymmetric runs. (2) Default quadratic bulk viscosity + default time-step scale goes unstable (zero volume at cycle 0) on 50:1 quads. (3) Default bulk viscosity costs 5–7 % rebound velocity in the elastic case. (4) Axisymmetric time-history internal energy (and the ERR % energy-balance column) reads zero: energy balance cannot be checked from it. (5) With `Isolid = 17` the temperature is computed but not written out. |
 
 ## 1. Method
@@ -957,6 +958,7 @@ Probe at R/16, 800 m/s ([`cs13b_probe.py`](opencourant/scripts/cs13b_probe.py),
 
 - **The protocol as written cannot run.** With `/THERMAL`, `/HEAT/MAT` on the bricks and none on the SPH material, the engine's memory runs away. Adding `/HEAT/MAT` to the particle, or removing it from the bricks, makes it run (≈ 400 MB).
 - **With a particle `/HEAT/MAT`, the particle's temperature is non-physical.** The whole kinetic energy at 800 m/s, 320 kJ/kg, heats Al by at most 357 K. The particle instead reaches 9·10⁴ K, and a quarter of its particles pass the melting point by 2.1 ns, starting at the impact axis. k = 0 does not help (no conduction), and neither does EFRAC = 0 (the result is bit-identical, so the SPH heat source ignores EFRAC). Above T_melt the Johnson–Cook flow stress vanishes, so the particle's mechanics change: its peak ε_p drops from 0.52 to 0.13.
+- **Correction (2026-11-05, §13.2):** the heat-card runs of this table had `/HEAT/MAT` T1 = 0, which OpenCourant reads as T_melt = 10²⁰ and which switches the Johnson–Cook thermal softening off. The brick comparison in the next point (737 K against 534 K) therefore also mixes in the lost softening. The particle overheating does not depend on it: it appears with any k and EFRAC, and from the first steps on.
 - **The heating path also changes in the bricks.** Adiabatic LAW4 takes T from the element internal energy (RG LAW2/LAW4 comment 11). With `/HEAT/MAT`, T is nodal and heated by the strain energy, and the brick peak falls from 737 K to 534 K in the conductive run. A conductive-minus-adiabatic difference would therefore mix conduction with a change of heat source. A brick k = 0 twin would separate the two, but it is not run here because the particle problem comes first.
 - **The stop element is a brick in every variant** (the same two elements, 3161 and 8729), and the stop time moves by only 1.6 %. So the particle artifact does not reach the stop at R/16, but it changes the particle that loads the edge.
 
@@ -974,3 +976,138 @@ needs the 24 runs, so it was not applied.
 
 **Safety change in the scripts:** every engine and starter run through `sphdeck.run` now runs under a
 virtual-memory cap, with core dumps off and a hard time limit, so a runaway run is killed instead of the WSL VM.
+
+## 13. Hunch CS-13c: brick particle on brick substrate with conduction; CS-13c refuted (task 2026-11-05-b)
+
+Task: [tasks/wsl-a.md](tasks/wsl-a.md), task 2026-11-05-b. Protocol: [coldspray-hunch-cs13c.md](coldspray-hunch-cs13c.md),
+frozen in `15fe42f`. Order followed: rung B0, rung H0-k0, the plastic-work output check, the 24 runs plus three runs
+without `/HEAT/MAT`, then P1–P3 and the verdict rule. **Both rungs pass and check E passes in every run. The verdict
+rule gives "refuted", by both of its clauses.** One full campaign had to be discarded because of a deck error of
+mine (§13.2); the verdict comes from the corrected rerun.
+
+### 13.1 Setup and prerequisite rungs
+
+**Setup B** ([`brick_particle.py`](opencourant/scripts/brick_particle.py)):
+- **Particle:** quarter O-grid sphere of 8-node bricks (`Isolid = 17`): a rounded cube core (half-size 0.5 R) and mapped shells, equiangular along the surface. At the contact pole the surface cells are s × s and the radial edge is about s. The mesh volume is within 0.06 % of the sphere's at R/16; there are no inverted elements, and the largest aspect ratio is 2.4.
+- **Substrate:** the setup-F brick block (`sph_interface.brick_block`).
+- **Contacts:** two `/INTER/TYPE7`, friction 0, `Istf = 1000`, `Igap = 1000`, no heat transfer. One has the particle nodes as secondary on the substrate top; the other has the substrate top nodes as secondary on the particle surface. The lowest particle node starts at the gap, so contact starts at t = 0.
+- **Element counts:** at R/16, 18 522 particle and 31 581 substrate bricks; at R/48, 476 656 and 599 076.
+
+**Rung B0 (elastic, 20 m/s, two-body Hertz; the brick analogue of F0)** ([`b0_rung.py`](opencourant/scripts/b0_rung.py),
+[`results/cs13c_b0.csv`](opencourant/results/cs13c_b0.csv)). Rung-1 material and radius, as F0 (R = 10 µm,
+E = 70 GPa, ν = 0.35):
+
+| run | gap | Stfac | peak / F_H | approach / d_H | contact (1 %) / t_H | rebound / V | engine (8 threads) |
+|---|---|---|---|---|---|---|---|
+| R/16 | s/10 | 10 | 1.051 | 0.965 | 0.947 | 0.999 | 4 min |
+| R/16 | s/10 | 1 | 1.040 | 0.985 | 0.964 | 0.999 | 4 min |
+| **R/32** | **s/10** | **1** | **1.046** | **0.976** | 0.957 | **1.000** | 54 min |
+
+**B0 passes** (frozen: at R/32 peak and approach within 5 %, rebound > 0.9 V). **Frozen: gap s/10, Stfac 1.** With two
+contacts the penalty acts twice, so Stfac 1 already gives an approach within 2.4 %. Stfac 10 stiffens the peak.
+The peak's 4.6 % excess at R/32 is close to the limit and did not decrease from R/16, so it is a mesh-level
+offset, not converging toward Hertz. The "energy error" column of the listing dips to −99.9 % at peak compression
+and returns to −0.1 %, because it leaves out the energy stored in the contact springs.
+
+**Rung H0-k0** ([`h0_conduction.py`](opencourant/scripts/h0_conduction.py) with `K_W_MK=0`,
+[`results/cs13c_h0_k0.csv`](opencourant/results/cs13c_h0_k0.csv)): the §11.2 brick slab with `/HEAT/MAT`, k = 0. The
+largest temperature change over the run is **0.0 K** at all three spacings (limit 0.1 K): **passes**. The k = 237 control
+reproduces §11.2 (0.017 % at 0.156 µm). (A first attempt showed changes of 12–44 K; the cause was a variable in the
+deck writer shadowing the conductivity argument, so the deck carried k = 128. Fixed before the result above.)
+
+**Per-element plastic work:** OpenCourant writes it for solids (`/ANIM/ELEM/WPLA`, engine `anim_dcod_key_0.F`; in the
+VTK output as a per-element field). So **the second clause of check E is binding**, not only reported.
+
+### 13.2 A discarded campaign: thermal softening was off (deck error)
+
+The first full campaign (27 + 24 runs, 15:19–18:45) gave **bit-for-bit identical** t_f and P2 for the two twins at
+every velocity and spacing, while their edge temperatures differed by up to 60 K. Cause: I left the `/HEAT/MAT`
+field T1 at 0. With `/HEAT/MAT` the Johnson–Cook softening uses T* = (T − T_ref)/(T1 − T_ref) (engine `mmain.F90`;
+LAW4's own T_melt is used only for the melt cut-off), and the starter reads T1 = 0 as T_melt = 10²⁰. So T* ≈ 0, and
+the flow stress never saw the temperature. That run set would have met the "twins agree" refutation clause without
+testing anything, so it is **discarded**, not counted (kept outside the repository). Fix: **T1 = T_melt = 933 K**
+(P-HG-Al, the value LAW4 already has); the starter now echoes 933 K. Check at R/16, 800 m/s: the twins now differ
+(t_f 0.1081 against 0.1085 D/V), and t_f moved from 0.113 to 0.108 D/V, close to the run without `/HEAT/MAT`
+(0.106). The protocol does not name T1; setting it to the material's melting point is the input the frozen
+material implies, so this is a deck fix, not a protocol change.
+
+### 13.3 Runs and metrics
+
+[`cs13c.py`](opencourant/scripts/cs13c.py), driver [`cs13c_all.sh`](opencourant/scripts/cs13c_all.sh), results
+[`results/cs13c_pass1.csv`](opencourant/results/cs13c_pass1.csv) (to the stop: P1, stop element, check E) and
+[`results/cs13c_pass2.csv`](opencourant/results/cs13c_pass2.csv) (rerun of the same deck to t_c: P2, P3). Implementation
+of the frozen definitions:
+- **dt₀** is the deck's own cycle-0 time step, from a one-cycle pre-run at each spacing. The run stops below dt₀/50.
+- **Check E:** E1 is Σ m_node c_p (T − T₀) over both bodies (nodal mass ρV₀/8 per brick corner) against 1.05 × the particle's initial kinetic energy. E2 compares each element above 933 K with 1.10 × its plastic work.
+- **P2:** a body's contact edge is its outermost surface node within 2 × gap of the other body's surface. P2 is that body's maximum ε_p over elements with centroid within 1.17 µm of that node.
+
+Cost: R/48 runs took 6.8–31 min of engine time on 8 threads (largest: 500 m/s), so the 1 h budget stop did not trigger. Pass 1 took 2 h 20 min, pass 2 52 min.
+
+**P1, failure time t_f / (D/V)** (every run stopped on the time-step collapse before t_e; the controlling element was
+**a particle brick in all 27 runs**):
+
+| V (m/s) | twin | R/16 | R/24 | R/32 | R/48 | R/32 → R/48 |
+|---|---|---|---|---|---|---|
+| 500 | k = 237 | 0.1599 | 0.1242 | 0.0963 | 0.0609 | −36.8 % |
+| 500 | k = 0 | 0.1551 | 0.1214 | 0.0939 | 0.0630 | −32.8 % |
+| 500 | no `/HEAT/MAT` (reported only) | 0.1483 | | | | |
+| 800 | k = 237 | 0.1085 | 0.0807 | 0.0526 | 0.0378 | −28.1 % |
+| 800 | k = 0 | 0.1081 | 0.0804 | 0.0526 | 0.0376 | −28.6 % |
+| 800 | no `/HEAT/MAT` | 0.1058 | | | | |
+| 1100 | k = 237 | 0.0877 | 0.0754 | 0.0549 | 0.0429 | −21.9 % |
+| 1100 | k = 0 | 0.0871 | 0.0751 | 0.0546 | 0.0428 | −21.6 % |
+| 1100 | no `/HEAT/MAT` | 0.0839 | | | | |
+
+**P2, edge plastic strain at t_c** (t_c = 0.5 × the smallest t_f at that velocity: 0.913 / 0.352 / 0.292 ns; the edges
+sit at 0.39 R, 0.29 R and 0.30 R in both bodies):
+
+| V (m/s) | body | k = 237: R/16 / R/24 / R/32 / R/48 | R/32 → R/48 (k = 237 / k = 0) |
+|---|---|---|---|
+| 500 | particle | 0.395 / 0.606 / 0.806 / 1.115 | +38.3 % / +38.7 % |
+| 500 | substrate | 0.187 / 0.280 / 0.381 / 0.542 | +42.3 % / +41.9 % |
+| 800 | particle | 0.132 / 0.217 / 0.276 / 0.436 | +57.7 % / +57.7 % |
+| 800 | substrate | 0.115 / 0.128 / 0.152 / 0.251 | +65.6 % / +65.6 % |
+| 1100 | particle | 0.131 / 0.214 / 0.244 / 0.373 | +52.7 % / +52.7 % |
+| 1100 | substrate | 0.115 / 0.134 / 0.165 / 0.223 | +35.1 % / +35.1 % |
+
+The k = 0 twin's P2 differs from the conductive one by at most 0.55 % (500 m/s, R/48, particle).
+
+**P3, conductive minus k = 0 (reported only):**
+
+| V (m/s) | peak edge-band T, particle: R/16 / R/24 / R/32 / R/48 | substrate | Δ P2 (largest) |
+|---|---|---|---|
+| 500 | −2.3 / −7.0 / −15.1 / −29.6 K | −2.0 / −5.7 / −10.1 / −22.6 K | −0.006 (particle, R/48) |
+| 800 | −0.4 / −1.4 / −2.8 / −7.5 K | −0.8 / −1.7 / −2.7 / −7.0 K | −0.0002 |
+| 1100 | −0.6 / −1.3 / −3.1 / −6.0 K | −0.6 / −2.0 / −3.6 / −6.8 K | −0.0001 |
+
+Conduction cools the edge band, and more so the finer the mesh, because the hot band is thinner and so loses heat faster. The peak temperature at
+the stop falls by 14–100 K. But the plastic strain at t_c hardly changes, and t_f moves by at most 3.5 %.
+
+**Check E:** passes in all 51 runs. The total heat is at most 20 % of the particle's initial kinetic energy (500 m/s,
+R/16) and falls with refinement as the runs stop earlier. No element reaches 933 K (largest: 578 K).
+
+![CS-13c: P1 and P2 against spacing](opencourant/figures/cs13c_verdict.png)
+
+![CS-13c setup B, R/16, 800 m/s, conductive](opencourant/figures/cs13c_B16_800.gif)
+
+*Setup B, conductive twin, R/16, 800 m/s, to the stop at 0.109 D/V (corrected deck). Section y = 0, mirrored. Left: plastic strain; right: temperature. A thin sheared and heated band forms on both sides of the
+interface and is strongest at the two contact edges. The stopping element is a particle brick off this section. A
+diagnostic visual from a separate run, with the campaign's settings.*
+
+### 13.4 Verdict (frozen rule, applied as written)
+
+([`cs13c_verdict.py`](opencourant/scripts/cs13c_verdict.py))
+- **Supported:** at none of the three velocities. Conductive t_f changes by −22 to −37 % from R/32 to R/48 (limit 6 %), and P2 by +35 to +66 % in both bodies.
+- **Refuted, clause (a):** holds. At all three velocities conductive t_f falls by more than 6 % (−36.8, −28.1, −21.9 %), and P2 changes by more than 6 % in both bodies.
+- **Refuted, clause (b):** holds too. The twins agree within 6 % in t_f and P2 at every velocity and spacing (largest difference 3.5 %, in t_f at 500 m/s).
+- No rung failed, and every run passed check E, so the inconclusive conditions do not apply.
+
+**CS-13c: refuted.** In OpenCourant, heat conduction at k = 237 W/(m K) does not regularise the contact edge of an
+Al–Al brick-on-brick impact. The failure time keeps falling with refinement down to R/48, and the edge plastic strain
+keeps rising, with or without conduction.
+
+**What it shows and what it does not (no further verdict):**
+- **Conduction acts too slowly to matter before the edge fails.** At t_c the thermal diffusion length √(κ t_c) is 0.30 / 0.19 / 0.17 µm (500 / 800 / 1100 m/s), 1–2 spacings at R/48. The edge band cools by up to 30 K, but the flow stress drop that drives the localisation is not changed measurably.
+- **The failing side is the particle,** in every run, and its collapse time falls steadily as the spacing is refined (by a factor 2.0–2.9 from R/16 to R/48). This is the mesh-scale edge failure of §8.3 and §10.5, now in a fully Lagrangian 3D model.
+- **One solver, as the protocol says.** A refutation in OpenCourant does not carry over to CS-13's mechanism in general. The JAX route is the independent check.
+- **DECISIONS 2026-11-05 applies:** CS-13c was the last OpenCourant protocol for the thermal question, so there is no CS-13d.
