@@ -1,0 +1,71 @@
+model,row,v_pred_mps,in_domain,note
+Z6_a015,B02-c1,578.6,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a015_C0,B02-c1,586.5,False,P-H20-Cu
+baseline_LOMO,B02-c1,696.5,False,median of 10 other materials
+DW_size,B02-c1,,False,Al/Ti matched with a diameter only
+CS-10,B02-c1,,False,no prediction: no particle strength
+Z18_static,B02-c1,,False,no prediction: sigma0 sourced for aluminium oxide only
+Z18_Yd,B02-c1,,False,no prediction: sigma0 sourced for aluminium oxide only
+Z6_a015,B02-c2,578.6,False,"B P-H20-Cu (E, nu); rho P-H20-Cu"
+Z6_a015_C0,B02-c2,586.5,False,P-H20-Cu
+baseline_LOMO,B02-c2,696.5,False,median of 10 other materials
+DW_size,B02-c2,,False,Al/Ti matched with a diameter only
+CS-10,B02-c2,,False,no prediction: no particle strength
+Z18_static,B02-c2,,False,no prediction: sigma0 sourced for aluminium oxide only
+Z18_Yd,B02-c2,,False,no prediction: sigma0 sourced for aluminium oxide only
+Z6_a015,B14-c1,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c1,807.0,True,P-H20-Al
+baseline_LOMO,B14-c1,611.5,True,median of 10 other materials
+DW_size,B14-c1,951.1,True,Dowding2020 fit
+CS-10,B14-c1,,False,no prediction: no particle strength
+Z18_static,B14-c1,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c1,,False,no prediction: no particle strength reported
+Z6_a015,B14-c2,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c2,807.0,True,P-H20-Al
+baseline_LOMO,B14-c2,611.5,True,median of 10 other materials
+DW_size,B14-c2,951.1,True,Dowding2020 fit
+CS-10,B14-c2,,False,no prediction: no particle strength
+Z18_static,B14-c2,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c2,,False,no prediction: no particle strength reported
+Z6_a015,B14-c3,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c3,807.0,True,P-H20-Al
+baseline_LOMO,B14-c3,611.5,True,median of 10 other materials
+DW_size,B14-c3,951.1,True,Dowding2020 fit
+CS-10,B14-c3,,False,no prediction: no particle strength
+Z18_static,B14-c3,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c3,,False,no prediction: no particle strength reported
+Z6_a015,B14-c4,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c4,807.0,True,P-H20-Al
+baseline_LOMO,B14-c4,611.5,True,median of 10 other materials
+DW_size,B14-c4,951.1,True,Dowding2020 fit
+CS-10,B14-c4,,False,no prediction: no particle strength
+Z18_static,B14-c4,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c4,,False,no prediction: no particle strength reported
+Z6_a015,B14-c5,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c5,807.0,True,P-H20-Al
+baseline_LOMO,B14-c5,611.5,True,median of 10 other materials
+DW_size,B14-c5,951.1,True,Dowding2020 fit
+CS-10,B14-c5,,False,no prediction: no particle strength
+Z18_static,B14-c5,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c5,,False,no prediction: no particle strength reported
+Z6_a015,B14-c6,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c6,807.0,True,P-H20-Al
+baseline_LOMO,B14-c6,611.5,True,median of 10 other materials
+DW_size,B14-c6,951.1,True,Dowding2020 fit
+CS-10,B14-c6,,False,no prediction: no particle strength
+Z18_static,B14-c6,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c6,,False,no prediction: no particle strength reported
+Z6_a015,B14-c7,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c7,807.0,True,P-H20-Al
+baseline_LOMO,B14-c7,611.5,True,median of 10 other materials
+DW_size,B14-c7,951.1,True,Dowding2020 fit
+CS-10,B14-c7,,False,no prediction: no particle strength
+Z18_static,B14-c7,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c7,,False,no prediction: no particle strength reported
+Z6_a015,B14-c8,805.1,True,"B P-H20-Al (E, nu); rho P-H20-Al"
+Z6_a015_C0,B14-c8,807.0,True,P-H20-Al
+baseline_LOMO,B14-c8,611.5,True,median of 10 other materials
+DW_size,B14-c8,951.1,True,Dowding2020 fit
+CS-10,B14-c8,,False,no prediction: no particle strength
+Z18_static,B14-c8,,False,no prediction: no particle strength reported
+Z18_Yd,B14-c8,,False,no prediction: no particle strength reported

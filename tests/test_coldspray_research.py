@@ -101,3 +101,15 @@ def test_z18_reproduces_na2025_and_frozen_fit():
     assert z.sigma_eff(200e6, 100.0) == pytest.approx(870e6)
     # frozen Z18_static constant (docs/research/coldspray-zoo-z18.md, fit commit)
     assert z.report()["k_static"] == pytest.approx(0.07139, rel=1e-3)
+
+
+def test_blind2_oxide_parsing_and_no_fill():
+    from schemeforge.research.coldspray_blind2 import oxide_thickness_nm, predict
+
+    assert oxide_thickness_nm("XPS passivation layer ~5-6 nm, amorphous") == 5.5
+    assert oxide_thickness_nm("~8 nm on average (XPS/TEM)") == 8.0
+    assert oxide_thickness_nm("thinner than RH-95 by less than 1 nm, more uniform") is None
+    assert oxide_thickness_nm("not separately reported; ~5-6 nm in the group") is None
+    preds = predict()
+    # models without their inputs give no value, never a filled one
+    assert all(p["v_pred_mps"] == "" for p in preds if p["model"] in ("CS-10", "Z18_static", "Z18_Yd"))
