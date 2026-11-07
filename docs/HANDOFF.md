@@ -21,7 +21,7 @@ DECISIONS 2026-11-05).
 
 **Two tracks since 2026-11-07:** single-impact (this section) and **build-up** (docs/research/coldspray-buildup-track.md;
 questions and data audit first, no hunches yet). **Hunch budget:** at most 5 open untested hunches across both
-tracks, each must discriminate on obtainable data; count 4 of 5 (rules at the top of coldspray-hunches.md).
+tracks, each must discriminate on obtainable data; count 3 of 5 since CS-14b was parked (rules at the top of coldspray-hunches.md).
 **End point of the single-impact phase:** the six pending papers scored or unobtainable, and the T3 request sent or
 dropped; then one short synthesis (DECISIONS 2026-11-07).
 
@@ -58,8 +58,7 @@ undecided.
 
 Reserved: **CS-15** for a whole-particle model (SPH with the interface law at the interface), not registered.
 
-**Proposed, awaiting Peter:** park the thermal question (no JAX port) and park CS-14b (its answer hinges on the
-oxide's unknown cohesive length; it cannot decide T3).
+**Parked 2026-11-07 (Peter, DECISIONS):** the thermal question (no JAX port) and CS-14b.
 
 ## 3. Blind set (docs/research/coldspray-blind-literature.md; B4 exposure log at its end)
 
@@ -154,19 +153,18 @@ Its new task says so explicitly.
 ## 9. Open for Peter
 
 Adopted 2026-11-07 (no longer open): the build-up track (coldspray-buildup-track.md), the hunch budget (max 5 open
-untested; now 4/5, rules in coldspray-hunches.md), and the end point of the single-impact phase (DECISIONS
+untested; now 3/5 after the CS-14b parking, rules in coldspray-hunches.md), and the end point of the single-impact phase (DECISIONS
 2026-11-07). An oxide-chemistry hunch (item 5) would take the fifth slot.
 
 Nothing below has been decided; each needs Peter's call.
 
-0. **Build-up:** the near-threshold-striker hunch is **parked** (Peter, 2026-11-07; budget stays 4/5). Open: whether
+0. **Build-up:** the near-threshold-striker hunch is **parked** (Peter, 2026-11-07; not registered). Open: whether
    the deposit-vs-plate contrast goes into the T3 measurement request; and the **Panova thesis** (MIT DMSE 2026,
    on Peter's machine, not opened by the modeller): proposed route is WSL B, first a yes/no screen (does it contain
    Panova & Schuh 2024, or values from pending blind papers B03/B05/B06/B07/B12/B16?), then a role-separated
    extraction of the Panova2026a chapter (two-particle stacks, bonded fraction) if it is clean or can be cut.
 
-1. **Parkings:** the thermal question (no JAX port after CS-13c) and CS-14b (its answer hinges on the oxide's unknown
-   cohesive length; it cannot decide T3). Recommendation: park both.
+1. ~~Parkings~~: thermal question and CS-14b parked 2026-11-07 (DECISIONS).
 2. **Blind list 2 screening task** for WSL B: yes/no screen of Tiamiyu 2022 and the two Panova & Schuh 2024 papers
    (oxide series? interface maps?) before anyone reads them. Not written yet.
 3. **CS-17's post-hoc domain restriction** (wrought substrates only, because Panova PA-02 contradicts it otherwise):
