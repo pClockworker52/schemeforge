@@ -150,3 +150,39 @@ printed. Method, validation against the printed stack means, and reading error:
 | `v_bar_end_mps` | the bar-end reading, as a cross-check, where the cap midpoint was used |
 | `d_um` | particle diameter [µm] measured before launch; reading error about ±0.2 µm |
 | `fracture_event` | 1 if the shot is marked in Fig. 5b as having fractured the stack |
+
+## Particle-property gap inventory (2026-11-07)
+
+Which v_cr rows have strength data **for the powder that was impacted**: dynamic yield Y_d, static or tensile
+strength, failure strain ε_c or hardening exponent n. These inputs block Z1, Z2 (tensile strength), Z7 (failure
+strain), CS-10 and Z18 (particle strength) on most rows. The inventory uses only sources already read; no new
+search was made. "Same material" means a value for the metal, measured on another powder or on bulk.
+
+| Rows | n | Particle | Y_d of the impacted powder | Static or tensile strength | ε_c or n | Same-material values only |
+|---|---|---|---|---|---|---|
+| H20 | 20 | 12 metals and alloys | **yes**: Hassani2020 Table S1 (`Yd_micro`, fitted to sub-critical rebounds, rule P2: partly circular) | no | no | bulk Johnson–Cook n for Al, Cu, Ni (P-HG, HG2018a) |
+| P18 (HG2018b) | 5 | Al, Cu, Ni, Zn | no (other powders than H20 as far as stated) | no | no | Table S1 Y_d; bulk JC n (Al, Cu, Ni) |
+| P19 (HG2019b) | 2 | Au, Ag | no | no | no | Table S1 Y_d |
+| DW | 9 | Al, Ti (size series) | no | no | no | Table S1 Y_d; bulk JC n (Al) |
+| CH | 3 | Al, Sn, Ti (heated substrates) | no | no | no | Table S1 Y_d |
+| PA (Panova2026b) | 3 | Cu 17–21 µm | no | no | no | Table S1 Y_d; possibly Lucas's 383 MPa if the same Alfa Aesar powder (not established) |
+| B-B10 (Na2025) | 5 | Al 6061, heat treatments | **yes**: CoR-fitted Y_d per batch (Table 1) | **yes**: micro-compression at 50 % strain, 219–351 MPa | no | – |
+| B-B14 (Lienhard2020) | 8 | Al, oxide states | no ("none for the metals") | no | no | Table S1 Y_d; bulk JC n |
+| B-B02 (Lucas) | 2 | Cu 19 µm | **yes**: 383 ± 65 MPa (Cu-on-sapphire impacts, Lucas ch. 3) | no | **no** for the particle (substrates only: 0.29, 0.16) | bulk JC n |
+| Build-up (Reiser2024 Au, Panova2026a Cu) | – | Au, Cu | no | no | no | Table S1 Y_d (Au, Cu) |
+
+**Summary:**
+- Three groups have a strength value of the impacted powder: H20 (Y_d, partly circular), B10 (Y_d and static
+  strength) and B02 (Y_d).
+- **No row has a failure strain or hardening exponent of the impacted powder.** That is the input Z7's mixing rule
+  needs (coldspray-results-b02-b14.md, addendum).
+
+**Where more could come from without a new literature search:**
+
+| Source | What might be there | Route |
+|---|---|---|
+| Lucas thesis ch. 3 (Cu-on-sapphire) and ch. 4 Table 2 | a particle row in Table 2 (ε_c of the powder?); powder hardness | WSL B; the thesis also covers blind papers |
+| Panova thesis ch. 3–4 (Cu-on-Cu, 2025 papers) | powder hardness or Y_d of the 15–38 µm Alfa Aesar Cu | WSL B, avoiding pp. 56–57 and 146 (B03 values) |
+| Lienhard thesis (B14, B04 source) | Al powder hardness | WSL B |
+| Na2025 (read, F) | micro-compression curves to 50 % strain (Table 1 gives only the stress); a full curve would give n | re-read Fig./SI by the modeller (B10 is unblinded) |
+| A measurement | micro-compression stress–strain curves of the LIPIT powders (B10's method) give Y and n directly | candidate item for a measurement request, if the campaign trigger is met |
