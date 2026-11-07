@@ -1,4 +1,4 @@
-# Handoff — 2026-11-07 (cold-spray track; replaces the 2026-11-04 version, which is in git history)
+# Handoff — 2026-11-07, refreshed after B02/B14 scoring and the kinematic view (cold-spray track)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read
 docs/STATUS.md (top entries) and the DECISIONS index (top of docs/DECISIONS.md). Branch:
@@ -38,7 +38,7 @@ undecided.
 | Id | What | State |
 |---|---|---|
 | CS-01…CS-06 | retrospective v1 | CS-02, CS-03 supported; CS-01, CS-05 inconclusive; CS-06 refuted (coldspray-results-v1.md) |
-| CS-07 | oxide raises v_cr | B10: not refuted, support undetermined; B14 test frozen (exposed) |
+| CS-07 | oxide raises v_cr | B10: not refuted, support undetermined; **B14: supported (exposed;** type and thickness changed together) |
 | CS-08 | strength raises v_cr within an alloy | refuted on B10 |
 | CS-09 | sound speed alone within B10 | undetermined (no window bounds) |
 | CS-10 | energy balance: jetting + plastic work + shell work (t_ox/d) | frozen, fitted on B10 (β 0.3774, γ 3.19e11 Pa); leave-one-out no better than a constant; relative of Na2025, not a variant |
@@ -46,7 +46,8 @@ undecided.
 | CS-12 | interface as Markov blanket; Bay-type criterion; thickness-independent at fixed oxide type | frozen; variant of Bay; T1 exposed; T3 decisive; criterion is a hybrid of Bay's two mechanisms (reading note Zhang & Bay 1997) |
 | CS-13 / 13b / 13c | conduction regularises the contact edge | 13b blocked (§12), **13c refuted** (§13); stop rule: no CS-13d |
 | CS-14 / 14b | interface submodel cell (t/w, Y', p_E against thickness) | 14b frozen: continuum film with cohesive cracks instead of DEM; DEM rung kept as record (R0 run, R1 not) |
-| CS-16 | substrate hardness raises v_cr for matched Cu | frozen on B02 (addendum): 480 / 583 m/s, Δ +102 |
+| CS-16 | substrate hardness raises v_cr for matched Cu | **refuted on B02:** hard − soft = −75 m/s against +102 predicted |
+| CS-17 | substrate strain-hardening capacity, not hardness (directional) | frozen 2026-11-07; domain restricted to wrought substrates **post hoc** (Panova PA-02 contradicts it otherwise); no unseen test data known |
 | Z18 | Na2025 Eq. 6 (Lienhard jet model), variants Yd and static | frozen; Z18_static fails on its own calibration data (RMS 72.5) |
 
 Reserved: **CS-15** for a whole-particle model (SPH with the interface law at the interface), not registered.
@@ -59,7 +60,7 @@ oxide's unknown cohesive length; it cannot decide T3).
 | Paper | State |
 |---|---|
 | B10 | scored (coldspray-results-b10.md) |
-| **B02, B14** | **predictions frozen** (coldspray-preregistration-b02-b14.md, 27e7eea; CS-16 addendum 542f810); **scoring script committed** (f8fb8f5); **WSL B task 2026-11-07-b2 (step 3, outcomes) open**, branch `coldspray/b02-b14-outcomes` |
+| **B02, B14** | **scored** (coldspray-results-b02-b14.md; freeze 27e7eea → addendum 542f810 → scorer f8fb8f5 → outcomes add80b8 → scores dabe6a7). Z6 within 1–6 % on dry B14 (in-sample material); RH-95-D 68.5 m/s below RH-95 at near-equal thickness |
 | B04, B13 | inputs extracted; no v_cr; nothing to predict |
 | B01, B08, B09, B11, B15 | no single-impact v_cr |
 | B03, B05, B06, B07, B12, B16 | pending (Peter is obtaining them). B06 and B05 matter most (oxide). |
@@ -73,13 +74,10 @@ Notes:
 
 ## 4. Next steps (in order)
 
-1. **When WSL B pushes B02/B14 outcomes:** check that only vcr_lipit.csv changed, run
-   `python -m schemeforge.research.coldspray_blind2_score`, write the results note, merge.
-2. **B03, B05, B06, B07, B12, B16 as they arrive:** WSL B step 1 → leak scan → merge → add their materials to
+1. **B03, B05, B06, B07, B12, B16 as they arrive:** WSL B step 1 → leak scan → merge → add their materials to
    `MATERIAL` in coldspray_blind2.py and freeze (new pre-registration file) → step 3 → score.
-3. **Peter's open decisions:** the two parkings (section 2); the screening task (section 3); the geometric
-   (kinematic) impact view, offered; Idea D (restitution data from Tang 2025 PNAS SI), offered.
-4. **Data gaps:**
+2. **Peter's open decisions:** section 9.
+3. **Data gaps:**
    - HG2018b primary (Al, Ni, Cu, Zn conflicting quotes);
    - strength of the impacted powders (blocks CS-10 and Z18);
    - Bay 1983 primary (files.aws.org blocked here; Peter can supply it).
@@ -106,7 +104,7 @@ Notes:
 |---|---|---|---|
 | Cloud (modeller) | models, predictions, scoring, notes, merges | `claude/exciting-fermi-qy077p` | — |
 | WSL A | OpenCourant simulations | `coldspray/opencourant-sph` | docs/research/tasks/wsl-a.md (no open task) |
-| WSL B | blind extraction | `coldspray/blind-inputs`, `coldspray/<paper>-outcomes` | docs/research/tasks/wsl-b.md (task 2026-11-07-b2 open) |
+| WSL B | blind extraction | `coldspray/blind-inputs`, `coldspray/<paper>-outcomes` | docs/research/tasks/wsl-b.md (no open task) |
 
 WSL B merged its step-1 inputs into the modeller branch itself (7a9e0b5); by the procedure only the modeller merges.
 Its new task says so explicitly.
@@ -118,6 +116,11 @@ Its new task says so explicitly.
   - SPH is 3D-only; SPH–SPH contact is a kernel weld without defined contact (§9.8, §10.3);
   - the SPH heat path is unreliable (§12);
   - every Lagrangian contact edge fails earlier with refinement, with or without conduction (§8.3, §10.5, §13).
+- **Kinematic view** (2026-11-07, coldspray-kinematics.md; `impact_kinematics.py`, figures in
+  docs/research/figures/kinematics/): rigid sphere into a rigid flat, contact-edge speed against the bulk sound
+  speed. Geometry only. The edge turns subsonic at every impact speed (β_c = atan(V/c): Al 5–12°, Cu 7–16°, at
+  65–261 ps for d = 15 µm), so geometry gives no threshold; Z6 reads as "subsonic at a fixed angle of 8.5°" (post hoc
+  reading).
 - **JAX code:**
   - `impact_axisym.py`: elastic 2D axisymmetric (rungs 0, 1);
   - `blanket_dem.py`: DEM film cell, superseded by CS-14b.
@@ -136,3 +139,24 @@ Its new task says so explicitly.
 | Reading notes | coldspray-reading-zhangbay1997.md, coldspray-reading-na2025.md, coldspray-literature-interface.md (external, exposure header) |
 | Blind set, prompts | coldspray-blind-literature.md, coldspray-extraction-prompt*.md, coldspray-literature-prompt-2026-11*.md |
 | Measurement request (draft) | coldspray-measurement-request-t3.md |
+| Kinematic view | coldspray-kinematics.md |
+| Results B02/B14 | coldspray-results-b02-b14.md |
+
+## 9. Open for Peter
+
+Nothing below has been decided; each needs Peter's call.
+
+1. **Parkings:** the thermal question (no JAX port after CS-13c) and CS-14b (its answer hinges on the oxide's unknown
+   cohesive length; it cannot decide T3). Recommendation: park both.
+2. **Blind list 2 screening task** for WSL B: yes/no screen of Tiamiyu 2022 and the two Panova & Schuh 2024 papers
+   (oxide series? interface maps?) before anyone reads them. Not written yet.
+3. **CS-17's post-hoc domain restriction** (wrought substrates only, because Panova PA-02 contradicts it otherwise):
+   accept as frozen, or treat the PA-02 tension as a reason to drop or reformulate CS-17 before it meets data.
+4. **A second item for the measurement request:** one powder on annealed, cold-rolled and peak-aged tempers of one
+   wrought alloy (tests CS-17). Only if the campaign trigger is met.
+5. **Oxide chemistry as its own hunch:** B14's RH-95-D result (−68.5 m/s at near-equal thickness) suggests an oxide
+   type term. Any hunch inspired by it cannot be tested on B14. Register or not.
+6. **Idea D** (restitution data, Tang 2025 PNAS SI): the source host is probably blocked here; Peter can supply the
+   SI files.
+7. **Post-hoc spall law Z7 for Cu** from Lucas's Table 2 (failure strain now known): run as a labelled post-hoc
+   check, or skip.
