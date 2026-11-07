@@ -82,9 +82,11 @@ Notes:
 
 1. **B03, B05, B06, B07, B12, B16 as they arrive:** WSL B step 1 → leak scan → merge → add their materials to
    `MATERIAL` in coldspray_blind2.py and freeze (new pre-registration file) → step 3 → score.
-2. **Build-up track:** the data audit of coldspray-buildup-track.md (seen sources: Panova2026b F, Reiser2024 F,
-   Panova2026a A; process DE sources S). Output: the audit table, then one question the data can answer. No hunch
-   before that, and only within the budget.
+2. **Build-up track:** data audit done (coldspray-buildup-track.md, "Data audit", 33152ad). Questions 1–4 cannot be
+   answered with seen data. **Proposed Q-B1** (awaiting Peter): does deposit fracture depend on the striking shot
+   or on the impacts before it? Answering it = digitize Reiser2024 Figs. 3b and 5b into
+   data/buildup_reiser2024.csv plus a one-page analysis (exploratory; hunches from it need unseen stacks).
+   Panova2026a full text not read (OSTI rate-limited, 429).
 3. **Peter's open decisions:** section 9.
 4. **Data gaps:**
    - HG2018b primary (Al, Ni, Cu, Zn conflicting quotes);
@@ -158,6 +160,9 @@ untested; now 4/5, rules in coldspray-hunches.md), and the end point of the sing
 2026-11-07). An oxide-chemistry hunch (item 5) would take the fifth slot.
 
 Nothing below has been decided; each needs Peter's call.
+
+0. **Q-B1 as the build-up track's first question** (coldspray-buildup-track.md, "Proposed question"), and
+   whether the deposit-vs-plate contrast goes into the T3 measurement request as a second item.
 
 1. **Parkings:** the thermal question (no JAX port after CS-13c) and CS-14b (its answer hinges on the oxide's unknown
    cohesive length; it cannot decide T3). Recommendation: park both.
