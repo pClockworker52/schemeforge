@@ -61,9 +61,13 @@ it is subsonic. The shaded cap is the geometric overlap of the two rigid bodies;
    v_cr = α c therefore says that bonding needs the edge to go subsonic at one fixed contact angle, the same for
    every material: atan(α). For Z6 (α = 0.15) that angle is 8.5°.
 3. **The switch is early and small.** It comes at 0.2–2 % of the transit time D/V and at a contact radius of
-   0.09–0.27 R. The OpenCourant runs failed at the contact edge at 0.04–0.17 D/V (§10, §13 of
-   opencourant-verification.md), so they did pass the switch before failing. At R/32 the switch radius spans
-   about 3–9 element spacings.
+   0.09–0.27 R. The OpenCourant runs stopped on mesh collapse at the contact edge at:
+   - 0.068–0.170 D/V: CS-11 setup F, `opencourant/results/cs11_sweep.csv`, column `t_stop_over_D_V`, all 23 rows;
+   - 0.038–0.160 D/V: CS-13c, `opencourant/results/cs13c_pass1.csv`, all 27 runs.
+
+   The latest switch in the table is at 0.019 D/V, so every one of those runs passed the switch before failing.
+   These are solver diagnostics recorded in opencourant-verification.md §10 and §13, not judge runs. At R/32 the
+   switch radius spans about 3–9 element spacings (0.093–0.274 R against a spacing of R/32).
 4. **Cu switches later and at a larger radius than Al** at the same speed, because its sound speed is lower.
 
 ## Limits
