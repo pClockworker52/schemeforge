@@ -70,8 +70,9 @@ CS-04 (regimes) does not use windows. Its verdict ("passed", 20 of 20) is unaffe
 
 ## What the sensitivity says
 
-1. **Five of the eight verdicts are robust.** CS-01 (inconclusive), CS-02, CS-03, CS-06 (refuted), CS-08, CS-16 and
-   CS-07 on B14 do not move under either variant.
+1. **Seven of the ten window-dependent verdicts are robust.** CS-01 (inconclusive), CS-02, CS-03, CS-06
+   (refuted), CS-08, CS-16 and CS-07 on B14 do not move under either variant. The three that move are CS-05,
+   CS-07 on B10 and CS-09.
 2. **R1 alone is harsh, R1 and R2 together are not.** With primaries but no widening, CS-05 crosses its kill line
    (Al d = 0.104). With the velocity error added, it returns to inconclusive (0.084). The narrow primary window,
    not the size law, made the difference.
