@@ -59,7 +59,7 @@ coldspray-data-and-zoo.md, unless stated.
 
 | Source | Level | Material, set-up | What is measured (variables) | n | Uncertainty as printed | Outcome variable for build-up | Usable for |
 |---|---|---|---|---|---|---|---|
-| **Reiser2024** | F | Au powder, 9–22 µm (99.9 %, 200 mesh); targets Si wafers with 100 nm sputtered or 3 µm electroplated Au; LIPIT, same spot, minutes between shots (isothermal) | per shot: diameter (before launch), impact velocity, rebound if inside the camera window; per stack: survival or fracture (optical, after each shot), shot number of each fracture; cross-sections: flaw length, three microstructure classes, splat height | 9 stacks in the figures: 4 intact (Fig. 3; 14–24 shots), 5 fractured (Fig. 5; 7–15 shots; 7 fracture events). Flaw regression N = 67 (3 stacks); microstructure N = 47 (2 stacks) | velocity ±5 % per shot; stack means ± s.d. printed | stack survival (binary); flaw length per height slice; recrystallized area fraction | stack survival against the impact history (per-shot data exist only as bar charts, to be digitized); flaw density against v/v_cr |
+| **Reiser2024** | F | Au powder, 9–22 µm (99.9 %, 200 mesh); targets Si wafers with 100 nm sputtered or 3 µm electroplated Au; LIPIT, same spot, minutes between shots (isothermal) | per shot: diameter (before launch), impact velocity, rebound if inside the camera window; per stack: survival or fracture (optical, after each shot), shot number of each fracture; cross-sections: flaw length, three microstructure classes, splat height | 9 stacks in the figures: 4 intact (Fig. 3; 14–24 shots), 5 fractured (Fig. 5; 7–14 shots; 7 fracture events). Flaw regression N = 67 (3 stacks); microstructure N = 47 (2 stacks) | velocity ±5 % per shot; stack means ± s.d. printed | stack survival (binary); flaw length per height slice; recrystallized area fraction | stack survival against the impact history (per-shot data exist only as bar charts, to be digitized); flaw density against v/v_cr |
 | **Panova2026b** | F | Cu, sieved 17–21 µm; polished H02 plate (98 HV), polished cold-sprayed Cu (142 HV), rough cold-sprayed Cu (Ra 8 µm, Rz 45 µm) | v_cr per surface (PA-01…03); surface hardness; roughness | 3 surfaces; 39–48 impacts each | window = mean of last 2 rebounds and first 2 bonds (563–571, 651–655, 717–737 m/s) | v_cr of a particle on a deposit-like surface | the deposit-vs-plate contrast (one powder, one metal); not the cause of it |
 | **Panova2026a** | A (abstract; full text not opened) | Cu, two-particle stacks around the optimal velocity | bonded fraction of the particle–particle interface (FIB tomography) | not known from the abstract | not known | bonded fraction | nothing quantitative until the full text is read |
 | **B02** (Lucas thesis ch. 4, blind, scored) | blind F | Cu powder on annealed and cold-rolled full-hard wrought Cu | v_cr per substrate | 2 substrates | coldspray-results-b02-b14.md | v_cr on a cold-worked, non-deposit surface | the other side of the deposit-vs-plate contrast |
@@ -80,7 +80,7 @@ coldspray-data-and-zoo.md, unless stated.
    sides. The ranks separate the groups (my arithmetic, post hoc, on the printed means: Mann–Whitney U = 18.5 of
    20, exact one-sided p = 3/126 = 0.024 with n = 4 and 5), but the stack means overlap within their spreads.
    Confounds named by the authors: no lateral constraint (stacks are free-standing columns), possible organic
-   contamination from the launch pad. Not named: fractured stacks stop early (7–15 shots), so their means come from
+   contamination from the launch pad. Not named: fractured stacks stop early (7–14 shots), so their means come from
    the first shots only, while intact means include shots 12–24.
 3. **The fracturing impacts look like ordinary shots.** Visual reading of Fig. 5b (300 dpi, not digitized): the
    7 shots marked as fracture events lie near their own stack's mean, and none is clearly below v_cr. Erosion here
@@ -95,7 +95,7 @@ coldspray-data-and-zoo.md, unless stated.
    distributions (go/no-go C2). Question 4: only the Au flaw-length regression, which is weak (R² = 0.06,
    p = 0.046, N = 67, with the sampling bias the authors name).
 
-### Proposed question (step 2; awaiting Peter)
+### Question Q-B1 (step 2; adopted by Peter 2026-11-07)
 
 **Q-B1. In a growing deposit, is erosion set by the striking particle or by the deposit's history?** Concretely,
 on Reiser2024's nine stacks: does fracture at shot k depend on (a) the velocity and size of shot k, or (b) the
@@ -103,7 +103,7 @@ impacts before it (mean v/v_cr of shots 1…k−1, stack height or aspect ratio 
 
 Why this one:
 - **The seen data can answer it.** Per-shot diameter and velocity (±5 %) and the shot number of each fracture event
-  are printed for all nine stacks (Figs. 3 and 5). That gives about 150 shots and 7 events, enough for a
+  are printed for all nine stacks (Figs. 3 and 5). That gives 137 shots and 7 events, enough for a
   descriptive answer.
 - **It bears on Peter's application.** It decides whether erosion during build-up can be modelled per impact (a
   per-particle removal law, the simple route to DE) or needs a state variable for the deposit (the bond quality of
@@ -119,3 +119,69 @@ possible launch-pad contamination.
 Not proposed: a question on the deposit-vs-plate contrast. It is the sharpest contradiction, but the seen data
 cannot separate its candidates. It goes into the measurement request if the campaign trigger is met (one powder on
 a deposit, an annealed deposit, and a cold-rolled plate of matched hardness).
+
+## Q-B1: digitized data and exploratory answer (2026-11-07, cloud)
+
+**Exploratory and post hoc, on seen data.** Nothing below tests a hunch. Any hunch drawn from it needs unseen
+stacks.
+
+### Data
+
+`data/buildup_reiser2024.csv`: 137 shots in 9 stacks (I1–I4 intact, Fig. 3b; F1–F5 fractured, Fig. 5b), one row
+per shot. The columns are stack, outcome, shot, v [m/s], how v was read, d [µm], and fracture event. It was
+digitized from the embedded 220-ppi rasters of arXiv:2404.05601v1 (`scripts/digitize_reiser2024.py`; the PDF is
+not committed). Figure: `figures/buildup/reiser2024_stacks.png` (`scripts/plot_buildup_reiser2024.py`).
+
+- **Axes:** fitted to the tick combs (50 m/s and 10 µm per tick). One pixel is 2.1 m/s (Fig. 3b) or 2.3 m/s
+  (Fig. 5b), and 0.19 or 0.21 µm.
+- **Velocity:** the midpoint of the ±5 % error-bar caps where a valid cap pair is found (103 of 137 shots);
+  otherwise the end of the grey bar (34 shots). Where both exist, they agree within 4 m/s for 91 of 103 shots.
+  The bar end reads up to 10 m/s high when it ends under the dotted stack-mean line, which is why the cap
+  midpoint is preferred.
+- **Fracture events:** six arrows were detected as connected components on a shot row; the seventh (F1 shot 7)
+  was confirmed by eye on a 4× zoom.
+- **Validation against the paper's own numbers:**
+  - all nine stack means are within 2.2 m/s of the printed means, and all s.d. within 1 m/s;
+  - the shot counts match the bars;
+  - the two velocities quoted in the text are recovered: 169 m/s (I2 shot 18) and 249 m/s at 20.1 µm (I2 shot 3);
+  - the size ranges match Fig. 2: 9.0–19.0 µm for the 23-particle stack (printed 9 and 19), 11.1–15.9 µm for the
+    24-particle stack (11 and 16), and F5 is Fig. 2's stack that "fractured on shot 14" (12.9–17.9 µm against 13
+    and 18).
+- **Reading error:** about ±3 m/s and ±0.2 µm, small against the ±5 % measurement error (±13–20 m/s).
+
+Corrections to the audit above: the fractured stacks have 7–14 shots, not 7–15. F4's fracture is at shot 11, not
+10 as my earlier visual reading had it.
+
+### Results (`scripts/buildup_qb1.py`; comparisons (a)–(c) fixed in the script header before computing)
+
+| | Finding |
+|---|---|
+| (a) striker | Fracturing shots: 255, 279, 301, 252, 296, 295, 275 m/s (1.00–1.19 v_cr; 0.98–1.20 v_cr size-scaled). One is numerically below 253 m/s (252), and two are within the ±5 % error of v_cr. Mean rank within their own stack is 0.32 (0 = slowest); a random shot of the same stack does as low or lower with P = 0.067. |
+| (a') shot before | No signal: mean rank 0.72 (P = 0.96 for "as slow or slower"). One exception: F1 shot 6 at 213 m/s (21.9 µm, 0.84 v_cr; it probably rebounded) came just before F1's second fracture. |
+| (b) history | Before their fractures, F1, F2 and F3 had mean velocities (272–296 m/s) below every intact stack over the same number of shots (298–362). F4 (328) and F5 (332) were inside the intact range. |
+| (c) common window | Over shots 1–7, intact and fractured stacks separate less well (U = 16 of 20, exact one-sided p = 0.095) than over all shots (U = 18, p = 0.032 on the digitized means; 0.024 on the printed means). Part of the "≥ 330 m/s" boundary comes from survivorship. |
+
+**Post hoc, chosen after looking:** all 7 fracturing shots lie in 0.98–1.20 v_cr. That band holds 20 of 48
+(42 %) of the other shots in fractured stacks and 15 of 82 (18 %) of intact-stack shots. The band was picked by
+eye, so no p-value is given.
+
+### Answer to Q-B1 (descriptive)
+
+1. **Not the simplest per-impact erosion law.** No fracture is clearly caused by a sub-v_cr striker (grit
+   blasting by rebounding particles). 0 of 7 strikers are clearly below v_cr, and the shot before the fracture
+   carries no signal.
+2. **Not history alone.** A slow history characterises 3 of 5 fractured stacks, but F4 and F5 broke with
+   histories inside the intact range.
+3. **What the data do show:** fractures are struck by shots at or just above v_cr. They are the slower part of
+   their stack (weak, P = 0.067), never above 1.2 v_cr, and come at shots 5–14, which intact stacks also passed.
+   Seven events in five stacks cannot separate "near-threshold striker" from "weakly bonded stack". Both are open.
+4. **For Peter's application:** a removal law that acts only on rebounding (sub-v_cr) particles is not supported
+   by these data. A near-threshold striker term is a candidate, but only for a hunch tested on unseen stacks.
+
+### Limits
+
+- One metal (Au); free-standing stacks with no lateral constraint; 7 events.
+- Stacks were stopped soon after a fracture: 4 of the 7 events are the stack's last shot.
+- Rebound is not recorded per shot. Shots near v_cr may not have bonded, so "the stack's history" includes shots
+  that may not be part of it.
+- Possible launch-pad contamination (authors). The ±5 % velocity error is the same size as the 1.0–1.2 v_cr band.

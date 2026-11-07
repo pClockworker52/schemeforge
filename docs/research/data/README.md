@@ -126,3 +126,21 @@ Gärtner2006, Van Steenkiste1999, Li2006). The oxide thickness is HG2019b's esti
 oxygen sits in a surface layer. Process quantity (not LIPIT), mixed particle sizes (10–56 µm) and gas
 temperatures (200–300 °C). HG2019b's reading: from ~20 to 7.5 nm, v_cr changes by no more than ~15 %; below
 2–3 nm it drops by up to ~50 % (to 310–327 m/s).
+
+## buildup_reiser2024.csv (build-up track, added 2026-11-07)
+
+Per-shot impact velocity and particle diameter for the nine Au particle stacks of Reiser2024 (arXiv:2404.05601v1),
+digitized from Figs. 3b (intact stacks I1–I4) and 5b (fractured stacks F1–F5). Evidence level F; digitized, not
+printed. Method, validation against the printed stack means, and reading error:
+[../coldspray-buildup-track.md](../coldspray-buildup-track.md), section "Q-B1". Script:
+`scripts/digitize_reiser2024.py`.
+
+| Column | Meaning |
+|---|---|
+| `stack`, `figure`, `stack_outcome` | I1–I4 intact (Fig. 3b panels left to right), F1–F5 fractured (Fig. 5b) |
+| `shot` | shot number within the stack, 1 = first |
+| `v_mps` | impact velocity [m/s]; the paper's measurement error is ±5 % |
+| `v_method` | `cap midpoint` (error-bar caps) or `bar end` (grey bar); reading error about ±3 m/s |
+| `v_bar_end_mps` | the bar-end reading, as a cross-check, where the cap midpoint was used |
+| `d_um` | particle diameter [µm] measured before launch; reading error about ±0.2 µm |
+| `fracture_event` | 1 if the shot is marked in Fig. 5b as having fractured the stack |

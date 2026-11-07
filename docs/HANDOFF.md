@@ -82,11 +82,11 @@ Notes:
 
 1. **B03, B05, B06, B07, B12, B16 as they arrive:** WSL B step 1 → leak scan → merge → add their materials to
    `MATERIAL` in coldspray_blind2.py and freeze (new pre-registration file) → step 3 → score.
-2. **Build-up track:** data audit done (coldspray-buildup-track.md, "Data audit", 33152ad). Questions 1–4 cannot be
-   answered with seen data. **Proposed Q-B1** (awaiting Peter): does deposit fracture depend on the striking shot
-   or on the impacts before it? Answering it = digitize Reiser2024 Figs. 3b and 5b into
-   data/buildup_reiser2024.csv plus a one-page analysis (exploratory; hunches from it need unseen stacks).
-   Panova2026a full text not read (OSTI rate-limited, 429).
+2. **Build-up track:** audit done (33152ad); **Q-B1 adopted and answered descriptively** (coldspray-buildup-track.md,
+   "Q-B1"; data/buildup_reiser2024.csv; figure figures/buildup/reiser2024_stacks.png). The data rule out removal only by
+   sub-v_cr rebounders; striker vs history not separable (7 events). Post hoc: all fracturing shots in 0.98–1.20 v_cr.
+   Next: Peter decides whether a near-threshold-striker hunch takes the 5th budget slot (it needs unseen stacks).
+   Panova2026a full text: Peter fetches it manually (doi:10.1016/j.mtla.2026.102742).
 3. **Peter's open decisions:** section 9.
 4. **Data gaps:**
    - HG2018b primary (Al, Ni, Cu, Zn conflicting quotes);
@@ -161,8 +161,8 @@ untested; now 4/5, rules in coldspray-hunches.md), and the end point of the sing
 
 Nothing below has been decided; each needs Peter's call.
 
-0. **Q-B1 as the build-up track's first question** (coldspray-buildup-track.md, "Proposed question"), and
-   whether the deposit-vs-plate contrast goes into the T3 measurement request as a second item.
+0. **Build-up:** a near-threshold-striker hunch from Q-B1 (would take the 5th budget slot; testable only on
+   unseen multi-particle stacks), and whether the deposit-vs-plate contrast goes into the T3 measurement request.
 
 1. **Parkings:** the thermal question (no JAX port after CS-13c) and CS-14b (its answer hinges on the oxide's unknown
    cohesive length; it cannot decide T3). Recommendation: park both.
