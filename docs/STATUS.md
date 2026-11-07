@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray track: discipline only, local first (DECISIONS 2026-11-03/04)  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
-Last session: 2026-11-04 (cloud) — cold-spray: retrospective test v1, first blind result (B10), solver route; handoff docs/HANDOFF.md
+Last session: 2026-11-07 (cloud) — cold-spray: interface agenda (CS-11–CS-16, Z18), OpenCourant thermal path closed, B02/B14 frozen; handoff docs/HANDOFF.md
+2026-11-07 (cloud, session end): measurement request for T3 drafted (coldspray-measurement-request-t3.md; send only under the campaign trigger); HANDOFF rewritten (docs/HANDOFF.md). Open for Peter: parking of the thermal question and CS-14b, the blind-list-2 screening task.
 2026-11-07 (cloud, 2nd): CS-16 registered (substrate hardness, B02: 480 / 583 m/s, +102); WSL B task 2026-11-07-b2 (step 3, B02 and B14 outcomes, branch coldspray/b02-b14-outcomes).
 2026-11-07 (cloud): B02, B04, B13, B14 inputs leak-scanned and merged (7a9e0b5; WSL B, from the Lienhard and Lucas theses). Predictions frozen for B02 and B14 (coldspray-preregistration-b02-b14.md, coldspray_blind2.py); B04, B13 have no v_cr. CS-10 and Z18 give no prediction (no particle strength). B14 exposed, B02 partly exposed. Next: step-3 outcomes after Peter decides on a B02 substrate-hardness hunch.
 2026-11-05 (WSL, merged by cloud 2026-11-06): CS-13c refuted by both clauses (opencourant-verification.md §13, 3bf56fe): rungs B0, H0-k0 and check E pass; conductive t_f still falls 22-37 % R/32 -> R/48, P2 rises 35-66 %, twins agree within 3.5 %; a first campaign with thermal softening off (T1 = 0) was discarded and rerun. By the stop rule, no CS-13d.
