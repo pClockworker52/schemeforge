@@ -88,3 +88,66 @@ Exclude: anything from the Panova & Schuh 2024 chapters; values from pending bli
 
 Branch `coldspray/panova-thesis` from `claude/exciting-fermi-qy077p`. Commit only the two files above (part 1, then
 part 2), push, and stop. **Do not merge;** the modeller leak-scans and merges.
+
+## Standing rule for fetching papers (from 2026-11-07)
+
+You may fetch papers yourself, but only from legitimate open copies, in this order: MIT DSpace (search by title),
+OSTI, arXiv, an author or institutional page, then the publisher's free-to-read version (in a browser if scripted
+downloads are blocked). Nothing paywalled, and no shadow libraries. For each PDF, record the URL, the version
+(accepted manuscript or published; values can differ) and its sha256 in your result file. Never commit a PDF. List
+anything you could not obtain, so Peter can ask for it.
+
+## Task 2026-11-07-b4: powder properties from three theses
+
+**Why:** no LIPIT powder in the repository has a measured failure strain or hardening exponent, and only three row
+groups have any strength value for the impacted powder (inventory: `docs/research/data/README.md`, "Particle-property
+gap inventory"). Z7 (spall law) and the strength terms of CS-10 and Z18 need them.
+
+**Sources** (you used the first and third before; the second is Peter's copy, sha256 `5a809e42…0538b00`):
+1. Lucas PhD thesis (MIT, 2025): ch. 3 (Cu-on-sapphire impacts, the 383 ± 65 MPa dynamic yield strength of the
+   19 µm Alfa Aesar Cu powder) and ch. 4 Table 2 (Y_d, C₀, B, failure strain ε_c per material). **Key question: does
+   Table 2, or any part of ch. 3–4, give a failure strain, hardening exponent or stress–strain curve for the
+   powder itself**, not only for the soft and hard plates?
+2. Panova PhD thesis (MIT, 2026): ch. 3 and 4 (Cu-on-Cu impacts, 15–38 µm Alfa Aesar Cu). **Do not read pp. 56–57 or
+   p. 146** (values from the pending blind paper B03).
+3. Lienhard PhD thesis (MIT, 2022): the Al powders of ch. 2 (B14) and the Sn and Zn powders of B04.
+
+**Report, per powder** (manufacturer, nominal and measured size, which chapter or paper uses it):
+- hardness (method, load);
+- dynamic yield strength Y_d, and how it was obtained (CoR fit, sapphire impacts, other);
+- static or tensile strength, and how (micro-compression, nanoindentation, bulk handbook);
+- failure strain, hardening exponent n, or a stress–strain curve (if only a figure: digitize it, with axis
+  calibration and reading error);
+- grain size and temper, if stated.
+
+Do the same for the substrates where a thesis gives a failure strain or n.
+
+**Do not report:** critical velocities; bonding or rebound outcomes; and any value attributed to a pending blind
+paper (B03, B05, B06, B07, B12, B16). For those, give the citation and page only, flagged `pending blind paper`.
+
+**Write** `docs/research/data/powder_properties_theses.md` on a new branch `coldspray/powder-properties` from
+`claude/exciting-fermi-qy077p`. Commit only that file, push, and stop. **Do not merge.**
+
+## Task 2026-11-07-b5: step 1 for B03, B05 and B12 (fetch them yourself)
+
+**Why:** Alex has not sent the PDFs yet. OpenAlex lists these three as free to read on the publisher's site
+("bronze"); B06, B07 and B16 are closed and still need Alex.
+
+| Id | Paper | DOI |
+|---|---|---|
+| B03 | Tiamiyu 2021, site-specific study of jetting, bonding and local deformation, Acta Mater. 202 | 10.1016/j.actamat.2020.10.057 |
+| B05 | Chen 2022, additional hindrances to metallurgical bonding from impurities, Surf. Coat. Technol. | 10.1016/j.surfcoat.2022.128114 |
+| B12 | Tiamiyu 2020, particle flattening during cold spray: single particle impact tests, Surf. Coat. Technol. | 10.1016/j.surfcoat.2020.126386 |
+
+1. **Fetch** under the standing rule above. Your earlier scripted attempt was blocked by the publisher, so try MIT
+   DSpace first (B03 and B12 are MIT papers), then the publisher's page in a browser. If a paper cannot be
+   obtained, leave its `-pending` row and write why in `access`.
+2. **Step 1** exactly as `docs/research/coldspray-extraction-prompt.md` says: inputs only, nothing that reveals or
+   hints at an outcome. Replace the rows `B03-pending`, `B05-pending` and `B12-pending` in
+   `docs/research/data/blind_inputs.csv` with one row per condition (`B03-c1`, …).
+3. Under the access column, give the URL, version and sha256 of the PDF you used.
+
+Commit only `docs/research/data/blind_inputs.csv` on a new branch `coldspray/blind-inputs-b03-b05-b12` from
+`claude/exciting-fermi-qy077p`, push, and stop. **Do not merge;** the modeller leak-scans and merges.
+
+Order: do b5 first (it unblocks the blind test), then b4.
