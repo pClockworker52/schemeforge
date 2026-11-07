@@ -14,7 +14,7 @@ B10 is unblinded and scored, so the full text may be read. From your PDF (sha256
 
 Write `docs/research/data/na2025_eq6.md` on branch `coldspray/b10-eq6` and push.
 
-## Task 2026-11-07-b2: step 3, outcomes of B02 and B14 (open)
+## Task 2026-11-07-b2: step 3, outcomes of B02 and B14 (closed: add80b8, scored)
 
 Predictions are frozen: commit 27e7eea (`docs/research/coldspray-preregistration-b02-b14.md`,
 `docs/research/data/predictions_b02_b14.csv`) and the CS-16 addendum in the commit that adds this task
