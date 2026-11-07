@@ -84,10 +84,12 @@ Notes:
 2. **Build-up track:** audit done (33152ad); **Q-B1 adopted and answered descriptively** (coldspray-buildup-track.md,
    "Q-B1"; data/buildup_reiser2024.csv; figure figures/buildup/reiser2024_stacks.png). The data rule out removal only by
    sub-v_cr rebounders; striker vs history not separable (7 events). Post hoc: all fracturing shots in 0.98–1.20 v_cr.
-   Near-threshold-striker hunch parked. Panova2026a: Peter has the Panova thesis; route via WSL B (item 0 of section 9).
-3. **Peter's open decisions:** section 9.
+   Near-threshold-striker hunch parked. Panova2026a extracted from the Panova thesis by WSL B (merged 9023ce6); audit
+   row now F via thesis, no change to questions 2, 4 or Q-B1.
+3. **Peter's open decisions:** section 9 (new: 1b, judge v2 proposal).
 4. **Data gaps:**
-   - strength of the impacted powders (blocks CS-10 and Z18);
+   - strength of the impacted powders (blocks CS-10 and Z18): inventory in data/README.md (2026-11-07); no powder
+     has a failure strain or n; possible WSL B checks of the Lucas, Panova and Lienhard theses;
    - Bay 1983 primary (files.aws.org blocked here; Peter can supply it).
 
 ## 5. Rules that must not be broken
