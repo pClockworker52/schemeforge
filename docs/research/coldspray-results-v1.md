@@ -61,6 +61,23 @@ Au 260–275, H20-15 Ag 340–365). For Au the primary window is lower, so Z6's 
 not smaller. The verdicts of CS-01 do not change (it stays inconclusive), but v1 is not rescored; a v2 would
 use primaries where available.
 
+## Caveat 2: the primary HG2018b (read 2026-11-07, post hoc)
+
+The primary HG2018b (rows P18 in vcr_lipit.csv) gives narrower windows than the H20 rows v1 was scored on: Al
+797–824 (H20: 790–835), Ni 650–660 (620–675), Cu 539–568 (560–590), Zn 518–523 (520–570). Scoring the frozen v1
+predictions against them (post hoc, S1 distance):
+- **CS-05** would cross its kill line. DW_size on Al gives d = 0.104 against 0.090, above the 0.10 threshold.
+  The frozen verdict stays **inconclusive**: v1 is not rescored, and the H20 window is Hassani2020's own
+  measurement, not a misquote. A v2 using primaries would refute CS-05.
+- **CS-06** does not change: Assadi's Cu 562.5 lies inside the primary Cu window too.
+- **Z6** hit counts move. Z6_a015 turns hits on Cu (d = 0.019) and Ni (0.009) into near misses; Z6_a014_sim
+  turns a miss on Cu into a hit and a hit on Ni into a miss (0.044). Rows used as in-sample calibration are not
+  part of CS-01 or CS-03, so these verdicts do not change. The property-free baseline's medians include the H20 Cu
+  and Zn midpoints. With the primaries, two of its inputs drop by 21–25 m/s, which is small against the CS-03 margin
+  (median d 0.171 against 0.418).
+- The primary windows (5–29 m/s) are narrower than the ±2 % velocity error (±10–16 m/s). A v2 judge should widen
+  windows by the velocity error (as rule B6 does), or S1 penalises misses inside the measurement error.
+
 ## Next
 
 - Source the tensile strength and failure strain of the Hassani2020 powders (ask the authors; check the

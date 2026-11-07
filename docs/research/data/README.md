@@ -58,7 +58,13 @@ Distinct matched materials: 11 (Al, Cu, Ni, Ti, Zn, Au, Ag, Sn, Al 6061, Al 2024
    gives 253 ± 7 at 16 ± 4 µm, both from HG2019b. The preprint of HG2018a (arXiv 1612.08081) gives Al 825 at 14 µm
    and 775 at 30 µm. Resolved for Au and Ag from the primary HG2019b: Au 253 ± 7 (Reiser's quote is right; H20-14 does not
    contain it), Ag 353 ± 2.5 (inside H20-15). HG2019b quotes Zn as 520 ± 2.5, like Panova2026b and unlike H20-13.
-   Al, Ni, Cu still need the primary HG2018b (*Scripta* 145).
+   **Resolved 2026-11-07 from the primary HG2018b** (author's final manuscript, MIT DSpace 1721.1/123866), rows
+   `P18-*`: Table 1 gives Al 797–824 (14 ± 2 µm), Ni 650–660 (10 ± 2), Cu 539–568 (14 ± 2), Zn 518–523 (11 ± 2) m/s,
+   each from the highest rebound to the lowest adhesion, velocity uncertainty 2 %; the text gives Al 810 at 14 µm
+   and 770 at 30 µm. So Panova2026b and Dowding2020 quote the primary correctly. The H20 rows are not misquotes but
+   Hassani2020's own equal-count windows. For Al and Ni they contain the primary window; for Cu (560–590) and Zn
+   (520–570) they do not, so Hassani2020 must rest on more or other impacts. The H20 rows stay as they are (frozen
+   v1 scores use them). Note: the primary windows (5–29 m/s wide) are narrower than the ±2 % velocity error.
 4. **Possible duplicates.** DW, CH (room-temperature comparisons) and H20 may reuse impacts from the same group's
    earlier campaigns, so rows are not necessarily independent measurements.
 5. **Quantity.** These are single impacts on polished (or prepared) substrates, mostly at room temperature,
@@ -71,7 +77,7 @@ Known sources with values I have only at abstract or second-hand level, or not a
 - Tang2025 (Al 800 m/s, abstract only);
 - Imbriglio2019 (Ti on alumina, ~580 m/s, second-hand);
 - Lienhard2020 (Al oxide states, +14 %);
-- the primaries HG2018b and HG2019b;
+- (HG2018b and HG2019b primaries: now read, rows P18 and P19);
 - Lucas2024 and Lucas2025 (Cu microstructure, substrate strength and ductility);
 - Na2025 (powder heat treatment);
 - Tiamiyu2021; Sun2020 (Cu);

@@ -88,7 +88,6 @@ Notes:
    Near-threshold-striker hunch parked. Panova2026a: Peter has the Panova thesis; route via WSL B (item 0 of section 9).
 3. **Peter's open decisions:** section 9.
 4. **Data gaps:**
-   - HG2018b primary (Al, Ni, Cu, Zn conflicting quotes);
    - strength of the impacted powders (blocks CS-10 and Z18);
    - Bay 1983 primary (files.aws.org blocked here; Peter can supply it).
 

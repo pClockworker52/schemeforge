@@ -39,7 +39,7 @@ Sandia [Murray2025 M] and McGill [Imbriglio2019 S].
 | Study | What is measured | Materials | Range / size | Data points, uncertainty | Level |
 |---|---|---|---|---|---|
 | HG2018a (preprint 1612.08081) | v_cr from restitution; jetting onset; FE simulations | Al, Cu, Ni, Zn, matched pairs | 100–1200 m/s launch; ~10 µm (Al also 14, 30, 45 µm) | Per-shot velocity ±3–4 %; v_cr bracketed in 25 m/s steps | F |
-| HG2018b Scripta | In-situ bonding moment, restitution vs velocity | Al (two sizes) and others | — | — | A (via Veysset2021 F) |
+| HG2018b Scripta | In-situ bonding moment, restitution vs velocity | Al (14 and 30 µm), Ni, Cu, Zn, matched | Table 1 windows (highest rebound to lowest adhesion); ±2 % velocity | rows P18 in vcr_lipit.csv | F (author's final manuscript, read 2026-11-07) |
 | Hassani2020 Acta 199 | Table 1: 20 particle/substrate combinations (9 mismatched, 11 matched), regime, adhesion-velocity window | See table below | 8–15 µm particles | **16 numeric windows** (4 rows "NA": no window found or melting); velocity uncertainty 2 %; window = smallest range with equal numbers adhered and rebounded | F (accepted manuscript, Elsevier user license) |
 | Dowding2020 | v_cr against particle size | Al, Ti matched | ~5–50 µm | v_cr ± window (equal numbers bonded/rebounded); exponent ±0.05 | F |
 | Chaban2021 | v_cr against substrate temperature | Al–Al, Sn–Sn, Ti–Ti | Heated substrate (hot stage up to 100 °C first; up to 250 °C later [Schuh2026 F]) | Narrow size selection | A (F header) |
