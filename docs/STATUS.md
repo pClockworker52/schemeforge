@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray track: discipline only, local first (DECISIONS 2026-11-03/04)  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-07 (cloud) — cold-spray: interface agenda (CS-11–CS-16, Z18), OpenCourant thermal path closed, B02/B14 frozen; handoff docs/HANDOFF.md
+2026-11-07 (cloud, 6th): build-up track opened (DECISIONS 2026-11-07; coldspray-buildup-track.md): questions and data audit first, no hunches yet.
 2026-11-07 (cloud, 5th, /goal): kinematic impact view (impact_kinematics.py, tests, figures in docs/research/figures/kinematics/, note coldspray-kinematics.md: geometry only; edge turns subsonic at every speed, Al 5-12 deg, Cu 7-16 deg); B02/B14 evidence added to H2 and H4 (post hoc); HANDOFF refreshed with 'Open for Peter'.
 2026-11-07 (cloud, 4th): CS-17 frozen (substrate strain-hardening capacity; directional; post-hoc domain restriction to wrought substrates because Panova PA-02 contradicts it otherwise). No known unseen test data yet.
 2026-11-07 (cloud, 3rd): B02/B14 scored (outcomes add80b8 after freeze 27e7eea, addendum 542f810, scorer f8fb8f5): CS-16 refuted (hard Cu substrate bonds at 566 vs 641 m/s on soft); CS-07 on B14 supported (exposed); dehydrated RH-95-D is 68.5 m/s below RH-95 at near-equal thickness; Z6 within 1-6 % on dry B14 (in-sample material). coldspray-results-b02-b14.md.
