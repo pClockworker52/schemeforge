@@ -177,5 +177,5 @@ Nothing below has been decided; each needs Peter's call.
    type term. Any hunch inspired by it cannot be tested on B14. Register or not.
 6. **Idea D** (restitution data, Tang 2025 PNAS SI): the source host is probably blocked here; Peter can supply the
    SI files.
-7. **Post-hoc spall law Z7 for Cu** from Lucas's Table 2 (failure strain now known): run as a labelled post-hoc
-   check, or skip.
+7. ~~Post-hoc spall law Z7 for Cu~~: done 2026-11-07 (coldspray-results-b02-b14.md, addendum): right sign, half the
+   contrast (1.064 vs 1.133); the mixing rule needs a particle failure strain of 0.01-0.09 (not measured).

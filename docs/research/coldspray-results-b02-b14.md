@@ -75,3 +75,27 @@ w_B14 = 44.0 m/s, w_B02 = 24.1 m/s (from B6).
 - A substrate-side hunch with strain-hardening capacity instead of hardness would be a new registration. It would be
   inspired by B02, so it could not be tested on B02.
 - Lucas's Table 2 (Y_d, C₀, B, failure strain ε_c per material) makes the spall-type law Z7 runnable for Cu, post hoc.
+
+## Addendum (2026-11-07): Z7 spall law on B02, post hoc
+
+**Post hoc.** Z7 was not frozen for B02; its inputs (Lucas ch. 4 Table 2) were withheld in step 1. Script:
+`scripts/z7_cu_posthoc.py`. Z7 is v_cr = (2/k) (2 Y_d ε_c / B)^(1/2) C₀. Its constant k is unknown, so only the
+ratio v_cr(soft) / v_cr(hard) is testable. C₀ and B are equal for the two plates and cancel.
+
+| Variant | Ratio soft / hard | Against measured 1.133 ± 0.032 |
+|---|---|---|
+| Substrate properties only (Lucas's own evaluation): soft Y_d 351 MPa, ε_c 0.29; hard 562 MPa, 0.16 | 1.064 (hard would be 602 m/s, given soft = 641) | Right direction; contrast about half the measured one, 0.069 short (about 2 × the combined error) |
+| Arithmetic-mean mixing of particle and substrate (Panova2026b form); particle Y_d 383 ± 65 MPa, particle ε_c not reported | 1.187 at ε_p = 0; 1.079 at 0.10; 1.001 at 0.29 | Matches only for ε_p = 0.04 (0.01–0.09 over the Y_p and v_cr errors). Soft above hard only if ε_p < 0.25–0.33 |
+
+What this says:
+- **Unlike hardness (CS-16, refuted on B02), Z7 gets the sign right**, because its failure-strain term
+  (ε_c ≈ n, Considère) falls faster from soft to hard than its strength term rises.
+- **The size is short.** Substrate-only Z7 explains about half the contrast. The mixing rule reaches the measured
+  ratio only with a particle failure strain (0.01–0.09) below the full-hard plate's 0.16. Meanwhile the powder's
+  Y_d (383 MPa) lies between the two plates. No measurement of ε_p exists, so this is a requirement, not a
+  contradiction.
+- **Bearing on CS-17** (frozen; strain-hardening capacity, directional): the ε_c term of Z7 carries CS-17's
+  direction. B02 cannot test CS-17 (it inspired it); this addendum adds no evidence for or against it. CS-17's label
+  "variant of Lucas 2025" stands.
+- **No new hunch.** The particle failure strain is the missing input; measuring it (or the powder's n) would turn
+  the mixing rule into a test.
