@@ -85,8 +85,7 @@ Notes:
 2. **Build-up track:** audit done (33152ad); **Q-B1 adopted and answered descriptively** (coldspray-buildup-track.md,
    "Q-B1"; data/buildup_reiser2024.csv; figure figures/buildup/reiser2024_stacks.png). The data rule out removal only by
    sub-v_cr rebounders; striker vs history not separable (7 events). Post hoc: all fracturing shots in 0.98–1.20 v_cr.
-   Next: Peter decides whether a near-threshold-striker hunch takes the 5th budget slot (it needs unseen stacks).
-   Panova2026a full text: Peter fetches it manually (doi:10.1016/j.mtla.2026.102742).
+   Near-threshold-striker hunch parked. Panova2026a: Peter has the Panova thesis; route via WSL B (item 0 of section 9).
 3. **Peter's open decisions:** section 9.
 4. **Data gaps:**
    - HG2018b primary (Al, Ni, Cu, Zn conflicting quotes);
@@ -161,8 +160,11 @@ untested; now 4/5, rules in coldspray-hunches.md), and the end point of the sing
 
 Nothing below has been decided; each needs Peter's call.
 
-0. **Build-up:** a near-threshold-striker hunch from Q-B1 (would take the 5th budget slot; testable only on
-   unseen multi-particle stacks), and whether the deposit-vs-plate contrast goes into the T3 measurement request.
+0. **Build-up:** the near-threshold-striker hunch is **parked** (Peter, 2026-11-07; budget stays 4/5). Open: whether
+   the deposit-vs-plate contrast goes into the T3 measurement request; and the **Panova thesis** (MIT DMSE 2026,
+   on Peter's machine, not opened by the modeller): proposed route is WSL B, first a yes/no screen (does it contain
+   Panova & Schuh 2024, or values from pending blind papers B03/B05/B06/B07/B12/B16?), then a role-separated
+   extraction of the Panova2026a chapter (two-particle stacks, bonded fraction) if it is clean or can be cut.
 
 1. **Parkings:** the thermal question (no JAX port after CS-13c) and CS-14b (its answer hinges on the oxide's unknown
    cohesive length; it cannot decide T3). Recommendation: park both.

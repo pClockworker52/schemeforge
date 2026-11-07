@@ -178,6 +178,14 @@ eye, so no p-value is given.
 4. **For Peter's application:** a removal law that acts only on rebounding (sub-v_cr) particles is not supported
    by these data. A near-threshold striker term is a candidate, but only for a hunch tested on unseen stacks.
 
+**Parked (Peter, 2026-11-07):** a near-threshold-striker hunch is not registered; the hunch budget stays at 4 of 5.
+It can be taken up again when unseen multi-particle stacks are in sight.
+
+**Panova2026a substitute (2026-11-07):** Peter has the PhD thesis of V. Panova (MIT DMSE, 2026) locally. The
+modeller has not opened it. It probably contains the blind-list-2 candidates (Panova & Schuh 2024 ×2) and quotes
+pending blind papers in its review, so it goes through WSL B like the Lienhard and Lucas theses (HANDOFF, "Open for
+Peter").
+
 ### Limits
 
 - One metal (Au); free-standing stacks with no lateral constraint; 7 events.
