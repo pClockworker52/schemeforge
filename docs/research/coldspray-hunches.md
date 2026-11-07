@@ -86,3 +86,5 @@ CS-16 (substrate hardness raises v_cr for matched Cu; v ~ HV^0.381 from Panova20
 (2026-11-07) in the addendum of [coldspray-preregistration-b02-b14.md](coldspray-preregistration-b02-b14.md).
 Results B02/B14 (2026-11-07, coldspray-results-b02-b14.md): **CS-16 refuted** (hard - soft = -75 m/s against +102 predicted);
 CS-07 on B14 supported (exposed; type and thickness together); RH-95-D vs RH-95 -68.5 m/s at near-equal thickness (reported).
+CS-17 (substrate strain-hardening capacity, not hardness; wrought monolithic substrates only, restriction post hoc for
+Panova PA-02; untestable on B02) is frozen (2026-11-07) in [coldspray-hunch-cs17.md](coldspray-hunch-cs17.md).
