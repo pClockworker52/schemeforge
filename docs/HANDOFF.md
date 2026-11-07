@@ -170,6 +170,10 @@ Nothing below has been decided; each needs Peter's call.
    - Panova2026a = ch. 5, extracted to data/panova2026a_stacks.md; audit updated (no change to questions 2 and 4 or
      to Q-B1).
 1. ~~Parkings~~: thermal question and CS-14b parked 2026-11-07 (DECISIONS).
+1b. **Judge v2 proposal** (draft, docs/research/coldspray-judge-v2-proposal.md): adopt R1 (primaries first) and R2
+   (widen brackets by the stated velocity error) for future freezes? Also: is ±2 % per shot or a shared calibration
+   error (it decides whether within-paper contrasts use the widened w); and B10 under B6 (CS-09 would be refuted,
+   CS-07 inconclusive) or left undetermined as recorded.
 2. **Blind list 2 screening task** for WSL B: yes/no screen of Tiamiyu 2022 and the two Panova & Schuh 2024 papers
    (oxide series? interface maps?) before anyone reads them. Partly answered by the thesis screen (item 0): the
    Acta 2024 paper has maps but no oxide-thickness series; the second 2024 paper and Tiamiyu 2022 are unscreened.
