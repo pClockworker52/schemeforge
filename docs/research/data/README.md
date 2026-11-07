@@ -181,8 +181,8 @@ search was made. "Same material" means a value for the metal, measured on anothe
 
 | Source | What might be there | Route |
 |---|---|---|
-| Lucas thesis ch. 3 (Cu-on-sapphire) and ch. 4 Table 2 | a particle row in Table 2 (ε_c of the powder?); powder hardness | WSL B; the thesis also covers blind papers |
-| Panova thesis ch. 3–4 (Cu-on-Cu, 2025 papers) | powder hardness or Y_d of the 15–38 µm Alfa Aesar Cu | WSL B, avoiding pp. 56–57 and 146 (B03 values) |
-| Lienhard thesis (B14, B04 source) | Al powder hardness | WSL B |
+| Lucas thesis ch. 3 (Cu-on-sapphire) and ch. 4 Table 2 | **checked (WSL B b4): no powder row.** The plates' ε_c are derived n (Eq. 18), not measured; the other rows are unattributed literature values | done: data/powder_properties_theses.md |
+| Panova thesis ch. 3–4 (Cu-on-Cu, 2025 papers) | **checked: nothing** beyond grain size ~5–10 µm. Ch. 2 (Panova & Schuh 2024) has a CoR-fitted Y_d for this powder, withheld under the blind-list-2 restriction | Peter's decision on blind list 2 |
+| Lienhard thesis (B14, B04 source) | **checked: nothing** for any powder or substrate | done |
 | Na2025 (read, F) | micro-compression curves to 50 % strain (Table 1 gives only the stress); a full curve would give n | re-read Fig./SI by the modeller (B10 is unblinded) |
 | A measurement | micro-compression stress–strain curves of the LIPIT powders (B10's method) give Y and n directly | candidate item for a measurement request, if the campaign trigger is met |

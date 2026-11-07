@@ -99,3 +99,9 @@ What this says:
   "variant of Lucas 2025" stands.
 - **No new hunch.** The particle failure strain is the missing input; measuring it (or the powder's n) would turn
   the mixing rule into a test.
+
+**Note (2026-11-07, after WSL B task b4, data/powder_properties_theses.md):** Lucas's ε_c values for the two plates
+(0.29, 0.16) are **not measured failure strains**. They are hardening exponents n from his Eq. (18), computed from
+each plate's quasi-static strength (H/3), an initial plastic strain matched to a literature OFHC compression curve,
+and K ≈ 350 MPa from that same source. The Z7 ratio above (1.064) therefore rests on derived inputs. No thesis gives
+a failure strain or n for the Cu powder, so the requirement ε_p = 0.01–0.09 cannot be checked from the three theses.
