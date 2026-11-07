@@ -158,15 +158,21 @@ untested; now 3/5 after the CS-14b parking, rules in coldspray-hunches.md), and 
 
 Nothing below has been decided; each needs Peter's call.
 
-0. **Build-up:** the near-threshold-striker hunch is **parked** (Peter, 2026-11-07; not registered). Open: whether
-   the deposit-vs-plate contrast goes into the T3 measurement request; and the **Panova thesis** (MIT DMSE 2026,
-   on Peter's machine, not opened by the modeller): proposed route is WSL B, first a yes/no screen (does it contain
-   Panova & Schuh 2024, or values from pending blind papers B03/B05/B06/B07/B12/B16?), then a role-separated
-   extraction of the Panova2026a chapter (two-particle stacks, bonded fraction) if it is clean or can be cut.
-
+0. **Build-up:** the near-threshold-striker hunch is **parked** (Peter, 2026-11-07; not registered). Open: whether the
+   deposit-vs-plate contrast goes into the T3 measurement request.
+   **Panova thesis screen (WSL B, merged 9023ce6; facts for the blind-list-2 decision, item 2):**
+   - Only one Panova & Schuh 2024 paper exists in the thesis: Acta Mater. (2024) 120105 = ch. 2. It has bonded-area
+     or interface maps against impact velocity: **yes**. Critical velocities on oxide layers of different thickness,
+     same type: **no**. A second 2024 paper is not in the thesis. Note: blind-literature.md already lists "Panova2024"
+     as excluded because it is exposed (Cu 540 m/s quoted in Panova2026b).
+   - Thesis pages with B03 values: ch. 2 pp. 56–57 (Fig. 8a) and ch. 6 p. 146. **Not to be read by the modeller
+     before B03 is frozen.** B05, B12 and B16 are cited without values; B06 and B07 are not cited.
+   - Panova2026a = ch. 5, extracted to data/panova2026a_stacks.md; audit updated (no change to questions 2 and 4 or
+     to Q-B1).
 1. ~~Parkings~~: thermal question and CS-14b parked 2026-11-07 (DECISIONS).
 2. **Blind list 2 screening task** for WSL B: yes/no screen of Tiamiyu 2022 and the two Panova & Schuh 2024 papers
-   (oxide series? interface maps?) before anyone reads them. Not written yet.
+   (oxide series? interface maps?) before anyone reads them. Partly answered by the thesis screen (item 0): the
+   Acta 2024 paper has maps but no oxide-thickness series; the second 2024 paper and Tiamiyu 2022 are unscreened.
 3. **CS-17's post-hoc domain restriction** (wrought substrates only, because Panova PA-02 contradicts it otherwise):
    accept as frozen, or treat the PA-02 tension as a reason to drop or reformulate CS-17 before it meets data.
 4. **A second item for the measurement request:** one powder on annealed, cold-rolled and peak-aged tempers of one

@@ -14,7 +14,7 @@ Build-up has seen literature of its own, and one sharp contradiction already sit
 | Source | What it shows | Level |
 |---|---|---|
 | Panova2026b | Cu, 19 µm: polished plate 567 m/s; polished cold-sprayed Cu (harder) 653 m/s; rough cold-sprayed Cu about 727 m/s; hardness and roughness each +10–15 %, together about +30 % | F |
-| Panova2026a | Two-particle stacks, Cu: bonded fraction at the particle–particle interface ≤ 18 % | A |
+| Panova2026a | Two-particle stacks, Cu: bonded fraction at the particle–particle interface ≤ 18 % (7, 18, 9 % in three stacks) | F via thesis (2026-11-07) |
 | Reiser2024 | Au stacks of more than 20 particles, each impact's size and velocity recorded; build-up needs a higher critical velocity than single bonding (single v_cr 253 ± 7 m/s) | F |
 | Process side | process v_cr is lower than single-impact v_cr (Panova2026b attributes it to heating); DE curves (Alkimov1990, Gilmore1999) integrate over distributions and cannot separate mechanisms | S / F |
 | B02 (scored) | cold-rolled wrought Cu substrate: v_cr **lower** than on annealed Cu (566 against 641 m/s) | blind, scored |
@@ -61,7 +61,7 @@ coldspray-data-and-zoo.md, unless stated.
 |---|---|---|---|---|---|---|---|
 | **Reiser2024** | F | Au powder, 9–22 µm (99.9 %, 200 mesh); targets Si wafers with 100 nm sputtered or 3 µm electroplated Au; LIPIT, same spot, minutes between shots (isothermal) | per shot: diameter (before launch), impact velocity, rebound if inside the camera window; per stack: survival or fracture (optical, after each shot), shot number of each fracture; cross-sections: flaw length, three microstructure classes, splat height | 9 stacks in the figures: 4 intact (Fig. 3; 14–24 shots), 5 fractured (Fig. 5; 7–14 shots; 7 fracture events). Flaw regression N = 67 (3 stacks); microstructure N = 47 (2 stacks) | velocity ±5 % per shot; stack means ± s.d. printed | stack survival (binary); flaw length per height slice; recrystallized area fraction | stack survival against the impact history (per-shot data exist only as bar charts, to be digitized); flaw density against v/v_cr |
 | **Panova2026b** | F | Cu, sieved 17–21 µm; polished H02 plate (98 HV), polished cold-sprayed Cu (142 HV), rough cold-sprayed Cu (Ra 8 µm, Rz 45 µm) | v_cr per surface (PA-01…03); surface hardness; roughness | 3 surfaces; 39–48 impacts each | window = mean of last 2 rebounds and first 2 bonds (563–571, 651–655, 717–737 m/s) | v_cr of a particle on a deposit-like surface | the deposit-vs-plate contrast (one powder, one metal); not the cause of it |
-| **Panova2026a** | A (abstract; full text not opened) | Cu, two-particle stacks around the optimal velocity | bonded fraction of the particle–particle interface (FIB tomography) | not known from the abstract | not known | bonded fraction | nothing quantitative until the full text is read |
+| **Panova2026a** | F via thesis (Panova PhD 2026 ch. 5, extracted by WSL B, data/panova2026a_stacks.md; journal text not seen) | Cu, gas-atomized 15–38 µm, particles 20 ± 1 µm; substrate C101 H02 (100 HV), polished; two-particle "direct strike" stacks, offset not quantified | per stack: v and d of both particles; β (bonded fraction) of the particle–particle interface (FIB tomography, 50 nm slices) and of the particle–substrate interface after both impacts (ch. 4); flattening, equatorial strain, interface area | 3 stacks (v2 = 636, 668, 738 m/s) | v ±2 % (general); β ±3–4 % (area uncertainty 3 %); β is an upper bound (unlabelled area counts as bonded) | β particle–particle 7, 18, 9 %; particle–substrate 23, 41, 81 % | bonding at a particle–particle interface against velocity (n = 3, one metal); no v_cr, no fracture |
 | **B02** (Lucas thesis ch. 4, blind, scored) | blind F | Cu powder on annealed and cold-rolled full-hard wrought Cu | v_cr per substrate | 2 substrates | coldspray-results-b02-b14.md | v_cr on a cold-worked, non-deposit surface | the other side of the deposit-vs-plate contrast |
 | **Gilmore1999** | S (via Dowding2020) | Cu, ~19 µm (11–26 µm), process | DE against mean particle velocity | a few points (53 % at 640, 95 % at 725 m/s) | not seen | DE | nothing mechanistic: integrates size, velocity, temperature and erosion |
 | **Alkimov1990** | S (figure via Hall2015) | Cu, Ni, Al, process | DE against particle velocity | S-curves | not seen | DE | as Gilmore1999 |
@@ -119,6 +119,20 @@ possible launch-pad contamination.
 Not proposed: a question on the deposit-vs-plate contrast. It is the sharpest contradiction, but the seen data
 cannot separate its candidates. It goes into the measurement request if the campaign trigger is met (one powder on
 a deposit, an annealed deposit, and a cold-rolled plate of matched hardness).
+
+### Audit update (2026-11-07): Panova2026a via the Panova thesis
+
+WSL B extracted thesis ch. 5 (task 2026-11-07-b3; leak-scanned and merged in 9023ce6). The row above is upgraded
+from A.
+- **Question 2 (particle-on-particle v_cr factor across metals): unchanged, not answerable.** Panova2026a measures no
+  v_cr.
+- **Question 4 (what the bonded fraction means): unchanged, not answerable.** The particle–particle bonded fraction is
+  now known for three Cu stacks: 7, 18 and 9 % at 636, 668 and 738 m/s, against 23–81 % at the particle–substrate
+  interface of the same specimens. That is no monotonic trend in velocity, and n = 3. Nothing links β to coating
+  strength or porosity.
+- **Q-B1: unchanged.** Different metal, two particles, no fracture data. Low particle–particle bonding (≤ 18 %, an
+  upper bound) is *consistent* with Reiser's inter-particle fractures, but it tests nothing.
+- The substrate (C101 H02, 100 HV) is the same plate type as Panova2026b's polished-plate row (PA-01, H02, 98 HV).
 
 ## Q-B1: digitized data and exploratory answer (2026-11-07, cloud)
 
@@ -183,8 +197,8 @@ It can be taken up again when unseen multi-particle stacks are in sight.
 
 **Panova2026a substitute (2026-11-07):** Peter has the PhD thesis of V. Panova (MIT DMSE, 2026) locally. The
 modeller has not opened it. It probably contains the blind-list-2 candidates (Panova & Schuh 2024 ×2) and quotes
-pending blind papers in its review, so it goes through WSL B like the Lienhard and Lucas theses (HANDOFF, "Open for
-Peter").
+pending blind papers in its review, so it goes through WSL B like the Lienhard and Lucas theses. Done: task 2026-11-07-b3, merged 9023ce6 (see
+"Audit update" above).
 
 ### Limits
 
