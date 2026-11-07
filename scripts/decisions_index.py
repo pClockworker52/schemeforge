@@ -20,7 +20,7 @@ TRACKS = {
 
 COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
-    "Campaign trigger", "Build-up",
+    "Campaign trigger", "Build-up", "Hunch budget",
 )
 
 

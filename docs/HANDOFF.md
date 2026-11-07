@@ -144,6 +144,10 @@ Its new task says so explicitly.
 
 ## 9. Open for Peter
 
+Adopted 2026-11-07 (no longer open): the build-up track (coldspray-buildup-track.md), the hunch budget (max 5 open
+untested; now 4/5, rules in coldspray-hunches.md), and the end point of the single-impact phase (DECISIONS
+2026-11-07). An oxide-chemistry hunch (item 5) would take the fifth slot.
+
 Nothing below has been decided; each needs Peter's call.
 
 1. **Parkings:** the thermal question (no JAX port after CS-13c) and CS-14b (its answer hinges on the oxide's unknown

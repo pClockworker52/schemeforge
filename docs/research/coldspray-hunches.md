@@ -5,6 +5,27 @@ its registration, never on the rows of `data/vcr_lipit.csv` v0.1, which inspired
 `ledger/schema.yaml`; research track, not a ledger arena. Assumption numbers refer to the inventory in
 [coldspray-go-nogo.md](coldspray-go-nogo.md).
 
+## Hunch budget (adopted 2026-11-07, DECISIONS "Hunch budget and end point of the single-impact phase")
+
+A new hunch (on either track) is registered only if both hold:
+1. **It discriminates on obtainable data.** It predicts something different from every frozen hunch and zoo member,
+   on data that can be obtained: a named blind paper, or an item of the measurement request.
+2. **At most five hunches are open and untested.** "Open and untested" means registered, not parked, and without a
+   verdict on unseen data. To register a sixth, one is retired: marked "retired" here, with one line on why.
+
+Count on 2026-11-07: **4 of 5.**
+
+| Hunch | Why it is open and untested |
+|---|---|
+| CS-10 | no blind paper so far reported particle strength |
+| CS-12 | its decisive test T3 needs an unseen thickness series |
+| CS-14 / 14b | not run (proposed for parking; parking would free its slot) |
+| CS-17 | no unseen substrate series known |
+
+Not counted:
+- tested hunches: CS-07, CS-08, CS-09, CS-11, CS-13c, CS-16;
+- zoo members (Z18 etc.).
+
 ```yaml
 - id: CS-07
   registered: 2026-11-03
