@@ -1,4 +1,4 @@
-# Handoff — 2026-11-07, refreshed after B02/B14 scoring and the kinematic view (cold-spray track)
+# Handoff — 2026-11-07, session end (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read
 docs/STATUS.md (top entries) and the DECISIONS index (top of docs/DECISIONS.md). Branch:
@@ -18,6 +18,12 @@ arena and no search, the schemeforge process used to develop models.
 law** (oxide fracture, fresh-metal contact, bond or separation). No affordable simulation resolves it; it is a
 closure. Simulated v_cr only with a stated interface law or both bracket bounds. **Data side first** (stop rule,
 DECISIONS 2026-11-05).
+
+**Two tracks since 2026-11-07:** single-impact (this section) and **build-up** (docs/research/coldspray-buildup-track.md;
+questions and data audit first, no hunches yet). **Hunch budget:** at most 5 open untested hunches across both
+tracks, each must discriminate on obtainable data; count 4 of 5 (rules at the top of coldspray-hunches.md).
+**End point of the single-impact phase:** the six pending papers scored or unobtainable, and the T3 request sent or
+dropped; then one short synthesis (DECISIONS 2026-11-07).
 
 **The decisive open question: test T3,** v_cr against oxide thickness at a fixed oxide type. Four frozen predictions
 for Al 6061, 15 µm, 17 → 25 nm:
@@ -63,7 +69,7 @@ oxide's unknown cohesive length; it cannot decide T3).
 | **B02, B14** | **scored** (coldspray-results-b02-b14.md; freeze 27e7eea → addendum 542f810 → scorer f8fb8f5 → outcomes add80b8 → scores dabe6a7). Z6 within 1–6 % on dry B14 (in-sample material); RH-95-D 68.5 m/s below RH-95 at near-equal thickness |
 | B04, B13 | inputs extracted; no v_cr; nothing to predict |
 | B01, B08, B09, B11, B15 | no single-impact v_cr |
-| B03, B05, B06, B07, B12, B16 | pending (Peter is obtaining them). B06 and B05 matter most (oxide). |
+| B03, B05, B06, B07, B12, B16 | pending: Peter asked Alex for the PDFs on 2026-11-07; they go to WSL B, never to the modeller. B06 and B05 matter most (oxide). |
 
 Notes:
 - CS-10 and Z18 could not run on B02 or B14 (no particle strength reported). Most future papers will hit the same
@@ -76,8 +82,11 @@ Notes:
 
 1. **B03, B05, B06, B07, B12, B16 as they arrive:** WSL B step 1 → leak scan → merge → add their materials to
    `MATERIAL` in coldspray_blind2.py and freeze (new pre-registration file) → step 3 → score.
-2. **Peter's open decisions:** section 9.
-3. **Data gaps:**
+2. **Build-up track:** the data audit of coldspray-buildup-track.md (seen sources: Panova2026b F, Reiser2024 F,
+   Panova2026a A; process DE sources S). Output: the audit table, then one question the data can answer. No hunch
+   before that, and only within the budget.
+3. **Peter's open decisions:** section 9.
+4. **Data gaps:**
    - HG2018b primary (Al, Ni, Cu, Zn conflicting quotes);
    - strength of the impacted powders (blocks CS-10 and Z18);
    - Bay 1983 primary (files.aws.org blocked here; Peter can supply it).
