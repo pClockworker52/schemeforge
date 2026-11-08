@@ -12,6 +12,8 @@ CHANGED = {  # entry heading -> (what changed, heading of the later entry that c
         "licence part", "2026-10-30 — Licence: GPL-3.0-or-later instead of MIT (Peter)"),
     "2026-11-03 — Cold-spray track: local first (Peter)": (
         "solver part", "2026-11-03 — Main impact solver: OpenCourant instead of OpenRadioss (Peter)"),
+    "2026-11-04 — Post-onset simulation route: 3D SPH, no OpenCourant fork (Peter)": (
+        "no-fork clause", "2026-11-08 — No-fork dropped; SPH–SPH contact fork sph-hvi-contact (Peter)"),
 }
 TRACKS = {
     "2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)": "repository",
