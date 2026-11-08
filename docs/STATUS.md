@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 PAUSED at step 5 (2026-11-03) — cold-spray track: discipline only, local first (DECISIONS 2026-11-03/04)  Judges: euler1d-v1.6 (2590e3e), contact-v0.8.dev  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-08 (cloud) — cold-spray: build-up Q-B1 answered, Panova thesis and 2024 paper extracted, HG2018b primary, judge v2 proposal drafted, B03/B05/B12 closed; handoff docs/HANDOFF.md
+2026-11-08 (cloud, next session): fetched; WSL B b8 (branch coldspray/b03-b12-outcomes) not pushed yet, no other unmerged remote work. Nothing unblocked: b8 waits on WSL B, B06/B07/B16 on Alex, T3 trigger on B06, HANDOFF §9 on Peter.
 2026-11-08 (cloud, session end): B03, B05, B12 closed without pre-registration (nothing discriminates; Peter); WSL B task b8 (their outcomes for the data table, labelled exposed, no verdicts). Remaining blind papers: B06, B07, B16 (Alex). HANDOFF rewritten.
 2026-11-08 (cloud): WSL B b6 and b7 merged (leak-scanned clean). b6: B12-c2 Al reuses HG2018b/HG2019b impacts (exposed); B03 and B12-c1 probably not independent (B4 log). b7: Panova & Schuh 2024 Cu (Alfa Aesar) on H02: V_cr 540 +- 5 (row P24-Cu), powder Y_d 403 +- 90 MPa; bonded fraction 6-89 % peaking at 1.30 V_cr, 13 % at 1.62 V_cr. Correction: Panova2026b's PA rows used a different powder (Praxair CU-159-3), so the PA gap stays open.
 2026-11-08 (cloud): Panova & Schuh 2024 released by Peter (B4 log); WSL B task b7 queued after b6 (powder Y_d, v_cr, bonded fraction vs velocity from thesis ch. 2; B03 points on pp. 56-57 still excluded).
