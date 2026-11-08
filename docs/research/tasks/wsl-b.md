@@ -151,3 +151,25 @@ Commit only `docs/research/data/blind_inputs.csv` on a new branch `coldspray/bli
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge;** the modeller leak-scans and merges.
 
 Order: do b5 first (it unblocks the blind test), then b4.
+
+## Task 2026-11-08-b6: where do the B03 and B12 data come from? (citations only)
+
+**Why:** B03 and B12 use the same suppliers as HG2018b (Alfa Aesar ~10 µm Cu, Valimet Al, OnlineMetals 3.175 mm
+plates), which the modeller has read (rows P18). B12-c2 says its Al impacts are "LIPIT data from the authors' earlier
+refs. [27,31]". If those impacts are HG2018b's, their v_cr is already seen, and B12-c2 is exposed. This must be
+settled before predictions are frozen (B4 exposure log, entry of 2026-11-07).
+
+From the PDFs you used in task b5 (sha256 in `blind_inputs.csv`), report **citations and yes/no answers only, no
+values**:
+1. **B12 refs. [27] and [31]:** full citations (authors, year, journal, volume, pages, DOI).
+2. **B12, Cu and Al separately:** does the paper say its impacts are new, reused from earlier work, or both? Quote
+   the sentence (it must not contain a velocity or an outcome; if it does, paraphrase without them) and give the
+   page.
+3. **B03:** the same question. Are its Cu impacts new, or taken from earlier work (which refs)?
+4. **B03 and B12:** does either paper cite HG2018b (Hassani-Gangaraj et al., Scripta Mater. 145 (2018) 9,
+   doi:10.1016/j.scriptamat.2017.09.042) or HG2018a (Acta Mater. 158 (2018) 430)? Give the reference numbers, and say
+   for what each is cited (method, data, comparison), without values.
+5. **Powder and plate lots:** does either paper say its powder or plates are the same batch as in earlier work?
+
+Write `docs/research/data/b03_b12_provenance.md` on a new branch `coldspray/b03-b12-provenance` from
+`claude/exciting-fermi-qy077p`. Commit only that file, push, and stop. **Do not merge.**
