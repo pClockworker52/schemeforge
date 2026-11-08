@@ -176,9 +176,8 @@ Nothing below has been decided; each needs Peter's call.
    (widen brackets by the stated velocity error) for future freezes? Also: is ±2 % per shot or a shared calibration
    error (it decides whether within-paper contrasts use the widened w); and B10 under B6 (CS-09 would be refuted,
    CS-07 inconclusive) or left undetermined as recorded.
-2. **Blind list 2 screening task** for WSL B: yes/no screen of Tiamiyu 2022 and the two Panova & Schuh 2024 papers
-   (oxide series? interface maps?) before anyone reads them. Partly answered by the thesis screen (item 0): the
-   Acta 2024 paper has maps but no oxide-thickness series; the second 2024 paper and Tiamiyu 2022 are unscreened.
+2. **Blind list 2:** Panova & Schuh 2024 released by Peter (2026-11-08; WSL B task b7 extracts it). Still open:
+   whether to screen Tiamiyu 2022 and whether a blind list 2 is wanted at all.
 3. **CS-17's post-hoc domain restriction** (wrought substrates only, because Panova PA-02 contradicts it otherwise):
    accept as frozen, or treat the PA-02 tension as a reason to drop or reformulate CS-17 before it meets data.
 4. **A second item for the measurement request:** one powder on annealed, cold-rolled and peak-aged tempers of one

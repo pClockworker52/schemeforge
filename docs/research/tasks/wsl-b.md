@@ -173,3 +173,33 @@ values**:
 
 Write `docs/research/data/b03_b12_provenance.md` on a new branch `coldspray/b03-b12-provenance` from
 `claude/exciting-fermi-qy077p`. Commit only that file, push, and stop. **Do not merge.**
+
+## Task 2026-11-08-b7: Panova & Schuh 2024 (thesis ch. 2), released (do after b6)
+
+**Why:** Peter released this paper on 2026-11-08 (B4 exposure log). It is no longer a blind-list-2 candidate, so
+its own values may now be reported. It probably supplies the only powder strength for the Panova Cu powder (rows
+PA-01…03 in `vcr_lipit.csv`).
+
+**Source:** the Panova thesis, ch. 2 (pp. 41–72; Peter's copy, sha256 `5a809e42…0538b00`). If you can obtain the
+journal paper (Acta Mater. 276 (2024) 120105, doi:10.1016/j.actamat.2024.120105) under the standing fetch rule, say
+whether the two differ in any value you report.
+
+**Still excluded:** values from pending blind papers. Thesis pp. 56–57 (Fig. 8a) plot B03 data against the thesis's
+own data. Report only the thesis's own points, and only if they can be told apart from B03's without reading B03's
+values; otherwise skip that figure and say so. Do not read p. 146.
+
+**Report** in `docs/research/data/panova2024_ch2.md`:
+1. **Powder and substrate:** supplier, size (nominal and as used), lot or temper if stated, preparation, hardness.
+   Say whether the powder is the one used in ch. 3–6 and in Panova2026b.
+2. **Dynamic yield strength of the powder** (the CoR fit): value, uncertainty, fit model and parameters, the data
+   it was fitted to, and the velocity range.
+3. **Critical velocity:** as printed, with its definition, bounds or uncertainty, and number of impacts. This is the
+   value Panova2026b quotes.
+4. **Bonded fraction against impact velocity:** per specimen, impact velocity, particle size and bonded fraction,
+   with its uncertainty and its definition (as in your b3 extraction of ch. 5). Use tables where printed; else
+   digitize, with axis calibration and reading error.
+5. **Coefficient of restitution data**, if tabulated (velocity, CoR, size); do not digitize a CoR plot unless it is
+   the only source for item 2.
+
+Branch `coldspray/panova2024-ch2` from `claude/exciting-fermi-qy077p`. Commit only that file, push, and stop.
+**Do not merge.**
