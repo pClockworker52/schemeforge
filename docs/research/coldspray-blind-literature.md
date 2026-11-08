@@ -82,3 +82,16 @@ Interfaces are open access. The rest via Peter.
 | 2026-11-07 | B03, B12 (and B05) | Step-1 inputs (WSL B task b5, merged b6d21c6). No outcome. **Possible exposure through shared material:** B03, B05 and B12-c1 use Alfa Aesar ~10 µm Cu on OnlineMetals 3.175 mm Cu plates, as HG2018b did (rows P18, read 2026-11-07). B12-c2 uses Valimet Al on OnlineMetals Al, and its Al impacts are "LIPIT data from the authors' earlier refs. [27,31]", possibly HG2018b itself. The Panova2026b quote "half-hard Cu 539–588" (B02, B03, HG2018b together) was already logged. | input extraction | Report B03 and B12 separately as possibly exposed and in-sample (Cu and Al are Z6 calibration materials). Before freezing, WSL B is asked to identify refs. [27,31] of B12 by citation only. |
 | 2026-11-08 | Panova & Schuh 2024 (Acta Mater. 276, 120105; thesis ch. 2) | **Released by Peter**, taken off the blind-list-2 candidates. Already partly exposed (Cu 540 m/s via Panova2026b; the bonded-ring pattern via the literature search). The thesis screen found no oxide-thickness series in it. | decision in chat | Its own values may be read (WSL B task b7). Values it shows from pending blind papers stay excluded (B03 on thesis pp. 56–57). Tiamiyu 2022 remains a blind-list-2 candidate. |
 | 2026-11-08 | B12, B03 | Provenance, citations only (WSL B task b6, merged). **B12-c2 (Al) reuses impacts from HG2018b and HG2019b**, both read: exposed. B12-c1 (Cu) is stated as newly launched, but B03 reproduces B12 data and has the same first author and suppliers, so B03 and B12-c1 are probably not independent. B03 cites HG2018b only for method and comparison. | WSL B b6 | B12-c2 is not a blind test; if scored at all, report it as exposed. B03 and B12-c1 are scored as one partly exposed Cu result, not as two. |
+
+## Closure of B03, B05 and B12 without a pre-registration (Peter, 2026-11-08)
+
+No frozen model or hunch can be discriminated on these papers, so no predictions are frozen for them:
+- **B03:** one Cu-on-Cu condition, no oxide data, no powder strength, plate temper not stated. Only Z6 (Cu is
+  in-sample) and the baseline could run, and the likely range is already known from seen sources (HG2018b 539–568,
+  Panova 2024 540, the joint "539–588" quote).
+- **B05:** no single-impact v_cr.
+- **B12:** B12-c1 (Cu) is probably not independent of B03; B12-c2 (Al) reuses HG2018b and HG2019b impacts (exposed).
+
+Their outcomes are extracted into `data/vcr_lipit.csv` for completeness (WSL B task b8), labelled **exposed**, with
+no verdicts. For the end point of the single-impact phase (DECISIONS 2026-11-07), they count as done. Remaining:
+B06, B07 and B16 (closed access, with Alex).

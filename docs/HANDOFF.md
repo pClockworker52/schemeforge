@@ -1,9 +1,12 @@
-# Handoff — 2026-11-07, session end (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-08, session end (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read
 docs/STATUS.md (top entries) and the DECISIONS index (top of docs/DECISIONS.md). Branch:
 `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-procedure.md (who writes where; tasks for other
 sessions in docs/research/tasks/; HANDOFF at session end only; DECISIONS for changes of direction only).
+
+**First action next session:** `git fetch` and check for WSL B's branch `coldspray/b03-b12-outcomes` (task b8).
+Leak-scan it, then merge it. Its rows are labelled exposed and carry no verdicts.
 
 **Arena 2 is paused** at Phase 6 step 5; resuming means step 6 (blind audit, Target D, tag contact-v1.0). Arena 1 is
 released as benchmark-v1.0.
@@ -14,178 +17,164 @@ Peter's application: multi-particle cold spray with coating build-up; deposition
 mechanistic model that states its own range of validity. Verdict "go: discipline only" (DECISIONS 2026-11-03): no
 arena and no search, the schemeforge process used to develop models.
 
-**The core, as of plan revision 2** (DECISIONS 2026-11-04; docs/research/coldspray-go-nogo.md): the **interface
-law** (oxide fracture, fresh-metal contact, bond or separation). No affordable simulation resolves it; it is a
-closure. Simulated v_cr only with a stated interface law or both bracket bounds. **Data side first** (stop rule,
-DECISIONS 2026-11-05).
+**The core** (plan revision 2, DECISIONS 2026-11-04; coldspray-go-nogo.md) is the **interface law**: oxide fracture,
+fresh-metal contact, bond or separation. It is a closure, and data come first (stop rule, DECISIONS 2026-11-05).
+The thermal question and CS-14b are **parked** (DECISIONS 2026-11-07).
 
-**Two tracks since 2026-11-07:** single-impact (this section) and **build-up** (docs/research/coldspray-buildup-track.md;
-questions and data audit first, no hunches yet). **Hunch budget:** at most 5 open untested hunches across both
-tracks, each must discriminate on obtainable data; count 3 of 5 since CS-14b was parked (rules at the top of coldspray-hunches.md).
-**End point of the single-impact phase:** the six pending papers scored or unobtainable, and the T3 request sent or
-dropped; then one short synthesis (DECISIONS 2026-11-07).
+**Two tracks:** single-impact, and **build-up** (coldspray-buildup-track.md). **Hunch budget:** at most 5 open
+untested hunches, each must discriminate on obtainable data. The count is **3 of 5** (CS-10, CS-12, CS-17). Rules
+are at the top of coldspray-hunches.md.
 
-**The decisive open question: test T3,** v_cr against oxide thickness at a fixed oxide type. Four frozen predictions
+**End point of the single-impact phase** (DECISIONS 2026-11-07): the six pending blind papers scored or
+unobtainable, and the T3 request sent or dropped; then one short synthesis.
+- B03, B05 and B12 count as done: closed without pre-registration on 2026-11-08, because nothing could be
+  discriminated on them.
+- **Remaining: B06, B07, B16 (closed access, with Alex).**
+- The campaign trigger for the T3 request (DECISIONS 2026-11-05) named B06 and B05. B05 has no v_cr, so the trigger
+  now waits on **B06** alone.
+
+**The decisive open question is test T3,** v_cr against oxide thickness at a fixed oxide type. Frozen predictions
 for Al 6061, 15 µm, 17 → 25 nm:
 
 | Model | Δv_cr |
 |---|---|
-| Z18_Yd (Na2025 Eq. 6, as published) | about +127 m/s |
+| Z18_Yd (Na2025 Eq. 6) | about +127 m/s |
 | Z18_static | about +92 m/s |
 | CS-10 | about +37 m/s |
 | CS-12 minimal | 0 within one window |
 
-No unseen series exists yet. The measurement request is drafted (docs/research/coldspray-measurement-request-t3.md);
-it goes out only under the campaign trigger (DECISIONS 2026-11-05): after B06 and B05 are scored, if T3 is still
-undecided.
+No unseen thickness series is known. The Panova thesis screen and the 2024 paper have none. The request is drafted
+in coldspray-measurement-request-t3.md.
 
-## 2. Hunches and zoo (index: docs/research/coldspray-hunches.md)
+## 2. What happened on 2026-11-07/08 (details in STATUS)
+
+- **Build-up, Q-B1** (is deposit fracture set by the striking shot or by the stack's history?): Reiser2024 was
+  digitized (data/buildup_reiser2024.csv, 137 shots, 7 fracture events).
+  - Answer, descriptive: removal only by slow, rebounding particles (below v_cr) is not supported; striker and
+    history cannot be separated.
+  - Post hoc: all fracturing shots lie in 0.98–1.20 v_cr. A near-threshold-striker hunch is **parked**.
+- **Panova thesis via WSL B:**
+  - Panova2026a (ch. 5): three two-particle Cu stacks, particle–particle bonded fraction 7, 18 and 9 %.
+  - Panova & Schuh 2024 (ch. 2), **released by Peter**: Cu (Alfa Aesar) on H02 Cu, V_cr 540 ± 5 m/s (row P24-Cu).
+    Powder Y_d 403 ± 90 MPa. Bonded fraction 6–89 % against velocity, peaking at 1.30 V_cr and falling to 13 % at
+    1.62 V_cr.
+  - Panova2026b's PA rows used a **different powder** (Praxair CU-159-3).
+- **HG2018b primary read** (rows P18): Al 797–824, Ni 650–660, Cu 539–568, Zn 518–523 m/s (±2 %).
+  - Panova2026b and Dowding quote it correctly. The H20 rows are Hassani2020's own windows, not misquotes.
+  - Post hoc, CS-05 would cross its kill line against the primary Al window; its frozen verdict stays.
+  - To reach MIT DSpace files, the host `cf003.cdn.4science.cloud` was added to the Default environment.
+- **Z7 on B02, post hoc:** soft/hard ratio 1.064 against a measured 1.133 ± 0.032 (right sign, half the contrast).
+  Its plate ε_c inputs are derived hardening exponents, not measurements.
+- **Judge v2 proposal** (draft, not adopted; coldspray-judge-v2-proposal.md): R1 primaries first, R2 widen bracket
+  windows by the stated velocity error. 7 of 10 window-dependent verdicts are robust.
+- **Powder properties:** no impacted powder in any source read has a failure strain or hardening exponent
+  (inventory in data/README.md; data/powder_properties_theses.md).
+- **B03, B05, B12:** step-1 inputs merged. Provenance (data/b03_b12_provenance.md): B12's Al data are reused from
+  HG2018b and HG2019b, and B03 and B12-c1 are probably not independent. All three closed without pre-registration;
+  outcomes go to the data table as exposed (task b8).
+
+## 3. Hunches and zoo (index: docs/research/coldspray-hunches.md)
 
 | Id | What | State |
 |---|---|---|
-| CS-01…CS-06 | retrospective v1 | CS-02, CS-03 supported; CS-01, CS-05 inconclusive; CS-06 refuted (coldspray-results-v1.md) |
-| CS-07 | oxide raises v_cr | B10: not refuted, support undetermined; **B14: supported (exposed;** type and thickness changed together) |
+| CS-01…CS-06 | retrospective v1 | CS-02, CS-03 supported; CS-01, CS-05 inconclusive; CS-06 refuted (caveats 1–2 in coldspray-results-v1.md) |
+| CS-07 | oxide raises v_cr | B10: not refuted, support undetermined; B14: supported (exposed; type and thickness changed together) |
 | CS-08 | strength raises v_cr within an alloy | refuted on B10 |
-| CS-09 | sound speed alone within B10 | undetermined (no window bounds) |
-| CS-10 | energy balance: jetting + plastic work + shell work (t_ox/d) | frozen, fitted on B10 (β 0.3774, γ 3.19e11 Pa); leave-one-out no better than a constant; relative of Na2025, not a variant |
-| CS-11 | interface bracket (welded vs frictionless) | inconclusive: neither bound computable in OpenCourant (§10) |
-| CS-12 | interface as Markov blanket; Bay-type criterion; thickness-independent at fixed oxide type | frozen; variant of Bay; T1 exposed; T3 decisive; criterion is a hybrid of Bay's two mechanisms (reading note Zhang & Bay 1997) |
-| CS-13 / 13b / 13c | conduction regularises the contact edge | 13b blocked (§12), **13c refuted** (§13); stop rule: no CS-13d |
-| CS-14 / 14b | interface submodel cell (t/w, Y', p_E against thickness) | 14b frozen: continuum film with cohesive cracks instead of DEM; DEM rung kept as record (R0 run, R1 not) |
-| CS-16 | substrate hardness raises v_cr for matched Cu | **refuted on B02:** hard − soft = −75 m/s against +102 predicted |
-| CS-17 | substrate strain-hardening capacity, not hardness (directional) | frozen 2026-11-07; domain restricted to wrought substrates **post hoc** (Panova PA-02 contradicts it otherwise); no unseen test data known |
-| Z18 | Na2025 Eq. 6 (Lienhard jet model), variants Yd and static | frozen; Z18_static fails on its own calibration data (RMS 72.5) |
+| CS-09 | sound speed alone within B10 | undetermined (would be refuted under judge-v2 R2) |
+| CS-10 | energy balance with oxide shell term | frozen, open; no blind paper reports particle strength |
+| CS-11 | interface bracket | inconclusive |
+| CS-12 | interface as Markov blanket; thickness-independent at fixed oxide type | frozen, open; T3 decisive |
+| CS-13 / 13b / 13c | conduction regularises the contact edge | 13c refuted; stop rule |
+| CS-14 / 14b | interface submodel cell | **parked** 2026-11-07 |
+| CS-16 | substrate hardness raises v_cr (Cu) | refuted on B02 |
+| CS-17 | substrate strain-hardening capacity (directional) | frozen, open; domain restricted post hoc to wrought substrates; no unseen test data |
+| Z18 | Na2025 Eq. 6 | frozen zoo member |
 
-Reserved: **CS-15** for a whole-particle model (SPH with the interface law at the interface), not registered.
+Reserved: CS-15 (whole-particle model with the interface law). Parked, not registered: the near-threshold striker
+(build-up).
 
-**Parked 2026-11-07 (Peter, DECISIONS):** the thermal question (no JAX port) and CS-14b.
-
-## 3. Blind set (docs/research/coldspray-blind-literature.md; B4 exposure log at its end)
+## 4. Blind set (coldspray-blind-literature.md; B4 exposure log and the closure note at its end)
 
 | Paper | State |
 |---|---|
-| B10 | scored (coldspray-results-b10.md) |
-| **B02, B14** | **scored** (coldspray-results-b02-b14.md; freeze 27e7eea → addendum 542f810 → scorer f8fb8f5 → outcomes add80b8 → scores dabe6a7). Z6 within 1–6 % on dry B14 (in-sample material); RH-95-D 68.5 m/s below RH-95 at near-equal thickness |
-| B04, B13 | inputs extracted; no v_cr; nothing to predict |
+| B10 | scored |
+| B02, B14 | scored (coldspray-results-b02-b14.md, with Z7 addendum and note) |
+| B03, B05, B12 | closed without pre-registration (2026-11-08); outcomes via WSL B b8, labelled exposed |
+| B04, B13 | no v_cr; nothing to predict |
 | B01, B08, B09, B11, B15 | no single-impact v_cr |
-| B03, B05, B12 | step-1 inputs merged (b6d21c6, 2026-11-07). B03 measures v_cr: **next, freeze predictions** (partly exposed, in-sample Cu; scored with B12-c1 as one Cu result). B05: no v_cr. B12-c2 (Al): exposed (reuses HG2018b/HG2019b impacts). Provenance: data/b03_b12_provenance.md |
-| B06, B07, B16 | closed access: still with Alex. B06 matters most (oxide). |
+| **B06, B07, B16** | **closed access, with Alex.** B06 (oxide fracture) is the one that matters |
 
-Notes:
-- CS-10 and Z18 could not run on B02 or B14 (no particle strength reported). Most future papers will hit the same
-  wall unless they report powder strength.
-- Extraction rule added 2026-11-05: interface observations after impact are outcomes (withheld in step 1).
-- Candidate papers for a **blind list 2** (Tiamiyu 2022; Panova & Schuh 2024 ×2): a yes/no screening task for
-  WSL B is proposed, not yet written.
+Thesis pages with B03 values (Panova pp. 56–57, 146) are no longer restricted once B03's outcomes are merged.
+Tiamiyu 2022 remains an unscreened blind-list-2 candidate.
 
-## 4. Next steps (in order)
+## 5. Next steps (in order)
 
-1. **B03, B05, B06, B07, B12, B16 as they arrive:** WSL B step 1 → leak scan → merge → add their materials to
-   `MATERIAL` in coldspray_blind2.py and freeze (new pre-registration file) → step 3 → score.
-2. **Build-up track:** audit done (33152ad); **Q-B1 adopted and answered descriptively** (coldspray-buildup-track.md,
-   "Q-B1"; data/buildup_reiser2024.csv; figure figures/buildup/reiser2024_stacks.png). The data rule out removal only by
-   sub-v_cr rebounders; striker vs history not separable (7 events). Post hoc: all fracturing shots in 0.98–1.20 v_cr.
-   Near-threshold-striker hunch parked. Panova2026a extracted from the Panova thesis by WSL B (merged 9023ce6); audit
-   row now F via thesis, no change to questions 2, 4 or Q-B1.
-3. **Peter's open decisions:** section 9 (new: 1b, judge v2 proposal).
-4. **Data gaps:**
-   - strength of the impacted powders (blocks CS-10 and Z18): inventory in data/README.md (2026-11-07); no powder
-     has a failure strain or n; possible WSL B checks of the Lucas, Panova and Lienhard theses;
-   - Bay 1983 primary (files.aws.org blocked here; Peter can supply it).
+1. **Merge WSL B b8** (B03, B12 outcomes) after a leak scan; add one STATUS line.
+2. **B06, B07, B16 when Alex sends them:** WSL B step 1 → leak scan → merge → check whether anything frozen can be
+   discriminated. If so, freeze (new pre-registration file) → step 3 → score. If not, close as for B03.
+3. **After B06:** the campaign-trigger decision for the T3 request (Peter), then the single-impact synthesis.
+4. **Peter's open decisions:** section 9.
+5. **Data gaps:**
+   - a failure strain or hardening exponent of any impacted powder; only a measurement or a new source would close
+     it (micro-compression curves, as in Na2025);
+   - Bay 1983 primary (Peter can supply it).
 
-## 5. Rules that must not be broken
+## 6. Rules that must not be broken
 
 - **Blind test** (rules B1–B6):
-  - the modeller never opens a hold-out paper or its outcomes before its predictions are committed;
+  - the modeller never opens a hold-out paper or its outcomes before its predictions are committed, or before Peter
+    closes it;
   - inputs come from WSL B and are leak-scanned before reading;
   - the scoring script is committed before outcomes are read;
   - post-hoc numbers are labelled;
   - verdicts follow the frozen rules even when that leaves them undetermined.
-- **Frozen files are never edited after scoring** (preregistrations, predictions_*.csv, hunch files). Amendments are
-  new files (CS-13b, CS-14b) or explicitly allowed addenda committed before outcomes.
+- **Frozen files are never edited after scoring** (preregistrations, predictions_*.csv, scores_*.csv, hunch
+  files). Amendments are new files or dated addenda.
 - **Simulation:** no simulated v_cr before the verification ladder and convergence; no erosion as a production
   method; no OpenCourant fork.
 - **Iron rules of CLAUDE.md:** never call a result novel; record negative results; no invented values.
-- **A detection metric gets its own rung** before it decides a verdict (procedure note).
-- **Licence:** OpenCourant's Siemens parts for local use only; no binaries or QA decks committed.
+- **Hunch budget:** a new hunch must discriminate on obtainable data.
+- **Licence:** OpenCourant's Siemens parts for local use only. PDFs are never committed.
 
-## 6. Sessions and branches
+## 7. Sessions and branches
 
 | Session | Role | Branch it pushes | Task file |
 |---|---|---|---|
 | Cloud (modeller) | models, predictions, scoring, notes, merges | `claude/exciting-fermi-qy077p` | — |
-| WSL A | OpenCourant simulations | `coldspray/opencourant-sph` | docs/research/tasks/wsl-a.md (no open task) |
-| WSL B | blind extraction | `coldspray/blind-inputs`, `coldspray/<paper>-outcomes` | docs/research/tasks/wsl-b.md (no open task) |
+| WSL A | OpenCourant simulations | `coldspray/opencourant-sph` | docs/research/tasks/wsl-a.md (**no open task**; thermal path parked) |
+| WSL B | blind extraction and source checks | one branch per task | docs/research/tasks/wsl-b.md (**open: b8**; standing fetch rule at b4) |
 
-WSL B merged its step-1 inputs into the modeller branch itself (7a9e0b5); by the procedure only the modeller merges.
-Its new task says so explicitly.
-
-## 7. Simulation status (record; the thermal path is closed)
-
-- **OpenCourant** (WSL, ~/opt/opencourant/latest-20261011; verification record opencourant-verification.md §1–§13):
-  - 2D needs `Isolid = 17`; 2D quads have **no heat conduction** (§11);
-  - SPH is 3D-only; SPH–SPH contact is a kernel weld without defined contact (§9.8, §10.3);
-  - the SPH heat path is unreliable (§12);
-  - every Lagrangian contact edge fails earlier with refinement, with or without conduction (§8.3, §10.5, §13).
-- **Kinematic view** (2026-11-07, coldspray-kinematics.md; `impact_kinematics.py`, figures in
-  docs/research/figures/kinematics/): rigid sphere into a rigid flat, contact-edge speed against the bulk sound
-  speed. Geometry only. The edge turns subsonic at every impact speed (β_c = atan(V/c): Al 5–12°, Cu 7–16°, at
-  65–261 ps for d = 15 µm), so geometry gives no threshold; Z6 reads as "subsonic at a fixed angle of 8.5°" (post hoc
-  reading).
-- **JAX code:**
-  - `impact_axisym.py`: elastic 2D axisymmetric (rungs 0, 1);
-  - `blanket_dem.py`: DEM film cell, superseded by CS-14b.
-
-  Figures: docs/research/figures/cs14/; impact animations: docs/research/opencourant/figures/.
+WSL B may fetch open copies itself (standing rule in wsl-b.md); paywalled papers come from Peter or Alex.
 
 ## 8. Key files
 
 | What | Where |
 |---|---|
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Plan, assumption inventory H1–H8, triggers | docs/research/coldspray-go-nogo.md |
-| Data tables | docs/research/data/ (README there) |
-| Zoo, predictions, scorers (not judges) | src/schemeforge/research/coldspray*.py |
-| Hunches and preregistrations | docs/research/coldspray-hunch*.md, coldspray-preregistration*.md, coldspray-zoo-z18.md |
-| Reading notes | coldspray-reading-zhangbay1997.md, coldspray-reading-na2025.md, coldspray-literature-interface.md (external, exposure header) |
-| Blind set, prompts | coldspray-blind-literature.md, coldspray-extraction-prompt*.md, coldspray-literature-prompt-2026-11*.md |
+| Plan, assumption inventory, triggers | docs/research/coldspray-go-nogo.md |
+| Data tables | docs/research/data/ (README there, with the powder-property inventory) |
+| Zoo, predictions, scorers | src/schemeforge/research/coldspray*.py |
+| Hunches, preregistrations | docs/research/coldspray-hunch*.md, coldspray-preregistration*.md |
+| Build-up track | coldspray-buildup-track.md; scripts/digitize_reiser2024.py, buildup_qb1.py, plot_buildup_reiser2024.py |
+| Judge v2 proposal | coldspray-judge-v2-proposal.md; scripts/judge_v2_sensitivity.py |
+| Z7 post-hoc check | scripts/z7_cu_posthoc.py; addendum in coldspray-results-b02-b14.md |
+| WSL B extractions | data/panova_thesis_screen.md, panova2026a_stacks.md, panova2024_ch2.md, powder_properties_theses.md, b03_b12_provenance.md |
 | Measurement request (draft) | coldspray-measurement-request-t3.md |
-| Kinematic view | coldspray-kinematics.md |
-| Results B02/B14 | coldspray-results-b02-b14.md |
 
 ## 9. Open for Peter
 
-Adopted 2026-11-07 (no longer open): the build-up track (coldspray-buildup-track.md), the hunch budget (max 5 open
-untested; now 3/5 after the CS-14b parking, rules in coldspray-hunches.md), and the end point of the single-impact phase (DECISIONS
-2026-11-07). An oxide-chemistry hunch (item 5) would take the fifth slot.
+Nothing below has been decided.
 
-Nothing below has been decided; each needs Peter's call.
-
-0. **Build-up:** the near-threshold-striker hunch is **parked** (Peter, 2026-11-07; not registered). Open: whether the
-   deposit-vs-plate contrast goes into the T3 measurement request.
-   **Panova thesis screen (WSL B, merged 9023ce6; facts for the blind-list-2 decision, item 2):**
-   - Only one Panova & Schuh 2024 paper exists in the thesis: Acta Mater. (2024) 120105 = ch. 2. It has bonded-area
-     or interface maps against impact velocity: **yes**. Critical velocities on oxide layers of different thickness,
-     same type: **no**. A second 2024 paper is not in the thesis. Note: blind-literature.md already lists "Panova2024"
-     as excluded because it is exposed (Cu 540 m/s quoted in Panova2026b).
-   - Thesis pages with B03 values: ch. 2 pp. 56–57 (Fig. 8a) and ch. 6 p. 146. **Not to be read by the modeller
-     before B03 is frozen.** B05, B12 and B16 are cited without values; B06 and B07 are not cited.
-   - Panova2026a = ch. 5, extracted to data/panova2026a_stacks.md; audit updated (no change to questions 2 and 4 or
-     to Q-B1).
-1. ~~Parkings~~: thermal question and CS-14b parked 2026-11-07 (DECISIONS).
-1b. **Judge v2 proposal** (draft, docs/research/coldspray-judge-v2-proposal.md): adopt R1 (primaries first) and R2
-   (widen brackets by the stated velocity error) for future freezes? Also: is ±2 % per shot or a shared calibration
-   error (it decides whether within-paper contrasts use the widened w); and B10 under B6 (CS-09 would be refuted,
-   CS-07 inconclusive) or left undetermined as recorded.
-2. **Blind list 2:** Panova & Schuh 2024 released by Peter (2026-11-08; WSL B task b7 extracts it). Still open:
-   whether to screen Tiamiyu 2022 and whether a blind list 2 is wanted at all.
-3. **CS-17's post-hoc domain restriction** (wrought substrates only, because Panova PA-02 contradicts it otherwise):
-   accept as frozen, or treat the PA-02 tension as a reason to drop or reformulate CS-17 before it meets data.
-4. **A second item for the measurement request:** one powder on annealed, cold-rolled and peak-aged tempers of one
-   wrought alloy (tests CS-17). Only if the campaign trigger is met.
-5. **Oxide chemistry as its own hunch:** B14's RH-95-D result (−68.5 m/s at near-equal thickness) suggests an oxide
-   type term. Any hunch inspired by it cannot be tested on B14. Register or not.
-6. **Idea D** (restitution data, Tang 2025 PNAS SI): the source host is probably blocked here; Peter can supply the
-   SI files.
-7. ~~Post-hoc spall law Z7 for Cu~~: done 2026-11-07 (coldspray-results-b02-b14.md, addendum): right sign, half the
-   contrast (1.064 vs 1.133); the mixing rule needs a particle failure strain of 0.01-0.09 (not measured).
+1. **Judge v2** (coldspray-judge-v2-proposal.md): adopt R1 and R2 for future freezes? Is the ±2 % velocity error per
+   shot or shared within a campaign? Rescore B10 under B6 (CS-09 would be refuted, CS-07 inconclusive), or leave it
+   undetermined as recorded?
+2. **CS-17's post-hoc domain restriction** (wrought substrates only): accept, or drop or reformulate CS-17.
+3. **Measurement request, extra items** (only if the campaign trigger is met):
+   - the deposit-vs-plate contrast: one powder on a deposit, an annealed deposit and a cold-rolled plate of matched
+     hardness;
+   - one powder on several tempers of one wrought alloy (tests CS-17);
+   - micro-compression stress–strain curves of the LIPIT powders (closes the failure-strain gap).
+4. **Oxide-chemistry hunch:** two budget slots are free. Note that the B14 RH-95-D signal drops from 1.6 to 0.9
+   window widths if windows include the velocity error (judge v2, post hoc).
+5. **Blind list 2:** screen Tiamiyu 2022 or drop the idea.
+6. **Idea D** (restitution data, Tang 2025 PNAS SI): Peter can supply the SI files.

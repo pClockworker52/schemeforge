@@ -203,3 +203,22 @@ values; otherwise skip that figure and say so. Do not read p. 146.
 
 Branch `coldspray/panova2024-ch2` from `claude/exciting-fermi-qy077p`. Commit only that file, push, and stop.
 **Do not merge.**
+
+## Task 2026-11-08-b8: outcomes of B03 and B12 for the data table (no scoring)
+
+Peter closed B03, B05 and B12 without a pre-registration (coldspray-blind-literature.md, "Closure of B03, B05 and
+B12"). Nothing is frozen against them, so their outcomes may be extracted now, for the data table only.
+
+Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on the PDFs of task b5 (sha256 in
+`blind_inputs.csv`), with these changes:
+- **Rows:** `B-B03-c1`, `B-B12-c1` (Cu), `B-B12-c2` (Al). If a paper gives more than one critical velocity (sizes,
+  definitions), one row each, with the condition in `notes`.
+- **In `notes`, start with:** `exposed; no verdict (closed without pre-registration 2026-11-08)`. For B12-c2, add
+  `impacts reused from HG2018b and HG2019b`; for B03 and B12-c1, add `probably shared impact sites (B03 reproduces
+  B12 data)`.
+- **Window, definition, uncertainty:** exactly as printed (rule B6 form if no bounds: `velocity uncertainty +-X %`).
+- **Where B03 compares its Cu value with HG2018b or Sun 2020:** record the comparison as printed.
+- B05 has no v_cr: no row.
+
+Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
+`claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
