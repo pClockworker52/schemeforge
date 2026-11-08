@@ -68,7 +68,8 @@ Reserved: **CS-15** for a whole-particle model (SPH with the interface law at th
 | **B02, B14** | **scored** (coldspray-results-b02-b14.md; freeze 27e7eea → addendum 542f810 → scorer f8fb8f5 → outcomes add80b8 → scores dabe6a7). Z6 within 1–6 % on dry B14 (in-sample material); RH-95-D 68.5 m/s below RH-95 at near-equal thickness |
 | B04, B13 | inputs extracted; no v_cr; nothing to predict |
 | B01, B08, B09, B11, B15 | no single-impact v_cr |
-| B03, B05, B06, B07, B12, B16 | pending: Peter asked Alex for the PDFs on 2026-11-07; they go to WSL B, never to the modeller. B06 and B05 matter most (oxide). |
+| B03, B05, B12 | step-1 inputs merged (b6d21c6, 2026-11-07). B03 measures v_cr: **next, freeze predictions** (partly exposed, in-sample Cu; scored with B12-c1 as one Cu result). B05: no v_cr. B12-c2 (Al): exposed (reuses HG2018b/HG2019b impacts). Provenance: data/b03_b12_provenance.md |
+| B06, B07, B16 | closed access: still with Alex. B06 matters most (oxide). |
 
 Notes:
 - CS-10 and Z18 could not run on B02 or B14 (no particle strength reported). Most future papers will hit the same

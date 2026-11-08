@@ -165,7 +165,8 @@ search was made. "Same material" means a value for the metal, measured on anothe
 | P19 (HG2019b) | 2 | Au, Ag | no | no | no | Table S1 Y_d |
 | DW | 9 | Al, Ti (size series) | no | no | no | Table S1 Y_d; bulk JC n (Al) |
 | CH | 3 | Al, Sn, Ti (heated substrates) | no | no | no | Table S1 Y_d |
-| PA (Panova2026b) | 3 | Cu 17–21 µm | no | no | no | Table S1 Y_d; possibly Lucas's 383 MPa if the same Alfa Aesar powder (not established) |
+| PA (Panova2026b) | 3 | Cu 17–21 µm, **Praxair CU-159-3** (thesis ch. 6) | no | no | no | Table S1 Y_d. Not the Alfa Aesar powder of Lucas or Panova 2024 |
+| P24 (Panova & Schuh 2024) | 1 | Cu 17–21 µm, Alfa Aesar 15–38 µm gas-atomized | **yes**: 403 ± 90 MPa (CoR fit, Wu model, α = 0.57); bonding-model fit 500 ± 30 MPa | no | no | – |
 | B-B10 (Na2025) | 5 | Al 6061, heat treatments | **yes**: CoR-fitted Y_d per batch (Table 1) | **yes**: micro-compression at 50 % strain, 219–351 MPa | no | – |
 | B-B14 (Lienhard2020) | 8 | Al, oxide states | no ("none for the metals") | no | no | Table S1 Y_d; bulk JC n |
 | B-B02 (Lucas) | 2 | Cu 19 µm | **yes**: 383 ± 65 MPa (Cu-on-sapphire impacts, Lucas ch. 3) | no | **no** for the particle (substrates only: 0.29, 0.16) | bulk JC n |
@@ -182,7 +183,7 @@ search was made. "Same material" means a value for the metal, measured on anothe
 | Source | What might be there | Route |
 |---|---|---|
 | Lucas thesis ch. 3 (Cu-on-sapphire) and ch. 4 Table 2 | **checked (WSL B b4): no powder row.** The plates' ε_c are derived n (Eq. 18), not measured; the other rows are unattributed literature values | done: data/powder_properties_theses.md |
-| Panova thesis ch. 3–4 (Cu-on-Cu, 2025 papers) | **checked: nothing** beyond grain size ~5–10 µm. Ch. 2 (Panova & Schuh 2024) has a CoR-fitted Y_d for this powder, withheld under the blind-list-2 restriction | Peter's decision on blind list 2 |
+| Panova thesis ch. 2–4 | **checked:** ch. 2 (released 2026-11-08) gives Y_d 403 ± 90 MPa for the Alfa Aesar powder (row P24-Cu); ch. 3–4 nothing more. Panova2026b's PA powder is a different one (Praxair) | done: data/panova2024_ch2.md |
 | Lienhard thesis (B14, B04 source) | **checked: nothing** for any powder or substrate | done |
 | Na2025 (read, F) | micro-compression curves to 50 % strain (Table 1 gives only the stress); a full curve would give n | re-read Fig./SI by the modeller (B10 is unblinded) |
 | A measurement | micro-compression stress–strain curves of the LIPIT powders (B10's method) give Y and n directly | candidate item for a measurement request, if the campaign trigger is met |

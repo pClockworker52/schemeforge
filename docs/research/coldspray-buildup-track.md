@@ -15,6 +15,7 @@ Build-up has seen literature of its own, and one sharp contradiction already sit
 |---|---|---|
 | Panova2026b | Cu, 19 µm: polished plate 567 m/s; polished cold-sprayed Cu (harder) 653 m/s; rough cold-sprayed Cu about 727 m/s; hardness and roughness each +10–15 %, together about +30 % | F |
 | Panova2026a | Two-particle stacks, Cu: bonded fraction at the particle–particle interface ≤ 18 % (7, 18, 9 % in three stacks) | F via thesis (2026-11-07) |
+| Panova & Schuh 2024 (released 2026-11-08; data/panova2024_ch2.md) | Single Cu particles on H02 Cu: bonded fraction 6, 18, 40, 35, 27, 40, 89, 80, 74, 13 % at 1.02–1.62 V_cr (V_cr 540 m/s); peak 89 % at 1.30 V_cr, then a fall to 13 % at 1.62 V_cr. Upper bounds (~14 nm resolution). Particle–substrate, not particle–particle | F via thesis |
 | Reiser2024 | Au stacks of more than 20 particles, each impact's size and velocity recorded; build-up needs a higher critical velocity than single bonding (single v_cr 253 ± 7 m/s) | F |
 | Process side | process v_cr is lower than single-impact v_cr (Panova2026b attributes it to heating); DE curves (Alkimov1990, Gilmore1999) integrate over distributions and cannot separate mechanisms | S / F |
 | B02 (scored) | cold-rolled wrought Cu substrate: v_cr **lower** than on annealed Cu (566 against 641 m/s) | blind, scored |
