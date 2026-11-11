@@ -1297,7 +1297,7 @@ under the frozen set-up (§14.2) stand unchanged.
 
 ### 15.2 S0
 
-Value at S' / frozen value; reference 1; a number fails when its error exceeds the frozen error + 0.01):
+Value at S' / frozen value; reference 1; a number fails when its error exceeds the frozen error + 0.01:
 
 | particles | plateau | contact time | rebound |
 |---|---|---|---|
@@ -1313,7 +1313,7 @@ spacing and the gap to the frozen value closes with refinement (0.024, 0.014, 0.
 
 ### 15.3 S1
 
-20 m/s, conforming, rigid wall, quarter; S' / frozen; references 0.940, 1.073, 0.957, 0.9996):
+20 m/s, conforming, rigid wall, quarter; S' / frozen; references 0.940, 1.073, 0.957, 0.9996:
 
 | spacing | contact at 10⁻² | peak | approach | rebound |
 |---|---|---|---|---|
@@ -1327,7 +1327,7 @@ force tail that ξ alone produced (contact time 1.089) is not there with order 1
 
 ### 15.4 Reported, not judged
 
- S1 at 2 m/s moves toward the reference at R/32 and R/64 (R/64: 0.956 / 1.026 / 0.962 /
+S1 at 2 m/s moves toward the reference at R/32 and R/64 (R/64: 0.956 / 1.026 / 0.962 /
 0.972 against frozen 1.037 / 0.957 / 1.069 / 0.992). The mirror-wall rows stay bad (R/16 rebound 0.086 against
 0.625 frozen). One lattice-sphere run with the mirror wall at R/32 blew up (peak 5·10⁵); the same case was already
 unusable under the frozen set-up (rebound 0.52), and lattice spheres are not a recommended set-up (§9.6). S0p at
@@ -1335,7 +1335,7 @@ h = 1.12 s: wall plateau 1.014 against 0.994 frozen, the same +2 % shift as in S
 
 ### 15.5 Against the prediction
 
- S0: wrong. I expected the plateau within 0.5 % of the frozen value with high
+S0: wrong. I expected the plateau within 0.5 % of the frozen value with high
 confidence; order 1 shifts it by +2.1 %. S1: I named the wrong failure (R/16 contact time); the rebound at R/64,
 which I expected within 0.01 of the frozen value, is 0.013 lower. F0 and A-0 as predicted.
 
