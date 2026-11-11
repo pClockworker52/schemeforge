@@ -5,7 +5,49 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-08-a: sph-hvi-contact, milestone 1 (open)
+## Task 2026-11-11-a: record and commit before anything else (open; do this first)
+
+**Why:** the referee ([../sph-contact-referee-2026-11-11.md](../sph-contact-referee-2026-11-11.md)) found that most
+results in the fork's VERIFY-RESULTS.md exist only in `~/oc_runs`. Several were made on binaries that were never
+committed, and the predictions after 937ff00 cannot be dated by git. Until this is fixed, the C-1 and D-2 PASS claims
+are **not admissible as verdicts**.
+
+1. **Commit every run reported in VERIFY-RESULTS.md as a CSV row in `hvi/results/`.** Each row carries:
+   - the fork SHA of the binary it ran on;
+   - the ladder commit 36c34bd;
+   - the deck hash;
+   - the settings (ξ, kernel-correction order, α_cs, stfac, normal, gap).
+
+   This covers:
+   - C-1, C-2, C-3;
+   - D-1, D-2;
+   - B-2d at R/32;
+   - the cone + fit full run and the fast-deck acceptance runs;
+   - the stabiliser matrix (cases a and c);
+   - the welded bars;
+   - F1 and F2;
+   - the E-1 probe (R/16, 800 m/s), labelled `unauthorised probe, diagnostic`.
+2. **Uncommitted binaries.** Rows from a binary that was never committed are marked `binary uncommitted`.
+   - Commit the current source, rebuild, and rerun the core rungs C-1 and D-2 on that committed binary. Only those
+     rows can carry a verdict.
+   - Also rerun A-0 on it (no sidecar, bit-identical).
+3. **From now on:**
+   - commit the source before every run campaign;
+   - commit each recorded prediction (CHANGELOG) in its own commit before its runs;
+   - never run on a dirty tree.
+4. **Push to schemeforge,** as task 2026-11-08-a item 3 says: the `hvi_*.csv` files and a new **§14** in
+   opencourant-verification.md, on `coldspray/opencourant-sph`. §14 states which rows are verdicts and which are
+   diagnostics.
+5. **Stop after this.** Make no new runs under ξ = 0.3 + order 1 (set-up S′) and no E-1 until Peter decides
+   [../sph-contact-ladder-addendum-1-draft.md](../sph-contact-ladder-addendum-1-draft.md). Reruns of C-1, D-2 and
+   A-0 under the frozen set-up (item 2) are allowed.
+
+## Task 2026-11-08-a: sph-hvi-contact, milestone 1 (open; paused until 2026-11-11-a is done)
+
+**Status 2026-11-11:**
+- B-2, B-3 and D-1 FAIL under the frozen ladder (referee-confirmed for B-2 and B-3 from `hvi_b.csv`).
+- The plan's stop rule applies from here on. A failing rung means stop, record and report; continuing needs Peter's
+  decision.
 
 **Plan:** [../sph-hvi-contact-plan.md](../sph-hvi-contact-plan.md) (approved by Peter, DECISIONS 2026-11-08 "No-fork
 dropped"). **Judge, frozen:** [../sph-contact-ladder.md](../sph-contact-ladder.md), commit 36c34bd. Cite its commit in every result.
