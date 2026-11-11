@@ -1259,3 +1259,111 @@ not edit DECISIONS or the ladder, so they are reported here for the cloud sessio
 
 No S′ run and no E-1 run is started on this basis alone: the ladder's commit order asks for the addendum to be
 frozen in its own commit first.
+
+## 15. sph-hvi-contact under set-up S′: host rungs S0 and S1 fail, reruns stopped (task 2026-11-11-b)
+
+Task: [tasks/wsl-a.md](tasks/wsl-a.md), task 2026-11-11-b. Judge: [sph-contact-ladder.md](sph-contact-ladder.md),
+frozen in `36c34bd`, Addendum 1 frozen in `140b84a`. Set-up S′ = the frozen settings plus ξ = 0.3 and
+kernel-correction order 1 on all SPH particles (`SPH_STAB=0.3,0,1`, `sphdeck.py` `cb257fd`). Fork binary: source
+`e606c1386`, built from a clean tree; runs started from the clean fork tree `de0906894`; results recorded in fork
+`d56b565ba`. Details: the fork's `hvi/CHANGELOG.md`, "Set-up S': host rungs S0, S1, F0 and A-0".
+
+**Result: step 1 of the task fails. S′ is not a valid host set-up under the rule fixed before the runs, and the
+task stopped there.** No hvi rung (A-2, B-1, B-2, B-3, C-1, D-2, D-3, optional rungs) was run at S′. The verdicts
+under the frozen set-up (§14.2) stand unchanged.
+
+### 15.1 Rule, prediction and verdicts
+
+- **Pass rule.** §9.4 and §9.6 give no numeric thresholds for S0 and S1. Peter fixed the rule in the WSL A session
+  on 2026-11-11, before the runs: **not worse than before.** For S0 (h = 1.12 s; 25, 50, 100, 200 particles;
+  plateau, contact time, rebound against 1) and S1 (conforming sphere, rigid wall, quarter model, 20 m/s; R/16,
+  R/32, R/64; contact time at 10⁻² F_Hertz, peak, approach, rebound against the JAX reference of §9.6) the error
+  |value / reference − 1| at S′ may exceed the error under the frozen set-up by at most 0.01. F0 keeps the limits
+  of §10.2. Code: the fork's `hvi/scripts/sp_host_eval.py`.
+- **Commit order.** Rule and prediction were committed in the fork (`2d60ce057`, `de0906894`) before the campaign
+  started (2026-11-11 19:47).
+- **Rows.** [`results/hvi_host.csv`](opencourant/results/hvi_host.csv) (one row per judged number, frozen value
+  next to the S′ value), [`results/sp_host/`](opencourant/results/sp_host/) (raw CSVs with a `setup` column; the
+  column `xi_stab` of `sph_s1.csv` is the deck script's own argument and reads 0, the property card of every deck
+  has ξ = 0.3 and order 1), [`results/hvi_a.csv`](opencourant/results/hvi_a.csv) (A-0 at S′). All rows:
+  `binary_state = committed`, ladder `36c34bd+140b84a`.
+
+| rung | verdict at S' | numbers inside the rule | predicted |
+|---|---|---|---|
+| S0 | **FAIL** | 4 of 12 | PASS (wrong) |
+| S1 | **FAIL** | 11 of 12 | FAIL through R/16 (wrong cause: R/16 passes, R/64 fails) |
+| F0 | PASS | 3 of 3: peak 1.049, approach 0.958, rebound 0.986 | borderline, peak 1.04–1.06 (right) |
+| A-0 at S' | PASS | fork without sidecar = base `d791761`: 55 runs, 627 metrics, max difference 0 | PASS (right) |
+
+### 15.2 S0
+
+Value at S' / frozen value; reference 1; a number fails when its error exceeds the frozen error + 0.01):
+
+| particles | plateau | contact time | rebound |
+|---|---|---|---|
+| 25 | **1.0169** / 0.9948 | **0.9666** / 1.0112 | **0.8638** / 0.8881 |
+| 50 | **1.0166** / 0.9955 | **0.9797** / 1.0075 | **0.9112** / 0.9251 |
+| 100 | **1.0167** / 0.9956 | 0.9871 / 1.0065 | 0.9408 / 0.9485 |
+| 200 | **1.0168** / 0.9957 | 0.9902 / 1.0050 | 0.9598 / 0.9640 |
+
+Bold = outside the rule. The plateau stress is 1.7 % high at every spacing (frozen: 0.4–0.5 % low) and does not
+move with refinement; it misses the limit (frozen error + 0.01 ≈ 1.5 %) by 0.15–0.25 percentage points at all four
+spacings. The contact time is short instead of long and converges to 1 from below; the rebound is lower at every
+spacing and the gap to the frozen value closes with refinement (0.024, 0.014, 0.008, 0.004).
+
+### 15.3 S1
+
+20 m/s, conforming, rigid wall, quarter; S' / frozen; references 0.940, 1.073, 0.957, 0.9996):
+
+| spacing | contact at 10⁻² | peak | approach | rebound |
+|---|---|---|---|---|
+| R/16 | 0.921 / 0.964 | 1.079 / 1.193 | 0.925 / 1.122 | 0.993 / 0.925 |
+| R/32 | 0.935 / 0.964 | 1.055 / 1.030 | 0.941 / 1.014 | 0.985 / 0.985 |
+| R/64 | 0.955 / 0.964 | 1.019 / 1.027 | 0.958 / 0.986 | **0.966** / 0.980 |
+
+Eleven numbers are inside the rule and nine of them are closer to the reference than under the frozen set-up. The
+one failure is the rebound at R/64: error 3.33 % against a limit of 2.99 % (frozen error 1.99 % + 1). The R/16
+force tail that ξ alone produced (contact time 1.089) is not there with order 1.
+
+### 15.4 Reported, not judged
+
+ S1 at 2 m/s moves toward the reference at R/32 and R/64 (R/64: 0.956 / 1.026 / 0.962 /
+0.972 against frozen 1.037 / 0.957 / 1.069 / 0.992). The mirror-wall rows stay bad (R/16 rebound 0.086 against
+0.625 frozen). One lattice-sphere run with the mirror wall at R/32 blew up (peak 5·10⁵); the same case was already
+unusable under the frozen set-up (rebound 0.52), and lattice spheres are not a recommended set-up (§9.6). S0p at
+h = 1.12 s: wall plateau 1.014 against 0.994 frozen, the same +2 % shift as in S0.
+
+### 15.5 Against the prediction
+
+ S0: wrong. I expected the plateau within 0.5 % of the frozen value with high
+confidence; order 1 shifts it by +2.1 %. S1: I named the wrong failure (R/16 contact time); the rebound at R/64,
+which I expected within 0.01 of the frozen value, is 0.013 lower. F0 and A-0 as predicted.
+
+
+### 15.6 Per required rung: S′ next to the frozen verdict
+
+| rung | frozen set-up (§14.2) | S′ |
+|---|---|---|
+| S0 (host) | pass (§9.4) | **FAIL** |
+| S1 (host) | not a clean pass (§9.6) | **FAIL** (rebound at R/64) |
+| F0 (host) | pass (§10.2) | PASS |
+| A-0 | PASS | PASS (bit-identical to the base build at S′) |
+| A-2 | PASS | not run (stopped) |
+| B-1 | PASS | not run |
+| B-2 | **FAIL** | not run; the diagnostic F2 of §14.3 (stfac 1) is not a verdict |
+| B-3 | **FAIL** | not run |
+| C-1 | PASS | not run |
+| D-2 | PASS | not run |
+| D-3 | not run | not run (A3.5 not implemented) |
+
+### 15.7 For Peter and the cloud session to decide
+
+WSL A changed nothing and proposes no fix here. The facts that bear on a decision:
+
+- The S0 failure is a constant offset: order 1 puts the plateau stress 1.7 % above the exact value at every
+  spacing. It misses the limit by 0.15–0.25 percentage points, but it does not converge, which the frozen set-up
+  does not show (0.4–0.5 % low at every spacing).
+- The S1 failure is one number of twelve (rebound at R/64, 0.34 percentage points over the limit); nine of the
+  twelve are closer to the reference than under the frozen set-up.
+- Which of ξ and order 1 causes the S0 offset is not measured: no host run with order 1 alone exists.
+- The cost comparison (step 6), R/48 (step 4) and D-3 (step 7) are untouched.
