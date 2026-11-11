@@ -5,7 +5,52 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-11-a: record and commit before anything else (open; do this first)
+## Task 2026-11-11-b: ladder reruns under set-up S′ (open)
+
+**Basis:** [../sph-contact-ladder.md](../sph-contact-ladder.md), **Addendum 1** (frozen in 140b84a, post hoc; adopted by
+Peter 2026-11-11). Cite 36c34bd + 140b84a in every row.
+- **S′** = the §9.1 settings plus ξ = 0.3 and kernel-correction order 1 on **all** particles. It is one set-up for
+  every rung below.
+- **stfac 3** for all S′ rungs (Peter's choice for E-1; one value throughout). B-3 must pass for it.
+- The FAILs under the frozen set-up stand (§14.2); S′ is a second, labelled track.
+
+**Rules:**
+- Commit the source and decks before each campaign.
+- Commit each recorded prediction in its own commit before its runs.
+- Every run gets a row with `binary_state = committed`.
+- A failing **required** rung means stop, record it and report to Peter, with no tuning. Optional items do not stop
+  the task.
+
+**Order:**
+1. **Host rungs at S′:** S0, S1 and F0 of opencourant-verification.md, on the fork binary without a sidecar. Same
+   references and thresholds as in §9.4, §9.6 and §10.2. If one fails, stop: S′ is then not a valid host set-up.
+2. **A-0 at S′:**
+   - build the base `d791761` unmodified;
+   - run S0, S0p, S1 and the two-part column at S′ on it and on the fork without a sidecar;
+   - the two must be bit-identical.
+3. **A-2, B-1, B-2** (R/16 and R/32), **B-3** (R/32, start at s against 2.4 s, within 1 %).
+4. **B-2 convergence:** B-2 at R/48 (R/64 if R/48 is affordable and inconclusive). It must be in the same direction
+   and within the same limits as at R/32. Report whether the 3.4 % peak overshoot of F2 is the SPH sphere's own: the
+   F0 rerun at S′ from step 1 is the comparison.
+5. **C-1, D-2** at S′.
+6. **Cost:** cycles and µs per particle-cycle for S′ against §9.1, measured on an idle machine. Use B-2 R/32 and one
+   column run.
+7. **D-3** needs A3.5 (cs12 and bay83 activation) first:
+   - A4.0: code the bay83 form as printed in the primary source (Kebriaei 2014, and Bay 1983 if Peter supplies it),
+     with page references in SPEC;
+   - implement, check A-0 again, then run D-3 at S′.
+8. **Optional, not stopping:** the D-1 refinement path of Addendum 1 A2.4 at S′ (50 → 100 → 200 particles per L;
+   maximum deviation over the whole run). Then C-2 and C-3 at S′ with `surface.area = rate` and `cone + fit` named
+   as settings, as diagnostics. Changing a default is a fix with its own CHANGELOG entry.
+
+**Results:** `hvi_*.csv` rows with a `setup` column (`frozen` or `S'`), plus a new §15 in opencourant-verification.md
+on `coldspray/opencourant-sph`. §15 lists, per required rung, the verdict under S′ next to the frozen-set-up verdict.
+
+**Not in this task:** E-1. It waits for the E-1 gate
+([../sph-contact-e1-gate-draft.md](../sph-contact-e1-gate-draft.md)) to be approved and frozen. E-1 itself runs under
+Addendum 1 A4: frozen set-up as the main case, S′ alongside, stfac 3.
+
+## Task 2026-11-11-a: record and commit before anything else (closed: done, §14, merged 5a251fc)
 
 **Why:** the referee ([../sph-contact-referee-2026-11-11.md](../sph-contact-referee-2026-11-11.md)) found that most
 results in the fork's VERIFY-RESULTS.md exist only in `~/oc_runs`. Several were made on binaries that were never
@@ -39,10 +84,10 @@ are **not admissible as verdicts**.
    opencourant-verification.md, on `coldspray/opencourant-sph`. §14 states which rows are verdicts and which are
    diagnostics.
 5. **Stop after this.** Make no new runs under ξ = 0.3 + order 1 (set-up S′) and no E-1 until Peter decides
-   [../sph-contact-ladder-addendum-1-draft.md](../sph-contact-ladder-addendum-1-draft.md). Reruns of C-1, D-2 and
+   the addendum draft (since adopted as Addendum 1 of the ladder, 140b84a). Reruns of C-1, D-2 and
    A-0 under the frozen set-up (item 2) are allowed.
 
-## Task 2026-11-08-a: sph-hvi-contact, milestone 1 (open; paused until 2026-11-11-a is done)
+## Task 2026-11-08-a: sph-hvi-contact, milestone 1 (open; the S′ reruns are task 2026-11-11-b)
 
 **Status 2026-11-11:**
 - B-2, B-3 and D-1 FAIL under the frozen ladder (referee-confirmed for B-2 and B-3 from `hvi_b.csv`).
