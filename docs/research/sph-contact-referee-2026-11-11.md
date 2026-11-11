@@ -9,7 +9,7 @@
 
 **It did not see** the modeller's own recommendations. The modeller's recommendation on Q2 (judge D-1 against the
 welded SPH bar) is overruled below. The report is reproduced verbatim. Peter's decisions on it are recorded
-elsewhere (addendum draft: sph-contact-ladder-addendum-1-draft.md).
+elsewhere (adopted as Addendum 1 of sph-contact-ladder.md on 2026-11-11).
 
 ---
 
