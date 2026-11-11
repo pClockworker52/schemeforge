@@ -95,3 +95,6 @@ No frozen model or hunch can be discriminated on these papers, so no predictions
 Their outcomes are extracted into `data/vcr_lipit.csv` for completeness (WSL B task b8), labelled **exposed**, with
 no verdicts. For the end point of the single-impact phase (DECISIONS 2026-11-07), they count as done. Remaining:
 B06, B07 and B16 (closed access, with Alex).
+
+**Merged 2026-11-11** (d67f72c, leak-scanned clean): rows B-B03-c1 (588–590 m/s as printed, Cu, D = 12 µm), B-B12-c1 and
+B-B12-c2 (no v_cr printed), all labelled exposed, no verdicts.

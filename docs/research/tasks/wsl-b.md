@@ -204,7 +204,7 @@ values; otherwise skip that figure and say so. Do not read p. 146.
 Branch `coldspray/panova2024-ch2` from `claude/exciting-fermi-qy077p`. Commit only that file, push, and stop.
 **Do not merge.**
 
-## Task 2026-11-08-b8: outcomes of B03 and B12 for the data table (no scoring)
+## Task 2026-11-08-b8: outcomes of B03 and B12 for the data table (no scoring) (closed: merged d67f72c)
 
 Peter closed B03, B05 and B12 without a pre-registration (coldspray-blind-literature.md, "Closure of B03, B05 and
 B12"). Nothing is frozen against them, so their outcomes may be extracted now, for the data table only.
