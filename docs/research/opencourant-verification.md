@@ -1111,3 +1111,151 @@ keeps rising, with or without conduction.
 - **The failing side is the particle,** in every run, and its collapse time falls steadily as the spacing is refined (by a factor 2.0–2.9 from R/16 to R/48). This is the mesh-scale edge failure of §8.3 and §10.5, now in a fully Lagrangian 3D model.
 - **One solver, as the protocol says.** A refutation in OpenCourant does not carry over to CS-13's mechanism in general. The JAX route is the independent check.
 - **DECISIONS 2026-11-05 applies:** CS-13c was the last OpenCourant protocol for the thermal question, so there is no CS-13d.
+
+## 14. sph-hvi-contact, milestone 1: recorded rows, verdicts and diagnostics (tasks 2026-11-08-a and 2026-11-11-a)
+
+Task: [tasks/wsl-a.md](tasks/wsl-a.md), task 2026-11-11-a (record and commit), which pauses task 2026-11-08-a.
+Judge: [sph-contact-ladder.md](sph-contact-ladder.md), frozen in `36c34bd`. Referee:
+[sph-contact-referee-2026-11-11.md](sph-contact-referee-2026-11-11.md). Fork: `sph-hvi-contact`, rows recorded at
+fork commit `b95ef45c6`; the solver source last changed in `e606c1386`. Details of every run: the fork's
+`hvi/CHANGELOG.md` and `hvi/VERIFY-RESULTS.md`.
+
+**This section adds no new physics.** It records every run the fork reported, says on which binary each ran, and
+separates verdicts from diagnostics. No run was made under ξ = 0.3 + order 1 (set-up S′) and no E-1 run was made
+for this task.
+
+### 14.1 What was done for task 2026-11-11-a
+
+1. **Rows.** Every run reported in the fork's VERIFY-RESULTS.md after A3.2 is now a CSV row, written by the fork's
+   `hvi/scripts/collect_runs.py` from the run folders in `~/oc_runs`:
+
+   | file | content | rows |
+   |---|---|---|
+   | [`results/hvi_a.csv`](opencourant/results/hvi_a.csv) | A-0 and A-2 | 20 |
+   | [`results/hvi_b.csv`](opencourant/results/hvi_b.csv) | B-1, B-2, B-3 and B-2d at R/16 (A3.2, fork `4e0646744`; unchanged) | 21 |
+   | [`results/hvi_c.csv`](opencourant/results/hvi_c.csv) | C-1, C-2, C-3 | 8 |
+   | [`results/hvi_d.csv`](opencourant/results/hvi_d.csv) | D-1, D-2 and the D-1 column diagnostics (tie and welded bars) | 17 |
+   | [`results/hvi_diag.csv`](opencourant/results/hvi_diag.csv) | every other B-type run: B-2d at R/32, tangent-plane gap, surface-only normals, fast deck, cone + fit, stabiliser matrix (a), F1, F2, B-1 regressions | 33 |
+   | [`results/hvi_e.csv`](opencourant/results/hvi_e.csv) | the two E-1 probes (R/16, 800 m/s), labelled `unauthorised probe, diagnostic` | 2 |
+
+   Every row carries the ladder commit, the deck hash, the settings (ξ, kernel-correction order, α_cs, stfac, normal,
+   gap, surface detection), the binary it ran on, and `binary_state`.
+2. **`binary_state`** has three values:
+   - `committed`: the binary was built from a clean tree at the named fork SHA;
+   - `source committed before run`: the solver source was committed (`e606c1386`) before the run, and the binary
+     had been built from the same files one day earlier. This holds for the runs of 2026-11-11 (cone + fit full run,
+     stabiliser matrix, F1, F2). The deck scripts carried uncommitted switches (`HVI_STAB`) during these runs; the
+     deck hash in the row fixes the deck;
+   - `binary uncommitted`: built from a dirty tree. This holds for every run between A3.2 (`4e0646744`) and
+     `e606c1386`, that is C-1, C-2, C-3, D-1, D-2, the tangent-plane-gap runs, the surface-only test, the fast-deck
+     acceptance runs and the second E-1 probe. For these rows the column `fork_sha` is the last source commit at run
+     time, not the source of the binary.
+3. **Rebuild.** The fork was rebuilt from a clean tree at `6a8084b11` (source = `e606c1386`). The new binary differs
+   from the A3.4 binary of 2026-11-10 in 27 bytes (link stamp); no solver source file is newer than that binary.
+4. **Reruns on the rebuilt binary, frozen set-up, clean tree:**
+
+   | rung | result | against the earlier, inadmissible row |
+   |---|---|---|
+   | C-1 (core) | top-face Y within 0.27 % (λ = 1.5) and 0.23 % (λ = 2) of 1 − 1/λ²; limit 1 % | every recorded digit equal, same deck hash |
+   | D-2 (core) | separation at 2.074 T_C against 2.001 (3.6 %, limit 5 %); dissipated energy 1.0000 × G_c·A (limit 5 %) | every recorded digit equal, same deck hash |
+   | B-1 (stfac 1, colour; regression) | striker 0.0087 V, target 0.0043 V, tension 0 | every recorded digit equal to the A3.2 row |
+   | A-0 (no sidecar) | PASS: 55 rows bit-identical to the baseline (S0 22, S0p 8, S1 16, two-part 9) | |
+
+### 14.2 Verdicts under the frozen ladder (`36c34bd`), frozen set-up (ξ = 0, order 0)
+
+Only rows with `binary_state = committed` carry a verdict.
+
+| rung | verdict | fork SHA | row |
+|---|---|---|---|
+| A-0 | PASS (55 rows bit-identical) | `e606c1386` (rebuilt at `6a8084b11`) | `hvi_a.csv` |
+| A-2 | PASS (float64 momenta, max \|Δv\|/V = 0) | `4e0646744` | `hvi_a.csv` |
+| B-1 | PASS | `4e0646744`; regression row at `e606c1386` | `hvi_b.csv`, `hvi_diag.csv` |
+| B-2 | **FAIL** (R/32: no stfac in {1, 3, 10} passes; stfac 1: peak 0.858, approach 1.166, rebound 0.885) | `4e0646744` | `hvi_b.csv` |
+| B-3 | **FAIL** (R/32, stfac 10: 6.6 %, limit 1 %) | `4e0646744` | `hvi_b.csv` |
+| C-1 | PASS | `e606c1386` | `hvi_c.csv`, row `kind = verdict` |
+| D-2 | PASS | `e606c1386` | `hvi_d.csv`, row `kind = verdict` |
+| D-3 | not run | | |
+
+Deferred rungs that were run early. Their rows are diagnostics until they are rerun on a committed binary; the FAILs
+stand:
+- **C-2: FAIL** at the default `surface.area` (Nanson: side faces 6.0e-3, limit 1e-3); the rate form gives 3.9e-4.
+- **C-3: FAIL** at the defaults (colour gradient: max tilt 32.3°, limit 5°). With `surface.detect = cone` and
+  `surface.normal = fit` the max tilt is 0.91°; that is a candidate fix, not the default.
+- **D-1: FAIL** (0.285 V from the exact joined bar, limit 0.05 V).
+
+**One thing the C-1 row does not show by itself:** the first C-1 run failed (`hvi_c.csv`, first row). The cause was a
+thread race in the new A3.3 hook (a missing barrier; fork CHANGELOG 2026-11-09), a code error and not a threshold
+question. It was fixed before the passing run. Both rows are recorded.
+
+### 14.3 Diagnostics (no verdict, whatever the numbers)
+
+All rows of `hvi_diag.csv` and `hvi_e.csv`, the `D-1 diag` rows of `hvi_d.csv`, and the rows above with
+`binary_state` other than `committed`.
+
+- **Set-up S′ (ξ = 0.3 + order 1; outside the frozen set-up, chosen after seeing results).** At R/32, stfac 1:
+
+  | run | peak | approach | rebound |
+  |---|---|---|---|
+  | F2: frozen contact law | 1.035 | 0.981 | 0.983 |
+  | F1: cone + fit, tangent-plane gap | 1.034 | 0.975 | 0.977 |
+
+  Both overshoot the Hertz peak by 3.4 %. The host's own F0 run at R/32 under the frozen set-up (§10: SPH sphere on
+  a brick block, no hvi code) has peak 1.037, approach 0.987, rebound 0.992, so the overshoot is probably the SPH
+  sphere's own at this resolution. That is a reading of existing rows, not a tested statement; the R/48 run the
+  addendum asks for would test it.
+
+  The predictions for these runs are in the fork's CHANGELOG, but the CHANGELOG was committed after the runs
+  (`6a8084b11`), so git does not date them. The referee's conditions for S′ are in the addendum draft; none of them
+  has been run.
+- **D-1 column, maximum deviation of the striker from the exact joined bar over the whole run** (the window the
+  addendum draft proposes; the fork's VERIFY-RESULTS quotes the value at 3.0 T_C, which is lower for the runs with
+  ξ):
+
+  | set-up | tie | welded SPH bar (no hvi) |
+  |---|---|---|
+  | frozen | 0.285 V | 0.073 V |
+  | ξ = 0.3 | 0.156 V (0.123 at 3.0 T_C) | 0.126 V (0.111) |
+  | α_cs = 0.1 | 0.089 V (0.086) | 0.081 V (0.080) |
+  | order 1 | 0.447 V | 0.297 V |
+  | S′ | 0.092 V (0.090) | 0.094 V (0.091) |
+
+  The tie-against-welded difference is a labelled diagnostic only (referee, Q2). D-1 is judged against the exact
+  bar and fails in every set-up.
+- **E-1 probes (R/16, 800 m/s).** Two runs, made without a decision by Peter or schemeforge. Frozen law, stfac 3:
+  J = 1.04. Tangent-plane gap, stfac 1: particles are thrown out (J = 4.4). No v_cr, no claim.
+
+### 14.4 What cannot be repaired after the fact
+
+- **Timing of predictions.** The predictions for the runs between `937ff009c` and `6a8084b11` (fast deck, C-3,
+  cone + fit, stabiliser matrix, F1/F2) were written into the CHANGELOG before each run, but committed afterwards.
+  File times are the only evidence. From now on each recorded prediction gets its own commit before its runs.
+- **Binaries between A3.2 and `e606c1386`.** Five intermediate binaries (kept in `~/oc_runs/ocroot_*`) were built
+  from uncommitted source and cannot be tied to a commit. The C-1 and D-2 results from them are reproduced digit
+  for digit on the committed binary; the other rows stay `binary uncommitted`.
+- **The stop rule.** B-2 failed at fork `4e0646744`; the fork went on through A3.3, A3.4 and deferred rungs without
+  Peter's decision. That is for Peter to confirm or reject (addendum draft, open point 2).
+
+### 14.5 Rules from now on (task item 3)
+
+- The source is committed before every run campaign, and no run is made on a dirty tree. This covers deck scripts,
+  since they define the deck.
+- Each recorded prediction is committed in its own commit before its runs.
+- Every run gets its CSV row in `hvi/results/` when it ends, with the fork SHA of a committed binary.
+
+**Stopped here,** as the task says: no run under S′ and no E-1 until Peter decides on
+[sph-contact-ladder-addendum-1-draft.md](sph-contact-ladder-addendum-1-draft.md).
+
+### 14.6 Peter's decisions on the addendum draft (given in the WSL A session, 2026-11-11)
+
+Peter decided the four open points of
+[sph-contact-ladder-addendum-1-draft.md](sph-contact-ladder-addendum-1-draft.md) in the WSL A session. WSL A does
+not edit DECISIONS or the ladder, so they are reported here for the cloud session to record:
+
+1. **A1–A4 adopted as written.**
+2. **Approved after the fact:** the fork's work past the plan's stop rule (A3.3, A3.4, the deferred rungs run early)
+   and the E-1 probe.
+3. **Fork base `d791761` accepted** instead of `cb760c2`.
+4. **stfac 3 for E-1.**
+
+No S′ run and no E-1 run is started on this basis alone: the ladder's commit order asks for the addendum to be
+frozen in its own commit first.
