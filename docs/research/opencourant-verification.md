@@ -1390,7 +1390,58 @@ What order 1 changes in S0 (200 particles; frozen value in brackets):
 
 Under the frozen set-up the wall force and the momentum rate agree to five digits. With order 1 the wall force is
 1.0 % above the momentum rate during the plateau, and over the whole run the wall delivers 1.5 % more impulse than
-the column receives (frozen: 0.5 % less, the size of the integration error of this check). So with order 1 the
-forces between the particles do not sum to zero: the corrected kernel sums do not conserve momentum exactly. The
+the column receives (frozen: 0.5 % less, the size of the integration error of this check). ~~So with order 1 the
+forces between the particles do not sum to zero: the corrected kernel sums do not conserve momentum exactly.~~
+(Wrong, corrected in §15.9: the gap comes from the lateral symmetry planes of the deck.) The
 wall force also has a start spike of +18 %. This is a reading of the two runs, not a code analysis; where in the
 order-1 sums the momentum goes was not traced.
+
+### 15.9 Correction of §15.8 and a width test (diagnostic, 2026-11-12)
+
+**Correction.** In the solver source (`engine/source/elements/sph/spforcp.F`) the force between two real particles
+is exactly equal and opposite with or without order 1. The gap between wall force and momentum rate in §15.8
+therefore cannot come from real particle pairs. Test, with the prediction committed in the fork before the runs
+(fork script `hvi/scripts/s0_width.py`): S0 at 50 particles per L with cross-sections 4, 8 and 16 particles wide,
+frozen and order 1 alone.
+
+**Results (2026-11-12, clean fork tree; rows [`results/sp_host/s0_width.csv`](opencourant/results/sp_host/s0_width.csv)).**
+S0, h = 1.12 s, 50 particles per L:
+
+| width (particles) | set-up | wall-force plateau | momentum-rate plateau | wall impulse − momentum change, / p0 (frozen offset removed) | contact time | rebound | wall-force peak |
+|---|---|---|---|---|---|---|---|
+| 4 | frozen | 0.9955 | 0.9955 | 0 | 1.0075 | 0.9251 | 0.998 |
+| 8 | frozen | 0.9960 | 0.9960 | 0 | 1.0075 | 0.9250 | 0.999 |
+| 16 | frozen | 0.9961 | 0.9961 | 0 | 1.0075 | 0.9250 | 0.999 |
+| 4 | order 1 | 1.0166 | 1.0063 | +0.0195 | 0.9797 | 0.9111 | 1.180 |
+| 8 | order 1 | 1.0089 | 1.0063 | +0.0049 | 0.9797 | 0.9111 | 1.170 |
+| 16 | order 1 | 1.0070 | 1.0063 | +0.0012 | 0.9797 | 0.9111 | 1.167 |
+
+(The frozen runs show a constant offset of −1/n_z = −0.0200 between the sampled wall impulse and the momentum
+change: the bottom layer starts in contact and is stopped in the first step. It is subtracted in the fifth column.)
+
+- **The gap between wall force and momentum is a deck artefact of the lateral planes.** It falls by a factor of 4
+  per doubling of the width (0.0195, 0.0049, 0.0012), that is with 1/width². A share that scales like 1/width² is
+  the share of the four corner columns, where two planes meet; that the corners are the place is an inference
+  from this scaling, not traced in the code.
+- **Order 1 has a width-independent effect as well,** and this is its real effect on the column: momentum-rate
+  plateau 1.0063 (frozen 0.9955; exact 1), contact time 0.980 (1.0075), rebound 0.911 (0.925), start spike of
+  the wall force +17 to 18 %. The wall-force plateau tends to 1.006 for a wide column.
+- **Against the prediction.** Frozen: right (0.9955–0.9961). Order 1 at width 8: +0.0129 over frozen, at the upper
+  end of the predicted +0.008 to +0.013. At width 16: +0.0108, outside the predicted +0.003 to +0.007, because I
+  did not expect the width-independent part (+0.0108 → 0.51 of the excess at width 4, so "below half" just fails).
+  The gap itself falls faster than predicted (1/width² and not 1/width).
+- **What it changes for the S0 verdict at S':** nothing. The rule was fixed for the 4-wide deck. On an infinitely
+  wide column the plateau would be inside the rule (error 0.6 % against a limit of 1.5 %), but contact time and
+  rebound do not depend on the width and stay outside the rule at 25 and 50 particles. S1 is not affected (R/32
+  half against quarter model at S': peak 1.059 against 1.055).
+
+### 15.10 Peter's decision (WSL A session, 2026-11-12) and the analysis
+
+**Peter accepted the stop.** S′ is not adopted; the verdicts under the frozen set-up stand (§14.2: B-2 and B-3
+FAIL). Steps 3–8 of task 2026-11-11-b are not run. WSL A does not edit DECISIONS; this is reported here for the
+cloud session to record.
+
+At Peter's request WSL A wrote an analysis (what was learned, what is not understood, outlook on other approaches
+and on simplifying assumptions for cold spray): fork `sph-hvi-contact`, `hvi/ANALYSIS-2026-11-12.md`. Its outlook
+is from general knowledge, with no paper opened, and is marked as such.
+
