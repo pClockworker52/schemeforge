@@ -1367,3 +1367,30 @@ WSL A changed nothing and proposes no fix here. The facts that bear on a decisio
   twelve are closer to the reference than under the frozen set-up.
 - Which of ξ and order 1 causes the S0 offset is not measured: no host run with order 1 alone exists.
 - The cost comparison (step 6), R/48 (step 4) and D-3 (step 7) are untouched.
+
+### 15.8 Which part shifts S0 (diagnostic; Peter, 2026-11-12)
+
+Peter asked for the cause before deciding. Two S0 runs (h = 1.12 s; 25 to 200 particles) on the same fork binary:
+order 1 alone and ξ = 0.3 alone. No verdict, no rule change. The prediction (order 1 alone = S′, ξ alone = frozen)
+was committed in the fork before the runs.
+
+**Results (2026-11-12, clean tree, rows [`results/sp_host/s0_order1.csv`](opencourant/results/sp_host/s0_order1.csv) and [`s0_xi.csv`](opencourant/results/sp_host/s0_xi.csv), diagnostics).**
+Both predictions hold, and exactly: order 1 alone gives the S' numbers digit for digit, ξ alone gives the frozen
+numbers digit for digit (same cycle counts). **The S0 shift is caused by order 1 alone; ξ does nothing in S0.**
+
+What order 1 changes in S0 (200 particles; frozen value in brackets):
+
+| quantity | order 1 | frozen |
+|---|---|---|
+| wall force, plateau / ρ c_d V A | 1.0168 | 0.9957 |
+| rate of change of the column's momentum, plateau | 1.0063 | 0.9957 |
+| wall force, peak | 1.177 | 0.998 |
+| impulse of the wall force / initial momentum | 1.975 | 1.959 |
+| momentum change of the column / initial momentum | 1.960 | 1.964 |
+
+Under the frozen set-up the wall force and the momentum rate agree to five digits. With order 1 the wall force is
+1.0 % above the momentum rate during the plateau, and over the whole run the wall delivers 1.5 % more impulse than
+the column receives (frozen: 0.5 % less, the size of the integration error of this check). So with order 1 the
+forces between the particles do not sum to zero: the corrected kernel sums do not conserve momentum exactly. The
+wall force also has a start spike of +18 %. This is a reading of the two runs, not a code analysis; where in the
+order-1 sums the momentum goes was not traced.
