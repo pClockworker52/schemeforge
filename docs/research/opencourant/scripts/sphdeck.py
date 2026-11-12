@@ -16,6 +16,11 @@ Cards used (Reference Guide 2022, card layouts from the shipped hm_cfg_files):
   /FRAME/FIX     origin, Y' axis, Z' axis (X' = Y' x Z').
   /RWALL/PLANE   frictionless (Slide = 0) rigid plane z = z_wall, normal +z, all particle nodes secondary.
 
+Set-up switch: the environment variable SPH_STAB="xi_stab,alpha_cs,order" overrides these three /PROP/TYPE34
+fields for every SPH part of every deck written here, whatever the calling script passes. Unset = the script's own
+values (the frozen set-up of section 9.1: 0, 0, 0). SPH_STAB=0.3,0,1 is set-up S' of the sph-contact ladder,
+Addendum 1 (artificial stress 0.3, kernel-correction order 1, on all particles).
+
 SPH particles of different parts interact through the kernel like one body (no part filter in the neighbour
 search or in spforcp.F); a particle-substrate contact therefore needs a separate method (section 9).
 """
@@ -98,8 +103,11 @@ def write_deck(d, name, bodies: list[Body], *, t_end, dt_th, sym=(), z_wall=None
         s += [f"/SPHCEL/{p}"] + [_i(k) + _i(0) for k in range(a0, a1 + 1)]
         s += [f"/PART/{p}", b.title, _i(p) + _i(p) + _i(0)]
         pr = b.prop
-        s += [f"/PROP/TYPE34/{p}", f"{b.title} sph", _f(b.mass) + _f(pr.qa) + _f(pr.qb) + _f(pr.alpha_cs) + _i(0)
-              + _i(pr.h_1d), _i(pr.order) + _f(pr.h) + _f(pr.xi_stab), _f(0.0)]
+        acs, order, xi = pr.alpha_cs, pr.order, pr.xi_stab
+        if os.environ.get("SPH_STAB"):  # set-up switch for every SPH part of every deck, see module docstring
+            xi, acs, order = (float(v) for v in os.environ["SPH_STAB"].split(","))
+        s += [f"/PROP/TYPE34/{p}", f"{b.title} sph", _f(b.mass) + _f(pr.qa) + _f(pr.qb) + _f(acs) + _i(0)
+              + _i(pr.h_1d), _i(int(order)) + _f(pr.h) + _f(xi), _f(0.0)]
         mc = _material_cards(b.mat)
         mc[0] = mc[0].rsplit("/", 1)[0] + f"/{p}"
         mc = [c if not c.startswith("/EOS/") else c.rsplit("/", 1)[0] + f"/{p}" for c in mc]

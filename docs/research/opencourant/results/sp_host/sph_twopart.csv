@@ -1,0 +1,10 @@
+t_over_2L_cd,striker_v_over_V,target_mean_v_over_V,setup,xi,alpha_cs,order,ladder,fork_sha,binary_state
+0.501,-0.4957,-0.2521,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+1.001,-0.0156,-0.4922,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+1.251,-0.0001,-0.5,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+1.5,-0.0001,-0.5,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+2.001,-0.0164,-0.4918,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+2.5,-0.449,-0.2755,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+3.001,-0.9063,-0.0468,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+3.5,-0.5829,-0.2085,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
+3.998,-0.0937,-0.4531,S',0.3,0,1,36c34bd+140b84a,e606c1386,committed
