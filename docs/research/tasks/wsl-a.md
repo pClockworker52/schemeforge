@@ -5,7 +5,30 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-12-a: TLSPH in the fork, preparation only (waiting for the freeze)
+## Task 2026-11-12-b: freeze preconditions for the TLSPH ladder (open; no code, no runs)
+
+**Basis:** DECISIONS 2026-11-12 "TLSPH set-up from SPEC-TL adopted"; ladder draft
+[../sph-tlsph-ladder-draft.md](../sph-tlsph-ladder-draft.md), "Freeze preconditions".
+
+1. **Journal check of SPEC-TL's equations:** eqs. 15 (correction matrix), 17 (F), 24 (force) and 32 (hourglass) of
+   Ganzenmüller, CMAME 286 (2015) 87–106.
+   - Compare the journal version with the preprint arXiv:1410.7221 that SPEC-TL used. If the journal version is
+     paywalled, ask Peter for the PDF.
+   - Compare with one independent source, for example Bonet & Lok 1999 or Vidal, Bonet & Huerta 2007 for the
+     correction and force, or another TLSPH paper for the hourglass term.
+   - Record every difference in SPEC-TL, with page references.
+2. **`tl.cond_max`:** compute the condition numbers of the reference correction matrices at t = 0 with a script,
+   with no engine run. Cover:
+   - the bulk cubic net;
+   - free faces, edges and corners;
+   - symmetry-plane neighbourhoods with images;
+   - the surface-conforming sphere at R/16, R/32 and R/64 (including the merged particles).
+
+   Propose a limit with its reason (for example 10× the largest value found in these sets-ups), and write it into
+   SPEC-TL §5.3.
+3. **Push** the fork branch `tlsph`, and stop. No solver code until the freeze commit in schemeforge exists.
+
+## Task 2026-11-12-a: TLSPH in the fork, preparation only (closed: done; reading note merged bc3376b, SPEC-TL at fork tlsph 1ae689c)
 
 **Basis:**
 - DECISIONS 2026-11-12: TLSPH directly in the solver, 3D, bond in the solver.
