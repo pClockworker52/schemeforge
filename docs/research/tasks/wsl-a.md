@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-11-b: ladder reruns under set-up S′ (open)
+## Task 2026-11-11-b: ladder reruns under set-up S′ (closed: stopped at step 1, §15; Peter 2026-11-12)
 
 **Basis:** [../sph-contact-ladder.md](../sph-contact-ladder.md), **Addendum 1** (frozen in 140b84a, post hoc; adopted by
 Peter 2026-11-11). Cite 36c34bd + 140b84a in every row.
@@ -93,6 +93,8 @@ are **not admissible as verdicts**.
 - B-2, B-3 and D-1 FAIL under the frozen ladder (referee-confirmed for B-2 and B-3 from `hvi_b.csv`).
 - The plan's stop rule applies from here on. A failing rung means stop, record and report; continuing needs Peter's
   decision.
+- 2026-11-12: milestone 1 is blocked under the frozen set-up (S′ not adopted, DECISIONS 2026-11-12). The work
+  continues as TLSPH (hunch CS-18, draft).
 - E-1 waits for the frozen E-1 gate ([../sph-contact-e1-gate-draft.md](../sph-contact-e1-gate-draft.md), draft until
   Peter approves).
 
