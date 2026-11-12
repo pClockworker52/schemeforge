@@ -5,6 +5,39 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-12-a: TLSPH in the fork, preparation only (waiting for the freeze)
+
+**Basis:**
+- DECISIONS 2026-11-12: TLSPH directly in the solver, 3D, bond in the solver.
+- Hunch draft [../coldspray-hunch-cs18.md](../coldspray-hunch-cs18.md) and ladder draft
+  [../sph-tlsph-ladder-draft.md](../sph-tlsph-ladder-draft.md).
+- Literature: [../tlsph-literature-check.md](../tlsph-literature-check.md).
+
+**Allowed now (no runs):**
+1. **Read Profizi, Combescure & Ogawa 2016** (C. R. Mécanique 344, 211–224, doi:10.1016/j.crme.2016.02.001) and
+   **Profizi's PhD thesis** (INSA Lyon 2016), at F level. Fetch them yourself under the standing fetch rule (the
+   journal page and the lamcos.insa-lyon.fr thesis PDF are open; the cloud session cannot reach those hosts).
+   Write `docs/research/data/profizi2016_reading.md` covering:
+   - the SPH formulation (kernel, correction, stabilisation, viscosity);
+   - the reference update, if any, and its trigger;
+   - the body-to-body contact;
+   - the adhesion law;
+   - the verification shown, with numbers;
+   - resolution and cost;
+   - the stated limits.
+
+   These papers are not on the blind list.
+2. **In the fork, on a new branch `tlsph` from `main`,** write two documents:
+   - `hvi/SPEC-TL.md`: a design proposing the set-up section of the ladder (kernel, h, correction, hourglass α,
+     viscosity, reference-update rule) with reasons. It also covers where the hvi contact and bond laws attach.
+   - A **CODEMAP addendum:** where a new SPH formulation plugs into the engine, whether the SPH arrays can hold
+     reference neighbours, reference gradients and F, how symmetry planes would work with fixed reference
+     neighbourhoods, and how SPMD/OpenMP split the loops.
+
+   Commit both. **No solver code and no runs** until CS-18 and the TLSPH ladder are frozen in schemeforge.
+3. **Push** the reading note to schemeforge on a branch `coldspray/profizi2016-reading`, and the fork branch
+   `tlsph`. Then stop.
+
 ## Task 2026-11-11-b: ladder reruns under set-up S′ (closed: stopped at step 1, §15; Peter 2026-11-12)
 
 **Basis:** [../sph-contact-ladder.md](../sph-contact-ladder.md), **Addendum 1** (frozen in 140b84a, post hoc; adopted by

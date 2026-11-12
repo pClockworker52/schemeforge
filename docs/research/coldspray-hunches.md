@@ -21,6 +21,8 @@ Count on 2026-11-07 (after the parking of CS-14b): **3 of 5.**
 | CS-12 | its decisive test T3 needs an unseen thickness series |
 | CS-17 | no unseen substrate series known |
 
+Draft, not counted until frozen: **CS-18** (TLSPH bodies; [coldspray-hunch-cs18.md](coldspray-hunch-cs18.md), 2026-11-12, awaiting Peter). Frozen, it makes the count 4 of 5.
+
 Not counted:
 - parked: CS-14 / 14b (2026-11-07, DECISIONS "Thermal question and CS-14b parked");
 - tested hunches: CS-07, CS-08, CS-09, CS-11, CS-13c, CS-16;
