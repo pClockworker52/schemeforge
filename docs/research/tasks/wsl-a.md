@@ -5,7 +5,37 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-12-b: freeze preconditions for the TLSPH ladder (open; no code, no runs)
+## Task 2026-11-12-c: TLSPH implementation and core rungs (open)
+
+**Basis:**
+- **Judge, frozen:** [../sph-tlsph-ladder.md](../sph-tlsph-ladder.md) and hunch
+  [../coldspray-hunch-cs18.md](../coldspray-hunch-cs18.md), frozen in 583912a. Cite it in every row.
+- **Design:** fork `sph-hvi-contact`, branch `tlsph`, `hvi/SPEC-TL.md` at 3e9aa6b. A change to the ladder's set-up
+  after the freeze is an addendum labelled post hoc, and goes to Peter first.
+
+1. **Implementation, in SPEC-TL §6 order.** Report each step's check in the fork CHANGELOG.
+   1. Sidecar keys (`tl.*`) and fatal checks → T-A0 (no TL body: bit-identical).
+   2. Reference lists with complete images; the correction matrix; the first-cycle self-check (completeness sums,
+      image counts, the `tl.cond_max` and `tl.smin_min` stops).
+   3. Kinematics and force without hourglass and viscosity; the one-cycle uniform-stretch check.
+   4. Hourglass force, viscosity, energies and diagnostics (smallest det F, principal stretches, plastic strain,
+      hourglass energy).
+   5. hvi attachment (SPEC-TL §5, hvi code unchanged).
+2. **Core rungs, in the frozen order:** T-A0, T-S0, T-S0p, T-S1, T-tension, T-zero-energy, T-B1, T-B2, T-B3,
+   **T-survival**, T-C1, T-D1, T-D2. T-D3 waits for A3.5. The reported rungs (T-large-strain-1 and -2, T-cost)
+   whenever convenient, labelled.
+3. **Rules:**
+   - commit the source and decks before each campaign;
+   - commit each prediction in its own commit before its runs;
+   - every row records `binary_state = committed`, the fork SHA, the ladder commit 583912a and the deck hash;
+   - a failing core rung means stop and report to Peter, with no tuning;
+   - **if T-survival fails, stop TLSPH without a reference update** (CS-18 kill clause).
+4. **Results:**
+   - fork `hvi/results/tl_*.csv`;
+   - schemeforge `coldspray/opencourant-sph`, with a new **§16** in opencourant-verification.md (a verdict table per
+     rung, diagnostics kept apart).
+
+## Task 2026-11-12-b: freeze preconditions for the TLSPH ladder (closed: tl.cond_max 30, tl.smin_min 0.025 at fork 3e9aa6b; journal check deferred by Peter)
 
 **Basis:** DECISIONS 2026-11-12 "TLSPH set-up from SPEC-TL adopted"; ladder draft
 [../sph-tlsph-ladder.md](../sph-tlsph-ladder.md), "Freeze preconditions".
