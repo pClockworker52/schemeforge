@@ -8,7 +8,7 @@ files or this file. Blind-list papers stay closed.
 ## Task 2026-11-12-b: freeze preconditions for the TLSPH ladder (open; no code, no runs)
 
 **Basis:** DECISIONS 2026-11-12 "TLSPH set-up from SPEC-TL adopted"; ladder draft
-[../sph-tlsph-ladder-draft.md](../sph-tlsph-ladder-draft.md), "Freeze preconditions".
+[../sph-tlsph-ladder.md](../sph-tlsph-ladder.md), "Freeze preconditions".
 
 1. **Journal check of SPEC-TL's equations:** eqs. 15 (correction matrix), 17 (F), 24 (force) and 32 (hourglass) of
    Ganzenmüller, CMAME 286 (2015) 87–106.
@@ -33,7 +33,7 @@ files or this file. Blind-list papers stay closed.
 **Basis:**
 - DECISIONS 2026-11-12: TLSPH directly in the solver, 3D, bond in the solver.
 - Hunch draft [../coldspray-hunch-cs18.md](../coldspray-hunch-cs18.md) and ladder draft
-  [../sph-tlsph-ladder-draft.md](../sph-tlsph-ladder-draft.md).
+  [../sph-tlsph-ladder.md](../sph-tlsph-ladder.md).
 - Literature: [../tlsph-literature-check.md](../tlsph-literature-check.md).
 
 **Allowed now (no runs):**

@@ -1,8 +1,8 @@
-# TLSPH verification ladder (for CS-18): DRAFT, awaiting Peter, not in force
+# TLSPH verification ladder (for CS-18): frozen
 
-Drafted 2026-11-12, revised the same day after the Profizi reading and SPEC-TL. It is frozen together with hunch
-CS-18 ([coldspray-hunch-cs18.md](coldspray-hunch-cs18.md)) in one commit, before the first TLSPH run in the fork
-(branch `tlsph`). After the freeze the rules of [sph-contact-ladder.md](sph-contact-ladder.md) apply:
+**Frozen 2026-11-12** (Peter approved the thresholds), together with hunch CS-18
+([coldspray-hunch-cs18.md](coldspray-hunch-cs18.md)) in one commit, before any TLSPH code or run in the fork (branch
+`tlsph`). After the freeze the rules of [sph-contact-ladder.md](sph-contact-ladder.md) apply:
 - amendments are dated addenda;
 - a failing rung means stop and report;
 - every row names the fork SHA of a committed binary;
@@ -15,14 +15,16 @@ is a separate ladder; the collocated ladder and its verdicts stay as recorded.
 every rung is 3D. It includes an early survival rung at impact conditions (Peter, 2026-11-12, after the Profizi
 reading).
 
-## Freeze preconditions (all three needed)
+## Freeze record
 
-1. Peter approves the numeric thresholds below.
-2. Journal check of SPEC-TL's equations (Ganzenmüller eqs. 15, 17, 24, 32; CMAME 286 (2015) 87–106), against the
-   preprint used and one independent source (WSL A task 2026-11-12-b).
-3. A value for `tl.cond_max`, with its reason (same task).
+1. **Thresholds:** approved by Peter on 2026-11-12, as below.
+2. **Conditioning limits:** fixed from SPEC-TL §3.11 (fork `tlsph` 3e9aa6b, `hvi/scripts/tl_cond.py`):
+   `tl.cond_max` = 30 and `tl.smin_min` = 0.025.
+3. **Journal check of SPEC-TL's equations** (Ganzenmüller eqs. 15, 17, 24, 32; CMAME 286 (2015) 87–106): deferred by
+   Peter on 2026-11-12. It is required before the first claim that rests on TLSPH results. Rung verdicts may be
+   recorded before it.
 
-## Set-up (adopted by Peter 2026-11-12, from SPEC-TL §1 at fork `tlsph` 1ae689c; one set-up for all rungs)
+## Set-up (adopted by Peter 2026-11-12, from SPEC-TL §1 and §3.11 at fork `tlsph` 3e9aa6b; one set-up for all rungs)
 
 | Item | Value |
 |---|---|
@@ -39,7 +41,8 @@ reading).
 | Reference update | **none** |
 | Symmetry | slide planes only, mutually orthogonal, with complete single, double and triple images |
 | Contact and bond | hvi code unchanged: `surface.normal = colour`, dynamic surface flag, radial gap, `contact.stfac = 3` |
-| `tl.cond_max` | to be fixed before the freeze |
+| `tl.cond_max` | 30 (largest condition number of a reference correction matrix; fatal above) |
+| `tl.smin_min` | 0.025 (smallest singular value relative to the bulk value; fatal below) |
 | Off for TL bodies | ξ, kernel-correction order, conservative smoothing (fatal if set) |
 
 Changing any item after the freeze is an addendum labelled post hoc.
@@ -78,12 +81,6 @@ rung is run at R/64.
 
 **E-1 follows only** after all core rungs pass and the E-1 gate (draft) is frozen.
 
-## Open for Peter (before the freeze)
+## Addenda
 
-1. Approve, change or reject the thresholds:
-   - T-S0 at 1 %;
-   - T-S1 at 5 %, with rebound ≥ 0.95;
-   - T-tension at 0.05 V;
-   - T-zero-energy at 1 %, plus the 1e-10 angular-momentum check;
-   - T-survival's checks.
-2. Approve the order: T-survival before the bond rungs.
+None.

@@ -1,15 +1,15 @@
-# Cold spray: hunch CS-18 (Total Lagrangian SPH bodies carry an accurate surface layer): DRAFT, awaiting Peter
+# Cold spray: hunch CS-18 (Total Lagrangian SPH bodies carry an accurate surface layer), registration (frozen)
 
 Drafted 2026-11-12 by the modeller. Direction: Peter (DECISIONS 2026-11-12: TLSPH directly in the fork).
-- **Not registered.** It is frozen together with its ladder ([sph-tlsph-ladder-draft.md](sph-tlsph-ladder-draft.md))
-  in one commit, before the first TLSPH run.
+- **Registered and frozen 2026-11-12,** together with its ladder ([sph-tlsph-ladder.md](sph-tlsph-ladder.md)), in
+  one commit, before any TLSPH code or run. Peter approved the thresholds.
 - **Research track,** a method hunch like CS-11 and CS-13. It is judged on exact references, not on blind data.
-- **Budget:** registered, it makes the count 4 of 5. It discriminates on obtainable data: the exact references of
+- **Budget:** it makes the count 4 of 5. It discriminates on obtainable data: the exact references of
   its ladder.
 
 ```yaml
 - id: CS-18
-  registered: draft 2026-11-12 (not frozen)
+  registered: 2026-11-12, frozen 2026-11-12 with its ladder (Peter approved the thresholds)
   assumption_broken: >-
     H8 at the level of the body formulation. Milestone 1 of sph-hvi-contact showed that collocated SPH bodies with
     Eulerian kernels cannot carry an accurate surface layer: kernel truncation at the body surface (B-2
@@ -58,7 +58,7 @@ Drafted 2026-11-12 by the modeller. Direction: Peter (DECISIONS 2026-11-12: TLSP
       (arXiv:1907.06990)
   provenance: fork analysis hvi/ANALYSIS-2026-11-12.md section 3; Peter's direction 2026-11-12
   label: none yet (referee); expected at most "variant of Profizi et al. 2016"
-  status: draft
+  status: open
   author: Peter (direction), claude (formulation)
 ```
 
