@@ -169,3 +169,31 @@ ladder: `sph-tlsph-ladder.md` @ 583912a.
 - An independent referee overruled one of the modeller's proposals: judging D-1 against the welded bar.
 - **Process faults:** some results were first kept only locally, on uncommitted binaries, and recovered later (§14);
   and a growth rule had no noise floor.
+
+## Corrections after the critique (2026-11-13, modeller)
+
+The independent critique ([sph-route-review-2026-11-critique.md](sph-route-review-2026-11-critique.md)) checked 14
+numbers and found four mismatches. They are corrected here rather than in the text above:
+1. **§2, the 2D figures.** "0.40 / 0.08 / 0.06 at R/16 / R/32 / R/64" is wrong. In §8.3 the R/16 mesh never failed.
+   The finest mesh, R/64, failed at 0.37 / 0.08 / 0.05 t_p for 500 / 750 / 1000 m/s, and failure comes earlier with
+   refinement. The conclusion stands.
+2. **H5, the start spike.** TLSPH gives +20 to +21 %, collocated order 1 gives +17 to +18 % (§15.9). They are
+   similar, not equal.
+3. **§6, "diverges".** One quantity under S′ (the S1 rebound) falls over three resolutions. Nine of twelve S1 numbers
+   improved under S′, and the frozen rebound also fell from R/32 to R/64 (0.985 → 0.980).
+4. **§2, "thresholds frozen before every run".** S0 and S1 had no numeric thresholds under the collocated ladder.
+   The S′ rule was relative and set beforehand by Peter, and Addendum 1 was post hoc.
+
+**Omissions the critique names, accepted:**
+- contact chatter damping took 17–24 % of the kinetic energy in B-2 at R/32;
+- C-2 and C-3 failed at the defaults (normals), so "not in the contact law" is too clean;
+- S1 under the frozen set-up was not a clean pass;
+- the TLSPH hourglass-amplitude factor-2 question is open;
+- the fork worked past the B-2 stop rule, and two E-1 probes ran without a decision (both approved afterwards).
+
+**Two weak points I accept** (the critique's §2):
+- **H5 is not evidence for the "common thread."** T-S0 is a bulk 1D test, and its failure is not a surface-layer
+  effect.
+- **The edge may be unconvergent in any method.** The contact edge did not converge in any host tried (2D FE, 3D FE,
+  FE with conduction, SPH). Point values of Y and p_n there may need a physical length scale to exist at all. If so,
+  that limit belongs to the problem, not to SPH, and it should be tested directly before another host is built.
