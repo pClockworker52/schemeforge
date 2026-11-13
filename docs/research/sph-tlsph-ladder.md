@@ -84,3 +84,5 @@ rung is run at R/64.
 ## Addenda
 
 None.
+
+**Note, 2026-11-13:** the ladder stopped at T-S0 (FAIL, opencourant-verification.md §16). No further rung is run under this freeze; CS-18 is refuted.

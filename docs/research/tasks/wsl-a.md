@@ -5,7 +5,37 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-12-c: TLSPH implementation and core rungs (open)
+## Task 2026-11-13-a: T-S0 diagnosis (open; diagnostics only, no verdicts)
+
+**Why:** CS-18 is refuted at T-S0 (§16; DECISIONS 2026-11-13). Before Peter decides on a CS-18b, find out which
+part of the set-up sets the contact-time and rebound errors, and whether the plateau offset is finite strain.
+
+**Rules:**
+- no solver code changes; deck and sidecar switches only;
+- each case changes one thing against the frozen set-up;
+- each prediction is committed in its own commit before its runs;
+- rows are marked `diagnostic`, carry the fork SHA (committed binary) and the deck hash, and never a verdict.
+
+**Deck:** the T-S0 column (h = 1.12 s, 4 wide), at 100 and 200 particles unless stated otherwise.
+
+| Case | Change |
+|---|---|
+| D-visc-off | viscosity off (q_a = q_b = 1e-30); report if unstable |
+| D-visc-P | Profizi's linear 0.8 / quadratic 4 |
+| D-hg | α = 0, and α = 20 |
+| D-vel | V/2 and V/4, at 200 particles (a finite-strain offset should scale with V) |
+| D-width | width 16, at 100 particles (no effect expected with complete images) |
+| D-layer | post-processing only: plateau stress per layer; where the +21 % start spike sits (first layers or bulk); the same for the collocated order-1 run of §15.9 |
+
+**Report per case:** plateau, contact time, rebound, viscous and hourglass work as shares of the initial kinetic
+energy, and the start spike. Then a short reading:
+- which item sets the contact-time and rebound errors;
+- whether the plateau offset is finite strain;
+- whether the start spike comes from the end-layer correction.
+
+**Results:** fork `hvi/results/tl_diag_s0.csv`; schemeforge §17 on `coldspray/opencourant-sph`. Then stop.
+
+## Task 2026-11-12-c: TLSPH implementation and core rungs (closed: stopped at T-S0, §16; CS-18 refuted)
 
 **Basis:**
 - **Judge, frozen:** [../sph-tlsph-ladder.md](../sph-tlsph-ladder.md) and hunch

@@ -86,3 +86,32 @@ Drafted 2026-11-12 by the modeller. Direction: Peter (DECISIONS 2026-11-12: TLSP
    first, so the first exact-reference evidence comes only after the solver implementation runs.
 4. **Exposure.** The B-2, B-3 and D-1 failure modes of the collocated form are known. The ladder keeps their
    thresholds unchanged, so this knowledge cannot be used to choose thresholds.
+
+## Verdict (2026-11-13): refuted at T-S0
+
+Under the frozen kill rule ("refuted if any of T-host, T-tension or T-zero-energy fails at its frozen threshold"),
+**CS-18 is refuted.** The second core rung, T-S0, failed (opencourant-verification.md §16; fork `tlsph` eac1040b2,
+rows `opencourant/results/tl_host.csv`):
+
+| particles | plateau | contact time | rebound |
+|---|---|---|---|
+| 100 | 1.0065 | 0.9851 (limit ± 1 %) | 0.9420 (limit ≥ 0.95) |
+| 200 | 1.0065 | 0.9890 (limit ± 1 %) | 0.9604 |
+
+The plateau error also grew from 100 to 200 particles (0.648 → 0.654 %). T-A0 passed. No later rung was run, so
+T-survival (the cold-spray kill clause) was not reached.
+
+**Against the author's prediction:** "the elastic host rungs likely pass" was wrong. At 200 particles the collocated
+host is closer to the exact solution on all three numbers (§16.5).
+
+**Lesson on the rule (no effect on the verdict):** the clause "errors do not grow from 100 to 200" has no noise
+floor. It fails on a plateau that has converged (to 1.0066) and moved by 0.006 points. The verdict does not depend
+on it: contact time and rebound fail on their own. Future growth clauses get a noise floor, as the E-1 gate draft
+already does.
+
+**Readings, not verdicts** (§16.5; diagnosis in WSL A task 2026-11-13-a):
+- the pair viscosity of SPEC-TL §3.7 removes 5.6–15.7 % of the kinetic energy, the hourglass term ≤ 0.25 %;
+- the plateau (1.0063) and the start spike (+21 %) match collocated SPH with order 1 (§15.9).
+
+A rescue with a changed set-up or rule would be a new hunch (CS-18b), registered before its runs. It is not an
+amendment of CS-18.
