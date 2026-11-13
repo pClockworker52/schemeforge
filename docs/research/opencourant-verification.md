@@ -1556,3 +1556,146 @@ predicted range of 0.955 to 0.965.
   preprint (hourglass amplitude, SPEC-TL 3.10).
 - For Peter and the cloud session: T-S0 failed under the frozen rule, so the TLSPH ladder is stopped at its second
   rung. Any change to the set-up or the rule is an addendum, labelled post hoc.
+
+## 17. T-S0 diagnosis: what sets the errors of the TL column (task 2026-11-13-a; diagnostics only, no verdicts)
+
+Task: `tasks/wsl-a.md`, task 2026-11-13-a (on branch `claude/exciting-fermi-qy077p`). Fork `sph-hvi-contact`,
+branch `tlsph`: engine source `eac1040b2` (unchanged; deck and sidecar switches only), script
+`hvi/decks/tl_diag_s0.py`, results recorded in `cd1efb6a3`. Each case changes one thing against the frozen T-S0
+set-up of §16. The six predictions were committed in the fork, one commit each (`ecc79946c` to `316b0eda6`),
+before the first diagnostic run. Rows: [`results/tl_diag_s0.csv`](opencourant/results/tl_diag_s0.csv), all with
+`kind = diagnostic`, `binary_state = committed`, fork SHA and deck hash, and no verdict.
+
+**Short answer.** The plateau offset is finite strain. The contact-time error is that offset plus about one
+spacing, to which viscosity and hourglass force both contribute. A little more than half of the rebound error is the
+viscosity; the rest is not explained. The start spike is a transient of the end layers at the wall.
+
+### 17.1 Cases
+
+| case | particles | plateau | contact time (first sample / interpolated) | rebound | viscous work | hourglass work | wall-force peak | undershoot after it | settled within 2 % after (s / c_d) |
+|---|---|---|---|---|---|---|---|---|---|
+| frozen (T-S0 rerun with stress output) | 50 | 1.0063 | 0.9773 / 0.9761 | 0.9136 | 11.1 % | 0.12 % | 1.211 | 0.908 | 8.2 |
+| frozen (T-S0 rerun with stress output) | 100 | 1.0065 | 0.9851 / 0.9846 | 0.9420 | 7.8 % | 0.06 % | 1.210 | 0.911 | 8.0 |
+| frozen (T-S0 row, no new run) | 200 | 1.0065 | 0.9890 / 0.9887 | 0.9604 | 5.6 % | 0.03 % | 1.196 | 0.916 | 8.0 |
+| D-visc-off | 100 | 1.0058 | 0.9893 / 0.9892 | 0.9732 | 0 | (26 %, see note) | 1.327 | 0.769 | never (ripple 6.3 %) |
+| D-visc-off | 200 | 1.0067 | 0.9932 / 0.9926 | 0.9836 | 0 | (26 %, see note) | 1.327 | 0.769 | never (ripple 6.0 %) |
+| D-visc-P (q_a 4, q_b 0.8) | 100 | 1.0065 | 0.9851 / 0.9848 | 0.9467 | 7.1 % | 0.09 % | 1.220 | 0.897 | 8.3 |
+| D-visc-P (q_a 4, q_b 0.8) | 200 | 1.0065 | 0.9900 / 0.9893 | 0.9638 | 5.0 % | 0.04 % | 1.212 | 0.903 | 8.4 |
+| D-hg, alpha 0 | 100 | 1.0064 | 0.9870 / 0.9864 | 0.9411 | 8.0 % | 0 | 1.249 | 0.796 | 16.7 |
+| D-hg, alpha 0 | 200 | 1.0065 | 0.9900 / 0.9897 | 0.9600 | 5.6 % | 0 | 1.243 | 0.807 | 16.8 |
+| D-hg, alpha 20 | 100 | 1.0065 | 0.9833 / 0.9828 | 0.9426 | 7.7 % | 0.10 % | 1.184 | 0.969 | 3.8 |
+| D-hg, alpha 20 | 200 | 1.0065 | 0.9882 / 0.9877 | 0.9606 | 5.5 % | 0.05 % | 1.176 | 0.972 | 3.7 |
+| D-vel, V / 2 | 200 | 1.0033 | 0.9923 / 0.9920 | 0.9609 | 5.5 % | 0.03 % | 1.193 | 0.918 | 8.0 |
+| D-vel, V / 4 | 200 | 1.0016 | 0.9941 / 0.9935 | 0.9611 | 5.5 % | 0.03 % | 1.192 | 0.916 | 8.0 |
+| D-width, 16 x 16 | 100 | 1.0065 | 0.9851 / 0.9846 | 0.9420 | 7.8 % | 0.06 % | 1.210 | 0.911 | 8.0 |
+| collocated, order 1 (no TL body) | 50 | 1.0166 (momentum rate 1.0063) | 0.9797 / 0.9793 | 0.9111 | not written | none | 1.180 | 0.838 | 16.3 |
+| collocated, order 1 (no TL body) | 100 | 1.0167 (momentum rate 1.0063) | 0.9871 / 0.9866 | 0.9408 | not written | none | 1.178 | 0.840 | 16.3 |
+
+Columns: every number is normalised with the case's own velocity. Works are shares of the initial kinetic
+energy at the end of the run. Wall-force peak and undershoot: the largest wall force of the run, and the smallest
+one after it before 0.1 contact times; the peak is over the exact plateau force, the undershoot over the measured
+plateau. The contact time has two values because the 5 % crossing is read from samples 0.0007 to 0.0017 contact
+times apart; the second value is interpolated between two samples.
+
+Note on the hourglass work without viscosity: the diagnostic `w_hourglass` reaches -26 % of the initial kinetic
+energy, growing linearly in time, while the kinetic energy returns to 97.7 % after the rebound. So this energy was
+not removed. The diagnostic sums force times half-step velocity, which is biased for an oscillation that is
+resolved by few time steps; with ringing it is not a measure of dissipation. [inference from the kinetic energy
+alone: the listing has no internal energy for a TL body, and the accumulator itself was not tested] In the cases
+with viscosity there is no ringing (ripple below 0.02 %); there the end kinetic energy plus the two works is
+0.981, 0.991 and 0.995 of the initial energy at 50, 100 and 200 particles. That gap is larger than the hourglass
+share, so the balance cannot confirm the hourglass share either.
+
+The task named the widths and coefficients; the mapping of Profizi's "linear 0.8 / quadratic 4" onto the solver's
+pair viscosity 2 (q_a μ² − q_b c μ) / (ρ_i + ρ_j) is q_b = 0.8, q_a = 4. Whether Profizi's own expression has the
+same normalisation was not checked. Changing q also changes the time step (cycle counts at 100 particles: 2175
+frozen, 1877 Profizi, 903 without viscosity). The wall-force columns of the frozen 200-particle row are
+recomputed from the T-S0 run's trace and are in no csv.
+
+### 17.2 D-layer: stress per layer
+
+Axial stress per layer over ρ c_d V, layer 1 on the wall; the steady values of the 50-particle profiles agree with these to 0.001 (the maxima and the collocated bulk mean, 1.0034, do not):
+
+| layer from the wall | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | bulk mean (11 to 0.6 n) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| TL, 100 particles, at 0.4 contact times | 0.655 | 0.845 | 1.018 | 1.006 | 1.006 | 1.006 | 1.006 | 1.006 | 1.006 | 1.006 | 1.0064 |
+| TL, largest value up to 0.45 contact times | 0.813 | 0.890 | 1.076 | 1.055 | 1.044 | 1.040 | | | | | 1.021 (any layer from 11 on) |
+| collocated order 1, 100 particles, at 0.4 | 0.550 | 0.941 | 1.045 | 0.978 | 1.028 | 0.990 | 1.019 | 0.997 | 1.014 | 1.001 | 1.0066 |
+| collocated order 1, largest value | 0.801 | 0.941 | 1.186 | 1.024 | 1.095 | 1.038 | | | | | 1.052 (any layer from 11 on) |
+
+### 17.3 Reading
+
+**1. What sets the contact-time error.** No single item; three parts, here with the interpolated values:
+
+| part | size | evidence |
+|---|---|---|
+| finite strain (the reference is linear) | 0.65 % at V, 0.33 % at V / 2, 0.16 % at V / 4; at V the same at 50, 100 and 200 particles | D-vel: the plateau offset is proportional to V, and a front with a high plateau is fast by the same factor (jump condition) |
+| a term of about one spacing | 0.9 to 1.0 spacings: error minus offset = 0.88 / n, 0.89 / n, 0.95 / n at 50, 100, 200 (V); 0.95 / n at V / 2; 0.98 / n at V / 4 | T-S0 rows and D-vel |
+| the viscosity | without it the error is 1.08 % instead of 1.54 % at 100 and 0.74 % instead of 1.13 % at 200: a difference of 0.45 % and 0.39 % of the contact time, so about constant and not proportional to 1 / n (0.45 and 0.78 spacings). Two caveats: the run without viscosity has 6 % ripple on the force, which blurs a 5 % crossing, and its time step is 2.4 times larger | D-visc-off |
+| the hourglass force | 0.18 spacings per 10 units of alpha at 100 (alpha 0 / 10 / 20: 1.36 / 1.54 / 1.72 %), 0.2 at 200 (1.03 / 1.13 / 1.23 %) | D-hg |
+
+The width changes nothing. Profizi's coefficients change the interpolated contact time by 0.02 % at 100 and
+0.06 % at 200. The error of the frozen set-up minus the finite-strain offset is 0.89 % at 100 and 0.48 % at 200;
+this is a difference of two measured numbers and says nothing about a rung.
+
+**2. What sets the rebound error.** The viscosity carries a little more than half of it. Without viscosity the
+rebound is 0.973 at 100 and 0.984 at 200 (error 2.7 and 1.6 % instead of 5.8 and 4.0 %). What is left is not
+explained by ringing alone: the kinetic energy that is not centre-of-mass motion at the end is 3.0 % (100) and
+1.9 % (200) of the initial energy without viscosity, and 2.4 % and 1.7 % in the frozen runs, which do not ring.
+So a similar amount of energy stays in internal motion of the column after the rebound in both cases; what
+motion that is was not looked at. Profizi's coefficients remove 9 % less energy than
+the frozen ones and raise the rebound by 0.005 (100) and 0.003 (200). The hourglass coefficient and the velocity
+do not change the rebound (within 0.001).
+
+**3. Is the plateau offset finite strain?** Yes. The offset is 0.654 %, 0.326 %, 0.163 % at V, V / 2, V / 4:
+proportional to V within 0.5 % of its value, coefficient 0.42 x V / c_d, the same as for the quad elements. It
+does not depend on the viscosity coefficients (with viscosity on), the hourglass coefficient or the width. The
+growth of the plateau error from 100 to 200 particles in T-S0 (0.648 to 0.654 %) then reads as convergence to
+this offset. [inference]
+
+**4. Where the start spike sits.** It is a transient of the end layers at the wall during the first spacings of
+wave travel. No layer reaches a stress 21 % above the plateau:
+- The wall force peaks at 1.2 to 1.6 s / c_d (the sample step is 0.14 s / c_d at 50 and 100 particles and
+  0.41 at 200, so the 200-particle peak of 1.196 is undersampled), undershoots to 0.91 of the plateau, and stays
+  within 2 % from 8 s / c_d on. In units of s / c_d this is the same at 50, 100 and 200 particles and at all three
+  velocities, so in physical time it shrinks with the spacing.
+- In absolute terms no layer carries a stress peak of that size: layer 1 never exceeds 0.81 of the reference
+  stress, layer 3 reaches 1.08, the layers from 11 on at most 1.02. Relative to its own steady value layer 1 does
+  overshoot, by 24 % (0.813 against 0.655) at the time of the wall-force peak, and the overshoot travels into the
+  column and decays: layers 3 to 6 exceed their steady values by 5.7, 4.9, 3.8 and 3.3 %, layer 11 by 1.5 %.
+- In the steady state the first two layers carry less stress than the wall transmits: 0.655 and 0.845 (layer 3:
+  1.018; from layer 4 on the bulk value). The pattern is the same at 50 and 100 particles and does not change in
+  time. The wall force (1.0065) is nevertheless the bulk stress, so the momentum balance holds; the particle
+  stress of the two end layers is not the traction there.
+- The hourglass force damps the transient: alpha 0 / 10 / 20 gives peak 1.25 / 1.21 / 1.18, undershoot 0.80 /
+  0.91 / 0.97 and settling after 16.7 / 8.0 / 3.8 s / c_d. Without viscosity the peak is 1.33.
+- Collocated SPH with kernel-correction order 1 shows a transient of the same kind (peak 1.18, undershoot 0.84,
+  settled after 16 s / c_d; taken at width 4, where its wall force carries the width artefact of §15.9 of the
+  schemeforge document) and a wider steady pattern: 0.550, 0.941, 1.045, 0.978, 1.028, 0.990, ... alternating over
+  more than ten layers. The collocated frozen set-up without correction has no start spike (peak 0.998, T-A0
+  reference rows); its layer profile was not taken.
+
+Does the spike come from the end-layer correction? The evidence fits: both set-ups with a corrected gradient have
+it and the uncorrected one does not; its steady pattern sits in the first three layers and it scales with the spacing. It is not
+isolated, because the correction of a TL body cannot be switched off from the deck. My reading: the correction
+matrix makes the deformation gradient of the one-sided end layer exact for linear fields, but the pair force sum
+at a truncated neighbourhood is not corrected, so the end layers find an equilibrium with a stress that differs
+from the traction, and they oscillate into it. [inference, not tested]
+
+### 17.4 Against the predictions
+
+| case | prediction | found |
+|---|---|---|
+| D-vel | plateau 1.0033 and 1.0016; contact time 0.9925 and 0.9942; rebound unchanged | 1.0033 and 1.0016; 0.9923 and 0.9941; 0.9609 and 0.9611. Right |
+| D-visc-off | stable; peak 1.25 to 1.5; plateau within 0.002; contact time unchanged within 0.003; rebound 0.95 to 0.98 and 0.96 to 0.99 | stable, peak 1.33, plateau 1.0058 and 1.0067, rebound 0.973 and 0.984: right. Contact time +0.004 at both spacings: outside the predicted range, so the viscosity (or the larger time step and the ripple that come with switching it off) does move the contact time |
+| D-visc-P | plateau and contact time unchanged; rebound +0.002 to +0.01; viscous work 0.8 to 0.95 of the frozen one; peak 1.21 to 1.25 | unchanged; +0.005 and +0.003; 0.91; 1.22 and 1.21. Right |
+| D-hg | both stable and within 0.002 in plateau and contact time; alpha 20: spike within 0.01; alpha 0: spike changes by a few 0.01 | stable; contact time -0.002 and +0.002 at 100 (at the edge of the range); alpha 0 spike +0.04: right. Hourglass work at alpha 20: 1.75 times, predicted "about doubles". Alpha 20 spike -0.026: wrong, the hourglass force acts on the start transient in both directions |
+| D-width | identical within 1e-4 | plateau, contact time, rebound and peak agree to 5e-8 or better. Right |
+| D-layer | wall-force peak within 5 s / c_d, settled within 20, same at 50 and 100; bulk overshoot below 5 %; first one to three layers deviate steadily; layer 1 stress 15 to 30 % above the plateau | timing, bulk and the steady three-layer pattern: right. Layer 1 stress: wrong, it is 35 % below the plateau and never above 0.81; the spike is in the wall force only. Collocated order 1: spike in the first layers right, but the steady pattern runs over more than ten layers and the bulk overshoot is 5.2 % over the reference stress (4.5 % over its own bulk value) |
+
+### 17.5 Not done
+
+- A TL run without the correction matrix, which would isolate the cause of the start spike: it needs solver code.
+- The layer profile of the collocated frozen set-up.
+- A check of the `w_hourglass` accumulator.
+- Nothing here is a verdict or changes one: T-S0 stays FAIL under the frozen rule (§16).
