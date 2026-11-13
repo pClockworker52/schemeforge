@@ -5,7 +5,44 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-13-b: CS-18b calibration and design (open; calibration and design only, no verdicts)
+## Task 2026-11-13-c: CS-18b calibration part 2 and BCT implementation (open; calibration only, no verdicts)
+
+**Basis:** DECISIONS 2026-11-13 "CS-18b calibration decisions" and §18.
+**Rules (as task b):**
+- this is still before the freeze; no TLSPH rung deck is used to choose anything;
+- predictions and criteria are committed before their runs;
+- rows `kind = calibration`, with fork SHA (committed binary) and deck hash.
+
+1. **BCT on the conforming sphere** (static model, no engine run).
+   - The BCT weights of §18.4 on the conforming sphere at R/16, R/32 and R/64, for contact patches of 3 to 10
+     spacings in radius.
+   - Report:
+     - the sign and conditioning of Σ φ (B·n), with a proposed guard threshold;
+     - the uniformity of the layer stresses under a Hertz-like pressure;
+     - the torque error per pair and in total.
+   - **If no robust guard exists, stop here and report.**
+2. **BCT implementation** in the fork: a TL-only step after the hvi contact and wall forces; the hvi code is
+   unchanged. Then:
+   - T-A0 again (no TL body: identical);
+   - a non-rung check: a confined TL column of length 2L at V/2 with BCT. The steady stresses of layers 1 to 3 should
+     be within 1 % of the plateau.
+3. **Quad two-body Hertz** (Isolid 17, axisymmetric, the B-2 geometry):
+   - a deformable sphere on a deformable block, elastic, 20 m/s, at the finest affordable meshes, with convergence
+     shown;
+   - peak, approach and rebound against two-body Hertz. These are the quad errors for the T-B2 limits (quad error +
+     3.0 points, rounded up to the next 0.5 %).
+4. **α recalibration** with the LAMMPS viscosity (Q1 = 0.05, Q2 = 0), on non-rung cases: the free bar of §18.3, and
+   a free block with a smooth initial field at a size other than T-zero-energy's.
+   - Criterion, stated before the runs:
+     - no resolved wave faster than exact (the SPEC-TL §3.5 rule);
+     - the share of shortest-wavelength energy ≤ 1 %;
+     - then the least dissipation.
+   - Report α, and whether Q1 should change (re-run §18.3's criterion if it does).
+
+**Output:** fork `hvi/SPEC-TL-b.md` updated and `hvi/results/tl_cal2_*.csv`; schemeforge §19 on
+`coldspray/opencourant-sph`. Then stop.
+
+## Task 2026-11-13-b: CS-18b calibration and design (closed: done, §18, merged 3a89b1c)
 
 **Basis:** DECISIONS 2026-11-13 "CS-18b with a calibration phase before its freeze". The T-S0 diagnosis is in §17.
 This is the phase **before** the CS-18b freeze: tuning on the calibration cases below is allowed and recorded. The
