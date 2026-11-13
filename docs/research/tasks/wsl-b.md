@@ -225,6 +225,13 @@ Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b1
 
 ## Task 2026-11-13-b9: interface-bonding methods in cold spray, reading at F level (open)
 
+**Status 2026-11-13:** the partial note is merged (51f1e6d): Dai 2026, Ren & Song 2022/2024, the Khoei 2023 abstract,
+and the comparison table. **Open:**
+- Tang 2021 and Ge 2026: Peter downloads them in a browser into `coldspray-papers/`;
+- Dai et al. 2025, doi:10.1007/s00466-025-02714-1 (closed; this is the task's "Wang et al. 2025").
+
+Continue on the same branch, then stop.
+
 **Why:** CS-18b (Total Lagrangian SPH) is on hold (DECISIONS 2026-11-13, "CS-18b freeze on hold for a methods
 literature step"). A search sweep on 2026-11-13 found recent method work that the project's literature checks had
 missed. Several groups claim what the SPH route kept failing at: bonding that does not depend on the
