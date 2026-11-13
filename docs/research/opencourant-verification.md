@@ -1445,3 +1445,114 @@ At Peter's request WSL A wrote an analysis (what was learned, what is not unders
 and on simplifying assumptions for cold spray): fork `sph-hvi-contact`, `hvi/ANALYSIS-2026-11-12.md`. Its outlook
 is from general knowledge, with no paper opened, and is marked as such.
 
+## 16. TLSPH in the fork: T-A0 passes, T-S0 fails, task stopped (task 2026-11-12-c)
+
+Task: `tasks/wsl-a.md`, task 2026-11-12-c. Judge: `sph-tlsph-ladder.md` and hunch `coldspray-hunch-cs18.md`,
+frozen in `583912a`. These three files are on branch `claude/exciting-fermi-qy077p` and not yet on this branch. Design: the fork's `hvi/SPEC-TL.md`
+(set-up of the ladder; differences between code and text in its section 3.12). Fork `sph-hvi-contact`, branch
+`tlsph`: engine source `eac1040b2`, binary built from the clean tree; results recorded in `a51d44ca3`. Details: the
+fork's `hvi/CHANGELOG.md`, "TLSPH implementation, SPEC-TL 6 steps 1 to 5" and "TLSPH ladder, core rungs".
+
+**Result: the implementation (SPEC-TL section 6, steps 1 to 5) is in the fork and reviewed. T-A0 passes. T-S0, the
+second core rung, fails, and the task stopped there** (task rule: a failing core rung means stop and report to
+Peter, with no tuning). No later rung was run: T-S0p, T-S1, T-tension, T-zero-energy, T-B1, T-B2, T-B3,
+T-survival, T-C1, T-D1, T-D2 have no verdict. The CS-18 kill clause (T-survival) was not reached.
+
+### 16.1 Verdicts
+
+| rung | verdict | numbers | predicted |
+|---|---|---|---|
+| T-A0 | PASS | 55 of 55 runs without a TL body identical to the A-0 run on `6a8084b` in the written metrics (§16.2) | none recorded (deviation from the task rule) |
+| T-S0 | **FAIL** | see §16.3 | FAIL at 100 particles (not blind; see §16.4) |
+
+Rows: [`results/tl_a0.csv`](opencourant/results/tl_a0.csv), [`results/tl_host.csv`](opencourant/results/tl_host.csv).
+Every row: `binary_state = committed`, fork SHA `eac1040b2` (last commit that changed solver source), ladder
+`583912a`, deck hash.
+
+### 16.2 T-A0
+
+The A-0 deck set (S0, S0p, S1, two-particle test; no sidecar) on the TLSPH binary, compared with the A-0 run of
+the binary before TLSPH (`6a8084b`, §14). A run counts as identical if every column of its csv row except the
+timing columns and the thread count is the same string (fork `hvi/scripts/tl_a0.py`).
+
+| file | runs identical | fields compared |
+|---|---|---|
+| sph_s0.csv | 22 of 22 | 286 |
+| sph_s0p.csv | 8 of 8 | 104 |
+| sph_s1.csv (five files `s1_*.csv`) | 16 of 16 | 304 |
+| sph_twopart.csv | 9 of 9 | 27 |
+
+The ladder asks for "bit-identical". The comparison is on the written metrics (double precision in the csv), not
+on the engine's binary output files; this is the same basis as rung A-0 in §14. The run was made twice: on the
+first TLSPH commit (`07c549519`) and again on `eac1040b2` after the review added two fatal checks; both give 55
+of 55. The second run carries the verdict.
+
+Time histories: 47 of the runs write a time-history csv. 44 are byte-identical to the reference, 3 are not
+(`Hrhc20112032`, `Hrhl20112016`, `Hrfl20112016`: the half and the full sphere models). They differ only in the
+sphere's momentum in the directions without a symmetry plane, where the exact value is zero and the written values
+are below 5·10⁻²⁷. The same three files also differ between the two T-A0 runs, so it is noise in a zero sum
+between runs; whether two runs of one binary differ in the same way was not tested. No metric uses these columns.
+Strictly, "bit-identical" holds for the written metrics of all 55 runs and for 44 of 47 time-history files.
+
+### 16.3 T-S0
+
+Confined elastic column of §9.4 (h = 1.12 s), the whole column one TL body; 4 threads. Rule (frozen): at 100 and
+200 particles plateau and contact time within 1 %, rebound ≥ 0.95; the three errors do not grow from 100 to 200.
+Reference 1 for all three numbers.
+
+| particles | plateau | contact time | rebound | point criteria |
+|---|---|---|---|---|
+| 25 (reported) | 1.0057 | 0.9603 | 0.8694 | not judged |
+| 50 (reported) | 1.0063 | 0.9773 | 0.9136 | not judged |
+| 100 | 1.0065 | **0.9851** | **0.9420** | fail |
+| 200 | 1.0065 | **0.9890** | 0.9604 | fail |
+
+Bold = outside the limit. Errors from 100 to 200: plateau 0.648 → 0.654 % (grows), contact time 1.49 → 1.10 %,
+rebound 5.80 → 3.96 %.
+
+**T-S0 FAIL** on each part of the rule: contact time and rebound at 100, contact time at 200 (0.10 percentage
+points over the limit), and the growth criterion through the plateau (by 0.005 percentage points).
+
+### 16.4 Against the prediction
+
+The prediction (fork `2c0523579`, committed before the run) was not blind: development runs had already shown
+the TL column at 25, 50 and 100 particles. It said FAIL at 100, and that is what happened. Its two real
+predictions, for the 200-particle run, are both wrong: contact-time error expected at 0.8 to 1.0 % (found 1.10 %),
+and "errors do not grow" expected to hold (the plateau error grows). A third expectation is also wrong: contact
+time and rebound "converge at roughly first order" (§16.5: they do not). The rebound at 200 (0.960) is inside the
+predicted range of 0.955 to 0.965.
+
+### 16.5 Diagnostics (no verdict)
+
+- **Plateau.** 1.00565, 1.00631, 1.00648, 1.00654 at 25, 50, 100, 200 particles: the sequence looks converged to
+  about 1.0066, not to 1. The 2D quads gave +0.69 % (+0.66 % with `Isolid = 0`) on the rung-0 column, a finite-strain effect
+  (§3); collocated SPH with kernel-correction order 1 gave 1.0063 at 50 particles in the momentum-rate plateau (§15.9; its wall-force plateau was 1.0166 at this column width; for TL both measures give 1.0063). The TL value is close to both. That
+  fits a finite-strain offset of the linear reference, but it is not shown for TLSPH: no TL run at a lower
+  velocity was made. Against it: the collocated column under the frozen set-up sits at −0.43 % at the same
+  velocity, and the 1.1 % gap between it and the quads is unexplained (§9.4); an offset of the reference alone
+  would shift all formulations the same way. If it is finite strain, the growth criterion fails on a number that converges to a value
+  other than the reference.
+- **Contact time and rebound.** Contact-time error 3.97, 2.27, 1.49, 1.10 %; its ratio per halving of the spacing
+  falls (1.74, 1.53, 1.36). Rebound error 13.1, 8.6, 5.8, 4.0 %, ratio about 1.5 per halving. Neither converges
+  at first order.
+- **Dissipation.** Work removed by the artificial viscosity until the end of the run, as a share of the initial
+  kinetic energy: 15.7, 11.1, 7.8, 5.6 %. By the hourglass force: 0.25, 0.12, 0.06, 0.03 %. Start spike of the
+  wall force: 1.21, 1.21, 1.21, 1.20 of the exact plateau force.
+- **Self-checks of the TL module.** Condition number of the correction matrix 1.62 (limit 30), completeness sums
+  1.2·10⁻¹⁵, smallest det F 0.9835, largest stretch 1.008, no plastic strain.
+- **The collocated host under the same rule.** The collocated frozen set-up (§9.4 rows, A-0 reference) gives
+  0.9956 / 1.0065 / 0.9485 at 100 and 0.9957 / 1.0050 / 0.9640 at 200. Measured with the T-S0 rule it would miss
+  at 100 on the rebound (0.9485 against 0.95) and meet the point criteria at 200. At 200 the collocated host is closer to
+  the reference in all three numbers: plateau error 0.43 against 0.65 %, contact-time error 0.50 against 1.10 %,
+  rebound 0.9640 against 0.9604.
+
+### 16.6 Not done, and what is open
+
+- Not run: every rung after T-S0. Not written: the T-zero-energy deck. The T-B and later rungs would use the
+  existing deck scripts with the TL switch.
+- Not tested: the cause of the plateau offset; which of viscosity (Monaghan 2 / 1 with the shear switch), kernel
+  stencil or hourglass term sets the contact-time error and the rebound.
+- Deferred by Peter before the freeze and still open: the journal version of Ganzenmüller 2015 against the
+  preprint (hourglass amplitude, SPEC-TL 3.10).
+- For Peter and the cloud session: T-S0 failed under the frozen rule, so the TLSPH ladder is stopped at its second
+  rung. Any change to the set-up or the rule is an addendum, labelled post hoc.
