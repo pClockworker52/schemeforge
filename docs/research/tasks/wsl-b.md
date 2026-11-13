@@ -222,3 +222,57 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
+
+## Task 2026-11-13-b9: interface-bonding methods in cold spray, reading at F level (open)
+
+**Why:** CS-18b (Total Lagrangian SPH) is on hold (DECISIONS 2026-11-13, "CS-18b freeze on hold for a methods
+literature step"). A search sweep on 2026-11-13 found recent method work that the project's literature checks had
+missed. Several groups claim what the SPH route kept failing at: bonding that does not depend on the
+discretisation, a regularised contact edge, and updated-Lagrangian SPH bonding at multi-particle scale. These papers
+are methods papers; none is on the blind list.
+
+**Blind screen first:** before extracting, check each source for numbers taken from the pending blind papers **B06,
+B07 and B16** (coldspray-blind-literature.md). If any appear, note page and paragraph without the value, and leave
+them out.
+
+**Papers.** The open ones go first, under the standing fetch rule. Record the URL, version and sha256; never commit
+a PDF.
+
+| # | Paper | Access |
+|---|---|---|
+| 1 | Tang, J. (2021), *Predictive model of impact-induced bonding in cold spray using the Material Point Method*, MASc thesis, University of Waterloo (UWSpace handle 10012/17030) | open |
+| 2 | Ge, Zhou, Bagherifard, Guagliano (2026), cold spray FE with nonlocal and over-nonlocal regularisation, Int. J. Mech. Sci. (Politecnico di Milano repository, re.public.polimi.it handle 11311/1314673) | open (repository) |
+| 3 | Peridynamic simulation of particles impact and interfacial bonding in cold spray process (PMC9109757) | open |
+| 4 | Dai, Xu, Wang, Ye, Feng (2026), "Investigation of interfacial adhesion and pore formation in cold spray using the updated Lagrangian SPH method", Comput. Mech. 78, doi:10.1007/s00466-026-02813-7 | closed: from Peter or Alex |
+| 5 | Wang, J. et al. (2025), "Physically based interaction model of cold spray particle bonding via smoothed particle hydrodynamics" (cited by #4; find the exact reference) | probably closed: from Peter or Alex |
+| 6 | Khoei (2023), ITSC abstract on MPM adhesion strength (extends #1) | abstract only; record what it states |
+
+Do 1–3 now, and 4–5 when the PDFs arrive. If a source is not obtainable, list it.
+
+**For each paper, write a section** in `docs/research/data/bonding_methods_reading.md`, with page references,
+stating exactly what the text says and labelling your own reading as such:
+1. **Method:** the formulation (SPH variant: total or updated Lagrangian, kernel correction, stabilisation against
+   tensile instability and zero-energy modes; MPM variant; FE with remeshing, ALE or CEL; peridynamics), and the
+   solver or code.
+2. **Contact and interface:** how the bodies are kept separate; the contact algorithm; how surface normals and
+   surface area are obtained.
+3. **Bonding law:** activation criterion, cohesive or adhesion law, parameters, and how they are obtained (fitted to
+   what).
+4. **Regularisation or length scale:** what makes results independent of the discretisation, and whether that is
+   shown.
+5. **Verification against exact references** (Hertz, wave solutions, tension), with numbers.
+6. **Convergence:** resolutions used (in particle spacings across the radius), the quantities shown to converge, and
+   which do not (especially edge quantities: plastic strain, temperature, surface stretch, contact pressure at the
+   contact edge).
+7. **Validation against experiment:** what data, and the agreement in numbers.
+8. **Impact conditions reached:** material, size, velocity range, and whether fine-resolution runs finish at
+   800–1100 m/s.
+9. **3D or axisymmetric; single or multi-particle; cost.**
+10. **Stated limits.**
+
+**Then a comparison table** across the papers, with the columns of items 1–9 in short form, and our own SPH route as
+the last row (from sph-route-review-2026-11.md). No ranking and no recommendation: the cloud session and Peter do
+that.
+
+**Commit** only `docs/research/data/bonding_methods_reading.md`, on a new branch `coldspray/bonding-methods-reading`
+from `claude/exciting-fermi-qy077p`. Push and stop. **Do not merge;** the modeller leak-scans and merges.
