@@ -135,3 +135,9 @@ d₂ ≤ d₁**.
    floor (§5).
 2. Whether S′ is judged here at all, which depends on addendum 1.
 3. The 12 h budget line for R/48.
+
+## Note, 2026-11-13 (to fold in at the next revision)
+
+DECISIONS 2026-11-13 amends the edge-state requirement: the interface outputs are judged as averages over a stated
+length (proposed 0.2 µm; confirmed at the CS-18b freeze). At its next revision, the Lagrangian ring bins of §4 are to
+be checked against that length, and if necessary redefined as averages over it.

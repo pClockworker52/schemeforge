@@ -25,6 +25,9 @@ Y′ while the normal pressure p_n exceeds an extrusion pressure.
 
 It must be 3D, with the bond acting inside the solver during the impact.
 
+**Amended 2026-11-13:** the interface outputs are judged as averages over a stated length (proposed 0.2 µm, the
+thermal diffusion length at contact time), not as point values at the edge. Point values are reported only.
+
 ## 2. Why SPH, and how it was judged
 
 **Lagrangian finite elements failed first.** At the jet root the contact-edge elements collapse, and they collapse
@@ -248,3 +251,5 @@ The critique answers these partly from recall. Those answers are checked in
   - §5: rewritten (finite-strain reference, calibration).
   - §6: updated.
   - §7a: added (requirements conflict).
+- **2026-11-13, requirement amended** (DECISIONS 2026-11-13): §1 states that the edge state is averaged over a stated
+  length.

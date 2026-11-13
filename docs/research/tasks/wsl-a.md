@@ -39,6 +39,21 @@ files or this file. Blind-list papers stay closed.
      - then the least dissipation.
    - Report α, and whether Q1 should change (re-run §18.3's criterion if it does).
 
+5. **Survival probe** (added 2026-11-13, DECISIONS "CS-18b hold lifted"; a calibration-phase diagnostic, no
+   verdict). Run it after item 2 (BCT implemented).
+   - **Set-up:** TLSPH with the §18 set-up (LAMMPS viscosity Q1 = 0.05, α as recalibrated in item 4 or 10 if item 4 is
+     not done yet, BCT).
+   - **Case:** Al–Al quarter model, 800 m/s, R/16 and R/32, contact only (`bond.model = none`), t_end = 1.0 D/V.
+   - **Judged by** the survival checks of the E-1 gate draft §3:
+     - dt ≥ 0.1 of its initial value;
+     - detached mass ≤ 1 %;
+     - no cross-body pair closer than 0.5 s;
+     - no det F ≤ 0 and no ill-conditioned-matrix stop;
+     - energy reported, not judged.
+   - **Also report:** how far beyond the kinematic switch (0.002–0.019 D/V) the run gets, the smallest det F, the
+     largest stretch, and the time step history.
+   - **The prediction** is committed in its own commit before the runs. Rows `kind = calibration, diagnostic`.
+
 **Output:** fork `hvi/SPEC-TL-b.md` updated and `hvi/results/tl_cal2_*.csv`; schemeforge §19 on
 `coldspray/opencourant-sph`. Then stop.
 
