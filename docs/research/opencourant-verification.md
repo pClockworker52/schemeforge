@@ -1699,3 +1699,138 @@ from the traction, and they oscillate into it. [inference, not tested]
 - The layer profile of the collocated frozen set-up.
 - A check of the `w_hourglass` accumulator.
 - Nothing here is a verdict or changes one: T-S0 stays FAIL under the frozen rule (§16).
+
+## 18. CS-18b calibration and design (task 2026-11-13-b; calibration and design only, no verdicts)
+
+Task: `tasks/wsl-a.md`, task 2026-11-13-b (DECISIONS 2026-11-13, "CS-18b with a calibration phase before its
+freeze"). Fork `sph-hvi-contact`, branch `tlsph`, records at `999ace118`: the full write-up is the fork's
+`hvi/SPEC-TL-b.md`; rows `hvi/results/tl_cal_*.csv` (copied to [`results/`](opencourant/results/)), all
+`kind = calibration`, with fork SHA, deck hash and `binary_state = committed`. No TLSPH rung deck was used to choose
+anything. Binaries: `eac1040b2` (quad and collocated rows) and `84e87958d` (adds an optional viscosity form; on the
+frozen T-S0 column its default path reproduces `eac1040b2` byte for byte, and the A-0 decks without a TL body
+other than the S1 spheres give 39 of 39 runs identical to the A-0 reference).
+
+### 18.1 (a) Finite-strain references
+
+LAW1 and LAW2 take the pressure from the density (p = K(ρ/ρ0 − 1)) and the deviator in rate form, so in uniaxial
+strain the compressive stress is S(λ) = K(1/λ − 1) − (4G/3) ln λ. Rankine–Hugoniot in the reference configuration
+gives the plateau U/c_d = 1 + 0.423 V/c_d + … (ν = 0.35), the 0.42·V/c_d of §17 derived. Contact time and rebound
+come from a 1D Lagrangian solver of the same law (finite-strain run minus linear run on the same mesh, 16000 cells),
+read with the rung definitions (`fs1d.py`).
+
+| rung | metric | small-strain reference (frozen) | finite-strain reference |
+|---|---|---|---|
+| T-S0 (100 m/s) | plateau | 1 | **1.00659** |
+| T-S0 | contact time | 1 | **0.99294** |
+| T-S0 | rebound | 1 | **0.99654** |
+| T-S0p (50 m/s) | σ₂ | 1 | **1.00412** |
+| T-S0p | plastic front | c_b | **1.00544** c_b |
+| T-S0p | elastic front | c_d | **1.00082** c_d |
+| T-tension | striker velocity | exact linear bar | differs by at most 0.0033 V: keep the linear reference |
+
+Checks: TL plateaus at V, V/2, V/4 (§17) are within 0.006 % of the reference; quads Isolid 17 within 0.03 %; the
+collocated column is 1.08 % low (the unexplained §9.4 gap; not finite strain).
+
+### 18.2 (b) Threshold calibration
+
+Quads (Isolid 17, viscosity off, dt scale 0.4; S1 meshes are R/12.5 to R/25.2, the finest is compared at R/32 and
+R/64) and collocated SPH (frozen §9.1 set-up, the T-A0 rows of the same binary and decks), with the SPH ladder's
+metric definitions (except the quads' T-S0 contact time, interpolated between samples; the sampled values give
+0.87 % and 0.50 % and change no threshold). Proposed rule, committed after the quad and collocated numbers existed
+and using no TL number: **threshold = 1.25 × the larger error of the two methods, rounded up to the next 0.5 %, at
+least 0.5 %**.
+
+| rung | metric | resolution | quads error | collocated error | proposed | frozen |
+|---|---|---|---|---|---|---|
+| T-S0 | plateau | 100 / 200 | 0.03 % / 0.03 % | 1.09 % / 1.08 % | within 1.5 % | 1 % of 1 |
+| T-S0 | contact time | 100 / 200 | 0.74 % / 0.44 % | 1.37 % / 1.21 % | within 2.0 % | 1 % of 1 |
+| T-S0 | rebound | 100 / 200 | 1.02 % / 0.55 % | 4.82 % / 3.27 % | ≥ 0.9318 / ≥ 0.9517 | ≥ 0.95 |
+| T-S0p | σ₂ | 200 | 0.69 % | 0.95 % | within 1.5 % | 1 % |
+| T-S0p | plastic front | 200 | 1.21 % | 2.64 % | within 3.5 % | 1 % |
+| T-S0p | elastic front | 200 | 0.37 % | 1.05 % | within 1.5 % | 1 % |
+| T-S1 | contact at 10⁻² | R/32 / R/64 | 0.11 % | 2.57 % / 2.56 % | within 3.5 % | not judged |
+| T-S1 | peak | R/32 / R/64 | 0.22 % | 4.01 % / 4.28 % | within 5.5 % | 5 %; R/64 ≤ R/32 + 0.01 |
+| T-S1 | approach | R/32 / R/64 | 0.11 % | 5.93 % / 3.02 % | within 7.5 % / 4.0 % | 5 %; R/64 ≤ R/32 + 0.01 |
+| T-S1 | rebound | R/32 / R/64 | 0.00 % | 1.43 % / 1.99 % | ≥ 0.9796 / ≥ 0.9746 | ≥ 0.95 |
+
+- Against the finite-strain references, the calibration methods fail several frozen limits: collocated SPH the
+  T-S0 plateau and contact time, the T-S0 rebound at 100 (0.9485), the T-S0p fronts and the T-S1 approach at R/32;
+  the quads the T-S0p plastic front.
+- Noise floors for the growth clauses: T-S0 from 100 to 200, plateau 0.1 %, contact time 0.2 % (one time-history
+  sample either way), rebound 0.2 %; T-S1 keeps + 0.01.
+- **T-B2** (sphere on a TL block, R/32): proposed peak within 5.5 %, approach within 7.5 % (the one-body limits; two
+  bodies in series give a weighted mean of their errors [inference]), rebound > 0.9 kept. Not calibrated by a run; a quad
+  two-body run should calibrate it before the freeze.
+
+### 18.3 (c) Viscosity
+
+Form: the LAMMPS SMD TLSPH pair viscosity, read from the source (`pair_smd_tlsph.cpp`, Ganzenmüller 2014): acts in
+compression and expansion, no switch, reference sound speed and density, relative normal velocity capped at
+0.01 c0, Π = (−Q1 c0 μ + Q2 μ²)/ρ0. Ported as sidecar option `tl.visc = lammps` (fork `84e87958d`). Q2 = 0 (with the
+cap it is at most 0.02 Q2 of a linear term, and anti-dissipative in expansion). Calibration cases, not rungs: a
+confined TL column of length 2L at V/2, and a free TL bar ringing in its first mode. The column is, in dimensionless
+form, the T-S0 column at V/2 (its rows equal §17's V/2 run): not a rung, but not a new geometry; the bar is the
+independent case. Criterion committed before the
+runs (fork `4a6412f6b`): stable; wall-force ripple ≤ 0.5 % on the column at both spacings; then the least first-mode
+damping per period of the bar.
+
+| setting | column ripple (L/50, L/100) | column rebound (L/100) | bar damping per period (L/100) | column start spike |
+|---|---|---|---|---|
+| frozen Monaghan q 2/1 | 0.00 %, 0.00 % | 0.961 | 3.59 % | 1.19 |
+| Q1 = 0.01 | 2.59 %, 1.09 % | 0.983 | 0.10 % | 1.29 |
+| Q1 = 0.02 | 1.32 %, 0.32 % | 0.983 | 0.21 % | 1.29 |
+| **Q1 = 0.05** | 0.23 %, 0.01 % | **0.980** | **0.51 %** | 1.28 |
+| Q1 = 0.1 | 0.02 %, 0.00 % | 0.976 | 1.02 % | 1.27 |
+| Q1 = 1 | 0.00 %, 0.00 % | 0.938 | 9.75 % | 1.18 |
+
+**Proposed: LAMMPS form, Q1 = 0.05, Q2 = 0** (Q1 = 0.01 and 0.02 ring). The start spike of the wall force grows
+(1.19 → 1.28); the hourglass α, which also damps it (§17), was not recalibrated.
+
+### 18.4 (d) End-layer stress
+
+- **Cause, reproduced:** a static model of the TL column (`tl_endlayer.py`: corrected reference gradient, Ganzenmüller
+  force, lateral images, linear elasticity, linearised hourglass force) gives 0.6515 / 0.8397 / 1.0107 for layers
+  1 to 3 under a wall force on layer 1; the TL runs measured 0.6504 / 0.8400 / 1.0117 (over their plateau). No fitted
+  parameter. For a uniform stress the corrected force sum leaves a boundary force spread over two layers with
+  opposite signs (+1.485, −0.471 per unit area on layers 1 and 2). The wall and the hvi contact apply the whole load
+  to layer 1, so the end layers deform until they balance it. Loading the layers in proportion to that boundary
+  force makes the stress uniform exactly. A flat, lattice-aligned free face under uniform in-plane load with
+  σ · n = 0 is an exact discrete equilibrium (curved faces and non-uniform stress are not covered by the argument):
+  the error is where a normal traction acts, at walls and contacts, so at the particle–substrate interface.
+- **Literature:**
+  - Röthlin, Klippel & Wegener (arXiv:1807.01117, §4.2) state that a corrected scheme must impose σ · n
+    explicitly. They list stress rotation (Randles & Libersky 2000), ghost particles (Hieber & Koumoutsakos 2008),
+    a −σ · n body force (Hieber et al. 2004) and the weak form; the four originals were not read.
+  - Vignjevic et al. 2021 state that boundary conditions spread over a boundary layer of the support size.
+  - No source deriving the consistent traction for corrected TLSPH was found.
+- **Proposed fix (not implemented): boundary-consistent traction.**
+  - Store the reference boundary vector B_k = Σ_j V_k V_j (K_k + K_j) ∇W_kj per TL particle.
+  - Distribute each contact or wall force f_i over the TL particles k of the same body near i with weights
+    φ_ik (B_k · n_i) / Σ_m φ_im (B_m · n_i), φ_ik = W_ik / Σ_{i' loaded} W_i'k (Shepard-normalised over the loaded
+    particles). With plain kernel weights the load split comes out wrong (1.106 / −0.106 instead of 1.485 / −0.471;
+    layer stresses 0.728 / 0.873 in the static model). With φ the static model gives 0.9999 on every layer.
+  - The weights sum to 1, so momentum is conserved. The torque error is of order |f| s per pair. The denominator
+    mixes positive and negative layer terms and needs a guard on curved surfaces; this should be checked on the
+    conform sphere before coding.
+  - It is a TL-only step after the hvi contact force; the hvi law stays unchanged.
+  - Reason to fix: the interface stress drives the plastic flow and the edge state [inference; no TL impact run
+    has looked at it].
+- **Proposed rung T-surface**, limits by the rule of 18.2:
+  1. Layers 1 and 2 of the T-S0 column over the wall-force plateau, at 100 and 200 particles: quads 0.11 %,
+     collocated 11.4 % (its own alternating end pattern), **within 14.5 %**; with quads alone 0.5 %. TL today:
+     35 % and 16 %; BCT with Shepard weights 10⁻⁴ in the static model (not implemented).
+  2. Free surface under load (the T-S0 column 16 particles wide with free x faces, `tl_cal_surface.py`):
+     σ_zz of the two outer columns over the middle, time-averaged over 0.25–0.55 contact times. Collocated
+     1.010 / 1.007 at 100 particles and 0.999 / 1.001 at 200, giving **within 1.5 %** at 100 and 0.5 % at 200.
+     The time average was introduced after the first single-frame runs had been seen (they scattered with the
+     breathing mode across the width: 0.908 / 0.961 at 50, 1.026 / 1.008 at 100).
+     There is no quad calibration (the axisymmetric quads cannot represent this deck), and TL was not run on it.
+
+### 18.5 Not done
+
+- A quad two-body run to calibrate T-B2.
+- A second bar amplitude for the viscosity (the 0.01 c0 cap matters only at impact velocities).
+- A recalibration of the hourglass α together with the new viscosity.
+- The S1 part of A-0 on `84e87958d` (the rest gives 39 of 39 identical runs).
+- The rebound and contact-time references at V/2 and V/4 (not converged at 16000 cells).
+- The CS-18b draft itself is the cloud session's, and Peter approves the freeze.
