@@ -5,7 +5,52 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-13-a: T-S0 diagnosis (open; diagnostics only, no verdicts)
+## Task 2026-11-13-b: CS-18b calibration and design (open; calibration and design only, no verdicts)
+
+**Basis:** DECISIONS 2026-11-13 "CS-18b with a calibration phase before its freeze". The T-S0 diagnosis is in §17.
+This is the phase **before** the CS-18b freeze: tuning on the calibration cases below is allowed and recorded. The
+TLSPH rungs themselves (the decks of `sph-tlsph-ladder.md`) are not used to choose anything.
+
+**Rules:**
+- source committed before each campaign;
+- rows `kind = calibration`, with fork SHA (committed binary) and deck hash;
+- no verdicts.
+
+**(a) Finite-strain references.** For T-S0, T-S0p and T-tension, derive the exact 1D solution including finite
+strain:
+- the plateau stress and front speed for the solver's hypoelastic material at the deck's velocity (the offset
+  0.42·V/c_d found in §17 is a check, not the definition);
+- check it against the quad elements (Isolid 17) and against TL runs at V/2 and V/4 (from §17).
+
+Write the reference formulas into the fork's `hvi/SPEC-TL-b.md`.
+
+**(b) Threshold calibration.** Run the quad elements (Isolid 17, 2D) and collocated SPH (frozen §9.1 set-up) on the
+T-S0, T-S0p and T-S1 decks at the ladder's resolutions, measured against the references of (a).
+- Propose each CS-18b threshold as a stated margin over what these methods achieve.
+- Every growth clause gets a noise floor.
+- For B-2 and T-surface, propose a threshold with its reason.
+
+**(c) Viscosity.** Take one viscosity form from the literature, for example the LAMMPS SMD TLSPH viscosity
+(Ganzenmüller) or Monaghan with a switch, read from the source and cited. Choose its coefficients on calibration
+cases that are **not** ladder rungs:
+- a confined column at a different length (2×) and velocity (V/2);
+- a free elastic bar ringing in its first mode, judged by damping per period.
+
+The criterion is stated before the runs: stable without ringing, and the least dissipation.
+
+**(d) End-layer stress design note.** In the steady state the TL end layers carry 0.655 and 0.845 of the true stress
+(§17.2).
+- From the literature, find why a corrected-gradient formulation does this at a truncated neighbourhood, and what
+  corrects it. Candidates: corrected pair-force sums, boundary integral terms, ghost or mirror layers at free
+  surfaces.
+- Propose a fix (new code, described, not implemented) or argue for none.
+- Define a rung **T-surface:** the steady stress of the first two layers against the traction, in the T-S0 column
+  and at a free surface under load, with its threshold from (b).
+
+**Output:** fork `hvi/SPEC-TL-b.md` and `hvi/results/tl_cal_*.csv`; schemeforge §18 on `coldspray/opencourant-sph`.
+Then stop. The cloud session drafts CS-18b and its ladder from this output, and Peter approves the freeze.
+
+## Task 2026-11-13-a: T-S0 diagnosis (closed: done, §17, merged 7638d1a)
 
 **Why:** CS-18 is refuted at T-S0 (§16; DECISIONS 2026-11-13). Before Peter decides on a CS-18b, find out which
 part of the set-up sets the contact-time and rebound errors, and whether the plateau offset is finite strain.
