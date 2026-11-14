@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-13-c: CS-18b calibration part 2 and BCT implementation (open; calibration only, no verdicts)
+## Task 2026-11-13-c: CS-18b calibration part 2 and BCT implementation (closed: done, §19, merged b5a4424)
 
 **Basis:** DECISIONS 2026-11-13 "CS-18b calibration decisions" and §18.
 **Rules (as task b):**

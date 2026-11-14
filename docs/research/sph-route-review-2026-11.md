@@ -25,8 +25,8 @@ Y′ while the normal pressure p_n exceeds an extrusion pressure.
 
 It must be 3D, with the bond acting inside the solver during the impact.
 
-**Amended 2026-11-13:** the interface outputs are judged as averages over a stated length (proposed 0.2 µm, the
-thermal diffusion length at contact time), not as point values at the edge. Point values are reported only.
+**Amended 2026-11-13 and 2026-11-14:** the interface outputs are judged as averages over a stated length, 0.5 µm
+(DECISIONS 2026-11-14), not as point values at the edge. Point values are reported only.
 
 ## 2. Why SPH, and how it was judged
 
@@ -253,3 +253,4 @@ The critique answers these partly from recall. Those answers are checked in
   - §7a: added (requirements conflict).
 - **2026-11-13, requirement amended** (DECISIONS 2026-11-13): §1 states that the edge state is averaged over a stated
   length.
+- **2026-11-14:** the averaging length was fixed at 0.5 µm (the first proposal, 0.2 µm, was below one spacing at R/32).
