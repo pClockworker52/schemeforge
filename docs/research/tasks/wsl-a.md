@@ -5,6 +5,32 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-14-a: CS-18b core rungs (open)
+
+**Judge, frozen:** [../sph-tlsph-b-ladder.md](../sph-tlsph-b-ladder.md) and hunch
+[../coldspray-hunch-cs18b.md](../coldspray-hunch-cs18b.md), frozen in 6f0786a. Cite it in every row.
+**Binary:** fork `tlsph`, solver source of 43791edbc (as in the ladder's set-up), built from a clean tree.
+
+1. **Core rungs, in the frozen order:** T-A0, T-S0, T-S0p, T-S1, T-tension, T-zero-energy, T-surface, T-B1, T-B2,
+   T-B3, T-survival, T-C1, T-D1, T-D2. T-D3 waits for A3.5.
+2. **Metrics under BCT:** every wall force is read from the body's momentum rate (ladder, "Metrics under BCT").
+   Rung scripts that read `/TH/RWALL` must be switched before the runs; the switch is a script commit that comes
+   before the predictions.
+3. **Reported rungs,** labelled, whenever convenient:
+   - T-surface-sphere;
+   - T-large-strain-1 and -2;
+   - T-cost;
+   - energy closure;
+   - BCT guard fallbacks (count and location) in every impact run.
+4. **Rules:**
+   - commit the source and decks before each campaign;
+   - commit each prediction in its own commit before its runs;
+   - every row records `binary_state = committed`, the fork SHA, ladder 6f0786a and the deck hash;
+   - a failing core rung means stop and report to Peter, with no tuning;
+   - if T-survival fails, stop TLSPH without a reference update (CS-18b kill clause).
+5. **Results:** fork `hvi/results/tlb_*.csv`; schemeforge §20 on `coldspray/opencourant-sph`, with a verdict table per
+   rung and the reported rungs kept apart.
+
 ## Task 2026-11-13-c: CS-18b calibration part 2 and BCT implementation (closed: done, §19, merged b5a4424)
 
 **Basis:** DECISIONS 2026-11-13 "CS-18b calibration decisions" and §18.
