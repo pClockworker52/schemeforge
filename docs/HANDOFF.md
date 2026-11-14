@@ -11,6 +11,12 @@ docs/research/coldspray-procedure.md (who writes where; tasks for the other sess
 - Peter: stay with TL; **CS-18c** with a corrected BCT; UL SPH (CS-19) is the fallback; no route review; rigour
   without ceremony (DECISIONS 2026-11-14).
 
+**Peter, 2026-11-14 (later):** requirements unchanged for now (bond in the solver stays). **After the next failure, hold a review session before anything else.** Its inputs were raised in chat:
+- every SPH failure so far was a surface failure;
+- a one-way bond for the first claim, evaluating Bay afterwards from the interface-state histories (exact up to the first bonding, CS-12 (a); v_cr only as a lower bound);
+- a dead-end trigger, written down before results.
+Modeller's estimates (judgment): CS-18c full ladder 35–50 %; edge convergence 25–35 %; whole chain 5–10 % (about 10–15 % to a first claim with a one-way bond).
+
 **Next:** when WSL A pushes §21 (task 2026-11-14-c), merge it (check that the diff touches only the verification log
 and results), then draft CS-18c and its ladder from the CS-18b ladder: the BCT variant, T-S1 marked non-blind, the
 checked T-S1 peak reference. Then a fresh general-purpose agent checks the draft (distinct from CS-18b? any
