@@ -113,3 +113,14 @@ prediction by the author that was wrong (CS-18: "elastic rungs likely pass").
 
 A rescue with a changed set-up (for example BCT off on wall contact, or a different wall treatment) would be a new
 hunch, registered and frozen before its runs. It is not an amendment of CS-18b.
+
+## Note (2026-11-14, after the verdict): R/64 and BCT off
+
+Reported after the verdict (§20.4–20.5); the verdict is unchanged.
+- **T-S1 at R/64, BCT on,** meets all its own criteria: contact 0.2 %, peak 3.1 %, approach 1.9 %, rebound 0.9788
+  (≥ 0.9746). The failure is strongly resolution-dependent.
+- **T-S1 at R/32, BCT off** (diagnostic, prediction committed before the run): rebound 0.9988, contact 1.4 %,
+  peak 1.2 %, approach 3.0 %, viscous work 0.0016 KE0 (0.33 with BCT on), one clean contact segment.
+- **Reading:** the R/32 failure comes from BCT's coupling to the wall load on a curved patch with few particles.
+  The TL bodies with the calibrated viscosity and α handle the curved elastic contact. The next step is CS-18c
+  (DECISIONS 2026-11-14), a new hunch.

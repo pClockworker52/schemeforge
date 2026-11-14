@@ -5,7 +5,44 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-14-b: T-S1 at R/64 and one BCT-off diagnostic (open; small and capped)
+## Task 2026-11-14-c: BCT under non-uniform and curved loads (open; calibration before any freeze)
+
+**Basis:** §20.4–20.5 and DECISIONS 2026-11-14 "CS-18c: TL with a corrected BCT, not a switch to UL SPH". With BCT
+off, T-S1 at R/32 gives a rebound of 0.9988; with BCT on it gives 0.860, and at R/64 0.9788. The TL bodies with the
+CS-18b viscosity and α handle curved contact. The defect is BCT's coupling to the load on a curved patch with few
+particles. BCT cannot be dropped: without it the end layers carry 0.65 / 0.84 of the stress (§17, §19.2).
+**Status of the cases:** this is calibration for a hunch not yet drafted (CS-18c). T-S1 is now a known case, and it
+will be a non-blind rung of the CS-18c ladder. Rows `kind = calibration`. Commit a prediction before each group of
+runs. Stop and report at the end.
+
+**Leading hypothesis (cloud, untested):** the rigid wall is kinematic (the wall particle is stopped, force = m Δa).
+BCT spreads that force over the end layers, and the §19.2 amendment then scales the load so that the wall particle
+still receives its full stopping force. This is exact only for a uniform load on a flat face. On a curved patch, and
+when particles enter and leave contact, the two disagree, which shows up as the 1.485 × wall-output mismatch, the
+chatter and the energy exchange. Under the hvi penalty contact (body on body, what cold spray uses) there is no
+kinematic constraint to fight, so BCT may already behave there.
+
+1. **Static and code analysis.** Where exactly does the wall scaling misload a curved patch, or one that changes
+   from step to step? Compare it with BCT spreading a penalty force. One page in the fork's SPEC-TL-b.
+2. **Body-on-body probe first** (the most decisive and the cheapest): the T-B2 geometry (Hertz sphere on a TL
+   block, hvi contact, `contact.stfac = 3`), R/32, BCT on and off, the CS-18b set-up otherwise. Report peak,
+   approach, rebound, chatter (contact segments), viscous and hourglass work. This is a calibration run of a T-B2
+   deck: name it as such in the rows.
+3. **A BCT variant**, chosen from 1 and 2 (WSL A proposes; examples: a penalty wall for TL bodies in place of the
+   kinematic wall; per-particle wall loads without the global stopping-force scaling; BCT only on patches above a
+   stated particle count, with a stated rule). One variant, fixed and committed before its runs:
+   - T-S1 at R/16, R/32 and R/64;
+   - the §19.2 column check (layers 1–4 within 1 % of the momentum-rate plateau);
+   - the flat free surface under load (§18.4 deck, T-surface b);
+   - the conforming-sphere layer-2 check of §19.1 (static model): does the variant change the 26–30 % deficit?
+   - T-A0 (no TL body: identical).
+4. **Also, for the CS-18c ladder:** the T-S1 peak reference (1.073, JAX §9.6). All hosts tend to 1.02–1.05 at R/64
+   (collocated 1.027, S′ 1.019, TL 1.040), and the quad two-body peak is 1.047. Check the reference's resolution
+   and, if needed, give a converged value. This is a reference check, not a change to any verdict.
+5. **Results:** fork `hvi/results/tl_cal3_*.csv`, SPEC-TL-b updated; schemeforge §21 on `coldspray/opencourant-sph`.
+   Then stop.
+
+## Task 2026-11-14-b: T-S1 at R/64 and one BCT-off diagnostic (closed: done, §20.4–20.5, merged c329481)
 
 **Basis:** CS-18b refuted at T-S1 (DECISIONS 2026-11-14). Peter is moving towards an updated-Lagrangian SPH hunch
 (CS-19, drafted by the cloud session). This task only answers whether BCT is carried into that draft. **It is not a

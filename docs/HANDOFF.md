@@ -4,10 +4,17 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**Done 2026-11-14 (after /clear):** §20 merged (7984e1c). **CS-18b is refuted at T-S1** by its frozen kill rule
-(R/32 rebound 0.860 vs ≥ 0.9796, contact time 5.3 % vs 3.5 %; R/16 unstable). Verdict in coldspray-hunch-cs18b.md,
-DECISIONS 2026-11-14, hunch count 3 of 5. **Waiting on Peter** for the next step of track B (§5). When WSL A pushes the
-R/64 numbers to §20.4, merge them (reported only; they cannot change the verdict).
+**Done 2026-11-14 (after /clear):**
+- §20 merged (7984e1c): **CS-18b refuted at T-S1** by its frozen kill rule (R/32 rebound 0.860). Hunch count 3 of 5.
+- §20.4–20.5 merged (c329481): T-S1 R/64 with BCT passes its own criteria; **T-S1 R/32 with BCT off: rebound
+  0.9988**. Cause: BCT on curved, few-particle wall patches.
+- Peter: stay with TL; **CS-18c** with a corrected BCT; UL SPH (CS-19) is the fallback; no route review; rigour
+  without ceremony (DECISIONS 2026-11-14).
+
+**Next:** when WSL A pushes §21 (task 2026-11-14-c), merge it (check that the diff touches only the verification log
+and results), then draft CS-18c and its ladder from the CS-18b ladder: the BCT variant, T-S1 marked non-blind, the
+checked T-S1 peak reference. Then a fresh general-purpose agent checks the draft (distinct from CS-18b? any
+threshold set on a rung?). Then Peter freezes it. If no BCT variant passes, draft CS-19 (UL SPH) instead.
 
 ## 1. The two tracks
 
@@ -35,6 +42,7 @@ amended 2026-11-14):
 | Calibration part 2 | BCT implemented (end layers 0.9999); quad two-body Hertz; α = 5 with Q1 = 0.1; **survival probe passed** (Al–Al, 800 m/s, R/16 and R/32, to 1.0 D/V) | §19 |
 | **CS-18b and its ladder frozen** (6f0786a) | rung runs: WSL A task 2026-11-14-a, results in §20 | DECISIONS 2026-11-14 |
 | CS-18b core rungs | T-A0, T-S0, T-S0p pass; **T-S1 fails** (R/32 rebound 0.860, contact 5.3 % short; R/16 unstable): **refuted** | §20, DECISIONS 2026-11-14 |
+| After the verdict | R/64 with BCT passes; R/32 with BCT off rebound 0.9988: BCT on curved patches is the cause; CS-18c next | §20.4–20.5, DECISIONS 2026-11-14 |
 
 **Known limits of CS-18b, named before its freeze:**
 - the conforming sphere's layer 2 stays 26–30 % low under BCT (a reported rung; fix later);
@@ -62,7 +70,7 @@ amended 2026-11-14):
 
 ## 5. Open for Peter
 
-1. What follows the refutation of CS-18b (§20). The candidates named earlier:
+1. CS-18c freeze, after §21 (the earlier options, UL / another host / reduced route, are fallbacks). The candidates named earlier:
    - an updated-Lagrangian variant (Dai type) with our surface fixes, as its own hunch;
    - another host;
    - a reduced route (a particle-level build-up rule, or the closed form).
@@ -76,7 +84,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-14-a (§20 pushed; R/64 runs to follow) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-14-c (BCT variant; §21) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining papers) |
 
 ## 7. Rules that must not be broken
