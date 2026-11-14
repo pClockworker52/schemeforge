@@ -5,7 +5,31 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-14-a: CS-18b core rungs (open)
+## Task 2026-11-14-b: T-S1 at R/64 and one BCT-off diagnostic (open; small and capped)
+
+**Basis:** CS-18b refuted at T-S1 (DECISIONS 2026-11-14). Peter is moving towards an updated-Lagrangian SPH hunch
+(CS-19, drafted by the cloud session). This task only answers whether BCT is carried into that draft. **It is not a
+rescue of CS-18b, and not a diagnostic campaign:** two runs, one table, no further runs without a new task.
+**Binary:** the same as task a (clean tree `8188ca5ec`), deck switch `HVI_TL_SET=cs18b`; wall forces from the
+momentum rate.
+
+1. **T-S1 at R/64:** let the running case finish and add its row and numbers to §20.4, labelled "reported, after the
+   verdict" (it cannot change the CS-18b verdict).
+2. **One diagnostic run:** T-S1 at R/32 with `tl.bct = off`, everything else as task a.
+   - Rows `kind = diagnostic`, no verdict; `binary_state = committed`, fork SHA, deck hash.
+   - Commit a one-line prediction in its own commit before the run.
+   - Report the same quantities as the §20.2 table: contact at 10⁻² (first drop and last time above), peak,
+     approach, rebound, largest and final KE / KE0, smallest det F, number of contact segments, viscous and
+     hourglass work.
+3. **Reading rule, fixed now (before the run):**
+   - rebound ≥ 0.9796 with BCT off: the wall–BCT coupling is the main cause, so BCT is **not** carried unchanged
+     into CS-19 for curved contact;
+   - rebound < 0.9796 with BCT off: the TL bodies (or the viscosity/hourglass set-up) fail curved contact on their
+     own, so BCT is not shown to be the cause; CS-19 may carry BCT, and must test it at T-S1;
+   - either way the row is a diagnostic, and nothing is tuned on it.
+4. **Results:** fork `hvi/results/tlb_diag.csv`; §20.4 and a short §20.5 on `coldspray/opencourant-sph`. Then stop.
+
+## Task 2026-11-14-a: CS-18b core rungs (closed: T-S1 FAIL, CS-18b refuted, §20, merged 7984e1c)
 
 **Judge, frozen:** [../sph-tlsph-b-ladder.md](../sph-tlsph-b-ladder.md) and hunch
 [../coldspray-hunch-cs18b.md](../coldspray-hunch-cs18b.md), frozen in 6f0786a. Cite it in every row.
