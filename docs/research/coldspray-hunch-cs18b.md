@@ -1,16 +1,17 @@
-# Cold spray: hunch CS-18b (calibrated TLSPH bodies with boundary-consistent traction): DRAFT, awaiting Peter
+# Cold spray: hunch CS-18b (calibrated TLSPH bodies with boundary-consistent traction), registration (frozen)
 
 Drafted 2026-11-14 by the modeller, from the calibration in opencourant-verification.md §18 and §19 and Peter's
 decisions (DECISIONS 2026-11-13 and 2026-11-14).
-- **Not registered.** It is frozen together with its ladder
-  ([sph-tlsph-b-ladder-draft.md](sph-tlsph-b-ladder-draft.md)) in one commit, on Peter's approval.
+- **Registered and frozen 2026-11-14** together with its ladder ([sph-tlsph-b-ladder.md](sph-tlsph-b-ladder.md)), in
+  one commit, before any CS-18b rung run. Peter approved; the T-tension limit of 0.095 V has its source noted in the
+  ladder.
 - **A new hunch, not an amendment of CS-18.** CS-18 stays refuted at T-S0
   ([coldspray-hunch-cs18.md](coldspray-hunch-cs18.md)).
-- **Budget:** once frozen, it makes the count 4 of 5.
+- **Budget:** it makes the count 4 of 5.
 
 ```yaml
 - id: CS-18b
-  registered: draft 2026-11-14 (not frozen)
+  registered: 2026-11-14, frozen 2026-11-14 with its ladder
   assumption_broken: >-
     H8 at the level of the body formulation, as CS-18: collocated SPH bodies with Eulerian kernels cannot carry an
     accurate surface layer. CS-18 showed that a corrected TLSPH form alone also loads its end layers wrongly
@@ -50,7 +51,7 @@ decisions (DECISIONS 2026-11-13 and 2026-11-14).
     - corrected SPH boundary-condition treatments listed by Roethlin, Klippel & Wegener (arXiv:1807.01117, section 4.2;
       the originals not read)
   label: none yet (referee); BCT's weighting is a candidate for review; never "novel"
-  status: draft
+  status: open
   author: Peter (direction), WSL A (calibration and BCT design), claude (formulation)
 ```
 

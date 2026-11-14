@@ -13,13 +13,14 @@ A new hunch (on either track) is registered only if both hold:
 2. **At most five hunches are open and untested.** "Open and untested" means registered, not parked, and without a
    verdict on unseen data. To register a sixth, one is retired: marked "retired" here, with one line on why.
 
-Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (CS-18 registered): 4 of 5. **Count on 2026-11-13 (CS-18 refuted at T-S0): 3 of 5.**
+Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (CS-18 registered): 4 of 5. Count on 2026-11-13 (CS-18 refuted at T-S0): 3 of 5. **Count on 2026-11-14 (CS-18b registered): 4 of 5.**
 
 | Hunch | Why it is open and untested |
 |---|---|
 | CS-10 | no blind paper so far reported particle strength |
 | CS-12 | its decisive test T3 needs an unseen thickness series |
 | CS-17 | no unseen substrate series known |
+| CS-18b | its ladder ([sph-tlsph-b-ladder.md](sph-tlsph-b-ladder.md)) not run yet (frozen 2026-11-14) |
 
 Not counted:
 - parked: CS-14 / 14b (2026-11-07, DECISIONS "Thermal question and CS-14b parked");
