@@ -2023,7 +2023,7 @@ committed in its own commit before its runs.
 **The campaign stops at T-S1** (task rule: a failing core rung means stop and report to Peter, no tuning).
 T-tension, T-zero-energy, T-surface, T-B1–T-B3, T-survival, T-C1, T-D1 and T-D2 are not run. The T-tension
 prediction had already been committed (`c49849d18`). The T-S1 run at R/64 was still running when this was written.
-It cannot change the verdict, because R/32 misses its point criteria; it will be added in 20.4.
+It cannot change the verdict, because R/32 misses its point criteria; it is added in 20.4.
 
 ### 20.2 T-S1
 
@@ -2070,7 +2070,8 @@ It cannot change the verdict, because R/32 misses its point criteria; it will be
 
 ### 20.4 T-S1 at R/64
 
-Added 2026-11-14, after the report. R/64 meets all its own criteria:
+**Reported, after the verdict** (added 2026-11-14; it cannot change the CS-18b verdict). R/64 meets all its own
+criteria:
 
 | | R/16 | R/32 | R/64 | R/64 limit |
 |---|---|---|---|---|
@@ -2088,3 +2089,35 @@ criteria. The failure is strongly resolution-dependent. My reading, untested: th
 patch that holds few particles goes wrong, and the effect fades with resolution. The chatter is still there at R/64
 but no longer harms the metrics. Run time 1 h 26 min for all three resolutions (8 threads); peak memory 10.0 GB
 (R/64).
+
+### 20.5 Diagnostic: T-S1 at R/32 with BCT off (task 2026-11-14-b)
+
+One run, no verdict. Same binary (`8188ca5ec`) and decks as task a, with `tl.bct = off` (fork deck switch
+`HVI_TL_BCT=off`, which also drops `tl.bct_guard`). Row `results/tlb_diag.csv` (`kind = diagnostic`, fork deck
+commit `3e3c2ae22`, deck hash `884329d1b58fcdc0`, `binary_state = committed`). The prediction was committed before
+the run (fork `50e37b5d5`). The first start stopped at the engine's input check (the guard key is refused with
+BCT off) before any time step; it was rerun after the deck fix, and has no row. Trace quantities come from the fork
+script `hvi/scripts/tlb_s1_trace.py`, which reproduces the 20.2 and 20.4 values.
+
+| | R/32 BCT on (20.2) | **R/32 BCT off** | R/64 BCT on (20.4) |
+|---|---|---|---|
+| contact at 10⁻²: first drop / last time above | 0.890 / 0.968 | 0.927 / 0.926 | 0.938 / 0.942 |
+| peak / approach / rebound | 1.049 / 0.893 / 0.860 | 1.060 / 0.928 / **0.9988** | 1.040 / 0.939 / 0.9788 |
+| largest / final kinetic energy / KE0 | 1.000 / 0.74 | 1.000 / 0.998 | 1.000 / 0.96 |
+| smallest det F | 0.87 | 0.92 | 0.88 |
+| contact segments above 10⁻² | 20 | 4 | 9 |
+| viscous / hourglass work / KE0 | 0.33 / 0.15 | 0.0016 / 0.0001 | 0.020 / 0.007 |
+
+"First drop" is the first sample below 10⁻² after the peak, so it can lie one sample after "last time above".
+
+- With BCT off, three of the four segments are blips below 0.015 F_Hertz in the first 1 % of t_Hertz; then the
+  contact is one clean segment. With BCT on, 11 segments of 0.2–0.65 F_Hertz come before the main contact (from
+  0.096 t_Hertz) and 8 of up to 0.48 F_Hertz follow it.
+- **Reading, by the rule fixed in the task before the run:** rebound 0.9988 ≥ 0.9796. The wall–BCT coupling is the
+  main cause of the R/32 failure, so **BCT is not carried unchanged into CS-19 for curved contact.**
+- Reported, not judged: with BCT off the other R/32 errors (contact 1.4 %, peak 1.2 %, approach 3.0 %) also lie
+  inside the R/32 limits. This is not a rescue of CS-18b, and nothing is tuned on it.
+- What it does not show: BCT was built for the plane-wall end layer (§19, T-S0); this run does not test BCT off on
+  flat faces.
+- My prediction was wrong: I expected the rebound to stay below 0.9796 (0.92–0.96). The chatter and the viscous
+  work dropped as predicted, but much further (viscous work 200× smaller).
