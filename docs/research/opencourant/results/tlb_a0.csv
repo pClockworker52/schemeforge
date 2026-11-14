@@ -1,0 +1,5 @@
+rung,case,fork_sha,ladder,deck_sha256,sidecar,rows_matched,rows_reference,fields_compared,result,setup,binary_state,reference
+T-A0 (CS-18b),sph_s0.csv,8188ca5ec,6f0786a,801f91cd249c266f,0,22,22,286,PASS,"frozen decks, no TL body",committed,"A-0 run on 6a8084b (hvi_rec/a0), identical strings in every non-timing column"
+T-A0 (CS-18b),sph_s0p.csv,8188ca5ec,6f0786a,06e7ec78d0cf7184,0,8,8,104,PASS,"frozen decks, no TL body",committed,"A-0 run on 6a8084b (hvi_rec/a0), identical strings in every non-timing column"
+T-A0 (CS-18b),sph_s1.csv,8188ca5ec,6f0786a,9f449218d57e0e81,0,16,16,304,PASS,"frozen decks, no TL body",committed,"A-0 run on 6a8084b (hvi_rec/a0), identical strings in every non-timing column"
+T-A0 (CS-18b),sph_twopart.csv,8188ca5ec,6f0786a,a8c5104985b4ddb0,0,9,9,27,PASS,"frozen decks, no TL body",committed,"A-0 run on 6a8084b (hvi_rec/a0), identical strings in every non-timing column"

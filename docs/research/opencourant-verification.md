@@ -1992,3 +1992,84 @@ where BCT turns itself off; where they occur was not examined.
   contact forces with a tensile part.
 - A joint (α, Q1) search; the survival probe with α = 10, Q1 = 0.05.
 - CS-18b and its ladder are the cloud session's draft; Peter approves the freeze.
+
+## 20. CS-18b core rungs: T-A0, T-S0, T-S0p pass; T-S1 fails; campaign stopped (task 2026-11-14-a)
+
+Task: `tasks/wsl-a.md`, task 2026-11-14-a. Judge: [sph-tlsph-b-ladder.md](sph-tlsph-b-ladder.md) and hunch
+[coldspray-hunch-cs18b.md](coldspray-hunch-cs18b.md), frozen in `6f0786a`. Fork `sph-hvi-contact`, branch `tlsph`,
+records at `62116031a`; details in the fork's `hvi/CHANGELOG.md`, "CS-18b core rungs".
+
+**Binary.** Built from the clean tree at `8188ca5ec`. Its solver source equals `43791edbc` byte for byte: `8188ca5ec`
+undoes a comment-only change made after task 2026-11-13-c. The engine binary differs from the old `ocroot_43791edbc`
+at byte 929 of the file header; I take that to be build metadata [not checked further].
+
+**Set-up.** The ladder's set-up through the deck switch `HVI_TL_SET=cs18b`: LAMMPS viscosity Q1 = 0.1, Q2 = 0;
+α = 5; BCT on with guard 0.45. Every wall force is read from the body's momentum rate (the ladder's "Metrics under
+BCT"); the script switch was committed before the predictions.
+
+**Rows.** [`results/tlb_a0.csv`](opencourant/results/tlb_a0.csv) and [`results/tlb_host.csv`](opencourant/results/tlb_host.csv).
+Every row has `binary_state = committed`, fork `8188ca5ec`, ladder `6f0786a` and the deck hash. Each prediction was
+committed in its own commit before its runs.
+
+### 20.1 Verdicts
+
+| rung | verdict | numbers | limits | prediction |
+|---|---|---|---|---|
+| T-A0 | PASS | 55 of 55 runs identical to the A-0 reference | identical | right |
+| T-S0 | PASS | 100 / 200: plateau 1.0065 / 1.0066, contact time 0.9936 / 0.9941, rebound 0.964 / 0.976; no error grows beyond its floor | plateau 1.5 % of 1.00659, contact time 2.0 % of 0.99294, rebound ≥ 0.9318 / ≥ 0.9517 | right (not blind: the calibration column is this column at V/2) |
+| T-S0p | PASS | 200: σ₂ 0.9984, plastic front 0.9883 c_b, elastic front 1.0034 c_d (errors 0.57 / 1.71 / 0.26 %) | 1.5 / 3.5 / 1.5 % of 1.00412 / 1.00544 / 1.00082 | right |
+| **T-S1** | **FAIL** | R/32: contact at 10⁻² 0.890 (**5.3 %**), peak 1.049 (2.3 %), approach 0.893 (6.7 %), rebound **0.860**. R/16: numerically unstable | contact 3.5 %, peak 5.5 %, approach 7.5 %, rebound ≥ 0.9796 (R/32) | "FAIL more likely than not": right on the verdict, but the R/16 instability was not predicted |
+
+**The campaign stops at T-S1** (task rule: a failing core rung means stop and report to Peter, no tuning).
+T-tension, T-zero-energy, T-surface, T-B1–T-B3, T-survival, T-C1, T-D1 and T-D2 are not run. The T-tension
+prediction had already been committed (`c49849d18`). The T-S1 run at R/64 was still running when this was written.
+It cannot change the verdict, because R/32 misses its point criteria; it will be added in 20.4.
+
+### 20.2 T-S1
+
+| | R/16 | R/32 | collocated SPH at R/32 (§18.2) |
+|---|---|---|---|
+| contact at 10⁻² / peak / approach / rebound | 0.36 / 11.9 / 0.66 / 1.23 | 0.890 / 1.049 / 0.893 / 0.860 | 0.964 / 1.030 / 1.014 / 0.985 |
+| largest kinetic energy over the run / KE0 | **9.0** | 1.000 | — |
+| kinetic energy at the end / KE0 | 1.56 | 0.74 | — |
+| BCT guard fallbacks (particle-cycles) | 88 (first reported at 1.47·10⁻¹⁰ s) | 36 | — |
+| smallest det F | 0.81 | 0.87 | — |
+
+- **R/16 is a numerical instability:** energy is created (up to 9× KE0) and the force reaches 11.9 F_Hertz at
+  0.36 t_Hertz.
+- **R/32 is stable but soft, and the wall contact chatters.**
+  - The force averages 0.89–0.99 F_Hertz from 0.30 to 0.55 t_Hertz and peaks at 1.049.
+  - The contact time 0.890 is the first time after the peak that the force falls below 10⁻², the rule used for the
+    references. The force comes back afterwards, up to 0.48 F_Hertz, and stays above 10⁻² until 0.968; the trace has
+    20 separate contact segments (R/16: 83).
+  - Under a "last time above 10⁻²" reading R/32 would pass the contact criterion (2.9 %). It fails on the rebound
+    under either reading.
+  - 26 % of the kinetic energy is lost in an elastic impact at 20 m/s. Where it goes is not known: the viscous plus
+    hourglass work (0.33 + 0.15 KE0) exceeds the loss, and there is no TL internal energy to close the balance.
+  - R/16's contact time 0.36 is an artefact of the same rule (the force stays above 10⁻² until 0.753).
+- **Ladder reading:** the frozen text attaches resolutions to the approach and rebound limits but not to contact
+  time and peak. The driver applies those two at R/32 and R/64, not at R/16 (which would fail them too). The
+  verdict does not depend on the reading.
+- **Reading [inference, not tested]:** this is the first engine case of BCT under a non-uniform rigid-wall load,
+  which §19.2 named as untested. The wall scaling is exact only for a uniform load on a flat face. On the curved
+  patch the wall particles do not receive exactly their stopping force, and the wall–BCT exchange can feed energy
+  (R/16) or soak it up (R/32). The conforming sphere's layer-2 deficit (§19.1) may add to the softness. No run
+  separates the two (for example T-S1 with BCT off), because that would be tuning after a failure.
+
+### 20.3 Reported (not judged)
+
+- **BCT guard fallbacks** in every run, in particle-cycles: 32 in each T-S0 and T-S0p run; T-S1 as in 20.2.
+  Locations were not examined.
+- **Energy closure:** not available (no TL internal energy in the fork).
+- **T-S0p rerun:** the first T-S0p run wrote its rows as "dirty tree", a false positive (the tracked result csv
+  the run writes counted as a modified file). After the fix the run was repeated, with the same values; the first
+  run has no committed row.
+- **Data loss during a disk clean-up on 2026-11-14** (my error, not part of a run): an over-broad deletion removed
+  the VTK frames and restart files of this campaign's run directories and of those of task 2026-11-13-c. All rows
+  and saved analysis arrays are intact; the raw frames could only be regenerated by rerunning.
+
+### 20.4 T-S1 at R/64
+
+Still running when this section was written. Interim state at 0.86 t_Hertz: kinetic energy 0.93 KE0, smallest det F
+0.879. If that holds, R/64 behaves much better than R/32, and the failure is strongly resolution-dependent. The
+numbers will be added here when the run has finished; they cannot change the verdict.
