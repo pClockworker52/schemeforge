@@ -2070,6 +2070,21 @@ It cannot change the verdict, because R/32 misses its point criteria; it will be
 
 ### 20.4 T-S1 at R/64
 
-Still running when this section was written. Interim state at 0.86 t_Hertz: kinetic energy 0.93 KE0, smallest det F
-0.879. If that holds, R/64 behaves much better than R/32, and the failure is strongly resolution-dependent. The
-numbers will be added here when the run has finished; they cannot change the verdict.
+Added 2026-11-14, after the report. R/64 meets all its own criteria:
+
+| | R/16 | R/32 | R/64 | R/64 limit |
+|---|---|---|---|---|
+| contact at 10⁻² | 0.36 | 0.890 | 0.938 (0.2 %) | 3.5 % |
+| peak | 11.9 | 1.049 | 1.040 (3.1 %) | 5.5 % |
+| approach | 0.66 | 0.893 | 0.939 (1.9 %) | 4.0 % |
+| rebound | 1.23 | 0.860 | 0.9788 | ≥ 0.9746 |
+| contact segments above 10⁻² | 83 | 20 | 9 | — |
+| kinetic energy at the end / KE0 | 1.56 | 0.74 | 0.96 | — |
+| viscous / hourglass work / KE0 | — | 0.33 / 0.15 | 0.020 / 0.007 | — |
+| BCT guard fallbacks | 88 | 36 | 16 | — |
+
+No R/64 error exceeds its R/32 value + 0.01. **The T-S1 verdict stays FAIL**, because R/32 fails its point
+criteria. The failure is strongly resolution-dependent. My reading, untested: the wall–BCT exchange on a curved
+patch that holds few particles goes wrong, and the effect fades with resolution. The chatter is still there at R/64
+but no longer harms the metrics. Run time 1 h 26 min for all three resolutions (8 threads); peak memory 10.0 GB
+(R/64).
