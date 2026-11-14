@@ -1834,3 +1834,161 @@ damping per period of the bar.
 - The S1 part of A-0 on `84e87958d` (the rest gives 39 of 39 identical runs).
 - The rebound and contact-time references at V/2 and V/4 (not converged at 16000 cells).
 - The CS-18b draft itself is the cloud session's, and Peter approves the freeze.
+
+## 19. CS-18b calibration part 2 and BCT (task 2026-11-13-c; calibration only, no verdicts)
+
+Task: `tasks/wsl-a.md`, task 2026-11-13-c, items 1 to 5 (item 5 added 2026-11-13); DECISIONS 2026-11-13 "CS-18b
+calibration decisions" and "CS-18b hold lifted". Fork `sph-hvi-contact`, branch `tlsph`, records at `72740e89b`: the
+full write-up is `hvi/SPEC-TL-b.md` section 5; rows `hvi/results/tl_cal2_*.csv` (copied to
+[`results/`](opencourant/results/)), `kind = calibration` (item 5: `calibration, diagnostic`). Engine rows carry the
+fork SHA, deck hash and `binary_state = committed`; the static-model rows carry the script commit; the dispersion
+rows have no deck. Criteria and predictions were committed before their runs (each named below). No TLSPH rung deck
+was used to choose anything. Four runs have no row, because their directories were overwritten or stopped (listed
+in SPEC-TL-b section 5): the first BCT check, the quad R/16 run with bulk viscosity off, the first α block run, and
+the first BCT-off column rows.
+
+Binaries: `43791edbc` (BCT, final; T-A0 on it 55 of 55 runs identical), `84e87958d` (quad two-body runs; quad code
+identical in all fork binaries), the superseded first BCT commit `d88157a23` (one check run, see 19.2).
+
+### 19.1 Item 1: BCT on the conforming sphere (static model, no engine run)
+
+`tl_bct_sphere.py`: quarter conforming sphere at R/16, R/32, R/64, TL operators of `tl_mod.F90`, Shepard-normalised
+BCT weights, contact patches of 3 to 10 spacings, exact and colour normals. Criterion committed in fork `d6b229f3c`.
+
+- **A robust guard exists** (calibrated with exact and colour normals; the engine uses −f/|f|, not tested). No loaded particle has a non-positive guard value; the smallest is 0.911 (R/64, exact
+  normal); merged particles 1.11–1.27; values up to 10.9 only at the patch edge (small weights). **Proposed
+  `tl.bct_guard` = 0.45.** The stop rule did not trigger.
+- **Torque error** per pair 1.06–1.36 |f| s at most, 0.18–0.63 on average; zero in total for the axisymmetric patch
+  by symmetry.
+- **Layer stresses under a Hertz pressure** (normal stress near the axis over the half-space Hertz value):
+
+  | body | patch | point load: layer 1 / 2 | BCT: layer 1 / 2 / 3 |
+  |---|---|---|---|
+  | flat lattice-aligned block | 10 spacings | 0.732 / 0.806 | 1.075 / 0.960 / 0.986 |
+  | sphere R/16 | 10 spacings | 0.761 / 0.619 | 1.043 / 0.721 / 0.850 |
+  | sphere R/32 | 10 spacings | 0.824 / 0.652 | 1.094 / 0.738 / 0.856 |
+
+  On a flat face BCT works under a non-uniform pressure too (first-order consistent; the layer-1 overshoot shrinks
+  with the patch size). **On the conforming sphere layer 2 stays 26–30 % low with BCT** at R/16 and R/32 alike. The
+  flat block does not show it, so it comes with the sphere's surface construction (the moved outer layer over the
+  lattice) [inference for the cause]. BCT corrects the load application, not this. (The flat block was added after
+  the criterion commit, as a comparison. The stress solve was not run at R/64.)
+- Against the prediction: the guard part right; the stress part wrong (the point-load deficit is 13–27 %, not
+  30–40 %; BCT does not bring the sphere's layers within 5 %).
+
+### 19.2 Item 2: BCT in the fork, and its check
+
+Sidecar `tl.bct = on` (default off), `tl.bct_guard`. b_k computed once at t = 0; one serial routine spreads
+per-particle loads with the weights of 19.1, the outward normal taken as −f/|f| (no hvi normal needed), point load
+kept where the guard value is below the threshold. Hooks, TL-only, hvi code unchanged: after `HVI_CONTACT_FORCES`
+(contact force per particle) and around `RGWAL0` (rigid-wall force = m Δa). Prediction committed in `d88157a23`.
+
+- **First version not kept:** spreading the kinematic wall force as it was left the wall particle short; the wall
+  over-corrected each cycle (wall-force ripple 30 %, layers 0.91 / 0.95 / 1.00). Amended before any further run
+  (`43791edbc`, recorded in SPEC-TL-b 5.2): each wall load is scaled so that the wall particle still receives its
+  stopping force (exact for a uniform load on a flat face).
+- **Check (column 2L at V/2, LAMMPS Q1 = 0.05, α = 10):** with BCT, layers 1 to 4 carry **0.9999** of the plateau
+  measured from the momentum rate, at 100 and 200 particles (without: 0.65 / 0.84 / 1.01). **The task's criterion
+  (within 1 %) is met.** Plateau unchanged; contact time +0.003 / +0.0016, rebound +0.003 / +0.0015. The predicted
+  change below 0.002 failed at 100 particles.
+- **Measurement changed after data:** the check script first divided by the `/TH/RWALL` plateau. Over that plateau
+  the BCT layers are 0.673, and the check would fail. It was switched to the momentum rate after the first runs had
+  been seen; the reason is the caveat below.
+- **Output caveat:** with BCT the engine's `/TH/RWALL` force is the wall's kinematic stopping force, **1.485 times**
+  the force transmitted to the body; the momentum rate is right. The wall's force sums and external work in the
+  engine output are off by the same factor. Rungs with a rigid wall and BCT must read the wall
+  force from the body momentum (`sph_rung0.py`'s `plateau_dPdt`, `contact_dPdt`; the frozen T-S0 metric reads
+  `/TH/RWALL`).
+- **T-A0 on `43791edbc`: 55 of 55 runs identical.**
+
+### 19.3 Item 3: quad two-body Hertz for T-B2
+
+Axisymmetric O-grid quad sphere on a quad cylinder (radius 3R, depth 2R, bottom fixed), Isolid 17, TYPE5 both ways,
+elastic, 20 m/s, against two-body Hertz (`sph_f0w0.hertz2`). Prediction committed in `b36e0aa4f`. With the bulk
+viscosity off (as the one-body quad references) the R/16 run became unstable after the rebound; all runs use the
+default bulk viscosity, time-step scale 0.4.
+
+| mesh | peak | approach | rebound |
+|---|---|---|---|
+| R/16 | 1.0054 | 1.0953 | 0.9988 |
+| R/32 | 1.0205 | 1.0209 | 0.9995 |
+| R/64 | 1.0408 | 0.9909 | 0.9996 |
+| R/128 | **1.0470** | **0.9763** | 0.9997 |
+
+In the last doubling the peak changes by +0.6 % and the approach by −1.5 %; the approach has not converged to 1 %.
+Geometric extrapolation (an estimate, not a run) gives peak about 1.050 and approach about 0.9625.
+- **T-B2 limits by the DECISIONS formula on the finest mesh: peak within 8.0 % (4.70 + 3.0), approach within 5.5 %
+  (2.37 + 3.0)**; rebound > 0.9 kept.
+- On the extrapolated errors (4.97 % and 3.75 %) the formula gives 8.0 % and **7.0 %**. Which one applies to the
+  approach is for Peter.
+- At R/32 the quads alone would give 5.5 % for both.
+- Against the prediction: the peak and approach ranges and the limits are right. The rebound (0.9997) is outside the
+  predicted 0.95–0.99, and the approach changed by more than the predicted 1 % between the finest meshes.
+
+### 19.4 Item 4: α with the LAMMPS viscosity
+
+Criterion committed in `b36e0aa4f`: (1) no resolved wave faster than exact (lattice dispersion, ν = 0.35);
+(2) shortest-wavelength kinetic energy ≤ 1 % in a free 12³ block with a smooth initial field over 100 periods;
+(3) least first-mode damping of the free bar; if two candidates are within 0.05 percentage points, the smaller
+viscous + hourglass work of the block.
+
+| α | (1) largest phase-speed ratio | (2) band share max | bar damping / period (100) | block work / KE0 |
+|---|---|---|---|---|
+| 0 | 0.9930 | 40.9 % | 0.5134 % | 0.992 |
+| 1 | 0.9934 | 3.54 % | 0.5134 % | 1.004 |
+| 3 | 0.9944 | 1.43 % | 0.5133 % | 1.026 |
+| **5** | 0.9955 | 0.63 % | 0.5129 % | **1.041** |
+| 10 | 0.9981 | 0.34 % | 0.5123 % | 1.071 |
+| 15 | 1.0501 | — | — | — |
+
+- As committed: **α = 5** (the bar damping of 5 and 10 differs by 0.0007 points, so the tie-break decides).
+  The tie-break uses the hourglass-work diagnostic, which §17 found unreliable (both sums exceed KE0).
+- α changed, so the Q1 criterion of §18.3 was rerun with α = 5: Q1 = 0.05 now rings (ripple 2.23 % at 100
+  particles); **Q1 = 0.1** is selected (bar damping 1.02 % per period).
+- **Recommendation (post hoc, not part of any committed criterion):** α = 10 with Q1 = 0.05 (the set-up before
+  this task) also meets every criterion and damps the bar half as much (0.51 % against 1.02 % per period; column
+  rebound 0.980 against 0.975). It is the worse of the two under the block-work diagnostic of the tie-break (1.071
+  against 1.041). The sequential procedure does not search the pairs jointly. My recommendation for the freeze is
+  **α = 10, Q1 = 0.05**; the decision is Peter's.
+
+### 19.5 Item 5: survival probe (calibration-phase diagnostic, no verdict)
+
+Al–Al quarter model, 800 m/s, contact only, both bodies TL with the committed outcome of this task (LAMMPS
+Q1 = 0.1, α = 5, BCT on, guard 0.45), contact.stfac = 3, colour normals, t_end = 1.0 D/V. Prediction committed in its own commit `e6d7abce0`.
+Reported against the E-1 gate draft §3 survival checks:
+
+| | R/16 | R/32 |
+|---|---|---|
+| time reached | 0.995 D/V (t_end) | 0.995 D/V (t_end) |
+| smallest dt / initial dt (≥ 0.1) | 0.204 | 0.157, at 0.996 D/V, still falling |
+| dt / dt0 at 0.1, 0.25, 0.5, 0.75 D/V | 0.58, 0.43, 0.35, 0.27 | 0.46, 0.38, 0.30, 0.26 |
+| detached mass (≤ 1 %) | 0 | 0 |
+| closest cross-body pair (≥ 0.5 s) | 0.88 s, at 0.10 D/V | 0.89 s, at 0.02 D/V |
+| det F > 0, no matrix stop | yes; smallest det F 0.885 (particle) / 0.852 (substrate) | yes; 0.856 / 0.833 |
+| largest / smallest principal stretch | 2.11 / 0.21 (particle) | 2.20 / 0.21 (particle), 2.19 / 0.24 (substrate) |
+| largest plastic strain | 2.2 (particle), 1.7 (substrate) | 2.9 (particle), 5.6 (substrate) |
+| largest speed | 1.38 V | 1.92 V |
+| kinetic energy at the end / KE0 | 0.009 | 0.010 |
+| viscous / hourglass work at the end / KE0 | 0.072 / 0.104 | 0.047 / 0.065 |
+| BCT guard fallbacks (particle-cycles) | 231, all after 0.975 D/V | 182 526, all after 0.815 D/V |
+| engine time | 21 min (4 threads, beside T-A0) | 2 h 46 min (8 threads, alone); peak memory 5.6 GB |
+
+Both runs pass every survival check of the E-1 gate draft §3, reported here only. They pass the kinematic switch
+(0.002–0.019 D/V) by a factor of 50 and more. The energy cannot be closed: the engine gives no TL internal energy,
+and the hourglass-work diagnostic is unreliable (§17).
+
+Against the prediction (fork `e6d7abce0`): passing the kinematic switch, reaching 0.2 D/V, det F staying positive
+and 0.6–0.9, and no matrix stop are right. The main prediction is wrong at both resolutions: the time step does not
+fall below 0.1 dt0. It falls steadily, to 0.16 at R/32 by the end, so it would cross 0.1 later than 1.0 D/V if the
+trend went on [inference]. Also wrong: detached mass stays 0 (not above 1 %), the closest pair is 0.88–0.89 s (not
+0.5–0.8 s), and the largest stretch is 2.2 (not above 3). The guard fallbacks late in both runs, many at R/32, show
+where BCT turns itself off; where they occur was not examined.
+
+### 19.6 Not done
+
+- The sphere's layer-2 deficit under BCT (19.1): its cause is inferred, not shown, and no fix is proposed here.
+- The ladder's wall metrics with BCT (19.2): the rung scripts would have to read the momentum rate.
+- BCT under a non-uniform rigid-wall load (the T-S1 sphere on the wall), where the wall scaling is not exact;
+  contact forces with a tensile part.
+- A joint (α, Q1) search; the survival probe with α = 10, Q1 = 0.05.
+- CS-18b and its ladder are the cloud session's draft; Peter approves the freeze.
