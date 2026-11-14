@@ -4,15 +4,10 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** fetch `coldspray/opencourant-sph` and read **§20** of docs/research/opencourant-verification.md
-(WSL A task 2026-11-14-a, the CS-18b core rungs).
-- It is pushed as 7984e1c. Its commit line says T-A0, T-S0 and T-S0p pass, **T-S1 fails**, the campaign stopped, and
-  R/64 is to follow. Not read in this session.
-- Merge it after checking that the diff touches only opencourant-verification.md and `opencourant/results/`. Then
-  apply the verdict by the frozen rule of `docs/research/sph-tlsph-b-ladder.md` and hunch
-  `docs/research/coldspray-hunch-cs18b.md`. **A failing host rung refutes CS-18b** (its kill rule).
-- Record the verdict as a dated section in the hunch file (never edit the frozen text), update the hunch index and
-  count, and write a DECISIONS entry. Then ask Peter.
+**Done 2026-11-14 (after /clear):** §20 merged (7984e1c). **CS-18b is refuted at T-S1** by its frozen kill rule
+(R/32 rebound 0.860 vs ≥ 0.9796, contact time 5.3 % vs 3.5 %; R/16 unstable). Verdict in coldspray-hunch-cs18b.md,
+DECISIONS 2026-11-14, hunch count 3 of 5. **Waiting on Peter** for the next step of track B (§5). When WSL A pushes the
+R/64 numbers to §20.4, merge them (reported only; they cannot change the verdict).
 
 ## 1. The two tracks
 
@@ -39,6 +34,7 @@ amended 2026-11-14):
 | Calibration before CS-18b | finite-strain references; thresholds 1.25 × quads or collocated SPH; LAMMPS viscosity; BCT (boundary-consistent traction) | §18 |
 | Calibration part 2 | BCT implemented (end layers 0.9999); quad two-body Hertz; α = 5 with Q1 = 0.1; **survival probe passed** (Al–Al, 800 m/s, R/16 and R/32, to 1.0 D/V) | §19 |
 | **CS-18b and its ladder frozen** (6f0786a) | rung runs: WSL A task 2026-11-14-a, results in §20 | DECISIONS 2026-11-14 |
+| CS-18b core rungs | T-A0, T-S0, T-S0p pass; **T-S1 fails** (R/32 rebound 0.860, contact 5.3 % short; R/16 unstable): **refuted** | §20, DECISIONS 2026-11-14 |
 
 **Known limits of CS-18b, named before its freeze:**
 - the conforming sphere's layer 2 stays 26–30 % low under BCT (a reported rung; fix later);
@@ -62,11 +58,11 @@ amended 2026-11-14):
 
 ## 4. Hunch budget
 
-**4 of 5:** CS-10, CS-12, CS-17, CS-18b. If CS-18b is refuted at T-S1, it drops to 3 of 5.
+**3 of 5:** CS-10, CS-12, CS-17 (CS-18b refuted at T-S1, 2026-11-14).
 
 ## 5. Open for Peter
 
-1. The verdict on CS-18b from §20, and what follows. The candidates named earlier:
+1. What follows the refutation of CS-18b (§20). The candidates named earlier:
    - an updated-Lagrangian variant (Dai type) with our surface fixes, as its own hunch;
    - another host;
    - a reduced route (a particle-level build-up rule, or the closed form).

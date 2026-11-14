@@ -77,3 +77,39 @@ decisions (DECISIONS 2026-11-13 and 2026-11-14).
 4. **BCT guard fallbacks** late in the R/32 survival probe (182 526 particle-cycles after 0.815 D/V), location
    unexamined.
 5. **Journal check of the four Ganzenmüller equations** is still deferred; it is required before the first claim.
+
+## Verdict (2026-11-14): refuted at T-S1
+
+Under the frozen kill rule ("refuted if any of T-S0, T-S0p, T-S1, T-tension, T-zero-energy or T-surface fails at its
+frozen threshold"), **CS-18b is refuted.** The third core rung, T-S1 (Hertz sphere on a rigid wall, 20 m/s), failed
+(opencourant-verification.md §20; fork `tlsph`, binary from clean tree `8188ca5ec`, ladder `6f0786a`; rows
+`opencourant/results/tlb_host.csv`, all `binary_state = committed`):
+
+| spacing | contact at 10⁻² | peak | approach | rebound | limits (R/32) |
+|---|---|---|---|---|---|
+| R/32 | 0.890 (**5.3 %**) | 1.049 (2.3 %) | 0.893 (6.7 %) | **0.860** | contact 3.5 %, peak 5.5 %, approach 7.5 %, rebound ≥ 0.9796 |
+| R/16 | numerically unstable: kinetic energy up to 9.0 KE0, force up to 11.9 F_Hertz | | | | |
+
+- **The verdict does not depend on readings of the rule.** Under a "last time above 10⁻²" reading of contact time
+  R/32 would meet that criterion (2.9 %), but it fails the rebound under either reading. Whether contact time and peak
+  apply at R/16 (the frozen text names resolutions only for approach and rebound) does not matter either.
+- **R/64** was still running when §20 was written (interim at 0.86 t_Hertz: KE 0.93 KE0). It cannot change the
+  verdict, because R/32 misses point criteria. Its numbers are reported in §20.4 when they arrive.
+- **Passed before the failure:** T-A0 (55 of 55 identical), T-S0 (plateau 1.0066, contact time 0.9941, rebound 0.976
+  at 200 particles) and T-S0p (errors 0.57 / 1.71 / 0.26 %). T-tension, T-zero-energy, T-surface, the contact rungs
+  and T-survival were not run (stop rule).
+
+**Against the author's prediction:** "host rungs: likely pass" was wrong for T-S1. WSL A's own prediction ("FAIL more
+likely than not") was right on the verdict, but did not foresee the R/16 instability. This is the second TLSPH host
+prediction by the author that was wrong (CS-18: "elastic rungs likely pass").
+
+**Readings, not verdicts** (§20.2; none tested, because a separating run would be tuning after a failure):
+- this is the first engine case of BCT under a non-uniform rigid-wall load, which §19.2 named untested; the wall
+  scaling is exact only for a uniform load on a flat face;
+- the conforming sphere's layer-2 deficit (known limit 1) may add to the softness;
+- 26 % of the kinetic energy is lost in an elastic impact; viscous plus hourglass work (0.33 + 0.15 KE0) exceeds the
+  loss, so without TL internal energy (known limit 3) the balance cannot be closed;
+- the wall contact chatters (20 contact segments at R/32, 83 at R/16).
+
+A rescue with a changed set-up (for example BCT off on wall contact, or a different wall treatment) would be a new
+hunch, registered and frozen before its runs. It is not an amendment of CS-18b.
