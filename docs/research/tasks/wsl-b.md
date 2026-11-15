@@ -223,6 +223,42 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
 
+## Task 2026-11-15-b10: step 1 for B06, B07 and B16 (open; do before the rest of b9)
+
+**Why:** Peter has filed the publisher versions in `coldspray-papers/` (your message of 2026-11-15, identified from
+PDF metadata only). These are the last three blind papers. Their step 1 unblocks the end point of the single-impact
+phase and, for B06, the decision on the T3 measurement request (CS-12 against CS-10).
+
+| Id | File | sha256 (as you reported) |
+|---|---|---|
+| B06 | B06_Wu_2026_published.pdf (Scripta Mater. 283, 117444) | 188dadc36e0ee3a01f1cf45d4aaa61ad1e13da856f226af2405b8f7cccec8b2b |
+| B07 | B07_Liu_2025_published.pdf (Surf. Interfaces 73, 107537) | 272e1e69d2e426fc7a1f0da5fa9adba3bceea58590eef85252e5c6e214ec4058 |
+| B16 | B16_Kajihara_2024_published.pdf (Acta Mater. 262, 119467) | 351beb1c0bd89433f1d42ae670d4ea08deb9304af052be46ddb24506339f6d2d |
+
+1. **Step 1 exactly as `docs/research/coldspray-extraction-prompt.md` says:** inputs only. Replace the rows
+   `B06-pending`, `B07-pending` and `B16-pending` in `docs/research/data/blind_inputs.csv` with one row per condition.
+   Re-hash each file first and give the hash in `access`.
+2. **Extra care for B06 (oxide fracture).** The oxide state of each condition is an input: type, thickness,
+   preparation. Do **not** pass on:
+   - critical velocities, bonding or rebound outcomes;
+   - descriptions of fracture patterns, bonded areas or oxide residue, and figures showing them;
+   - the paper's conclusions or mechanisms.
+
+   These are outcomes for CS-12 (T1, T3) and CS-10.
+   - If B06 has a series of one oxide type over several thicknesses, write only that the inputs form such a series
+     (types and thicknesses as inputs), nothing about the result.
+3. **B07 and B16 may contain no v_cr** (the list says so). Then give one row with `measures_vcr = no` and nothing
+   else, as the prompt says.
+4. **B03 check (small; B03 is closed and exposed, so no blinding applies):** the list owner asks for it. Compare row
+   B-B03-c1 in `data/vcr_lipit.csv` (588–590 m/s, from the accepted manuscript) with the published
+   B03_Tiamiyu_2021_published.pdf (sha256 ab89767c…cb3). Report "same" or the published values, with page and
+   figure, in a note on the same branch.
+   - **Do not open B05 or B12** for this.
+
+Commit only `docs/research/data/blind_inputs.csv` (and the B03 note) on a new branch
+`coldspray/blind-inputs-b06-b07-b16` from `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge;** the
+modeller leak-scans and merges.
+
 ## Task 2026-11-13-b9: interface-bonding methods in cold spray, reading at F level (open)
 
 **Status 2026-11-13:** the partial note is merged (51f1e6d): Dai 2026, Ren & Song 2022/2024, the Khoei 2023 abstract,

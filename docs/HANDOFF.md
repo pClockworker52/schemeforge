@@ -29,8 +29,9 @@ and results), then apply the rule of DECISIONS 2026-11-15:
 ## 1. The two tracks
 
 **A. Single-impact data track** (unchanged since 2026-11-08):
-- The blind papers B06, B07 and B16 are with Alex. The T3 measurement request (v_cr against oxide thickness at a
-  fixed oxide type) waits on B06.
+- The blind papers B06, B07 and B16 are filed by Peter (2026-11-15). Step 1 is WSL B task b10 (branch
+  `coldspray/blind-inputs-b06-b07-b16`; leak-scan before merging). The T3 measurement request (v_cr against oxide
+  thickness at a fixed oxide type) waits on B06's step 1.
 - B03 and B12 are merged as exposed (d67f72c).
 - Open data hunches: **CS-10, CS-12, CS-17.** Details: docs/research/coldspray-hunches.md.
 
@@ -95,7 +96,7 @@ amended 2026-11-14):
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
 | WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-15-a (BCT off at the 0.5 µm scale; §22) |
-| WSL B | `coldspray/bonding-methods-reading` | b9 (remaining papers) |
+| WSL B | `coldspray/blind-inputs-b06-b07-b16`, then `coldspray/bonding-methods-reading` | b10 (step 1 for B06, B07, B16; B03 check), then b9 (remaining papers) |
 
 ## 7. Rules that must not be broken
 
