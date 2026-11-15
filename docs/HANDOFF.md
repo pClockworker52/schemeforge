@@ -20,11 +20,15 @@ Modeller's estimates (judgment): CS-18c full ladder 35–50 %; edge convergence 
 **Done 2026-11-15:** §21 merged (7073f1e). No BCT variant is clean; "BCT on flat walls only" rejected
 (DECISIONS 2026-11-15).
 
-**Next:** when WSL A pushes §22 (task 2026-11-15-a), merge it (check that the diff touches only the verification log
-and results), then apply the rule of DECISIONS 2026-11-15:
-- 0.5 µm averages within 3.5 % → draft CS-18c (the CS-18b set-up with BCT off; T-surface on body-on-body contact
-  at 0.5 µm; T-S1 peak reference 1.062), have a fresh general-purpose agent check it, and Peter freezes it;
-- otherwise → Peter's review session (inputs above) before anything else.
+**§22 merged (2026-11-15): the rule is not met** (4 of 20 / 6 of 20 averages within 3.5 %). The face-layer deficit
+comes with any point-loaded face, rigid wall or not. **Next: Peter's review session**, before any new BCT variant or
+hunch. Its inputs:
+- the surface pattern;
+- the one-way bond;
+- TLSPH energy accounting;
+- a written dead-end trigger;
+- the external four-step proposal and its critique (in chat 2026-11-15; save them if Peter wants);
+- the state report (Claude Docs, "Cold-spray simulation: state report", 2026-11-15).
 
 ## 1. The two tracks
 
@@ -95,7 +99,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-15-a (BCT off at the 0.5 µm scale; §22) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | — (2026-11-15-a done, §22; waits on the review) |
 | WSL B | `coldspray/blind-inputs-b06-b07-b16`, then `coldspray/bonding-methods-reading` | b10 (step 1 for B06, B07, B16; B03 check), then b9 (remaining papers) |
 
 ## 7. Rules that must not be broken

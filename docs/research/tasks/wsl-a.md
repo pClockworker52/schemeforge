@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-15-a: is BCT needed at the 0.5 µm scale? (open; calibration, small)
+## Task 2026-11-15-a: is BCT needed at the 0.5 µm scale? (closed: rule not met, §22)
 
 **Basis:** §21 and DECISIONS 2026-11-15. Every BCT form misbehaves on small or changing loaded patches, which is
 the cold-spray contact regime. BCT off is clean on curved and body-on-body contact, but the column end layers carry
