@@ -5,7 +5,33 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-14-c: BCT under non-uniform and curved loads (open; calibration before any freeze)
+## Task 2026-11-15-a: is BCT needed at the 0.5 µm scale? (open; calibration, small)
+
+**Basis:** §21 and DECISIONS 2026-11-15. Every BCT form misbehaves on small or changing loaded patches, which is
+the cold-spray contact regime. BCT off is clean on curved and body-on-body contact, but the column end layers carry
+0.62 / 0.86 of the stress. The interface outputs are judged as 0.5 µm averages (DECISIONS 2026-11-14), and at R/32
+two layers are about that length. This task measures whether the BCT-off deficit matters at that scale.
+**Set-up:** the CS-18b set-up with `tl.bct = off`, binary `8188ca5ec` (or `18ffc51c1` with the default rule).
+Rows `kind = calibration`. Commit the prediction before the runs. Stop and report.
+
+1. **Sphere on block, body-on-body (T-B2 deck), R/32 and R/64,** hvi contact with `contact.stfac = 3`.
+   - At the time of peak force, and averaged over 0.4–0.6 t_H: contact pressure p_n and normal stress σ_zz on the
+     block side and the sphere side, averaged over discs of 0.5 µm radius on the axis and at 0.5 a, and over depth
+     bands of 0.5 µm from the contact (first and second band).
+   - Compare with the two-body Hertz field, and with the quad axisymmetric two-body run of task 2026-11-13-c item 3
+     (same averaging) as the numerical reference.
+   - Also report the layer-1 and layer-2 point values and the contact-area radius.
+   - State the particle size used to convert 0.5 µm into spacings.
+2. **The column check (2L at V/2) loaded by a deformable wall instead of the kinematic rigid wall:** a TL or
+   collocated block through hvi penalty contact, BCT off. Report layers 1–4 against the momentum-rate plateau.
+   Is the 0.62 / 0.86 deficit a rigid-wall artefact, or does it come with any point-loaded face?
+3. **Decision rule (fixed before the runs, DECISIONS 2026-11-15):**
+   - if the 0.5 µm averages in item 1 are within 3.5 % of the reference at R/32 and R/64, CS-18c will be the CS-18b
+     set-up with BCT off;
+   - otherwise this counts as the next failure, and Peter's review session comes before any further BCT variant.
+4. **Results:** fork `hvi/results/tl_cal4_*.csv`; schemeforge §22 on `coldspray/opencourant-sph`. Then stop.
+
+## Task 2026-11-14-c: BCT under non-uniform and curved loads (closed: done, §21, merged 7073f1e)
 
 **Basis:** §20.4–20.5 and DECISIONS 2026-11-14 "CS-18c: TL with a corrected BCT, not a switch to UL SPH". With BCT
 off, T-S1 at R/32 gives a rebound of 0.9988; with BCT on it gives 0.860, and at R/64 0.9788. The TL bodies with the

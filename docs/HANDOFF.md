@@ -17,10 +17,14 @@ docs/research/coldspray-procedure.md (who writes where; tasks for the other sess
 - a dead-end trigger, written down before results.
 Modeller's estimates (judgment): CS-18c full ladder 35–50 %; edge convergence 25–35 %; whole chain 5–10 % (about 10–15 % to a first claim with a one-way bond).
 
-**Next:** when WSL A pushes §21 (task 2026-11-14-c), merge it (check that the diff touches only the verification log
-and results), then draft CS-18c and its ladder from the CS-18b ladder: the BCT variant, T-S1 marked non-blind, the
-checked T-S1 peak reference. Then a fresh general-purpose agent checks the draft (distinct from CS-18b? any
-threshold set on a rung?). Then Peter freezes it. If no BCT variant passes, draft CS-19 (UL SPH) instead.
+**Done 2026-11-15:** §21 merged (7073f1e). No BCT variant is clean; "BCT on flat walls only" rejected
+(DECISIONS 2026-11-15).
+
+**Next:** when WSL A pushes §22 (task 2026-11-15-a), merge it (check that the diff touches only the verification log
+and results), then apply the rule of DECISIONS 2026-11-15:
+- 0.5 µm averages within 3.5 % → draft CS-18c (the CS-18b set-up with BCT off; T-surface on body-on-body contact
+  at 0.5 µm; T-S1 peak reference 1.062), have a fresh general-purpose agent check it, and Peter freezes it;
+- otherwise → Peter's review session (inputs above) before anything else.
 
 ## 1. The two tracks
 
@@ -76,7 +80,7 @@ amended 2026-11-14):
 
 ## 5. Open for Peter
 
-1. CS-18c freeze, after §21 (the earlier options, UL / another host / reduced route, are fallbacks). The candidates named earlier:
+1. CS-18c, after §22 by the rule of DECISIONS 2026-11-15 (the earlier options, UL / another host / reduced route, are fallbacks). The candidates named earlier:
    - an updated-Lagrangian variant (Dai type) with our surface fixes, as its own hunch;
    - another host;
    - a reduced route (a particle-level build-up rule, or the closed form).
@@ -90,7 +94,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-14-c (BCT variant; §21) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-15-a (BCT off at the 0.5 µm scale; §22) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining papers) |
 
 ## 7. Rules that must not be broken
