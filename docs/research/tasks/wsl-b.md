@@ -223,7 +223,7 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
 
-## Task 2026-11-15-b11: boundary integration and patch tests in corrected particle methods (open; after b10, before the rest of b9)
+## Task 2026-11-15-b11: boundary integration and patch tests in corrected particle methods (closed: merged 9d954b1)
 
 **Why:** route review 2026-11-15 (DECISIONS, D5 step 1). The TLSPH face layer carries only 0.5–0.6 of the stress
 under any point-loaded flat face (§22), and an external review claims that the literature proves strong-form
@@ -260,7 +260,7 @@ End with a short table: claim of the external review (inputs.md, input 2, point 
 Push to a new branch `coldspray/boundary-integration-reading` from `claude/exciting-fermi-qy077p` and stop; the
 modeller leak-scans and merges.
 
-## Task 2026-11-15-b10: step 1 for B06, B07 and B16 (open; do before the rest of b9)
+## Task 2026-11-15-b10: step 1 for B06, B07 and B16 (closed: merged 5f7bf7d)
 
 **Why:** Peter has filed the publisher versions in `coldspray-papers/` (your message of 2026-11-15, identified from
 PDF metadata only). These are the last three blind papers. Their step 1 unblocks the end point of the single-impact

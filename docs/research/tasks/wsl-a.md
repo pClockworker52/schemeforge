@@ -7,15 +7,9 @@ files or this file. Blind-list papers stay closed.
 
 ## Task 2026-11-15-b: reference, energy, survival, flat face and skin before the trigger run (open)
 
-**Basis:** DECISIONS 2026-11-15 "Route review 2026-11-15". The bond stays in the solver (D1). p_n and Y are judged on
-a measurement-only skin as 0.5 µm surface-disc averages, depth bands reported only (D2). One bounded TLSPH attempt
-(D3) is closed by a dead-end trigger fixed before any further result (D4, quoted in the DECISIONS entry). This task
-does D5 steps 1–3. **It does not run the trigger run itself** (T-B2 with skin and fitted face at R/32 and R/64);
-that is a later task, frozen first.
-**Set-up:** the CS-18b set-up (Q1 = 0.1, α = 5) with `tl.bct = off` on both bodies, contact.stfac = 3, colour
-normals. Rows `kind = calibration`, each naming a committed binary. Results to schemeforge §23 on
-`coldspray/opencourant-sph`. **Do not run the T-B2 deck with the skin or the fitted face**: that deck is the
-trigger deck.
+**Amended 2026-11-15 (later):** D3 was reopened after WSL B's boundary-integration reading (b11; DECISIONS
+2026-11-15 "D3 reopened after the boundary-integration reading"). Steps 1 and 2 are unchanged. **Step 3 is replaced
+by step 3′ below**; the original step 3 text is kept for the record.
 
 **Step 1 (in parallel; any order):**
 1. **Quad reference and U_ref.**
@@ -61,6 +55,22 @@ trigger deck.
    - Calibrate on the flat free surface under uniform load (known p_n and Y), on the column, and on T-S1 at R/32 and
      R/64 (p_n against the FE reference on the axis and at 0.5 a).
    - 0.5 µm surface-disc averages as in D2.
+
+**Step 3′ (replaces step 3; only if step 2 passes).**
+1. **VCI design note, no code** (`hvi/` design note in the fork, summary in §23). Basis:
+   `docs/research/data/boundary_integration_reading.md` (E, items 3–4: Hillman 2013 §4.1.2, §6.1.3). State:
+   - the surface quadrature (points, normals, weights) and the surface Ψ_I chosen for TLSPH (Shepard or RK);
+   - ξ_I computed once in the reference configuration, and how the Petrov–Galerkin term enters `tl_mod.F90`;
+   - how penalty contact applies its traction through the surface facets instead of point forces on layer 1;
+   - the expected size of the linear-momentum loss, and how it would be monitored;
+   - the interaction with hourglass control (the §22 layer split depends on α);
+   - cost and code size; what would make it unworkable.
+2. **Selection criterion, committed before any calibration run:** how one construction (fitted flat face or VCI)
+   is chosen on non-trigger cases (column against rigid and deformable walls, flat free surface under load, T-S1).
+   Stop and report after the note and the criterion: Peter confirms before any VCI code is written.
+3. Then, per Peter: build and calibrate the candidate(s), choose by the committed criterion, freeze the chosen
+   construction, and build the measurement skin (as in the original step 3.2; under VCI the skin also carries the
+   contact load, which needs Peter's approval at the trigger-run freeze).
 
 **Then stop and report.** The modeller drafts the trigger-run task (frozen binary, decks and predictions) from §23.
 

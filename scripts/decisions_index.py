@@ -16,6 +16,8 @@ CHANGED = {  # entry heading -> (what changed, heading of the later entry that c
         "no-fork clause", "2026-11-08 — No-fork dropped; SPH–SPH contact fork sph-hvi-contact (Peter)"),
     "2026-11-14 — CS-18b set-up and limits after calibration (Peter)": (
         "averaging item 4", "2026-11-15 — Route review 2026-11-15 (Peter)"),
+    "2026-11-15 — Route review 2026-11-15 (Peter)": (
+        "D3 and D4 host", "2026-11-15 — D3 reopened after the boundary-integration reading (Peter)"),
 }
 TRACKS = {
     "2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)": "repository",
@@ -24,7 +26,7 @@ TRACKS = {
 
 COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
-    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review",
+    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened",
 )
 
 

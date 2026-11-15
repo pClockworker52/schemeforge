@@ -4,12 +4,21 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** fetch and merge what has been pushed:
-- WSL A task 2026-11-15-b, results in §23 on `coldspray/opencourant-sph`;
-- WSL B b10 (`coldspray/blind-inputs-b06-b07-b16`), then b11 (`coldspray/boundary-integration-reading`).
+**First action:** fetch and merge WSL A task 2026-11-15-b (results in §23 on `coldspray/opencourant-sph`). If the
+BCT-off survival probe of step 2 failed, the dead-end trigger has fired (see below). After step 2, WSL A writes the
+VCI design note and the selection criterion (step 3′) and stops: Peter confirms before any VCI code.
 
-Leak-scan every WSL B branch before merging. If the BCT-off survival probe of 2026-11-15-b step 2 failed, the
-dead-end trigger has fired (see below).
+**Later on 2026-11-15:** WSL B b10 and b11 merged (5f7bf7d, 9d954b1; leak scans clean).
+- **b11:** the TLSPH face-layer deficit is the integration-constraint failure of nodally integrated Galerkin
+  meshfree methods (Hillman 2013; Chen et al. 2001): **rediscovery**. VCI is the known remedy (reference-frame
+  correction; load through a surface quadrature; loses exact momentum).
+- **D3 reopened (Peter, DECISIONS "D3 reopened after the boundary-integration reading"):** a VCI design note first,
+  then one construction (fitted flat face or VCI) chosen by a committed criterion on non-trigger cases. The D4 host is
+  "the one construction chosen and frozen in advance". If VCI is chosen, the skin carries the contact load, which
+  needs Peter's approval at the trigger-run freeze.
+- **b10 (track A):** B06 has two v_cr conditions (native Al oxide 4.5 nm; ZnO coating 20 nm), not a thickness
+  series of one oxide type; B07 and B16 have no v_cr; B03 row same as published. Peter: merge only for now; the B06
+  pre-registration and the T3 decision come later.
 
 **Route review 2026-11-15 held** (DECISIONS 2026-11-15 "Route review 2026-11-15"; folder
 docs/research/route-review-2026-11-15/: brief, inputs, reviewer packet, state-report copy, and reviewer-1.md and
@@ -18,8 +27,8 @@ reviewer-2.md verbatim). Peter's decisions:
   reviewers and the modeller had recommended one-way first.
 - **D2:** p_n and Y are judged on a measurement-only skin, as 0.5 µm surface-disc averages. Depth-band stresses are
   reported only. 2D axisymmetric runs are for references only (SPH is 3D only). This amends 2026-11-14 item 4.
-- **D3:** one bounded TLSPH attempt (BCT off, skin, a fitted flat face frozen in advance), plus a BCT-off survival
-  probe. Fallback: the reduced route (a build-up rule or the closed form, on track A).
+- **D3:** one bounded TLSPH attempt (BCT off, skin, a fitted flat face frozen in advance; amended later the same
+  day: fitted face or VCI, see above), plus a BCT-off survival probe. Fallback: the reduced route (a build-up rule or the closed form, on track A).
 - **D4, dead-end trigger** (full wording in the DECISIONS entry). It fires if any of these holds:
   - a p_n or Y − 1 surface average on T-B2 misses the quad reference by more than 3.5 % + U_ref at R/64;
   - such an average does not converge from R/32 to R/64;
@@ -46,9 +55,9 @@ it from §23, with frozen binary, decks and predictions, and Peter approves the 
 ## 1. The two tracks
 
 **A. Single-impact data track** (unchanged since 2026-11-08):
-- The blind papers B06, B07 and B16 are filed by Peter (2026-11-15). Step 1 is WSL B task b10 (branch
-  `coldspray/blind-inputs-b06-b07-b16`; leak-scan before merging). The T3 measurement request (v_cr against oxide
-  thickness at a fixed oxide type) waits on B06's step 1.
+- Step 1 for B06, B07 and B16 is merged (5f7bf7d). B06 measures v_cr in two conditions (native Al oxide; ZnO
+  coating) and is not a thickness series, so it does not supply T3. B07 and B16 have no v_cr. Open for Peter: the
+  B06 pre-registration and whether to send or drop the T3 measurement request.
 - B03 and B12 are merged as exposed (d67f72c).
 - Open data hunches: **CS-10, CS-12, CS-17.** Details: docs/research/coldspray-hunches.md.
 
@@ -93,8 +102,9 @@ amended 2026-11-14):
     verification, flattening ratio still moving at d/80. Also Ren & Song 2022 and 2024, and the Khoei abstract.
   - Outstanding, in the background, not blocking: Ge 2026 (browser download by Peter) and Dai 2025,
     doi:10.1007/s00466-025-02714-1 (closed). Tang 2021 moved to task b11.
-- **Boundary integration and patch tests** in corrected particle methods (SCNI, VCI, Hillman 2013, Ganzenmüller
-  2015) plus Tang 2021 in full: WSL B task b11, open.
+- **Boundary integration and patch tests** (WSL B b11, merged 9d954b1): data/boundary_integration_reading.md. The
+  face-layer deficit is the Galerkin nodal-integration constraint failure (rediscovery); VCI is the known remedy;
+  Tang 2021 verifies no Y or p_n.
   - **Lesson:** a literature step must sweep for competing methods.
 - **Reviews:** sph-route-review-2026-11.md, with its critique, the meta-review supplied by Peter, and
   sph-route-expert-answers-check.md; route review 2026-11-15 with two independent reviewers
@@ -120,7 +130,7 @@ amended 2026-11-14):
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
 | WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-15-b (results to §23) |
-| WSL B | `coldspray/blind-inputs-b06-b07-b16`, then `coldspray/boundary-integration-reading`, then `coldspray/bonding-methods-reading` | b10 (step 1 for B06, B07, B16; B03 check), then b11, then b9 (remaining papers) |
+| WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken
 
