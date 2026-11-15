@@ -1,52 +1,47 @@
-# Handoff — 2026-11-15, after the route review (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-15, session end after the route review (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
+**First action:** fetch and merge what has been pushed:
+- WSL A task 2026-11-15-b, results in §23 on `coldspray/opencourant-sph`;
+- WSL B b10 (`coldspray/blind-inputs-b06-b07-b16`), then b11 (`coldspray/boundary-integration-reading`).
+
+Leak-scan every WSL B branch before merging. If the BCT-off survival probe of 2026-11-15-b step 2 failed, the
+dead-end trigger has fired (see below).
+
 **Route review 2026-11-15 held** (DECISIONS 2026-11-15 "Route review 2026-11-15"; folder
-docs/research/route-review-2026-11-15/, with reviewer-1.md and reviewer-2.md verbatim):
-- **D1:** the bond stays in the solver (Peter; reviewers and modeller had recommended one-way first).
-- **D2:** p_n and Y are judged on a measurement-only skin as 0.5 µm surface-disc averages; depth bands reported only.
-- **D3:** one bounded TLSPH attempt (BCT off, skin, fitted flat face) plus a BCT-off survival probe; fallback: the
-  reduced route.
-- **D4:** dead-end trigger fixed in the DECISIONS entry (p_n and Y − 1 within 3.5 % + U_ref at R/64 on T-B2; no
-  convergence R/32 → R/64; survival probe fails; U_ref ≤ 1.75 % first). If it fires: reduced route.
-- **D5:** WSL A task 2026-11-15-b (quad R/256 and U_ref, TL internal energy, contact list; then survival probe; then
-  fitted face and skin); WSL B task b11 (boundary integration, patch tests, Tang 2021 in full), after b10.
+docs/research/route-review-2026-11-15/: brief, inputs, reviewer packet, state-report copy, and reviewer-1.md and
+reviewer-2.md verbatim). Peter's decisions:
+- **D1:** the bond stays in the solver. Reason: the claim needs the bond's effect on rebound and v_cr. Both
+  reviewers and the modeller had recommended one-way first.
+- **D2:** p_n and Y are judged on a measurement-only skin, as 0.5 µm surface-disc averages. Depth-band stresses are
+  reported only. 2D axisymmetric runs are for references only (SPH is 3D only). This amends 2026-11-14 item 4.
+- **D3:** one bounded TLSPH attempt (BCT off, skin, a fitted flat face frozen in advance), plus a BCT-off survival
+  probe. Fallback: the reduced route (a build-up rule or the closed form, on track A).
+- **D4, dead-end trigger** (full wording in the DECISIONS entry). It fires if any of these holds:
+  - a p_n or Y − 1 surface average on T-B2 misses the quad reference by more than 3.5 % + U_ref at R/64;
+  - such an average does not converge from R/32 to R/64;
+  - the BCT-off survival probe fails.
 
-**Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." First action: read and
-merge whatever WSL A (§23) or WSL B (b10, b11) has pushed; leak-scan WSL B branches.
+  U_ref is the quad change from R/128 to R/256 and must be ≤ 1.75 % first. If the trigger fires, the project moves
+  to the reduced route.
+- **D5:** the order of work, as set out in WSL A task 2026-11-15-b and WSL B task b11.
+- **D6:** two independent reviewers.
 
-**Done 2026-11-14 (after /clear):**
-- §20 merged (7984e1c): **CS-18b refuted at T-S1** by its frozen kill rule (R/32 rebound 0.860). Hunch count 3 of 5.
-- §20.4–20.5 merged (c329481): T-S1 R/64 with BCT passes its own criteria; **T-S1 R/32 with BCT off: rebound
-  0.9988**. Cause: BCT on curved, few-particle wall patches.
-- Peter: stay with TL; **CS-18c** with a corrected BCT; UL SPH (CS-19) is the fallback; no route review; rigour
-  without ceremony (DECISIONS 2026-11-14).
+**Choices the modeller made in the tasks** (Peter may change them):
+- the survival probe uses the §19.5 survival checks, with the energy balance reported but not judged;
+- the fitted flat face and the skin are calibrated only on cases other than the T-B2 trigger deck (column, flat
+  free surface, T-S1).
 
-**Peter, 2026-11-14 (later):** requirements unchanged for now (bond in the solver stays). **After the next failure, hold a review session before anything else.** Its inputs were raised in chat:
-- every SPH failure so far was a surface failure;
-- a one-way bond for the first claim, evaluating Bay afterwards from the interface-state histories (exact up to the first bonding, CS-12 (a); v_cr only as a lower bound);
-- a dead-end trigger, written down before results.
-Modeller's estimates (judgment): CS-18c full ladder 35–50 %; edge convergence 25–35 %; whole chain 5–10 % (about 10–15 % to a first claim with a one-way bond).
+**The trigger run itself** (T-B2 with skin and fitted face at R/32 and R/64) is not yet a task. The modeller drafts
+it from §23, with frozen binary, decks and predictions, and Peter approves the freeze.
 
-**Done 2026-11-15:** §21 merged (7073f1e). No BCT variant is clean; "BCT on flat walls only" rejected
-(DECISIONS 2026-11-15).
-
-**(Done.)** The route review was started with "Read docs/research/route-review-2026-11-15/brief.md and run the route
-review." The folder holds the session brief (facts, decisions D1–D6, the modeller's recommendations in a section withheld from
-independent reviewers) and inputs.md (two external texts verbatim, with the modeller's critiques).
-
-**§22 merged (2026-11-15): the rule is not met** (4 of 20 / 6 of 20 averages within 3.5 %). The face-layer deficit
-comes with any point-loaded face, rigid wall or not. **Next: Peter's review session**, before any new BCT variant or
-hunch. Its inputs:
-- the surface pattern;
-- the one-way bond;
-- TLSPH energy accounting;
-- a written dead-end trigger;
-- the external four-step proposal and its critique (in chat 2026-11-15; save them if Peter wants);
-- the state report (Claude Docs, "Cold-spray simulation: state report", 2026-11-15).
+**Earlier on 2026-11-14 and 2026-11-15** (details in DECISIONS and STATUS):
+- CS-18b refuted at T-S1;
+- §21: no BCT variant is clean;
+- §22: the BCT-off rule was not met (4 of 20 / 6 of 20 averages within 3.5 %), which triggered the review.
 
 ## 1. The two tracks
 
@@ -78,6 +73,9 @@ amended 2026-11-14):
 | **CS-18b and its ladder frozen** (6f0786a) | rung runs: WSL A task 2026-11-14-a, results in §20 | DECISIONS 2026-11-14 |
 | CS-18b core rungs | T-A0, T-S0, T-S0p pass; **T-S1 fails** (R/32 rebound 0.860, contact 5.3 % short; R/16 unstable): **refuted** | §20, DECISIONS 2026-11-14 |
 | After the verdict | R/64 with BCT passes; R/32 with BCT off rebound 0.9988: BCT on curved patches is the cause; CS-18c next | §20.4–20.5, DECISIONS 2026-11-14 |
+| BCT analysis and variant | diagonal scaling fails on small or changing patches (rim loads 2–3×); no variant clean; T-S1 peak reference 1.062 | §21, DECISIONS 2026-11-15 |
+| BCT off at the 0.5 µm scale | rule not met (4 of 20 / 6 of 20 within 3.5 %); face-layer deficit with any point-loaded face | §22, DECISIONS 2026-11-15 |
+| **Route review** | bond in the solver kept; skin-based p_n and Y; one bounded TLSPH attempt; dead-end trigger fixed | DECISIONS 2026-11-15 "Route review 2026-11-15" |
 
 **Known limits of CS-18b, named before its freeze:**
 - the conforming sphere's layer 2 stays 26–30 % low under BCT (a reported rung; fix later);
@@ -93,11 +91,14 @@ amended 2026-11-14):
 - **Bonding methods** (WSL B task b9, partial merged 51f1e6d): data/bonding_methods_reading.md.
   - Read: Dai et al. 2026 (F): updated-Lagrangian SPH, Lennard-Jones bond switched on at ε_p ≥ 1.4, no exact
     verification, flattening ratio still moving at d/80. Also Ren & Song 2022 and 2024, and the Khoei abstract.
-  - Outstanding, in the background, not blocking: Tang 2021, Ge 2026 (both need a browser download by Peter), and
-    Dai 2025, doi:10.1007/s00466-025-02714-1 (closed).
+  - Outstanding, in the background, not blocking: Ge 2026 (browser download by Peter) and Dai 2025,
+    doi:10.1007/s00466-025-02714-1 (closed). Tang 2021 moved to task b11.
+- **Boundary integration and patch tests** in corrected particle methods (SCNI, VCI, Hillman 2013, Ganzenmüller
+  2015) plus Tang 2021 in full: WSL B task b11, open.
   - **Lesson:** a literature step must sweep for competing methods.
 - **Reviews:** sph-route-review-2026-11.md, with its critique, the meta-review supplied by Peter, and
-  sph-route-expert-answers-check.md.
+  sph-route-expert-answers-check.md; route review 2026-11-15 with two independent reviewers
+  (docs/research/route-review-2026-11-15/).
 
 ## 4. Hunch budget
 
@@ -108,8 +109,8 @@ amended 2026-11-14):
 1. Track B is settled by the route review until the trigger run: nothing open for Peter until §23 arrives (the
    trigger-run task is drafted from §23 and frozen with Peter). If U_ref > 1.75 %, Peter decides how the reference
    is improved.
-2. The E-1 gate draft (docs/research/sph-contact-e1-gate-draft.md): revise to 0.5 µm averages, then thresholds and
-   freeze. It applies only if a host passes its ladder.
+2. The E-1 gate draft (docs/research/sph-contact-e1-gate-draft.md): revise to skin-based p_n and Y as 0.5 µm
+   surface-disc averages (D2), then thresholds and freeze. It applies only if a host passes its ladder.
 3. Compute for E-1 at R/48 and finer (raised in chat; not recorded elsewhere at Peter's wish).
 4. Track A items from 2026-11-08: judge v2, the CS-17 domain, the T3 extra items, Tiamiyu 2022, the Tang 2025 SI.
 
@@ -142,9 +143,10 @@ amended 2026-11-14):
 | What | Where |
 |---|---|
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log, all sections §1–§20 | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log, all sections §1–§22 (§23 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
 | Hunches | coldspray-hunches.md (index), coldspray-hunch-cs18.md, coldspray-hunch-cs18b.md, and the earlier CS files |
 | Referee | sph-contact-referee-2026-11-11.md |
 | Plan of the fork | sph-hvi-contact-plan.md (milestone 1) |
 | Tasks | docs/research/tasks/wsl-a.md, wsl-b.md |
+| Route review 2026-11-15 | docs/research/route-review-2026-11-15/ |
