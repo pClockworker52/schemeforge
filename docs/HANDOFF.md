@@ -1,8 +1,22 @@
-# Handoff — 2026-11-14, session end before /clear (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-15, after the route review (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
+
+**Route review 2026-11-15 held** (DECISIONS 2026-11-15 "Route review 2026-11-15"; folder
+docs/research/route-review-2026-11-15/, with reviewer-1.md and reviewer-2.md verbatim):
+- **D1:** the bond stays in the solver (Peter; reviewers and modeller had recommended one-way first).
+- **D2:** p_n and Y are judged on a measurement-only skin as 0.5 µm surface-disc averages; depth bands reported only.
+- **D3:** one bounded TLSPH attempt (BCT off, skin, fitted flat face) plus a BCT-off survival probe; fallback: the
+  reduced route.
+- **D4:** dead-end trigger fixed in the DECISIONS entry (p_n and Y − 1 within 3.5 % + U_ref at R/64 on T-B2; no
+  convergence R/32 → R/64; survival probe fails; U_ref ≤ 1.75 % first). If it fires: reduced route.
+- **D5:** WSL A task 2026-11-15-b (quad R/256 and U_ref, TL internal energy, contact list; then survival probe; then
+  fitted face and skin); WSL B task b11 (boundary integration, patch tests, Tang 2021 in full), after b10.
+
+**Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." First action: read and
+merge whatever WSL A (§23) or WSL B (b10, b11) has pushed; leak-scan WSL B branches.
 
 **Done 2026-11-14 (after /clear):**
 - §20 merged (7984e1c): **CS-18b refuted at T-S1** by its frozen kill rule (R/32 rebound 0.860). Hunch count 3 of 5.
@@ -20,8 +34,8 @@ Modeller's estimates (judgment): CS-18c full ladder 35–50 %; edge convergence 
 **Done 2026-11-15:** §21 merged (7073f1e). No BCT variant is clean; "BCT on flat walls only" rejected
 (DECISIONS 2026-11-15).
 
-**Start the next session with:** "Read docs/research/route-review-2026-11-15/brief.md and run the route review."
-The folder holds the session brief (facts, decisions D1–D6, the modeller's recommendations in a section withheld from
+**(Done.)** The route review was started with "Read docs/research/route-review-2026-11-15/brief.md and run the route
+review." The folder holds the session brief (facts, decisions D1–D6, the modeller's recommendations in a section withheld from
 independent reviewers) and inputs.md (two external texts verbatim, with the modeller's critiques).
 
 **§22 merged (2026-11-15): the rule is not met** (4 of 20 / 6 of 20 averages within 3.5 %). The face-layer deficit
@@ -47,7 +61,9 @@ hunch. Its inputs:
 amended 2026-11-14):
 - particle shape, rebound and v_cr, and the interface state;
 - 3D, with the bond acting in the solver;
-- interface outputs judged as **averages over 0.5 µm**, point values at the edge reported only.
+- interface outputs judged as **averages over 0.5 µm**, point values at the edge reported only;
+- since the route review 2026-11-15: p_n and Y measured on a measurement-only surface skin (0.5 µm surface discs),
+  depth-band stresses reported only; a dead-end trigger is in force (DECISIONS 2026-11-15).
 
 ## 2. History of track B, in one table
 
@@ -89,10 +105,9 @@ amended 2026-11-14):
 
 ## 5. Open for Peter
 
-1. CS-18c, after §22 by the rule of DECISIONS 2026-11-15 (the earlier options, UL / another host / reduced route, are fallbacks). The candidates named earlier:
-   - an updated-Lagrangian variant (Dai type) with our surface fixes, as its own hunch;
-   - another host;
-   - a reduced route (a particle-level build-up rule, or the closed form).
+1. Track B is settled by the route review until the trigger run: nothing open for Peter until §23 arrives (the
+   trigger-run task is drafted from §23 and frozen with Peter). If U_ref > 1.75 %, Peter decides how the reference
+   is improved.
 2. The E-1 gate draft (docs/research/sph-contact-e1-gate-draft.md): revise to 0.5 µm averages, then thresholds and
    freeze. It applies only if a host passes its ladder.
 3. Compute for E-1 at R/48 and finer (raised in chat; not recorded elsewhere at Peter's wish).
@@ -103,8 +118,8 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | — (2026-11-15-a done, §22; waits on the review) |
-| WSL B | `coldspray/blind-inputs-b06-b07-b16`, then `coldspray/bonding-methods-reading` | b10 (step 1 for B06, B07, B16; B03 check), then b9 (remaining papers) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-15-b (results to §23) |
+| WSL B | `coldspray/blind-inputs-b06-b07-b16`, then `coldspray/boundary-integration-reading`, then `coldspray/bonding-methods-reading` | b10 (step 1 for B06, B07, B16; B03 check), then b11, then b9 (remaining papers) |
 
 ## 7. Rules that must not be broken
 

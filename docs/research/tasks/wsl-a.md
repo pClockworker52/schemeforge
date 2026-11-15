@@ -5,6 +5,65 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-15-b: reference, energy, survival, flat face and skin before the trigger run (open)
+
+**Basis:** DECISIONS 2026-11-15 "Route review 2026-11-15". The bond stays in the solver (D1). p_n and Y are judged on
+a measurement-only skin as 0.5 µm surface-disc averages, depth bands reported only (D2). One bounded TLSPH attempt
+(D3) is closed by a dead-end trigger fixed before any further result (D4, quoted in the DECISIONS entry). This task
+does D5 steps 1–3. **It does not run the trigger run itself** (T-B2 with skin and fitted face at R/32 and R/64);
+that is a later task, frozen first.
+**Set-up:** the CS-18b set-up (Q1 = 0.1, α = 5) with `tl.bct = off` on both bodies, contact.stfac = 3, colour
+normals. Rows `kind = calibration`, each naming a committed binary. Results to schemeforge §23 on
+`coldspray/opencourant-sph`. **Do not run the T-B2 deck with the skin or the fitted face**: that deck is the
+trigger deck.
+
+**Step 1 (in parallel; any order):**
+1. **Quad reference and U_ref.**
+   - The quad axisymmetric two-body run of §22 (T-B2, same block sizes: full and reduced) at R/256, beside the
+     existing R/64 and R/128.
+   - Extract on the contact surface, at the force peak, 0.5 µm disc averages on the axis and at 0.5 a, block and
+     sphere side: p_n, and the surface expansion Y − 1 from the stretch of the surface element edges
+     (axisymmetric: radial edge stretch times hoop stretch).
+   - Report per quantity U_ref = |quad R/128 − quad R/256| (for Y as a relative error on Y − 1), the observed order
+     and a Richardson estimate where the order is stable.
+   - If any U_ref > 1.75 %, say so and stop this item: the trigger cannot be evaluated until the reference improves
+     (DECISIONS, D4).
+2. **TLSPH internal energy.**
+   - Accumulate per particle ΔE_int = V₀ P : ΔF each step, and report the hourglass work, the viscous work (from
+     pair relative velocities) and the contact penalty energy separately.
+   - Check the balance KE + E_int + E_contact + dissipated work against KE0 on T-S1 at R/32 with BCT off, and on the
+     T-S0 column. Report the closure, no threshold.
+   - Also rerun T-S1 at R/32 with BCT on and report its budget: the 0.33 + 0.15 KE0 at rebound 0.860 is listed as
+     "not understood" (state report). Diagnosis only.
+3. **Interface file.** List the particles actually in contact at each output time, not the static surface set
+   (§22 open item).
+
+**Step 2 (after the internal energy of step 1.2): BCT-off survival probe = trigger clause 3.**
+- Commit the prediction first.
+- The §19.5 deck (Al–Al quarter model, 800 m/s, contact only, t_end = 1.0 D/V) at R/16 and R/32, with `tl.bct = off`.
+- Report against the E-1 gate draft §3 survival checks exactly as §19.5 did, plus the energy balance now available
+  (reported).
+- **If any survival check fails, the trigger has fired:** stop the task and report. No variant, no rerun with other
+  settings.
+
+**Step 3 (only if step 2 passes): fitted flat face, then the skin.** Calibration on cases other than the trigger deck.
+1. **Fitted flat face.** Build the block's top face like the conforming sphere: a fitted outer layer over the lattice
+   with adjusted mass (§19, conforming sphere construction).
+   - State the construction and its selection criterion in a commit before its calibration runs; if more than one
+     construction is tried, the criterion picks one.
+   - Calibrate on the 2L column against the rigid wall and against the deformable TL column (layers 1–4 against the
+     momentum-rate plateau), and on the flat free surface under load (T-surface b).
+   - Freeze the chosen construction (commit) before stopping.
+2. **Measurement-only skin.** A triangulated surface over the boundary particles of each body, moved by the
+   particles, with Y per facet from the area stretch and p_n per facet from the penalty forces over the facet area.
+   - It feeds nothing back: show that a run with the skin on is bitwise identical in particle state to the same run
+     with it off.
+   - Calibrate on the flat free surface under uniform load (known p_n and Y), on the column, and on T-S1 at R/32 and
+     R/64 (p_n against the FE reference on the axis and at 0.5 a).
+   - 0.5 µm surface-disc averages as in D2.
+
+**Then stop and report.** The modeller drafts the trigger-run task (frozen binary, decks and predictions) from §23.
+
 ## Task 2026-11-15-a: is BCT needed at the 0.5 µm scale? (closed: rule not met, §22)
 
 **Basis:** §21 and DECISIONS 2026-11-15. Every BCT form misbehaves on small or changing loaded patches, which is

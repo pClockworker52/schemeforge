@@ -223,6 +223,43 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
 
+## Task 2026-11-15-b11: boundary integration and patch tests in corrected particle methods (open; after b10, before the rest of b9)
+
+**Why:** route review 2026-11-15 (DECISIONS, D5 step 1). The TLSPH face layer carries only 0.5–0.6 of the stress
+under any point-loaded flat face (§22), and an external review claims that the literature proves strong-form
+corrected particle methods fail the patch test at traction boundaries unless boundary integrals are evaluated over
+surface cells. Neither independent reviewer could confirm "proves". The answer decides whether the deficit is a
+known property of the method (then "rediscovery") and whether a known remedy exists. These are methods papers; none
+is on the blind list. **Blind screen first:** check each source for numbers from B06, B07 or B16; if any appear,
+note page and paragraph without the value, and leave them out.
+
+**Papers** (standing fetch rule; record URL, version and sha256; never commit a PDF):
+
+| # | Paper | Access |
+|---|---|---|
+| 1 | Chen, Wu, Yoon, You (2001), stabilized conforming nodal integration (SCNI), IJNME 50:435–466 | find an open copy |
+| 2 | Chen, Hillman, Rüter (2013), variationally consistent integration (VCI), IJNME, doi:10.1002/nme.4512 | find an open copy |
+| 3 | Hillman (2013), PhD dissertation, UCLA (eScholarship qt2s8848b6), the chapter on the patch test for collocation | open |
+| 4 | Ganzenmüller (2015), TLSPH with hourglass control, Comput. Methods Appl. Mech. Eng.: what it says about boundaries | find an open copy |
+| 5 | Up to three more found by a sweep for: Neumann / traction boundary conditions in kernel-corrected SPH or RKPM collocation; surface (boundary) integrals in corrected SPH; meshfree bodies with surface meshes or skins for contact | as found |
+| 6 | Tang, J. (2021), MASc thesis, University of Waterloo (UWSpace 10012/17030), **full text** (moved here from b9) | open |
+
+**For each paper, a section** in `docs/research/data/boundary_integration_reading.md`, with page references, stating
+exactly what the text says and labelling your own reading as such:
+1. Which formulation (Galerkin or collocation / strong form; kernel correction order) the result applies to.
+2. What it shows at loaded boundaries: a patch-test failure, a proof, or a numerical observation; the size of the
+   boundary error and how it scales with spacing.
+3. The remedy (surface integrals, stabilised boundary cells, ghost particles, a corrected traction form) and what it
+   requires from the code.
+4. Whether it carries over to strong-form TLSPH with penalty contact applied to the outer layer, as the text says
+   or as your reading (labelled).
+5. For Tang 2021: what converges under refinement (bonded area, Y, p_n, shape), against what reference, and which
+   length or regularisation it needs.
+
+End with a short table: claim of the external review (inputs.md, input 2, point 4) against what the sources show.
+Push to a new branch `coldspray/boundary-integration-reading` from `claude/exciting-fermi-qy077p` and stop; the
+modeller leak-scans and merges.
+
 ## Task 2026-11-15-b10: step 1 for B06, B07 and B16 (open; do before the rest of b9)
 
 **Why:** Peter has filed the publisher versions in `coldspray-papers/` (your message of 2026-11-15, identified from
@@ -263,7 +300,8 @@ modeller leak-scans and merges.
 
 **Status 2026-11-13:** the partial note is merged (51f1e6d): Dai 2026, Ren & Song 2022/2024, the Khoei 2023 abstract,
 and the comparison table. **Open:**
-- Tang 2021 and Ge 2026: Peter downloads them in a browser into `coldspray-papers/`;
+- Tang 2021 and Ge 2026: Peter downloads them in a browser into `coldspray-papers/` (Tang 2021 moved to task b11,
+  2026-11-15);
 - Dai et al. 2025, doi:10.1007/s00466-025-02714-1 (closed; this is the task's "Wang et al. 2025").
 
 Continue on the same branch, then stop.

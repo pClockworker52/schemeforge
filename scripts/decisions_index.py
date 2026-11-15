@@ -14,6 +14,8 @@ CHANGED = {  # entry heading -> (what changed, heading of the later entry that c
         "solver part", "2026-11-03 — Main impact solver: OpenCourant instead of OpenRadioss (Peter)"),
     "2026-11-04 — Post-onset simulation route: 3D SPH, no OpenCourant fork (Peter)": (
         "no-fork clause", "2026-11-08 — No-fork dropped; SPH–SPH contact fork sph-hvi-contact (Peter)"),
+    "2026-11-14 — CS-18b set-up and limits after calibration (Peter)": (
+        "averaging item 4", "2026-11-15 — Route review 2026-11-15 (Peter)"),
 }
 TRACKS = {
     "2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)": "repository",
@@ -22,7 +24,7 @@ TRACKS = {
 
 COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
-    "Campaign trigger", "Build-up", "Hunch budget",
+    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review",
 )
 
 
