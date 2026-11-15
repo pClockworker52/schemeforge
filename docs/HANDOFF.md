@@ -20,6 +20,10 @@ Modeller's estimates (judgment): CS-18c full ladder 35–50 %; edge convergence 
 **Done 2026-11-15:** §21 merged (7073f1e). No BCT variant is clean; "BCT on flat walls only" rejected
 (DECISIONS 2026-11-15).
 
+**Start the next session with:** "Read docs/research/route-review-2026-11-15/brief.md and run the route review."
+The folder holds the session brief (facts, decisions D1–D6, the modeller's recommendations in a section withheld from
+independent reviewers) and inputs.md (two external texts verbatim, with the modeller's critiques).
+
 **§22 merged (2026-11-15): the rule is not met** (4 of 20 / 6 of 20 averages within 3.5 %). The face-layer deficit
 comes with any point-loaded face, rigid wall or not. **Next: Peter's review session**, before any new BCT variant or
 hunch. Its inputs:
