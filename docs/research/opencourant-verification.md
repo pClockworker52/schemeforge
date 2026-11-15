@@ -2121,3 +2121,112 @@ script `hvi/scripts/tlb_s1_trace.py`, which reproduces the 20.2 and 20.4 values.
   flat faces.
 - My prediction was wrong: I expected the rebound to stay below 0.9796 (0.92–0.96). The chatter and the viscous
   work dropped as predicted, but much further (viscous work 200× smaller).
+
+## 21. BCT under non-uniform and curved loads (task 2026-11-14-c; calibration, no verdicts)
+
+Calibration only: all rows have `kind = calibration` (or a variant of it), and none of them changes a verdict of §20.
+Each prediction was committed in the fork before its runs (`f1d7970c6` for the T-B2 probe, `797af96c8` for the flat
+baselines, `929a73969` for the variant; results up to fork `b2294150c`). Full account in the fork, `hvi/SPEC-TL-b.md` §6. Fork
+binaries: `8188ca5ec` (the CS-18b binary of §20) for steps 1–2 and the flat baselines; `18ffc51c1` (variant switch
+`tl.bct_rule`, default unchanged) for the variant runs and T-A0. Rows are copied to `results/tl_cal3_*.csv`.
+
+### 21.1 Static and code analysis
+
+The wall hook stops each wall particle kinematically (f_i) and loads the body with F_i = f_i / r_i, where r_i is the
+spread load that i receives. This replaces the inverse of the spreading operator by its diagonal, which is exact
+only for a uniform load on a flat face (r = 1.485). A static one-cycle model on the T-S1 sphere and a flat lattice
+face (fork `hvi/scripts/tl_bct_wall.py`, `results/tl_cal3_wall.csv`) gives:
+- a single loaded particle loads the body with 3.0× (sphere) or 6.1× (flat face) its stopping force;
+- rim particles get 2–3× their stopping force, and the load they receive reaches 4–8× it, so the patch rim flickers
+  (the chatter of §20.2);
+- the total load over the stopping force ranges from 0.7 to 6, depending on patch size and load profile;
+- the exact inverse is no fix: it needs tensile wall loads at the rim (condition number 14–50).
+The defect comes from a small or changing loaded set, not from curvature: the flat face shows it too. It fades with
+resolution because the patch at the T-S1 peak holds more particles (a ≈ 2.2 / 4.5 / 8.9 spacings at R/16 / R/32 /
+R/64).
+
+### 21.2 Body-on-body probe (T-B2 deck)
+
+B-2 geometry, both bodies TL with CS-18b, hvi penalty contact with `contact.stfac = 3`; rows
+`results/tl_cal3_b2.csv`. BCT spreads the penalty force unscaled.
+
+| | peak | approach | rebound | contact 10⁻² | segments | final KE / KE0 |
+|---|---|---|---|---|---|---|
+| R/16 BCT on | 1.306 | 0.765 | 0.964 | 0.770 | 3 | 0.934 |
+| R/16 BCT off | 1.048 | 0.923 | 0.998 | 0.931 | 1 | 0.996 |
+| R/32 BCT on | 1.080 | 0.901 | 0.984 | 0.909 | 2 | 0.968 |
+| R/32 BCT off | 1.054 | 0.952 | 0.999 | 0.944 | 1 | 0.998 |
+
+BCT off is close to two-body Hertz at both resolutions. BCT on is worse, less so at R/32. So the spreading also harms
+a penalty-loaded patch, although it conserves the total load (R/32 approach 9.9 % short with BCT on, 4.8 % with BCT
+off). A penalty wall for TL bodies is therefore unlikely to be the whole fix. Against my prediction: at R/32 with BCT
+on, the peak (1.080 against 1.07) and the approach (9.9 % against 5.5 %) miss, while rebound, segments and final KE
+hold; BCT off at R/32 and both R/16 runs hold. The on/off approach gap (0.051) was not bounded by the prediction.
+
+### 21.3 The T-S1 peak reference
+
+The reference 1.073 is the JAX axisymmetric code on 20 × 40. Rerun unchanged on six meshes
+(`results/tl_cal3_peakref.csv`):
+
+| mesh | 10 × 20 | 15 × 30 | 20 × 40 | 30 × 60 | 40 × 80 | 60 × 120 |
+|---|---|---|---|---|---|---|
+| peak | 1.060 | 1.058 | 1.073 | 1.063 | 1.064 | 1.062 |
+| peak, 0.02 t_H moving mean | 1.041 | 1.041 | 1.060 | 1.055 | 1.057 | 1.057 |
+
+Contact time, approach and rebound agree within 0.004 on all meshes. **From 30 × 60 on the peak is 1.062–1.064; the
+reference is 1.062 ± 0.002 (60 × 120), so 1.073 is 1.0 % high.** The value frozen in the ladder is not changed by this
+task. With 1.062, the T-S1 peak errors of collocated SPH (1.030 / 1.027) in the threshold table of the fork's
+SPEC-TL-b §2.2 would read 3.0 % (R/32) and 3.3 % (R/64) instead of 4.0 % and 4.3 %; the "within 5.5 %" limits are
+unchanged. The decision is for the ladder owner.
+
+### 21.4 Flat-face baselines
+
+Column check (2L at V/2) and T-surface (b) with TL CS-18b (`results/tl_cal3_flat.csv`):
+- column layers 1–4, BCT on: within 0.03 % of the plateau at 100 and 200;
+- column layers 1–4, BCT off: 0.62 / 0.86 / 1.03 / 0.99;
+- T-surface (b): within 0.8 % with BCT on and off.
+These are the baselines that a variant has to keep.
+
+### 21.5 Variant `tl.bct_rule = interior`
+
+Only a loaded particle whose face neighbours ((b_j · n_i) / (b_i · n_i) > 0.3, a threshold set in a gap of the
+static distribution) are all loaded spreads its load and is scaled. Every other loaded particle keeps its point
+load. Statically this removes the amplification: total load 0.80–1.21, q 0.80–1.59. Rows `results/tl_cal3_var.csv`
+(T-S1) and `results/tl_cal3_a0.csv`.
+
+| T-S1 | peak | smoothed peak | approach | rebound | contact 10⁻² | force noise |
+|---|---|---|---|---|---|---|
+| R/16 variant | 1.096 | 1.095 | 0.877 | 0.997 | 0.886 | 0.001 |
+| R/32 variant | 1.402 | 1.081 | 0.926 | 0.999 | 0.925 | 0.122 |
+| R/32 BCT off (20.5) | 1.060 | 1.059 | 0.928 | 0.999 | 0.927 | 0.001 |
+| R/32 BCT on (20.2) | 1.049 | 0.992 | 0.893 | 0.860 | 0.890 | 0.022 |
+| R/64 variant | 1.252 | 1.060 | 0.948 | 0.999 | 0.937 | 0.045 |
+| JAX 60 × 120 | 1.062 | 1.057 | 0.956 | 1.000 | 0.939 | |
+
+(Force noise is the mean of |force − its 0.02 t_H moving mean| over 0.1–0.8 t_H, in units of the Hertz peak.)
+
+- **What it fixes:** the energy error. R/16 is stable (BCT on: kinetic energy up to 9×), the rebound is 0.997–0.999
+  at every resolution, and the mean response matches BCT off at R/32. It approaches the JAX values with refinement
+  (R/64: approach 0.948 against 0.956, smoothed peak 1.060 against 1.057; R/64 with BCT on: approach 0.939, smoothed peak 1.035);
+  two resolutions do not show convergence.
+- **What it breaks:** once the patch holds spreading particles, the force carries spikes of up to 0.32 F_Hertz above
+  its moving mean, and the raw peak is one of those spikes. The noise falls with resolution. The T-B2 deck at R/16 shows the same: rebound
+  0.998, but a raw peak of 1.81. The likely cause (a hypothesis) is that the rule is a hard switch: a particle flips
+  between point load and spread load as its neighbours enter or leave the contact.
+- **Unchanged where it should be:** the column check and T-surface (b) give the BCT-on values to four digits, and
+  T-A0 is 55 of 55 identical.
+- **Against my prediction:** partly wrong. Stability, rebound, approach, the flat checks and T-A0 were right; on
+  T-B2 R/16 the run is stable and rebound and approach hold at the BCT-off values. Missed: the peaks (1.40 and 1.25
+  against at most 1.09), the T-B2 peak (1.81 against at most 1.10), and the R/32 segments (4 against at most 3;
+  BCT off has the same 4 early blips, so that miss is not the variant's).
+- **Not resolved:** the viscous plus hourglass work columns do not close an energy budget (up to 0.49 KE0 at a
+  rebound of 0.998), so they are not read as dissipation.
+
+**Status.** None of the three set-ups is clean on T-S1:
+- BCT on fails the rebound at R/32;
+- the variant has the right mean response but a noisy force;
+- BCT off is clean on curved contact (run at R/32 only) but leaves the flat-face end layers at 0.62 / 0.86.
+
+The variant is not adopted. Two candidate next steps, neither run here: a smooth weight in place of the face-neighbour
+switch, or BCT on flat wall faces only, with point loads on curved and body-on-body contact. The choice is for the
+ladder owner.
