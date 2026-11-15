@@ -2230,3 +2230,87 @@ load. Statically this removes the amplification: total load 0.80–1.21, q 0.80�
 The variant is not adopted. Two candidate next steps, neither run here: a smooth weight in place of the face-neighbour
 switch, or BCT on flat wall faces only, with point loads on curved and body-on-body contact. The choice is for the
 ladder owner.
+
+## 22. BCT off at the 0.5 µm scale (task 2026-11-15-a; calibration, no verdicts)
+
+Question: is BCT needed at the 0.5 µm scale? Calibration only: all rows have `kind = calibration`. The tools
+(`e04029662`) and the plan, definitions, operational reading of the decision rule and prediction (`b539ba048`) were
+committed in the fork before the runs. The sphere-side p_n guard (`c6f209a4e`) and the compare script (`50f4938d7`) were
+committed during the runs, before the fields of the two judged runs were read (the R/32 reduced-block fields, which
+showed the problem, were read before the guard); results up to fork `6e7643a26`. Full account in
+the fork, `hvi/SPEC-TL-b.md` §7. Fork binary `18ffc51c1`, BCT off on both bodies, CS-18b set-up otherwise. Rows are
+copied to `results/tl_cal4_{b2,quad,fields,compare,col}.csv`; pipeline-test rows (before the prediction) to
+`results/tl_cal4_tests.csv`.
+
+### 22.1 Set-up
+
+- **T-B2 deck** (conforming sphere R = 10 µm on a cubic-net block, quarter model, 20 m/s, hvi contact with
+  `contact.stfac = 3`), stress fields and the interface file every t_H/100.
+  - R/32 (s = 0.3125 µm, so 0.5 µm = 1.6 s) on the full T-B2 block and on a reduced 1R × 1R × 1R block.
+  - R/64 (s = 0.156 µm, 3.2 s) on the reduced block only. **Deviation:** the full block at R/64 has 4.7 million
+    particles (about 40 GB), beyond the 15 GB machine.
+- **Reference:** the quad axisymmetric two-body run of §19 at element edge R/128 (R/64 for convergence), on both
+  block sizes. Each SPH run is judged against the quad on its own block size.
+- **Averages:** p_n over discs of 0.5 µm radius on the axis and at 0.5 a_max, and −σ_zz over those discs in the depth
+  bands 0–0.5 µm (band 1) and 0.5–1.0 µm (band 2), block side and sphere side; at the force peak and averaged over
+  0.4–0.6 t_H. Units p0_max = 4.07 GPa; a_max = 1.604 µm.
+- **Operational reading of the rule** (fixed before the runs): every average within 3.5 % of the quad R/128 value at
+  R/32 and at R/64.
+- **Sphere-side p_n is not measured** (deviation): the interface file lists the static surface set, which misses most
+  of the conforming sphere's contact particles (they carry 8 % of its contact force at R/32, 40 % at R/64). So 20
+  averages per run are judged, not 24.
+
+### 22.2 Results
+
+Force traces against two-body Hertz: SPH R/32 full block 1.054 / 0.952 / 0.999 (peak / approach / rebound); on the
+reduced block R/32 1.077 / 0.940 / 0.999, R/64 1.076 / 0.949 / 1.000; quad R/128 full 1.047 / 0.976 / 1.000, reduced
+1.069 / 0.967 / 1.000.
+
+Peak-frame averages (`results/tl_cal4_compare.csv`), error = SPH / quad R/128 on the same block − 1:
+
+| average (0.5 a = the disc at 0.5 a_max) | R/32, full block | R/64, reduced block |
+|---|---|---|
+| p_n block, axis / 0.5 a | +10.0 / +10.3 % | +7.8 / +4.9 % |
+| σ_zz block band 1, axis / 0.5 a | −23.5 / −18.0 % | −8.1 / −8.8 % |
+| σ_zz block band 2, axis / 0.5 a | +5.9 / +7.9 % | +9.0 / +7.6 % |
+| σ_zz sphere band 1, axis / 0.5 a | −10.8 / +2.8 % | +1.0 / −3.3 % |
+| σ_zz sphere band 2, axis / 0.5 a | +1.7 / −5.1 % | +3.7 / +3.3 % |
+| within 3.5 % (peak and window) | 4 of 20 | 6 of 20 |
+
+- The window means differ from the peak-frame errors by at most 0.5 points.
+- Against Hertz the picture is the same (block band 1 −26 / −19 % at R/32, −10 / −9 % at R/64).
+- Block size: the R/32 averages on the reduced block are 0.6–1.5 % above those on the full block, and the quads move
+  the same way, so the errors agree to 0.2 points.
+- The quad reference still rises by 2–4 % from R/64 to R/128, so it is not converged to the 3.5 % band. A further
+  rise could bring p_n at 0.5 a (R/64, +4.9 %) inside, but moves the band-1 values (−8.1, −8.8 %) further out.
+- Point values on the axis (SPH / quad at the particle): block layer 1 0.59 (R/32) and 0.50 (R/64), layer 2 0.83 at
+  both. Contact radius 1.03 a_max (R/32), 1.04 a_max (R/64).
+
+**Item 2, column on a deformable wall.** The §19 column (2L) striking an identical TL column through the penalty
+contact (interface at V/2): layers 1–4 at 0.619 / 0.856 / 1.032 / 0.992 of the plateau (1.003) at n = 100 and 200 —
+the same as against the rigid wall. The face-layer deficit comes with any point-loaded face. Item 2 is not blind:
+a column pipeline test at n = 40 (`results/tl_cal4_tests.csv`, 0.62 / 0.85 / 1.03 / 0.99 averaged over 0.3–0.5 tc)
+ran before the prediction.
+
+### 22.3 Outcome
+
+**Decision rule not met:** 4 of 20 averages within 3.5 % at R/32, 6 of 20 at R/64. No other reading of the rule
+passes (against Hertz, p_n only, block side only, window only). By DECISIONS 2026-11-15 this is the next failure;
+Peter's review comes before any further BCT variant. CS-18c is not defined.
+
+Observations for the review (not claims):
+- The block band-1 error falls from −24 % to −8 % from R/32 to R/64 while the face-layer value stays at 0.5–0.6 of the
+  reference: a deficit fixed to the first one or two layers, diluted by a 0.5 µm band at finer resolution.
+- Block band 2 (+6 to +9 %) and p_n (+5 to +10 %) are high; part of the load the face layer does not carry may
+  show up deeper and at the surface, and part may be the unconverged reference.
+- The sphere side is much closer (R/64 within 3.7 %) than the flat cubic-net block face.
+
+Against the prediction: partly wrong. Right: the decision rule not met, the contact radius, the block-size effect,
+block layer 2 and item 2 (not blind). Partly wrong: band 1 (the block is low as predicted, but the R/32 0.5 a disc at
+−18.0 % is outside −35…−20 %; 3 of 8 band-1 values inside the predicted ranges). Wrong: the sphere side is low only on
+the axis at R/32 (predicted low everywhere and within ±6 % of the block side; it is +18 / +28 % above the block side at
+R/32, +11 / +8 % at R/64), band 2 has 5 of 8 values
+outside 5 % (block 6–9 % high), p_n misses at 0.5 a at R/32 (+10.3 % against 10 %) and on the axis at R/64 (+7.8 %
+against 6 %), and block layer 1 at R/64 is 0.50 (predicted 0.55–0.75).
+
+Open item: the interface file should list the particles that are in contact, not the static surface set.
