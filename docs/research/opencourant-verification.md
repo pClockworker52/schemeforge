@@ -2314,3 +2314,88 @@ outside 5 % (block 6–9 % high), p_n misses at 0.5 a at R/32 (+10.3 % against 1
 against 6 %), and block layer 1 at R/64 is 0.50 (predicted 0.55–0.75).
 
 Open item: the interface file should list the particles that are in contact, not the static surface set.
+
+## 23. Reference, energy, survival, VCI against the fitted face, skin (task 2026-11-15-b; calibration)
+
+Question: does the quad reference reach U_ref ≤ 1.75 % at R/256, does the TLSPH energy balance close, does the
+BCT-off scheme survive the 800 m/s probe, and which near-surface fix, VCI or the fitted flat face, wins by the
+committed criterion? Calibration only: all rows have `kind = calibration`; the trigger deck (T-B2 with skin and fitted face) was not run.
+Step 3 (fitted face and skin) was replaced by step 3′ (VCI against the fitted face, schemeforge `5e9801e`) before any of its runs;
+Peter confirmed the VCI note (fork `hvi/VCI-DESIGN.md`, with the selection criterion §8) on 2026-11-15, building to
+start after survival R/32. Each plan and prediction was committed in the fork before its runs: 8.1 quad reference `613213ea2` (review fixes
+`b3baa4a6e`), 8.2 energy `0e77b75f3`, 8.3 survival `56cef06ac`, 8.4/8.5 fitted face and skin `520a4be9c`, VCI note
+and selection criterion `49711056b`; results up to fork `b9c3294fc`. Full account in the fork, `hvi/SPEC-TL-b.md` §8 and `hvi/VCI-DESIGN.md`. Fork binaries `18ffc51c1`
+(quad R/256), `b5f5b94e1` (energy, survival, T-A0), `f91682094` (VCI build, step 3′). Set-up: CS-18b (Q1 = 0.1,
+α = 5), BCT off on both bodies, `contact.stfac = 3`, colour normals. Rows are copied to `results/tl_cal5_*.csv`: reference `tl_cal5_quad.csv`, `tl_cal5_ref.csv`, `tl_cal5_ref_runs.csv`; energy `tl_cal5_energy.csv`; survival and T-A0 `tl_cal5_survival.csv`, `tl_cal5_a0.csv`; VCI static `tl_cal5_vci.csv`; flat cases `tl_cal5_face.csv`; T-S1 `tl_cal5_vci_s1.csv`; quad T-S1 `tl_cal5_s1ref.csv`; skin `tl_cal5_skin.csv`, `tl_cal5_skin_s1runs.csv`, `tl_cal5_skin_flat.csv`; pipeline-test rows (VCI build, before its calibration runs) to
+`results/tl_cal5_tests.csv`.
+
+### 23.1 Steps 1–2: reference, energy, survival
+
+- **Quad T-B2 reference at R/256** (both block sizes, 0.5 µm discs at the force peak): 12 of the 16 judged U_ref =
+  |q128 − q256| / |q256| are above 1.75 % (p_n at 0.5 a 1.78–1.83 %, Y − 1 1.80–3.00 %; only p_n on the axis is below,
+  0.89–1.31 %). By D4 the trigger cannot be evaluated until the reference improves. Orders stable (0.75–1.78).
+- **Energy balance** B = (KE + E_int + E_c − W_hg − W_visc − W_wall + W_d) / KE0: with BCT off it closes to 0.25 %
+  (T-S1 R/32, T-S0 100 / 200). With BCT on it does not: B = 1.135 at R/32 and 20.4 at R/16 (rebound faster than
+  impact): BCT with the kinematic wall puts energy in.
+- **Survival probe, BCT off** (trigger clause 3): R/16 and R/32 pass every check (dt_min / dt0 0.281 / 0.228, no
+  detached mass, closest cross-body pair 0.92 / 0.90 s, det F min 0.895 / 0.852, B at the end 1.015 / 1.004).
+  Clause 3 has not fired. T-A0 on `b5f5b94e1`: 55 of 55 identical.
+
+### 23.2 Step 3′: VCI and the fitted face
+
+- **VCI build** (`f91682094`, about 150 lines): the sidecar key `tl.vci` gives each skin particle its lumped area
+  vector S_I on the physical surface; ξ_I = (S_I + B_I)/⟨R_I⟩ in `tl_setup`, f_I −= P̄_I ξ_I in `tl_force` (test
+  side only, F unchanged). VCI off is bitwise neutral against `b5f5b94e1`.
+- **Static model (unworkable item 1):** with VCI the 1D column (α = 0, 5, 10) and the whole-skin uniform pressure on
+  the conforming sphere are exact to the solver tolerance (lattice: layer 1 off by up to 0.86). Uniform cap load
+  (case 5), layers 1–2 on the axis over the half-space σ_zz of the same disc load at their depth (a reading of the
+  note's "uniform-stress value", fixed before the runs in `0358e2e31`; the two differ by at most 2.4 % there), R/32: VCI 1.07 / 0.95 (a = 10 s), 1.13 / 0.90 (a = 5 s); lattice
+  0.69 / 0.63, 0.74 / 0.64; R/64 lattice 0.748 / 0.638 (a = 5 s), 0.712 / 0.655 (a = 10 s). **Deviation:** R/64 runs
+  single-threaded at about 3 h per solve; the first R/64 run was stopped after its first solve (row taken from the
+  log, 4 digits; its GMRES residual is known only as below 5·10⁻⁵, against about 10⁻¹¹ elsewhere) and, by Peter's decision (2026-11-16, option b), only the lattice a = 10 s solve was then run, the one term
+  that could still change the choice. VCI's R/64 case 5 was not run (VCI not eligible). The net VCI force is
+  4.6–4.8 % of the load at R/32 (8.3–8.6 % at R/16).
+- **Flat cases** (layers 1–4 over the momentum-rate plateau, columns on the rigid and on a deformable TL wall, 100
+  and 200): largest deviation VCI 0.004 / 0.002, F2 0.021, F1 0.087, lattice 0.381; T-surface (b) outer columns within
+  0.84 % for all; |B − 1| ≤ 0.0053 on every run.
+- **T-S1 R/32 and R/64:** all normal, |B − 1| ≤ 0.0032, ladder errors of lattice and VCI within 0.7 points of each
+  other (R/64 lattice: contact 0.3 %, peak 1.6 %, approach 0.9 %). VCI momentum drift (largest over the run) 0.18 % of
+  the contact impulse at R/32, 0.43 % at R/64; on the flat columns it halves with refinement (0.44 → 0.22 %).
+- **Quad T-S1 reference** (O-grid, Isolid 17, h = R/64, R/128, R/256): with bulk viscosity off all three stopped
+  (negative volume next to the axis); with the default bulk viscosity, as the T-B2 reference, all normal and
+  U_ref p_n 1.71 % (axis) / 0.40 % (0.5 a), Y − 1 0.33 / 0.29 %: all ≤ 1.75 %, so T-S1 enters the score.
+
+**Gate and score (VCI-DESIGN §8):**
+
+| candidate | gate | columns | case 5 (R/32; R/64) | T-S1 skin p_n R/64 | S |
+|---|---|---|---|---|---|
+| F2 (F1 out by its own criterion, 0.087) | passes | 0.021 | 0.369; 0.362 (a = 5 s), 0.345 (a = 10 s) | 0.036 | **0.369** |
+| VCI | **fails**: R/64 drift 2.4 × the R/32 value (limit 0.6 ×), although within 2 % at both | 0.004 | 0.129; not run | — | (≥ 0.129) |
+| lattice (reference) | — | 0.381 | as F2 | as F2 | 0.381 |
+
+**Choice:** **F2** (w1 0.71, w2 0.89 on flat faces; the sphere stays the lattice), S = 0.369 below the lattice's 0.381 by 0.012; frozen in fork `0b58b6a46` before any trigger run. The margin is the flat columns only (0.021 against 0.381); on the conforming sphere F2 is the lattice, so its near-surface stress there is unchanged (case-5 layer 2 at 0.63–0.65 of the half-space value).
+
+### 23.3 Skin (output only)
+
+- Bitwise neutral (T-S1 R/16 with and without `out.skin`). **Deviation:** the flat skin runs used F2 and the lattice, both open
+  outcomes of the choice, since the choice had to wait for the R/64 static solve (SPEC-TL-b 8.5 asks for the frozen
+  construction).
+- T-S1 force share outside the skin: below about 0.1 % (estimated from the peaks; the interface file lists the skin only).
+- Columns: skin p_n 0.996 of ρ c_d V (rigid wall) and of ρ c_d V/2 (deformable wall), Y − 1 = 0; T-surface (b):
+  within 2.4 % of the middle σ_zz, Y − 1 within 11 % of ν (1 + ν) σ_zz / E; no contact force outside the skin on
+  the flat decks.
+- T-S1 R/64 against the quad R/256: p_n +3.6 % (axis), +3.1 % (0.5 a); Y − 1 13 % low on both discs (R/32: p_n +0.3 /
+  +2.8 %, Y − 1 33 / 37 % low).
+
+### 23.4 Against the predictions
+
+Steps 1–2: mostly right; wrong: T-B2 Y − 1 levels (sphere −2.8 %, block −1.9 %, not −2.0…−2.4 % on both), "U_ref(Y − 1)
+more likely below 1.75 %" (8 of 8 above), E_int at the T-S1 peak (0.988), the BCT-on budget (B 1.135, not ≤ 1.02); just wrong: the R/16 stretch (1.85, not 1.9–2.6), W_hg at the E_int maximum
+(−0.011 against 0.01) and the block-size factor (1.503 against 1.5). Step 3′: VCI on the columns ≤ 0.02 right; VCI ≤ 0.05 on case 5 wrong (0.129);
+F2 on the columns right; F2's S set by the sphere right, its value 0.26–0.30 wrong (0.36–0.37); the expected choice
+VCI wrong, through the named momentum risk (on S alone VCI would have led); §6's 1–10 % net force right statically,
+its halving holds on the flat columns, not on the explicit sphere. Fitted
+face (§8.4) and skin (§8.5): right except the F1/F2 rebound at n = 100 (+0.6 / +0.7 % against 0.5 %), the plate strain
+magnitude (10⁻², not 10⁻⁴) and the quad T-S1 order and U_ref range.
+
+Open items for Peter: (1) the T-B2 quad reference misses D4 (12 of 16 U_ref above 1.75 %), so the trigger cannot be evaluated until it improves; (2) VCI is out only by the refinement rule of the drift (on the terms it ran, S ≥ 0.129 against F2's 0.369; its R/64 case 5 and T-S1 skin were not run); readmitting it by an override or building the momentum-restoring variant (VCI-DESIGN §6) is Peter's call, and if VCI is readmitted its D2 change (VCI-DESIGN §4: the skin becomes part of the operator) also needs his approval at the freeze; (3) the interface file lists the static surface set, which misses most contact particles of the conforming sphere (sphere-side p_n on T-B2 not measured).
