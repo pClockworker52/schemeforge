@@ -1,12 +1,22 @@
-# Handoff — 2026-11-15, session end after the route review (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-16, after §23 (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** fetch and merge WSL A task 2026-11-15-b (results in §23 on `coldspray/opencourant-sph`). If the
-BCT-off survival probe of step 2 failed, the dead-end trigger has fired (see below). After step 2, WSL A writes the
-VCI design note and the selection criterion (step 3′) and stops: Peter confirms before any VCI code.
+**First action:** fetch and merge WSL A task 2026-11-16-a (results in §24 on `coldspray/opencourant-sph`): the
+contact-particle interface file, then a momentum-restoring VCI judged by the §23 gate and criterion. If the variant
+wins, Peter approves its D2 change before the trigger run; otherwise F2 (frozen, fork 0b58b6a46) stands. Then draft
+the trigger-run task (T-B2, R/32 and R/64) for Peter's freeze.
+
+**2026-11-16: §23 merged** (DECISIONS 2026-11-16 "After §23"):
+- energy closes with BCT off (0.25 %); BCT on put energy in (B 1.135 / 20.4);
+- BCT-off survival probe passes (trigger clause 3 not fired);
+- VCI fails its committed momentum gate (drift 2.4× from R/32 to R/64); F2 chosen and frozen (S 0.369 vs lattice
+  0.381, flat columns only);
+- skin on T-S1 R/64: p_n +3.6 / +3.1 %, **Y − 1 13 % low** (33–37 % at R/32): the likeliest trigger failure;
+- quad T-B2 reference missed U_ref ≤ 1.75 % (12 of 16). **Peter: accepted as is**, threshold 3.5 % + measured
+  U_ref (post hoc); a momentum-restoring VCI is built (task 2026-11-16-a).
 
 **Later on 2026-11-15:** WSL B b10 and b11 merged (5f7bf7d, 9d954b1; leak scans clean).
 - **b11:** the TLSPH face-layer deficit is the integration-constraint failure of nodally integrated Galerkin
@@ -129,7 +139,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-15-b (results to §23) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-16-a (results to §24) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken
@@ -153,7 +163,7 @@ amended 2026-11-14):
 | What | Where |
 |---|---|
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log, all sections §1–§22 (§23 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log, all sections §1–§23 (§24 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
 | Hunches | coldspray-hunches.md (index), coldspray-hunch-cs18.md, coldspray-hunch-cs18b.md, and the earlier CS files |
 | Referee | sph-contact-referee-2026-11-11.md |

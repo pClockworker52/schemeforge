@@ -5,7 +5,26 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-15-b: reference, energy, survival, flat face and skin before the trigger run (open)
+## Task 2026-11-16-a: contact-particle interface file, then a momentum-restoring VCI (open)
+
+**Basis:** §23 and DECISIONS 2026-11-16 "After §23: reference accepted as is; momentum-restoring VCI". F2 stays the
+frozen default (fork 0b58b6a46). The trigger run is **not** part of this task. Rows `kind = calibration`; results
+to schemeforge §24 on `coldspray/opencourant-sph`.
+
+1. **Interface file (outstanding from task 2026-11-15-b step 1.3).** List the particles actually in contact at each
+   output time, on both bodies, not the static surface set. Show on T-S1 R/32 and on the T-B2 deck **without the skin
+   averages being evaluated** (count of contact particles per body against time, force share outside the listed set).
+   Do not compute the trigger quantities on T-B2.
+2. **Momentum-restoring VCI (VCI-DESIGN §6).** Commit its plan and prediction in the fork first. Build it, show
+   VCI off is bitwise neutral, and judge it by the **same** gate and selection criterion (VCI-DESIGN §8) on the same
+   non-trigger cases as §23 (columns, flat free surface, case 5 at R/32 and R/64, T-S1 skin p_n at R/64), against
+   F2's S = 0.369.
+   - If it passes the gate and has the lower S, it is the candidate; freeze it in the fork and **stop**: its D2
+     change (the skin becomes part of the operator) needs Peter's approval before any trigger run.
+   - Otherwise F2 stands; report and stop.
+3. Report the momentum drift at R/32 and R/64 and the net VCI force as in §23.
+
+## Task 2026-11-15-b: reference, energy, survival, flat face and skin before the trigger run (closed: §23, merged; step 1.3 moved to 2026-11-16-a)
 
 **Amended 2026-11-15 (later):** D3 was reopened after WSL B's boundary-integration reading (b11; DECISIONS
 2026-11-15 "D3 reopened after the boundary-integration reading"). Steps 1 and 2 are unchanged. **Step 3 is replaced

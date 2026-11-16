@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 PATH = Path(__file__).resolve().parents[1] / "docs" / "DECISIONS.md"
-CHANGED = {  # entry heading -> (what changed, heading of the later entry that changed it)
+CHANGED = {  # entry heading -> (what changed, later heading) or a list of such pairs
     "2026-10-30 — Benchmark release (Peter)": (
         "licence part", "2026-10-30 — Licence: GPL-3.0-or-later instead of MIT (Peter)"),
     "2026-11-03 — Cold-spray track: local first (Peter)": (
@@ -16,8 +16,11 @@ CHANGED = {  # entry heading -> (what changed, heading of the later entry that c
         "no-fork clause", "2026-11-08 — No-fork dropped; SPH–SPH contact fork sph-hvi-contact (Peter)"),
     "2026-11-14 — CS-18b set-up and limits after calibration (Peter)": (
         "averaging item 4", "2026-11-15 — Route review 2026-11-15 (Peter)"),
-    "2026-11-15 — Route review 2026-11-15 (Peter)": (
-        "D3 and D4 host", "2026-11-15 — D3 reopened after the boundary-integration reading (Peter)"),
+    "2026-11-15 — Route review 2026-11-15 (Peter)": [
+        ("D3 and D4 host", "2026-11-15 — D3 reopened after the boundary-integration reading (Peter)"),
+        ("D4 reference precondition",
+         "2026-11-16 — After §23: reference accepted as is; momentum-restoring VCI (Peter)"),
+    ],
 }
 TRACKS = {
     "2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)": "repository",
@@ -26,7 +29,7 @@ TRACKS = {
 
 COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
-    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened",
+    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
 )
 
 
@@ -62,8 +65,9 @@ def main() -> None:
         date, title = h.split(" — ", 1)
         ch = ""
         if h in CHANGED:
-            what, by = CHANGED[h]
-            ch = f"{what}: [{by.split(' — ', 1)[1].replace(' (Peter)', '')}](#{slug(by)})"
+            pairs = CHANGED[h] if isinstance(CHANGED[h], list) else [CHANGED[h]]
+            ch = "; ".join(f"{what}: [{by.split(' — ', 1)[1].replace(' (Peter)', '')}](#{slug(by)})"
+                           for what, by in pairs)
         lines.append(f"| {date} | [{title}](#{slug(h)}) | {track(h)} | {ch} |")
     PATH.write_text("# DECISIONS\n\n" + "\n".join(lines) + "\n\n" + body)
     print(len(heads), "entries")
