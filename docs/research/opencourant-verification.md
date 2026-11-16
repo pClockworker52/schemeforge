@@ -2399,3 +2399,65 @@ face (§8.4) and skin (§8.5): right except the F1/F2 rebound at n = 100 (+0.6 /
 magnitude (10⁻², not 10⁻⁴) and the quad T-S1 order and U_ref range.
 
 Open items for Peter: (1) the T-B2 quad reference misses D4 (12 of 16 U_ref above 1.75 %), so the trigger cannot be evaluated until it improves; (2) VCI is out only by the refinement rule of the drift (on the terms it ran, S ≥ 0.129 against F2's 0.369; its R/64 case 5 and T-S1 skin were not run); readmitting it by an override or building the momentum-restoring variant (VCI-DESIGN §6) is Peter's call, and if VCI is readmitted its D2 change (VCI-DESIGN §4: the skin becomes part of the operator) also needs his approval at the freeze; (3) the interface file lists the static surface set, which misses most contact particles of the conforming sphere (sphere-side p_n on T-B2 not measured).
+
+## 25. P3 probe: interface averages in a plastic impact on 2D quads (task 2026-11-16-b; calibration)
+
+(§24, task 2026-11-16-a, follows when its runs end.) Question: do 0.5 µm surface averages of p_n and Y − 1 converge
+under refinement in a plastic, jetting Al–Al impact before the jet root collapses? A calibration diagnostic, no route
+verdict; the outcome goes to Peter. All rows `kind = calibration`. Plan, reading rule and prediction committed in the
+fork before the runs (`1ced28681`, after a review); results fork `6a4f609db`; full account fork `hvi/SPEC-TL-b.md` §10.
+Rows copied to `results/tl_cal6_p3_{runs,series,conv}.csv`.
+
+**Set-up.** The §8.3 deck unchanged (`option1_alal.write`: Al O-grid sphere R = 10 µm on an Al block 5R × 5R,
+`Isolid = 17`, default bulk viscosity, LAW4 Johnson–Cook + Grüneisen with γ₀ = 2.17, TYPE5 both ways, `/DT` minimum
+with stop, no erosion), plus the stress components in `/ANIM` and an output step of (D/V)/400. Meshes R/64, R/128,
+R/256 (§8.3's "fine" is R/64); t_p from R/32 (and R/16) run toward 2 D/V (R/32 at 600 m/s stopped at 1.21 D/V, after t_p). Fork binary `d0500106d`, one thread per run.
+Discs of radius 0.5 µm centred at 0.25, 0.5 and 0.75 a_256(t), the R/256 contact radius at each output time, the same
+centres on all three meshes, looked up by the current edge radii; p_n = −n·σ·n of the owning element, Y − 1 from the
+edge stretch (meridional × hoop); particle and block side; up to the last output before the earliest stop t*.
+Reading rule (task item 3): converge if |q256 − q128| ≤ 3.5 % |q256| and (|q256 − q128| ≤ 0.8 |q128 − q64| or
+|q128 − q64| ≤ 3.5 % |q128|).
+
+**Stop times** (all by the `/DT` minimum; t_p = 0.707 D/V at 600 m/s, 0.598 D/V at 500 m/s):
+
+| V | R/64 | R/128 | R/256 |
+|---|---|---|---|
+| 600 m/s | 0.157 t_p | 0.054 t_p | **0.034 t_p** |
+| 500 m/s (added: R/256 below 0.1 t_p at 600) | 0.371 t_p (§8.3: 0.37) | 0.120 t_p | **0.036 t_p** |
+
+The cells named at each stop are block cells near the surface (R/256 at 0.27–0.30 R, near its contact edge,
+a_256 ≈ 0.33 R). R/256 stops at about 0.8 ns at both speeds; the window t* is 0.81 / 0.85 ns: 9 and 8 output times
+(t / t_p ≤ 0.033, a_256 from 1.0 to 3.2–3.3 µm). The R/256 surface starts to fold in the last one or two outputs.
+Whether a jet has formed is not evaluated. Every run ended by the `/DT` minimum except R/16 at both speeds and R/32
+at 500 m/s (reached 2 D/V); no negative volume; nothing else stopped a run. Cost (engine, single-threaded): R/256
+185–186 s, R/128 37–131 s, R/64 23–82 s; peak memory 0.70 GB; both speeds in 8 minutes.
+
+**Reading rule** (fraction of disc-time points that converge; overall, and 0.25 a / 0.5 a / 0.75 a):
+
+| V | side | p_n | Y − 1 |
+|---|---|---|---|
+| 600 | particle | 0.59 (0.78 / 0.78 / 0.22) | 0.00 (0 / 0 / 0) |
+| 600 | block | 0.59 (0.78 / 0.67 / 0.33) | 0.07 (0.11 / 0 / 0.11) |
+| 500 | particle | 0.58 (1.00 / 0.63 / 0.13) | 0.04 (0 / 0 / 0.13) |
+| 500 | block | 0.63 (1.00 / 0.63 / 0.25) | 0.00 (0 / 0 / 0) |
+
+- First lost at the first output (t / t_p = 0.0035 at 600 m/s, 0.0042 at 500 m/s) everywhere, except p_n at 0.25 a
+  at 500 m/s (never lost). p_n fails at the first one or two outputs, when the three meshes' contact radii still
+  differ (1.47 / 1.22 / 1.04 µm; the h/2 contact tolerance a possible cause, not shown); after that it passes at most
+  outputs at 0.25 a and 0.5 a, and fails at most at 0.75 a (up to 14 % after the first output, 24 % at it).
+- Y − 1: |q256 − q128| / |q256| at 0.25 a falls over the window from 24–37 % to 3–6 %; it stays 7–54 % at 0.5 a and
+  47–85 % at 0.75 a from the third output on (spikes to 1250 % where Y − 1 crosses zero; two passes at the second
+  output). The values rise monotonically with refinement (0.25 a, block, last output at 600 m/s:
+  0.124 / 0.130 / 0.135).
+
+**Answer (no route verdict):** in this deck the 0.5 µm averages can be judged only up to about 0.035 t_p (0.8 ns), when
+the finest mesh stops on a collapsing block cell near the contact edge, at both speeds. Within that window p_n
+converges by the rule at 0.25 a and 0.5 a after the start-up outputs, not at 0.75 a; Y − 1 does not converge at any
+disc.
+
+**Against the prediction:** stop times mostly right (wrong: R/128 at 600 m/s 0.054, just below 0.06–0.15; R/256 at
+500 m/s 0.036, not 0.05–0.15); 500 m/s added, right; t_p right; cost wrong (cheaper, 0.05 h against 0.1–0.3 h), memory
+right (0.70 ≤ 1.5 GB); p_n at the inner discs wrong (0.63–1.00, not 0.3–0.6), at 0.75 a right except 600 m/s block
+(0.33 against < 0.3); Y − 1 below 0.2 right; first lost at 0.75 a from the start right, at the inner discs right at
+600 m/s and wrong for p_n at 0.25 a at 500 m/s (never lost); "does not converge overall" right for Y − 1, wrong for
+p_n at the inner discs; 500 m/s fractions lower by 0.1 wrong (about the same). No "surprise" threshold reached.
