@@ -4,10 +4,20 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** fetch and merge WSL A task 2026-11-16-a (results in §24 on `coldspray/opencourant-sph`): the
-contact-particle interface file, then a momentum-restoring VCI judged by the §23 gate and criterion. If the variant
-wins, Peter approves its D2 change before the trigger run; otherwise F2 (frozen, fork 0b58b6a46) stands. Then draft
-the trigger-run task (T-B2, R/32 and R/64) for Peter's freeze.
+**First action:** fetch and merge what WSL A pushed:
+- task 2026-11-16-a, results in §24: the contact-particle interface file; the momentum-restoring VCI (time box two
+  working days; F2 stands if it fails); then the **trigger run**. Record the rule outcome of the trigger by clause.
+  Clause 2 has a noise floor (post hoc);
+- task 2026-11-16-b, results in §25: the **P3 probe** on 2D quads, judged by its reading rule. The outcome goes to
+  Peter.
+
+**2026-11-16, odds review** (docs/research/odds-review-2026-11-16/, summary.md): two independent reviewers put the
+trigger pass at 6–8 % and the whole chain at about 0.3 %, about ten times below the modeller's figures. Peter
+(DECISIONS "After the odds review"):
+- run the trigger as a bounded cost;
+- run the P3 probe in parallel;
+- prepare the reduced route: draft docs/research/reduced-route-plan.md, open for Peter (adopt now or on a trigger
+  fire; which of R1–R3 leads).
 
 **2026-11-16: §23 merged** (DECISIONS 2026-11-16 "After §23"):
 - energy closes with BCT off (0.25 %); BCT on put energy in (B 1.135 / 20.4);
@@ -139,7 +149,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-16-a (results to §24) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-16-a (§24) and 2026-11-16-b (§25) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken

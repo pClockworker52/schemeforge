@@ -20,6 +20,8 @@ CHANGED = {  # entry heading -> (what changed, later heading) or a list of such 
         ("D3 and D4 host", "2026-11-15 — D3 reopened after the boundary-integration reading (Peter)"),
         ("D4 reference precondition",
          "2026-11-16 — After §23: reference accepted as is; momentum-restoring VCI (Peter)"),
+        ("D4 clause 2 floor",
+         "2026-11-16 — After the odds review: bounded trigger run, P3 probe, reduced route (Peter)"),
     ],
 }
 TRACKS = {
@@ -29,7 +31,7 @@ TRACKS = {
 
 COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
-    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
+    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23", "odds review",
 )
 
 

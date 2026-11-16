@@ -5,7 +5,27 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-16-a: contact-particle interface file, then a momentum-restoring VCI (open)
+## Task 2026-11-16-b: P3 probe, interface averages in plastic jetting impact (2D axisymmetric quads) (open; beside 16-a)
+
+**Basis:** DECISIONS 2026-11-16 "After the odds review". Question: do 0.5 µm surface averages of p_n and Y − 1
+converge under refinement in a plastic, jetting impact, before the jet root collapses? A calibration diagnostic, no
+route verdict; the outcome goes to Peter. Run it at low thread count beside task 16-a; 16-a has priority.
+
+1. **Deck:** the §8 deck (OpenCourant 2D axisymmetric, `Isolid = 17`, Lagrangian, Johnson–Cook plus Grüneisen with
+   the sourced γ₀ = 2.17), Al–Al, 600 m/s; add 500 m/s if 600 m/s collapses before 10 % of the penetration time on
+   the finest mesh. Meshes R/64, R/128, R/256 (the §8 mesh family, contact as in §8).
+2. **Quantities:** contact pressure p_n and surface expansion Y − 1 (from the surface element edge stretch, radial
+   times hoop) averaged over 0.5 µm surface discs centred at 0.25 a, 0.5 a and 0.75 a of the current contact radius,
+   particle side and substrate side, as time histories up to the earliest jet-root collapse time of the three meshes,
+   reported against penetration fraction. Edge point values reported only.
+3. **Reading rule (commit it with the prediction, before any run):** at a disc and output time the averages
+   "converge" if |q256 − q128| ≤ 3.5 % of |q256| and either |q256 − q128| ≤ 0.8 |q128 − q64| or
+   |q128 − q64| ≤ 3.5 % of |q128|. Report the fraction of disc-time points that converge per quantity and side, and
+   the penetration fraction at which convergence is first lost at each disc.
+4. **Report** the collapse time per mesh, the cost per run, and anything that stopped a run. Rows
+   `kind = calibration`, `results/tl_cal6_p3_*.csv`; schemeforge §25 on `coldspray/opencourant-sph`. Then stop.
+
+## Task 2026-11-16-a: contact-particle interface file, momentum-restoring VCI, then the trigger run (open)
 
 **Basis:** §23 and DECISIONS 2026-11-16 "After §23: reference accepted as is; momentum-restoring VCI". F2 stays the
 frozen default (fork 0b58b6a46). The trigger run is **not** part of this task. Rows `kind = calibration`; results
@@ -23,6 +43,21 @@ to schemeforge §24 on `coldspray/opencourant-sph`.
      change (the skin becomes part of the operator) needs Peter's approval before any trigger run.
    - Otherwise F2 stands; report and stop.
 3. Report the momentum drift at R/32 and R/64 and the net VCI force as in §23.
+
+**Amended 2026-11-16 (later; DECISIONS "After the odds review"):**
+- **Time box for item 2:** two working days from its start. If the variant has not passed its gate by then, stop
+  it, report what ran, and F2 stands.
+- **Item 4, the trigger run (D4 as amended 2026-11-15 and 2026-11-16).** After item 2 (or the time box):
+  - host: TLSPH, CS-18b set-up, BCT off, skin, and the frozen construction: F2 (fork 0b58b6a46), or the VCI variant
+    only after Peter has approved its D2 change;
+  - T-B2 elastic deck, R/32 on the full block and R/64 on the reduced block, with the contact-particle interface file
+    of item 1;
+  - commit the plan, the binary and the prediction first. The prediction states the clause-2 noise floor (clause 2
+    applies only where |e(R/32)| exceeds that quantity's 3.5 % + U_ref) and the reviewers' expected fire
+    (sphere-side Y − 1);
+  - report the eight 0.5 µm surface averages (p_n and Y − 1; axis and 0.5 a; block and sphere side, at the force
+    peak) at both resolutions, each error against quad R/256 with its U_ref from §23, and for each of clauses 1 and 2
+    whether it fires. Report; the modeller records the rule outcome.
 
 ## Task 2026-11-15-b: reference, energy, survival, flat face and skin before the trigger run (closed: §23, merged; step 1.3 moved to 2026-11-16-a)
 
