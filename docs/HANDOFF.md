@@ -1,14 +1,25 @@
-# Handoff — 2026-11-17, after §24 and §25 (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-17, Track B continues with cs12 (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action: Peter's Track B decision, pending** (he is weighing the epistemic implications of having no
-calibration reference). Options already discussed on 2026-11-17:
-- stop the interface-state route now on the P3 result and adopt the reduced route (modeller's recommendation);
-- one trigger run on the frozen F2, then stop;
-- approve VCIMR's D2 change (the skin in the operator, a uniform per-body restoring force) and run the trigger on it.
+**First action:** fetch and merge WSL A task 2026-11-17-a (fork branch `cs12`; schemeforge section to follow): the
+cs12 design note, the build, the D-3/D-4 checks, the Ti-6Al-4V survival check, then the He/H₂ illustration. Still open
+for Peter: VCIMR's D2 change and the trigger run (task 2026-11-16-a item 4).
+
+**2026-11-17, Peter:** **Track B continues** with `cs12` (Bay activation) on TLSPH; the skin feeds bond activation
+(activation only); f_B is a running maximum, σ_B(t) = f_B·σ_flow(T). Illustration runs (`kind = illustration`) for
+the homepage are outside the rules. Ti-6Al-4V, 20 µm, several particles per side, He/N₂ 1347 m/s against H₂/N₂
+1584 m/s (Peter's nozzle model). Risk: TLSPH has survived only Al–Al at 800 m/s; the fallback for the animation is
+Peter's existing OpenRadioss set-up.
+
+**Draft caption for the new animation (for Peter):** "3D-SPH-Simulation (OpenRadioss-Fork, Total-Lagrange-SPH)
+mehrerer Ti-6Al-4V-Partikel mit 20 µm Durchmesser auf Ti-6Al-4V, Schnitt durch die Mitte, links mit He/N₂
+(1347 m/s), rechts mit H₂/N₂ (1584 m/s). Die Farbe zeigt die plastische Dehnung; markiert ist, wo die Oxidschicht
+aufreißt. Die Aufprallgeschwindigkeiten stammen aus dem 1D-Düsenmodell bei gleichen Stagnationsbedingungen. Die
+Bindung wird im Löser aktiviert, wo Oberflächendehnung und Kontaktdruck Schwellwerte überschreiten (Bay-Kriterium,
+Schwellwerte angenommen). Illustration, nicht verifiziert und experimentell nicht validiert."
 
 **2026-11-17: §24 and §25 merged (5ab274d; calibration, no verdicts).**
 - **§25, the P3 probe on 2D quads.** Al–Al at 600 and 500 m/s, R/64–R/256. The finest mesh stops at about
@@ -171,7 +182,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | — (16-a item 4, the trigger run, waits for Peter's D2 decision; 16-b done, §25) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-17-a (cs12, illustration); 16-a item 4 waits for Peter's D2 decision |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken

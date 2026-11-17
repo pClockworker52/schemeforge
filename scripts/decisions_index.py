@@ -14,6 +14,8 @@ CHANGED = {  # entry heading -> (what changed, later heading) or a list of such 
         "solver part", "2026-11-03 — Main impact solver: OpenCourant instead of OpenRadioss (Peter)"),
     "2026-11-04 — Post-onset simulation route: 3D SPH, no OpenCourant fork (Peter)": (
         "no-fork clause", "2026-11-08 — No-fork dropped; SPH–SPH contact fork sph-hvi-contact (Peter)"),
+    "2026-11-12 — Set-up S′ not adopted; Total Lagrangian SPH next, in the solver (Peter)": (
+        "bond activation via skin", "2026-11-17 — Track B continues with cs12 on TLSPH; illustration runs (Peter)"),
     "2026-11-14 — CS-18b set-up and limits after calibration (Peter)": (
         "averaging item 4", "2026-11-15 — Route review 2026-11-15 (Peter)"),
     "2026-11-15 — Route review 2026-11-15 (Peter)": [
@@ -31,7 +33,8 @@ TRACKS = {
 
 COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
-    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23", "odds review",
+    "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
+    "odds review", "Track B continues",
 )
 
 

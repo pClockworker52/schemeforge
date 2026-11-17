@@ -5,7 +5,37 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-16-b: P3 probe, interface averages in plastic jetting impact (2D axisymmetric quads) (open; beside 16-a)
+## Task 2026-11-17-a: cs12 (Bay activation) on TLSPH, then a He/H₂ multi-particle illustration (open)
+
+**Basis:** DECISIONS 2026-11-17 "Track B continues with cs12 on TLSPH; illustration runs". The code serves Track B;
+the illustration runs (`kind = illustration`) sit outside the ladders and support no claim. Each step commits its
+plan and prediction in the fork before its runs. Stop and report after any failure. Run jobs one at a time (15 GB;
+§24 OOM). Task 2026-11-16-a item 4 (trigger run) stays waiting on Peter's D2 decision.
+
+1. **Branch** `cs12` from fork `tlsph` f226cd4.
+2. **Design note `hvi/CS12-DESIGN.md`** (short, no code):
+   - activation per SPEC §4.6: a pair bonds when Y_ij > Y′ and p_n > p_E. Y_ij from the TLSPH skin: the
+     facet-area-weighted Y of each partner's facets, the minimum of the two partners; p_n the per-particle sum (O13);
+   - bonded fraction f_B = (Y − Y′)/(1 − Y′), kept as a running maximum; σ_B(t) = f_B·σ_flow(T(t)) (O3/O14);
+   - cohesive law and damage per SPEC §4.7;
+   - output in the interface file: bond state, damage, and an "oxide broken" flag (Y > Y′) per skin facet;
+   - what is fed back: activation only; the skin does not feed contact forces.
+3. **Build.** `bond.model = none` and `tie` bitwise neutral against `f226cd4`'s binary; T-A0 55 of 55.
+4. **Checks (reported, not frozen):** D-3 and D-4 of the sph-contact ladder (docs/research/sph-contact-ladder.md).
+5. **Survival check:** one Ti-6Al-4V particle of 20 µm on Ti-6Al-4V at 1584 m/s, R/16, quarter model, to 1.0 D/V,
+   with `cs12`, against the E-1 gate draft §3 survival checks. Johnson–Cook and EOS parameters for Ti-6Al-4V from a
+   cited primary source (not a blind-list paper; say which). If it fails, stop and report.
+6. **Illustration runs** (only if step 5 passes):
+   - full 3D (no symmetry plane), about 5 particles per side, staggered positions and arrival times, R/12–R/16;
+   - side A He/N₂ at 1347 m/s, side B H₂/N₂ at 1584 m/s (Peter's 1D nozzle model, equal stagnation conditions),
+     everything else identical;
+   - `bond.model = cs12` with placeholder Y′ and p_E chosen so the ring is visible; state the values;
+   - construction F2 (frozen, fork 0b58b6a46), BCT off, CS-18b set-up.
+7. **Rendering** under `hvi/illustration/`: mid-plane section through the particles, colour by plastic strain (same
+   scale both sides); skin facets marked where the oxide breaks (Y > Y′); bonded interface drawn, damaged bonds
+   (damage = 1) as a gap or dark band. Frames and an MP4 per side, plus a side-by-side MP4. Report cost and any stop.
+
+## Task 2026-11-16-b: P3 probe, interface averages in plastic jetting impact (2D axisymmetric quads) (closed: §25, merged 5ab274d)
 
 **Basis:** DECISIONS 2026-11-16 "After the odds review". Question: do 0.5 µm surface averages of p_n and Y − 1
 converge under refinement in a plastic, jetting impact, before the jet root collapses? A calibration diagnostic, no
