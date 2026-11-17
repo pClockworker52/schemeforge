@@ -1,0 +1,15 @@
+model,row,v_pred_mps,in_domain,note
+Z6_a015,B06-c1,805.1,False,"B P-H20-Al (E, nu); rho P-H20-Al; d not reported (out of domain)"
+Z6_a015_C0,B06-c1,807.0,False,P-H20-Al; d not reported (out of domain)
+baseline_LOMO,B06-c1,611.5,False,median of 10 other materials; d not reported (out of domain)
+DW_size,B06-c1,,False,Al/Ti matched with a diameter only
+CS-10,B06-c1,,False,no prediction: d not reported; no static particle strength (only a cited dynamic yield)
+Z18_static,B06-c1,,False,no prediction: no static particle strength reported
+Z18_Yd,B06-c1,,False,"no prediction: Y_d only cited from another study, not fitted by B06 to rebounds"
+Z6_a015,B06-c2,805.1,False,"B P-H20-Al (E, nu); rho P-H20-Al; d not reported (out of domain)"
+Z6_a015_C0,B06-c2,807.0,False,P-H20-Al; d not reported (out of domain)
+baseline_LOMO,B06-c2,611.5,False,median of 10 other materials; d not reported (out of domain)
+DW_size,B06-c2,,False,Al/Ti matched with a diameter only
+CS-10,B06-c2,,False,no prediction: d not reported; no static particle strength (only a cited dynamic yield)
+Z18_static,B06-c2,,False,no prediction: no static particle strength reported
+Z18_Yd,B06-c2,,False,"no prediction: Y_d only cited from another study, not fitted by B06 to rebounds"
