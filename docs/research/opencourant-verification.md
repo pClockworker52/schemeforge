@@ -2654,3 +2654,24 @@ black is drawn about 1.5× too wide (vertex-majority check on 21 % of facets). R
 (he/, h2/: MP4 + five frames each; `he_h2_side_by_side.mp4`); mid-plane section, plastic strain 0–3 on both sides,
 red oxide broken, green bonded, black debonded; caption "Illustration: not verified, not validated. Bond thresholds
 assumed (placeholders)." Row `results/tl_cal7_cs12_illustration.csv`.
+
+**Bond tuning and a second illustration pair (Peter 2026-11-17: "too little bonding … I want to see bonding AND
+debonding", plus a slightly isometric view; fork SPEC-TL-b §11.5 plan `e6256ae2b`, §11.6 sweep results and pair plan
+`3e4167f82`, §11.7 results `90393d952`).** Kind = illustration tuning / illustration; supports no claim.
+Record correction first: the survival row's deck_sha256 was `c104928c1ea08575`, hashed from a sidecar that an
+EVAL_ONLY re-read had rewritten without the `tl.*` lines; the deck that ran is `06f57a8aa0e5e9fa` (row corrected
+with a note; EVAL_ONLY no longer writes decks). Sweep: one particle, R/12 quarter, 1584 m/s, to 2.0 D/V, p_E 0.5 GPa,
+Y′ ∈ {0.2, 0.3} × δ_c/s ∈ {0.3, 1, 3} plus the baseline 0.05. All seven pass the E-1 checks (dt_min 0.163 dt₀,
+B 1.03, 8–10 min each). Still-bonded share of ever-bonded facets at the end: 0.06 (baseline), 0.06–0.11 (δ_c 0.3 s),
+0.63–0.65 (1 s), 1.00 (3 s); Y′ 0.2 bonds 28 % more facets than 0.3. The separation δ_c decides; at 1 s the centre
+under the pole debonds on spring-back and the outer contact stays bonded. Peter picked Y′ 0.2, δ_c 1 s. Second pair
+(same five-particle set-up as above, IL12heb / IL12h2b): He 1.53 h, H₂ 1.70 h engine, 4.7 GB, dt_min/dt₀ 0.171 /
+0.135, B 1.049 / 1.081, both reach t_end. Facets at the end bonded / debonded / ever bonded: He 3369 / 3572 / 9428,
+H₂ 3075 / 4906 / 9550; both colours visible under every particle. Predicted still-bonded 0.5–0.75: miss (0.36 /
+0.32); H₂ +10–40 % ever bonded: miss (+1 %). Some facets that were debonded show state 0 or 1 later (He 2839, H₂ 2193);
+likely the pair leaving the pair list or re-pairing with a later particle (not checked), so end frames show less
+black than ever debonded. Rendering: new 3D cutaway (`hvi/scripts/render3d_cs12.py`: front half removed, oblique
+parallel camera, sphere impostors by plastic strain, bond state on the cut and on exposed skin facets) plus the
+section, per side, and `he_h2_3d_side_by_side.mp4`, fork `hvi/illustration/v2/`. Rows
+`results/tl_cal7_cs12_tune.csv`, `results/tl_cal7_cs12_illustration.csv` (now four rows); `tl_cal7_cs12_survival.csv`
+updated with the corrected hash. Task 2026-11-16-a item 4 (trigger run) still waits.
