@@ -20,6 +20,8 @@ CHANGED = {  # entry heading -> (what changed, later heading) or a list of such 
     ],
     "2026-11-17 — Track B continues with cs12 on TLSPH; illustration runs (Peter)": (
         "route closed", "2026-11-17 — Track B interface-state route closed; reduced route adopted (Peter)"),
+    "2026-11-05 — Campaign trigger: only for registered predictions that disagree (Peter)": (
+        "T3 trigger lapsed", "2026-11-17 — T3 measurement request dropped (Peter)"),
     "2026-11-14 — CS-18b set-up and limits after calibration (Peter)": (
         "averaging item 4", "2026-11-15 — Route review 2026-11-15 (Peter)"),
     "2026-11-15 — Route review 2026-11-15 (Peter)": [
@@ -39,7 +41,7 @@ COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
     "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
     "odds review", "Track B continues", "cs12 illustration",
-    "Driver check", "Track B interface-state",
+    "Driver check", "Track B interface-state", "T3 measurement",
 )
 
 

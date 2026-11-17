@@ -7,8 +7,9 @@ docs/research/coldspray-procedure.md (who writes where; tasks for the other sess
 **First action: Track A.** Merge WSL B task b12 (`coldspray/b06-outcomes`, B06 step 3), run
 `python -m schemeforge.research.coldspray_blind_b06_score`, and write docs/research/coldspray-results-b06.md. The
 **B06 pre-registration is frozen** (c484494; the scorer was committed before any outcome). Its content: predictions from Z6, Z18, CS-10 and CS-12 for the
-two B06 conditions (native Al oxide 4.5 nm; ZnO coating 20 nm), frozen before step 3 of the blind protocol. Then
-Peter's **T3 decision** (send or drop the measurement request; B06 is not a thickness series). Both are the first
+two B06 conditions (native Al oxide 4.5 nm; ZnO coating 20 nm), frozen before step 3 of the blind protocol. The T3
+measurement request was **dropped** (2026-11-17). Once B06 is scored the single-impact phase ends: write the
+synthesis (DECISIONS 2026-11-07 end point), then choose which of R1–R3 leads. Both are the first
 steps of the adopted reduced-route plan (docs/research/reduced-route-plan.md); the lead option among R1–R3 is chosen
 after them.
 
@@ -132,8 +133,8 @@ it from §23, with frozen binary, decks and predictions, and Peter approves the 
 
 **A. Single-impact data track** (unchanged since 2026-11-08):
 - Step 1 for B06, B07 and B16 is merged (5f7bf7d). B06 measures v_cr in two conditions (native Al oxide; ZnO
-  coating) and is not a thickness series, so it does not supply T3. B07 and B16 have no v_cr. Open for Peter: the
-  B06 pre-registration and whether to send or drop the T3 measurement request.
+  coating) and is not a thickness series, so it does not supply T3. B07 and B16 have no v_cr. B06 is frozen
+  (c484494), step 3 is WSL B b12; the T3 measurement request was dropped (2026-11-17).
 - B03 and B12 are merged as exposed (d67f72c).
 - Open data hunches: **CS-10, CS-12, CS-17.** Details: docs/research/coldspray-hunches.md.
 

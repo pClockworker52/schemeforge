@@ -38,7 +38,7 @@ judge:
 1. **B06 pre-registration** (Track A, already pending): freeze predictions from Z6, Z18, CS-10 and CS-12 for the two
    B06 conditions (native Al oxide; ZnO coating) before step 3 of the blind protocol. This is the nearest test any
    reduced-route model can get.
-2. **Decide the T3 request:** B06 is not a thickness series, so the decisive test of CS-12 still needs one. Send the
+2. **Decide the T3 request** (done 2026-11-17: dropped, DECISIONS "T3 measurement request dropped"): B06 is not a thickness series, so the decisive test of CS-12 still needs one. Send the
    measurement request or drop it (the single-impact end point needs one of the two).
 
 Further steps (R2, R3) are chosen after these, under the hunch budget (3 of 5 open).

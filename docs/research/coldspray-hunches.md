@@ -18,7 +18,7 @@ Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (
 | Hunch | Why it is open and untested |
 |---|---|
 | CS-10 | no blind paper so far reported particle strength |
-| CS-12 | its decisive test T3 needs an unseen thickness series |
+| CS-12 | its decisive test T3 needs an unseen thickness series; the measurement request was dropped 2026-11-17 |
 | CS-17 | no unseen substrate series known |
 
 Not counted:

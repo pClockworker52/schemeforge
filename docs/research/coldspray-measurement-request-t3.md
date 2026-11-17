@@ -1,5 +1,7 @@
 # Measurement request: v_cr against oxide thickness at a fixed oxide type (CS-12 test T3)
 
+**Dropped 2026-11-17 (Peter, DECISIONS "T3 measurement request dropped"), not sent; kept for the record.**
+
 Draft 2026-11-07, for Peter. **Not to be sent before the trigger** (DECISIONS 2026-11-05 "Campaign trigger"): B14,
 B06 and B05 must be scored and T3 still undecided. As of this draft B14 is frozen (no T3 series in it: under 5 nm
 span at one oxide type), and B06 and B05 are pending. Template: [coldspray-campaign-proposal.md](coldspray-campaign-proposal.md)
