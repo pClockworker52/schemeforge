@@ -53,4 +53,23 @@ enough to drive a local bond law; it constrains where bonding can happen, not wh
 
 ## 6. Results
 
-(to follow, in separate commits)
+### 6.1 Driver 1 (cloud, 2026-11-17; `python scripts/driver_check_a.py`, inputs `tl_cal6_p3_series.csv` only)
+
+| Driver | 600 m/s (outputs 3–9) | 500 m/s (outputs 3–8) | Usable |
+|---|---|---|---|
+| a(t) | 7 of 7 converge | 6 of 6 converge | **yes** |
+| v_edge = da/dt | 0 of 7 | 0 of 6 | **no** |
+
+- a(t) at R/256 grows from 1.77 to 3.34 µm (600 m/s) and from 1.77 to 3.17 µm (500 m/s); mesh-to-mesh differences
+  are 0.2–3.5 % of the R/256 value.
+- v_edge from differences of nine outputs is noisy on every mesh; R/256 gives 2.5–3.5 km/s, edge Mach
+  v_edge/C₀ = 0.48–0.66, so the edge is subsonic throughout the judged window (consistent with
+  coldspray-kinematics.md).
+- **Against the prediction:** a(t) usable (predicted 0.6) right; v_edge not usable (predicted 0.3) right.
+- **Reading (judgment):** a(t) is close to a kinematic quantity of the bulk (penetration depth and geometry), so its
+  convergence was expected and says little about the interface; it constrains where bonding can happen, not whether.
+  It does not settle the outcome rule; drivers 2–4 (WSL A, §27) do.
+
+### 6.2 Drivers 2–4 (WSL A, §27)
+
+(to follow)
