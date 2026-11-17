@@ -2675,3 +2675,69 @@ parallel camera, sphere impostors by plastic strain, bond state on the cut and o
 section, per side, and `he_h2_3d_side_by_side.mp4`, fork `hvi/illustration/v2/`. Rows
 `results/tl_cal7_cs12_tune.csv`, `results/tl_cal7_cs12_illustration.csv` (now four rows); `tl_cal7_cs12_survival.csv`
 updated with the corrected hash. Task 2026-11-16-a item 4 (trigger run) still waits.
+
+## 27. Driver-convergence check, drivers 2–4 (task 2026-11-17-b; calibration)
+
+Spec, rule and prediction: [driver-check-2026-11-17.md](driver-check-2026-11-17.md) (unchanged). All rows
+`kind = calibration`. Plan (how each definition is computed from the outputs) committed in the fork before any
+number: SPEC-TL-b §12.1 `b614f39bb`; results §12.2 `ce728926c`. Post-processing only, no solver change. The §25 run
+directories (binary `d0500106d`) were complete, so nothing was rerun.
+
+**How computed (labelled where the outputs forced a choice).** Judged outputs 3–9 (600 m/s) and 3–8 (500 m/s), the
+same frames as driver 1. Rings of width ℓ centred at 0.25 / 0.5 / 0.75 a_256(t), r ∈ [max(0, c − ℓ/2), c + ℓ/2],
+area-averaged; at 0.25 a the ring reaches the axis. W_ann: the outputs have no plastic-work field, so per element
+w_p = trapezoid over all outputs of σ_vm dε_p (substitute), times the current axisymmetric volume, summed over the
+elements whose centroid is within ℓ of the body's contact-side surface and in a_256 − ℓ ≤ r ≤ a_256. P_s: per
+surface edge, trapezoid over the outputs of p_n |v_slip| while the edge is in contact (r ≤ a of that mesh), v_slip
+the tangential velocity of the edge relative to the other surface at the same radius; ring-averaged. Ring Y: §25's
+Y − 1 over the rings. For P_s and ring Y the points of the three rings are pooled for "usable" (reading, labelled).
+
+**Convergence by the spec's rule** (fraction of judged points; 600 m/s outputs 3–9, 7 points per ring; 500 m/s
+outputs 3–8, 6 per ring; ring drivers pooled over the three rings, per ring in brackets):
+
+| driver | ℓ | side | 600 m/s (0.25 / 0.5 / 0.75 a) | 500 m/s (0.25 / 0.5 / 0.75 a) |
+|---|---|---|---|---|
+| W_ann | 1.5 µm | particle | 0.00 | 0.00 |
+| W_ann | 1.5 µm | block | 0.29 | 0.00 |
+| W_ann | 2 µm | particle | 0.00 | 0.00 |
+| W_ann | 2 µm | block | 0.43 | 0.00 |
+| P_s | 1.5 µm | particle | 0.14 (0.43 / 0.00 / 0.00) | 0.11 (0.33 / 0.00 / 0.00) |
+| P_s | 1.5 µm | block | 0.14 (0.14 / 0.14 / 0.14) | 0.22 (0.33 / 0.33 / 0.00) |
+| P_s | 2 µm | particle | 0.24 (0.43 / 0.29 / 0.00) | 0.22 (0.33 / 0.33 / 0.00) |
+| P_s | 2 µm | block | 0.19 (0.14 / 0.14 / 0.29) | 0.17 (0.17 / 0.17 / 0.17) |
+| ring Y | 1.5 µm | particle | 0.00 (0 / 0 / 0) | 0.00 (0 / 0 / 0) |
+| ring Y | 1.5 µm | block | 0.19 (0.57 / 0 / 0) | 0.11 (0.33 / 0 / 0) |
+| ring Y | 2 µm | particle | 0.00 (0 / 0 / 0) | 0.00 (0 / 0 / 0) |
+| ring Y | 2 µm | block | 0.10 (0.29 / 0 / 0) | 0.00 (0 / 0 / 0) |
+
+**Usable: none** (rows `tl_cal8_driver_usable.csv`; the highest smallest-fraction over side × speed is 0.17,
+P_s at ℓ = 2 µm). With driver 1 (a(t) usable, v_edge not; cloud) the only usable driver remains a(t).
+
+- **W_ann** rises with refinement at every output: |q256 − q128| / q256 median 9 % (particle) and 4–6 % (block),
+  |q128 − q64| / q128 13–19 %. The same with each mesh's own a(t) (reported only): 0.00–0.57, also not usable.
+  The whole-body plastic work (no band; diagnostic) differs by 2–12 % between R/128 and R/256: the plastic
+  work in this window is not resolved, not only the band edge. Output-sampling check (labelled): with every second
+  output the trapezoid plastic work drops by 8.2 / 9.9 / 9.8 % (R/64 / R/128 / R/256); the sampling error is of
+  similar size on all meshes, so it shifts the mesh differences by ≲ 1–2 %, not enough to change a verdict, but it
+  is not negligible against 3.5 %. Removing it needs a plastic-work output or finer output (a rerun; not done,
+  the task allows reruns only for missing files).
+- **P_s** is noisy: mesh differences 4–24 % (medians) and not monotonic; best at 0.25 a (0.33–0.43).
+- **Ring Y** fails as Y − 1 did on 0.5 µm discs (§10): at 0.25 a the block side reaches 3–8 % (median) but rises
+  with refinement; at 0.5 a and 0.75 a 30–90 % (the wider rings reach past the contact edge where the meshes differ
+  most).
+
+**Survival probe** (BCT-off TLSPH, Al–Al 800 m/s, R/16 and R/32, quarter model, 48 outputs 0.06–1.0 D/V; rows
+`tl_cal8_driver_survival.csv`; reported only, two meshes cannot show convergence). P_s not computable (no contact
+pressure in the outputs). Contact radius (substitute definition) R/16 against R/32: median 2.8 %. W_ann with the
+Johnson–Cook static flow stress (substitute): |q32 − q16| / q32 median 10 % (particle, ℓ 1.5) / 4.5 % (particle,
+ℓ 2) and 23–30 % (block). Ring Y from a Delaunay skin: 9–10 % (block, 0.25 a), 22–50 % elsewhere.
+
+**Against the prediction** (spec §5): W_ann usable 0.4, P_s 0.3, ring Y 0.15, at least one usable 0.45: none usable.
+Own additions (§12.1): ring Y converging at the 0.25 a ring only — partly (block side only, at most 0.57 at 600 m/s,
+not converging); W_ann below 80 % at one speed — it is below at both; cost < 30 min — right (eval 1.5 min per speed,
+survival 4.5 min, plus diagnostics).
+
+**Outcome rule (spec §3), stated, not decided here:** no usable driver among 2–4; a(t) alone is usable (driver 1).
+The spec reads "no usable driver → the outer-driven activation route has no stable input; the modeller recommends
+stopping Track B (Peter decides)". Whether a(t) alone counts as a usable driver for that rule is for the modeller and
+Peter (the spec's §5 says a(t) alone would not be enough to drive a local bond law).
