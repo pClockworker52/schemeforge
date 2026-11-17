@@ -1,6 +1,6 @@
-# Cold spray: pre-registration for blind paper B06 — DRAFT, not frozen (awaits Peter)
+# Cold spray: pre-registration for blind paper B06 — Frozen 2026-11-17 (Peter approved)
 
-To be frozen, with `data/predictions_b06.csv`, **before** any outcome of B06 is extracted (rule B2, step 2). Inputs:
+Frozen with `data/predictions_b06.csv` (generated in f82f197, unchanged), **before** any outcome of B06 is extracted (rule B2, step 2). Inputs:
 `data/blind_inputs.csv`, rows B06-c1 and B06-c2, as merged in 5f7bf7d (WSL B task b10; leak scan clean: inputs only,
 diameters withheld, no outcomes). Code: `src/schemeforge/research/coldspray_blind_b06.py`; the frozen
 `coldspray_blind2.py` (B02/B14) is untouched.
