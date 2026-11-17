@@ -2641,3 +2641,16 @@ rim first. Limits: one run, R/16, quarter model, skin Y is areal stretch only. I
 so the ring is visible"; none exist, so the two illustration runs (R/12, about 8 h each) were **not started**, and
 item 7 was done only as a renderer test on the survival run (fork `hvi/illustration/survival_TI16/`). Decision for
 Peter. Task 2026-11-16-a item 4 (trigger run) still waits.
+
+**Illustration after Peter's go (items 6–7; fork SPEC-TL-b §11.3 plan `49cc7a0df`, §11.4 results `d3b4e458d`).**
+Run with the survival placeholders as stated values (Y′ 0.3, p_E 0.5 GPa, δ_c 0.05 s; chosen as known, not for a
+ring): five Ti-6Al-4V particles, R/12, full 3D, x/R −4.4…4.4, delays 0–1.6 D/V, F2, BCT off, CS-18b, to 2.6 D/V.
+Side A He/N₂ 1347 m/s: 1.36 h engine, 4.6 GB, dt_min/dt₀ 0.171, B 1.050. Side B H₂/N₂ 1584 m/s: 1.46 h,
+4.7 GB, 0.135, B 1.081 (above 1.05; reported only). Both reach t_end, no TL stop. Bonds form under each particle in
+the crater phase, broken oxide at the jetting rims; most bonds break during spring-back, and at the end the
+interfaces are mostly debonded (side A's middle particle partly lifted off). Predicted was a lasting bonded disc:
+wrong. Side B has more strain and jetting, not more bonded area. The facet colour takes the largest vertex state, so
+black is drawn about 1.5× too wide (vertex-majority check on 21 % of facets). Rendering: fork `hvi/illustration/`
+(he/, h2/: MP4 + five frames each; `he_h2_side_by_side.mp4`); mid-plane section, plastic strain 0–3 on both sides,
+red oxide broken, green bonded, black debonded; caption "Illustration: not verified, not validated. Bond thresholds
+assumed (placeholders)." Row `results/tl_cal7_cs12_illustration.csv`.
