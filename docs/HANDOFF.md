@@ -4,8 +4,9 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action: Track A.** Peter approves the freeze of the **B06 pre-registration** (drafted 2026-11-17,
-docs/research/coldspray-preregistration-b06.md; B06 hardly discriminates between open hunches), then WSL B step 3. Its content: predictions from Z6, Z18, CS-10 and CS-12 for the
+**First action: Track A.** Merge WSL B task b12 (`coldspray/b06-outcomes`, B06 step 3), run
+`python -m schemeforge.research.coldspray_blind_b06_score`, and write docs/research/coldspray-results-b06.md. The
+**B06 pre-registration is frozen** (c484494; the scorer was committed before any outcome). Its content: predictions from Z6, Z18, CS-10 and CS-12 for the
 two B06 conditions (native Al oxide 4.5 nm; ZnO coating 20 nm), frozen before step 3 of the blind protocol. Then
 Peter's **T3 decision** (send or drop the measurement request; B06 is not a thickness series). Both are the first
 steps of the adopted reduced-route plan (docs/research/reduced-route-plan.md); the lead option among R1–R3 is chosen

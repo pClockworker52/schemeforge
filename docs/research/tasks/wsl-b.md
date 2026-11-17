@@ -223,6 +223,29 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
 
+## Task 2026-11-17-b12: step 3, outcomes of B06 (open)
+
+Predictions are frozen: commit c484494 (`docs/research/coldspray-preregistration-b06.md`,
+`docs/research/data/predictions_b06.csv`); the scorer `src/schemeforge/research/coldspray_blind_b06_score.py` is
+committed before this task. Do not edit those files or any code.
+
+Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) with these changes:
+- **Paper and rows:** B06 conditions c1, c2 → ids `B-B06-c1`, `B-B06-c2`, matching `blind_inputs.csv`.
+- **Source:** the publisher version you used in step 1 (`coldspray-papers/B06_Wu_2026_published.pdf`, sha256
+  188dadc3…b2b). Say in `read_from` which table, figure or page.
+- **Window:** v_cr_low / v_cr_high / v_cr_mid exactly as printed, and `vcr_definition` exactly as the paper defines it.
+  If no bounds are printed, leave them blank and write the stated velocity uncertainty in `notes` in exactly this
+  form: `velocity uncertainty +-X m/s` or `velocity uncertainty +-X %` (rule B6; the scorer reads it). If values exist
+  only in a figure, digitize them and say so (`digitized (+-x m/s)`).
+- **Notes:** the items withheld in step 1: the particle diameters (and `d_um` itself), and anything the paper says
+  about why the conditions differ.
+- **Interface observations** (oxide fracture patterns, fragments, bonded-area or oxide-residue maps, where on the
+  interface bonding occurs) may now be recorded in `notes`. They are outcomes, and the paper is frozen.
+- **Ref. [31]** (Tang, Ichikawa, Hassani, Scripta Mater. 244, 2024): not needed; if you open it, blind-screen it first.
+
+Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b06-outcomes` from
+`claude/exciting-fermi-qy077p`, push, and stop. **Do not merge;** the modeller merges and scores.
+
 ## Task 2026-11-15-b11: boundary integration and patch tests in corrected particle methods (closed: merged 9d954b1)
 
 **Why:** route review 2026-11-15 (DECISIONS, D5 step 1). The TLSPH face layer carries only 0.5–0.6 of the stress
