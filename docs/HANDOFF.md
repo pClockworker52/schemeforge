@@ -1,15 +1,37 @@
-# Handoff — 2026-11-16, after §23 (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-17, after §24 and §25 (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** fetch and merge what WSL A pushed:
-- task 2026-11-16-a, results in §24: the contact-particle interface file; the momentum-restoring VCI (time box two
-  working days; F2 stands if it fails); then the **trigger run**. Record the rule outcome of the trigger by clause.
-  Clause 2 has a noise floor (post hoc);
-- task 2026-11-16-b, results in §25: the **P3 probe** on 2D quads, judged by its reading rule. The outcome goes to
-  Peter.
+**First action: Peter's Track B decision, pending** (he is weighing the epistemic implications of having no
+calibration reference). Options already discussed on 2026-11-17:
+- stop the interface-state route now on the P3 result and adopt the reduced route (modeller's recommendation);
+- one trigger run on the frozen F2, then stop;
+- approve VCIMR's D2 change (the skin in the operator, a uniform per-body restoring force) and run the trigger on it.
+
+**2026-11-17: §24 and §25 merged (5ab274d; calibration, no verdicts).**
+- **§25, the P3 probe on 2D quads.** Al–Al at 600 and 500 m/s, R/64–R/256. The finest mesh stops at about
+  0.035 t_p (0.8 ns) on a collapsing block cell near the contact edge. Within that window:
+  - p_n converges by the rule at 0.25 a and 0.5 a, but not at 0.75 a;
+  - **Y − 1 converges at no disc**, and it rises steadily with refinement.
+
+  Three readings, none ruled out:
+  1. a reference-deck limit (collapse, contact tolerance);
+  2. an ill-posed local quantity, because the model has no length scale;
+  3. a start-up window.
+
+  A remeshing or ALE reference host would test reading 1; a regularising length would test reading 2.
+- **§24, the interface file and VCIMR.**
+  - The interface file (v5) is complete. §23's open item (3) was partly wrong: only rigid-wall contact was missing.
+  - VCIMR passes the VCI-DESIGN §8 gate within the time box: S = 0.132 against F2's 0.369. Sphere layer 2 is at
+    0.90–0.95, against 0.63–0.65 for F2.
+  - Its costs: skin p_n on the axis is +6.6 % at R/64 (F2: +3.6 %); |B − 1| = 0.026 at R/16 (outside the gate);
+    the drift reading is unconfirmed (fork SPEC-TL-b §9.1).
+  - It is recorded as the candidate (fork 310b21cb7); F2 stays frozen.
+  - The trigger run (16-a item 4) is not run; it waits for the D2 decision.
+  - A WSL VM ran out of memory during parallel R/64 runs; everything was rerun serially, and no result comes from a
+    killed run.
 
 **2026-11-16, odds review** (docs/research/odds-review-2026-11-16/, summary.md): two independent reviewers put the
 trigger pass at 6–8 % and the whole chain at about 0.3 %, about ten times below the modeller's figures. Peter
@@ -149,7 +171,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-16-a (§24) and 2026-11-16-b (§25) |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | — (16-a item 4, the trigger run, waits for Peter's D2 decision; 16-b done, §25) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken
