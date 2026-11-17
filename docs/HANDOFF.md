@@ -4,9 +4,18 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** fetch and merge WSL A task 2026-11-17-a (fork branch `cs12`; schemeforge section to follow): the
-cs12 design note, the build, the D-3/D-4 checks, the Ti-6Al-4V survival check, then the He/H₂ illustration. Still open
-for Peter: VCIMR's D2 change and the trigger run (task 2026-11-16-a item 4).
+**First action:** Peter's open decisions on Track B:
+- VCIMR's D2 change and the trigger run (task 2026-11-16-a item 4);
+- the proposed outer-driven bond activation driver (`bond.driver` selectable; a zero-code driver-convergence check on
+  §25 and the BCT-off survival probe first).
+
+**2026-11-17: §26 merged (9b03f79).**
+- `cs12` is built on TLSPH and is neutral; D-3/D-4 pass.
+- The Ti-6Al-4V survival check at 1584 m/s passes (material data second-hand).
+- **Skin Y peaks at the pole**, so skin-Y activation bonds the centre first. With skin-Y activation no choice of
+  thresholds gives a bonded ring.
+- The illustration (fork `hvi/illustration/v2/`) uses Y′ 0.2 and δ_c 1 s, tuned for the picture. Its ring comes from
+  central debonding on spring-back.
 
 **2026-11-17, Peter:** **Track B continues** with `cs12` (Bay activation) on TLSPH; the skin feeds bond activation
 (activation only); f_B is a running maximum, σ_B(t) = f_B·σ_flow(T). Illustration runs (`kind = illustration`) for
@@ -18,8 +27,9 @@ Peter's existing OpenRadioss set-up.
 mehrerer Ti-6Al-4V-Partikel mit 20 µm Durchmesser auf Ti-6Al-4V, Schnitt durch die Mitte, links mit He/N₂
 (1347 m/s), rechts mit H₂/N₂ (1584 m/s). Die Farbe zeigt die plastische Dehnung; markiert ist, wo die Oxidschicht
 aufreißt. Die Aufprallgeschwindigkeiten stammen aus dem 1D-Düsenmodell bei gleichen Stagnationsbedingungen. Die
-Bindung wird im Löser aktiviert, wo Oberflächendehnung und Kontaktdruck Schwellwerte überschreiten (Bay-Kriterium,
-Schwellwerte angenommen). Illustration, nicht verifiziert und experimentell nicht validiert."
+Bindung wird im Löser aktiviert, wo Oberflächendehnung und Kontaktdruck Schwellwerte überschreiten (Bay-Kriterium);
+beim Zurückfedern löst sie sich in der Mitte. Schwellwerte und Bindungsgesetz sind für die Darstellung gewählt.
+Illustration, nicht verifiziert und experimentell nicht validiert."
 
 **2026-11-17: §24 and §25 merged (5ab274d; calibration, no verdicts).**
 - **§25, the P3 probe on 2D quads.** Al–Al at 600 and 500 m/s, R/64–R/256. The finest mesh stops at about

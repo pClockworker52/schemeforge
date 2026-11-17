@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-17-a: cs12 (Bay activation) on TLSPH, then a He/H₂ multi-particle illustration (open)
+## Task 2026-11-17-a: cs12 (Bay activation) on TLSPH, then a He/H₂ multi-particle illustration (closed: §26, merged 9b03f79)
 
 **Basis:** DECISIONS 2026-11-17 "Track B continues with cs12 on TLSPH; illustration runs". The code serves Track B;
 the illustration runs (`kind = illustration`) sit outside the ladders and support no claim. Each step commits its
