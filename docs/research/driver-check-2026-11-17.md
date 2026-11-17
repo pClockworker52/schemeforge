@@ -70,6 +70,31 @@ enough to drive a local bond law; it constrains where bonding can happen, not wh
   convergence was expected and says little about the interface; it constrains where bonding can happen, not whether.
   It does not settle the outcome rule; drivers 2–4 (WSL A, §27) do.
 
-### 6.2 Drivers 2–4 (WSL A, §27)
+### 6.2 Drivers 2–4 (WSL A, §27; merged 29c09ee)
 
-(to follow)
+Fraction of judged points that converge, pooled over the three rings; the smallest over side × speed decides
+(usable needs ≥ 0.80):
+
+| Driver | ℓ = 1.5 µm | ℓ = 2 µm | Usable |
+|---|---|---|---|
+| W_ann (annulus plastic work) | particle 0.00; block 0.29 (600) / 0.00 (500) | particle 0.00; block 0.43 / 0.00 | no |
+| P_s (pressure–slip history) | 0.11–0.22 | 0.17–0.24 | no |
+| ring Y | particle 0.00; block 0.00–0.19 | particle 0.00; block 0.00–0.10 | no |
+
+- Even the whole-body plastic work differs by 2–12 % between R/128 and R/256 in the window: the plastic deformation
+  near the contact is not resolved, not only the band edge. Coarse output sampling adds about 8–10 % to the
+  plastic-work integral on all meshes alike (shifts the mesh differences by about 1–2 %; no verdict changes).
+- Survival probe (TLSPH, R/16 and R/32, reported only): contact radius median difference 2.8 %; W_ann 4.5–30 %; ring Y
+  9–50 %; P_s not computable.
+
+**Outcome under the rule (§3):** no usable driver among 2–4; only a(t) converges, which by §5 cannot drive a local
+bond law. So the outer-driven activation route has no stable input; the modeller recommended stopping Track B, and
+Peter decided so (DECISIONS 2026-11-17 "Track B interface-state route closed; reduced route adopted").
+
+**Against the prediction (§5):** W_ann 0.4, P_s 0.3, ring Y 0.15, "at least one other than a(t) usable" 0.45: none
+usable, so the modeller's prediction leaned too optimistic again.
+
+**Scope limit:** judged only to about 0.035 t_p (the finest quad mesh collapses there, §25), and on the only reference
+host available (OpenCourant 2D quads, Lagrangian, no remeshing). A remeshing or ALE reference might converge later in
+the impact; this is not ruled out. The result is "not verifiable with the references available to this project", not
+"impossible in principle".

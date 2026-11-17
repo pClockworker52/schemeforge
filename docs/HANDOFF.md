@@ -1,15 +1,24 @@
-# Handoff — 2026-11-17, Track B continues with cs12 (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-17, Track B route closed; reduced route adopted (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** merge WSL A task 2026-11-17-b (§27, drivers 2–4 of docs/research/driver-check-2026-11-17.md) and
-apply the spec's outcome rule. The trigger run is deferred until then (D4 in force). Peter's other open decisions on
-Track B:
-- VCIMR's D2 change and the trigger run (task 2026-11-16-a item 4);
-- the proposed outer-driven bond activation driver (`bond.driver` selectable; a zero-code driver-convergence check on
-  §25 and the BCT-off survival probe first).
+**First action: Track A.** Draft the **B06 pre-registration**: predictions from Z6, Z18, CS-10 and CS-12 for the
+two B06 conditions (native Al oxide 4.5 nm; ZnO coating 20 nm), frozen before step 3 of the blind protocol. Then
+Peter's **T3 decision** (send or drop the measurement request; B06 is not a thickness series). Both are the first
+steps of the adopted reduced-route plan (docs/research/reduced-route-plan.md); the lead option among R1–R3 is chosen
+after them.
+
+**2026-11-17: Track B's interface-state route is closed** (DECISIONS "Track B interface-state route closed; reduced
+route adopted"), as unverifiable with the references available to this project:
+- §27: no outer or non-local driver is usable by the rule fixed in advance (driver-check-2026-11-17.md); only a(t)
+  converges;
+- §25: Y − 1 converges nowhere, even on 2D quads;
+- §26: skin Y peaks at the pole.
+
+The trigger run and VCIMR's D2 change are dropped. Kept: the verified elastic bulk results, `cs12` and VCIMR in the
+fork, and the He/H₂ animation (illustration). WSL A has no open task.
 
 **2026-11-17: §26 merged (9b03f79).**
 - `cs12` is built on TLSPH and is neutral; D-3/D-4 pass.
@@ -194,7 +203,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | 2026-11-17-a (cs12, illustration); 16-a item 4 waits for Peter's D2 decision |
+| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | — (no open task; Track B route closed 2026-11-17) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken

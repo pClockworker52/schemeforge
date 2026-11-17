@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-17-b: driver-convergence check, drivers 2–4 (post-processing) (open)
+## Task 2026-11-17-b: driver-convergence check, drivers 2–4 (post-processing) (closed: §27, merged 29c09ee)
 
 **Basis:** DECISIONS 2026-11-17 "Driver check before the trigger run"; spec, rule and prediction in
 docs/research/driver-check-2026-11-17.md, fixed before any number. Do not change the definitions or the rule; if one
@@ -71,7 +71,7 @@ route verdict; the outcome goes to Peter. Run it at low thread count beside task
 4. **Report** the collapse time per mesh, the cost per run, and anything that stopped a run. Rows
    `kind = calibration`, `results/tl_cal6_p3_*.csv`; schemeforge §25 on `coldspray/opencourant-sph`. Then stop.
 
-## Task 2026-11-16-a: contact-particle interface file, momentum-restoring VCI, then the trigger run (open)
+## Task 2026-11-16-a: contact-particle interface file, momentum-restoring VCI, then the trigger run (closed: items 1–3 done, §24; item 4 dropped, Track B route closed 2026-11-17)
 
 **Basis:** §23 and DECISIONS 2026-11-16 "After §23: reference accepted as is; momentum-restoring VCI". F2 stays the
 frozen default (fork 0b58b6a46). The trigger run is **not** part of this task. Rows `kind = calibration`; results

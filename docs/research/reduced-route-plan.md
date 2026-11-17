@@ -1,4 +1,4 @@
-# Reduced route: plan (DRAFT, not in force; awaits Peter)
+# Reduced route: plan (adopted 2026-11-17, DECISIONS "Track B interface-state route closed; reduced route adopted")
 
 Drafted 2026-11-16 by the modeller, per DECISIONS 2026-11-16 "After the odds review" item 5. The reduced route is the
 named fallback of the route review (D3 (iv)). It becomes the project's main line if the dead-end trigger fires, and
@@ -45,5 +45,4 @@ Further steps (R2, R3) are chosen after these, under the hunch budget (3 of 5 op
 
 ## Open for Peter
 
-- Adopt this draft now, or only if the trigger fires?
 - Which of R1–R3 is the main line?
