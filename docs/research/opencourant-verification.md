@@ -2596,3 +2596,48 @@ right (0.70 ≤ 1.5 GB); p_n at the inner discs wrong (0.63–1.00, not 0.3–0.
 (0.33 against < 0.3); Y − 1 below 0.2 right; first lost at 0.75 a from the start right, at the inner discs right at
 600 m/s and wrong for p_n at 0.25 a at 500 m/s (never lost); "does not converge overall" right for Y − 1, wrong for
 p_n at the inner discs; 500 m/s fractions lower by 0.1 wrong (about the same). No "surprise" threshold reached.
+
+## 26. cs12 (Bay activation) on TLSPH; Ti-6Al-4V survival; stop before the He/H₂ illustration (task 2026-11-17-a)
+
+`kind = check` (build, D-3/D-4, survival) and pre-check for the illustration; nothing here supports a claim. Fork
+branch `cs12` from `tlsph` f226cd4: design note `hvi/CS12-DESIGN.md` (`5f8d276dd`, before any code), code
+`01efb1558`, plan and predictions `c6d34778c` (fork `hvi/SPEC-TL-b.md` §11.1, before any run), results `2fb315ad5`
+(§11.2, full account). Rows copied to `results/tl_cal7_cs12_{a0,d3,survival,ring_check}.csv`. `cs12` is the
+second-hand threshold form of the fork SPEC (Bay 1983 / Zhang & Bay 1997 not checked); Y′, p_E are placeholders.
+
+**Design (item 2).** Activation g < 0, Y_ij > Y′, p_n,ij > p_E with Y_ij = min(Y_i, Y_j) from the TLSPH skin
+(new key `bond.skin`: triangular facets of particle ids; Y_f = 1 − A_f0/A_f, Y_I area-weighted), p_n,ij =
+min(p_n,i, p_n,j) of the O13 per-particle sum from the previous cycle (activation lags first contact by one cycle);
+f_B = (Y_ij − Y′)/(1 − Y′) as running maximum; σ_B(t) = f_B σ_flow,ij(t), σ_flow = SIGY of the material call (LAW4:
+rate and adiabatic temperature included), frozen at damage onset (implementation choice: keeps D monotone and W_b
+consistent); law and A_ij = s² as `tie`; interface file v6 per skin facet (Y_f, oxide broken, bond state, D);
+activation only, no skin force.
+
+**Build checks (item 3).** `none` and `tie` against f226cd4's binary: data byte-identical (T01 differ in the run-date
+header bytes only). T-A0 55 of 55 identical.
+
+**D-3/D-4 (item 4; reported, not frozen).** Two TL blocks under prescribed press, equi-biaxial stretch and pull:
+D-3 pull-off/σ_B,exact 0.9990 (78.1 MPa), 36/36 pairs, skin Y within 5.6·10⁻⁵, σ_flow/σ_y 1.0000, W_b/(G_c A)
+0.9997; running maximum (1.3 → 1.2) 0.9983; D-4 (Y < Y′, p_n < p_E) no bond. p_n: interior particles within 0.07 %,
+edge and corner particles up to 17 % high (existing hvi Nanson ratio with tilted colour normals; not new with cs12).
+
+**Survival (item 5): pass.** Ti-6Al-4V 20 µm on Ti-6Al-4V, 1584 m/s, R/16 quarter (4269 + 150 528 particles), to
+1.0 D/V, CS-18b, BCT off, F2, stfac 3, cs12 Y′ = 0.3, p_E = 0.5 GPa. Material: JC (A 862 MPa, B 331 MPa, n 0.34,
+C 0.012, m 1.1, T_m 1903 K) and Grüneisen (c₀ 5130 m/s, S₁ 1.03, γ₀ 1.23) **second-hand** from Khamsepour 2022
+Table 1 (not on the blind list), which cites Meyer & Kleponis IJIE 26 (2001) for JC and Steinberg UCRL-MA-106439
+(1996) for the EOS; neither primary could be retrieved here (OSTI/LLNL anti-bot page, DTIC copy not found):
+deviation from item 5 ("cited primary source"), verify before any claim. E-1 draft §3: dt_min/dt₀ 0.158; detached
+mass 0; closest cross-body pair 0.78 s; det F min 0.71, no TL stop; normal termination at 0.995 D/V. Energy B 1.035.
+Max speed 1.7 V, ε_p max 8.0. Engine 878 s on 8 threads, 1.6 GB. Prediction: pass probability 0.4, failure by TL
+stop at the jet edge: wrong (it passed); cost 1–3 h: wrong (0.25 h); dt, B, speed ranges right.
+
+**Bonds and the ring (item 6 pre-check): stop.** With the survival placeholders the centre bonds, a band at
+r ≈ 5–8 µm debonds late, the rim stays mostly unbonded; predicted was the reverse. Skin Y peaks at the particle's
+south pole (largest Y_f 0.72 at r < 3 µm, 0.46 at 5–6, 0.33 at 8–9, 0.13 at 9–10 µm; the pole flattens to
+A/A₀ ≈ 3.6), and p_n while Y > Y′ is several GPa there, not lower than at the rim. The substrate has a weak ring
+(0.81 at 5 µm against 0.74 at the centre), but the min rule takes the particle side. So no (Y′, p_E) gives a bonded
+ring around an unbonded centre in this model: raising Y′ shrinks a bonded disc from outside, raising p_E removes the
+rim first. Limits: one run, R/16, quarter model, skin Y is areal stretch only. Item 6 asks for placeholders "chosen
+so the ring is visible"; none exist, so the two illustration runs (R/12, about 8 h each) were **not started**, and
+item 7 was done only as a renderer test on the survival run (fork `hvi/illustration/survival_TI16/`). Decision for
+Peter. Task 2026-11-16-a item 4 (trigger run) still waits.
