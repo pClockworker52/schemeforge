@@ -2399,3 +2399,200 @@ face (§8.4) and skin (§8.5): right except the F1/F2 rebound at n = 100 (+0.6 /
 magnitude (10⁻², not 10⁻⁴) and the quad T-S1 order and U_ref range.
 
 Open items for Peter: (1) the T-B2 quad reference misses D4 (12 of 16 U_ref above 1.75 %), so the trigger cannot be evaluated until it improves; (2) VCI is out only by the refinement rule of the drift (on the terms it ran, S ≥ 0.129 against F2's 0.369; its R/64 case 5 and T-S1 skin were not run); readmitting it by an override or building the momentum-restoring variant (VCI-DESIGN §6) is Peter's call, and if VCI is readmitted its D2 change (VCI-DESIGN §4: the skin becomes part of the operator) also needs his approval at the freeze; (3) the interface file lists the static surface set, which misses most contact particles of the conforming sphere (sphere-side p_n on T-B2 not measured).
+
+## 24. Contact-particle interface file and the momentum-restoring VCI (task 2026-11-16-a; calibration)
+
+**Question.** Does interface file version 5 list every particle that carries contact force? Does the
+momentum-restoring VCI (VCI-DESIGN §6) pass the §8 gate and beat F2 on the §8 score?
+
+**Basis and records.**
+- Calibration only: calibration rows throughout, except `tl_cal6_tests.csv` (`kind = test`: neutrality and the R/16
+  smoke run).
+- The trigger deck was not run, and item 4 (the trigger run) waits; see the outcome below.
+- The plan and prediction were committed in the fork before the build and the runs (`1350401b0`).
+- Build: `d0500106d`, the binary for every run. Rows: `f49834701` (phase 1) and `a88ea941f` (phase 2). Candidate
+  commit: `310b21cb7`; results `f226cd46e`.
+- Full account: fork `hvi/SPEC-TL-b.md` §9.
+- Set-up as §23: CS-18b, BCT off, `contact.stfac = 3`, colour normals.
+- Rows are copied to `results/`:
+  - contact list: `tl_cal6_contact.csv` and `tl_cal6_contact_series_{s1n032,b2n032}.csv`;
+  - T-B2 R/32 deck: `tl_cal6_b2.csv`;
+  - flat cases: `tl_cal6_face.csv`;
+  - T-S1: `tl_cal6_s1.csv` and `tl_cal6_skin.csv`;
+  - static case 5: `tl_cal5_vci.csv`, new rows with `vci = 2`;
+  - neutrality and T-A0: `tl_cal6_tests.csv` and `tl_cal6_a0.csv`.
+
+**Deviation (memory).** The plan allowed parallel R/64 jobs only on a measured peak. I first started the a = 10
+static solve beside a = 5 and stopped it by hand at 17:28. Then I started the T-S1 R/64 deck
+build beside a static R/64 solve on available memory alone. Together they peak at about 19 GB (10.0 + 9.0 GB), and
+the WSL VM ran out of memory and restarted at 17:45. Phase 2 was rerun one task at a time (T-A0 still runs its small decks in parallel, as
+`tl_a0.py` does); no result comes from a killed run.
+
+### 24.1 Step 1: interface file version 5
+
+Version 5 also lists particles with a rigid-wall force. At the force peak:
+
+| deck, body | listed particles | list / reference | share outside the list (largest over time) | SURF0 share |
+|---|---|---|---|---|
+| T-S1 R/32, sphere (reference dp_z/dt) | 17 | 1.0003 | −0.03 % (12.5 %, at first touch and separation) | 7.2 % |
+| T-B2 R/32 full block, sphere (dp_z/dt) | 22 | 1.0004 | −0.04 % (2.3 %) | 7.7 % |
+| T-B2 R/32, block (hvi body sum; complete by construction) | 22 | 1.0000 | 0 | 100 % |
+
+§23 open item (3) was partly wrong. Versions 3 and 4 already listed the particles in hvi contact; only rigid-wall
+contact was missing, which matters only on T-S1, the one deck with a rigid wall (§23.3 had to estimate the share there). On T-B2, SURF0 holds 7.7 % of the
+sphere-side force. Sphere-side averages on T-B2 must therefore come from the list (or the skin), not from SURF0.
+
+### 24.2 Step 2: momentum-restoring VCI
+
+`tl.vci_mr = on` subtracts, per body, the net VCI force in the free directions as a uniform body force
+−(m_I / M_b) Π F_b. The time box (two working days) was kept: the variant passed on 2026-11-17.
+
+**Static case 5 (mode 2).** Layers 1–2 on the axis over the half-space value:
+
+| n_r | a = 5 s: layers 1, 2 | a = 10 s: layers 1, 2 |
+|---|---|---|
+| 32 | 1.1285, 0.9006 | 1.0689, 0.9518 |
+| 64 | 1.1323, 0.8958 | 1.0807, 0.9541 |
+
+- At R/32, mode 2 equals plain VCI to 2·10⁻¹¹.
+- The case-5 term does not fall with refinement (0.129 → 0.132).
+
+**Flat cases (100 / 200).**
+- `col` layers 1–4: within 0.0020 / 0.0010.
+- `coldef` layers 1–4: within 0.0012 / 0.0005.
+- T-surface (b) outer columns: 0.74 % / 0.05 %.
+- |B − 1| ≤ 0.0102 (`surface` 100).
+
+**T-S1 with the skin.**
+
+| | R/32 | R/64 |
+|---|---|---|
+| \|B − 1\| (VCI) | 0.0043 (0.0015) | 0.0063 (0.0032) |
+| summed drift / impulse (VCI) | 7.4·10⁻¹⁶ (1.8·10⁻³) | 1.7·10⁻¹⁶ (4.3·10⁻³) |
+| ladder errors: contact, peak, approach | 1.9 %, 1.4 %, 3.7 % | 0.2 %, 1.7 %, 1.0 % |
+| skin p_n − quad R/256, axis / 0.5 a (VCIMR only) | +7.6 % / +4.7 % | **+6.6 % / +2.9 %** |
+
+- The R/64 ladder errors are within 0.5 points of plain VCI. At R/32 the peak error is 0.7 points above it.
+- The lattice gave +3.6 % / +3.1 % on the skin p_n at R/64. Plain VCI was not run with the skin, so the change
+  cannot be split between VCI and the restoring term.
+- **R/16 smoke run** (`kind = test`, not a gate case): |B − 1| = 0.026, above the 0.02 limit (plain VCI at R/16:
+  0.006). The gate covers R/32 and R/64 only, but the restoring term's energy cost is largest at coarse resolution.
+- The independent balance Δp_z − p_wall_z is ≤ 4·10⁻¹¹ of the impulse.
+- The uncorrected net VCI impulse is 0.18 % / 0.43 %, within the predicted ±20 % of §23's plain-VCI drift.
+
+**Neutrality.**
+- T-S1 R/16, VCI off and VCI on without `tl.vci_mr`: T01 and `tl_diag.csv` bitwise identical to `f91682094`
+  (row notes).
+- T-A0: 55 of 55 runs identical.
+
+**Gate and score (VCI-DESIGN §8):**
+
+| candidate | gate | columns | case 5 (R/32; R/64) | T-S1 skin p_n R/64 | S |
+|---|---|---|---|---|---|
+| VCIMR | passes on its cases: drift at round-off (clause met under the fork's §9.1 reading, unconfirmed); \|B − 1\| ≤ 0.0102 | 0.0020 | 0.129; 0.132 | 0.066 | **0.132** |
+| F2 (frozen, §23) | passes | 0.021 | 0.369; 0.362 | 0.036 | 0.369 |
+
+**Outcome (task rule):**
+- VCIMR passes the gate, and S = 0.132 is below 0.369 − 0.005.
+- It is recorded as the candidate in fork `310b21cb7` (`CANDIDATE = "VCIMR"`). `FROZEN` stays F2.
+- It improves the conforming sphere's near-surface stress (case-5 layer 2 at 0.90–0.95 of the half-space value,
+  against 0.63–0.65 for F2). It costs a little energy accuracy and skin p_n on the axis (+6.6 % against +3.6 % for F2, whose sphere is the lattice).
+- **The trigger run (item 4) is not run.** Its construction is F2, or VCIMR only after Peter approves VCIMR's D2
+  change. That decision comes first.
+
+### 24.3 Against the prediction
+
+**Right:**
+- the step 1 counts and shares on T-S1;
+- list completeness on both decks and the SURF0 shares;
+- mode 2 = mode 1 at R/32;
+- R/64 case 5 within 0.16;
+- columns within 0.006;
+- `surface` within 1 %;
+- drift ≤ 10⁻⁹;
+- p_vci within ±20 % of §23;
+- the independent balance;
+- R/64 ladder within 0.5 points;
+- S in 0.1285–0.16;
+- the expected outcome;
+- R/64 solve times (3.7–3.9 h). The memory estimate cannot be judged (no lattice R/64 footprint recorded;
+  measured 9.0 GB).
+
+**Wrong:**
+- T-B2 listed particles were 22 per body, not 150–400. The list follows the hvi contact pairs; I had sized it from
+  the patch area.
+- |B − 1| ≤ 0.006 failed on three runs (0.0102, 0.0091, 0.0063). This is the energy risk named in the plan; all
+  three are within the gate. The R/16 smoke run (0.026) is not.
+- R/32 peak error: 0.7 points above plain VCI, against the predicted 0.5.
+- Skin p_n on the axis at R/64: +6.6 %, against the predicted ≤ 5 %.
+
+**Open items for Peter:**
+1. Approve or reject VCIMR's D2 change: a uniform per-body restoring force, which gives up locality for non-uniform
+   stress, and the skin as part of the operator (VCI-DESIGN §4, §6). The trigger run's construction follows from
+   this.
+2. Confirm or override the drift reading (fork SPEC-TL-b §9.1): both drifts are round-off (below 10⁻⁶ of the
+   impulse), so the refinement clause counts as met; their ratio (0.24) carries no information. The clause then
+   tests the implementation only; the independent balance (≤ 4·10⁻¹¹) is the physical check.
+3. Note the R/16 energy value (|B − 1| = 0.026) before choosing VCIMR for coarse decks.
+
+## 25. P3 probe: interface averages in a plastic impact on 2D quads (task 2026-11-16-b; calibration)
+
+Question: do 0.5 µm surface averages of p_n and Y − 1 converge
+under refinement in a plastic, jetting Al–Al impact before the jet root collapses? A calibration diagnostic, no route
+verdict; the outcome goes to Peter. All rows `kind = calibration`. Plan, reading rule and prediction committed in the
+fork before the runs (`1ced28681`, after a review); results fork `6a4f609db`; full account fork `hvi/SPEC-TL-b.md` §10.
+Rows copied to `results/tl_cal6_p3_{runs,series,conv}.csv`.
+
+**Set-up.** The §8.3 deck unchanged (`option1_alal.write`: Al O-grid sphere R = 10 µm on an Al block 5R × 5R,
+`Isolid = 17`, default bulk viscosity, LAW4 Johnson–Cook + Grüneisen with γ₀ = 2.17, TYPE5 both ways, `/DT` minimum
+with stop, no erosion), plus the stress components in `/ANIM` and an output step of (D/V)/400. Meshes R/64, R/128,
+R/256 (§8.3's "fine" is R/64); t_p from R/32 (and R/16) run toward 2 D/V (R/32 at 600 m/s stopped at 1.21 D/V, after t_p). Fork binary `d0500106d`, one thread per run.
+Discs of radius 0.5 µm centred at 0.25, 0.5 and 0.75 a_256(t), the R/256 contact radius at each output time, the same
+centres on all three meshes, looked up by the current edge radii; p_n = −n·σ·n of the owning element, Y − 1 from the
+edge stretch (meridional × hoop); particle and block side; up to the last output before the earliest stop t*.
+Reading rule (task item 3): converge if |q256 − q128| ≤ 3.5 % |q256| and (|q256 − q128| ≤ 0.8 |q128 − q64| or
+|q128 − q64| ≤ 3.5 % |q128|).
+
+**Stop times** (all by the `/DT` minimum; t_p = 0.707 D/V at 600 m/s, 0.598 D/V at 500 m/s):
+
+| V | R/64 | R/128 | R/256 |
+|---|---|---|---|
+| 600 m/s | 0.157 t_p | 0.054 t_p | **0.034 t_p** |
+| 500 m/s (added: R/256 below 0.1 t_p at 600) | 0.371 t_p (§8.3: 0.37) | 0.120 t_p | **0.036 t_p** |
+
+The cells named at each stop are block cells near the surface (R/256 at 0.27–0.30 R, near its contact edge,
+a_256 ≈ 0.33 R). R/256 stops at about 0.8 ns at both speeds; the window t* is 0.81 / 0.85 ns: 9 and 8 output times
+(t / t_p ≤ 0.033, a_256 from 1.0 to 3.2–3.3 µm). The R/256 surface starts to fold in the last one or two outputs.
+Whether a jet has formed is not evaluated. Every run ended by the `/DT` minimum except R/16 at both speeds and R/32
+at 500 m/s (reached 2 D/V); no negative volume; nothing else stopped a run. Cost (engine, single-threaded): R/256
+185–186 s, R/128 37–131 s, R/64 23–82 s; peak memory 0.70 GB; both speeds in 8 minutes.
+
+**Reading rule** (fraction of disc-time points that converge; overall, and 0.25 a / 0.5 a / 0.75 a):
+
+| V | side | p_n | Y − 1 |
+|---|---|---|---|
+| 600 | particle | 0.59 (0.78 / 0.78 / 0.22) | 0.00 (0 / 0 / 0) |
+| 600 | block | 0.59 (0.78 / 0.67 / 0.33) | 0.07 (0.11 / 0 / 0.11) |
+| 500 | particle | 0.58 (1.00 / 0.63 / 0.13) | 0.04 (0 / 0 / 0.13) |
+| 500 | block | 0.63 (1.00 / 0.63 / 0.25) | 0.00 (0 / 0 / 0) |
+
+- First lost at the first output (t / t_p = 0.0035 at 600 m/s, 0.0042 at 500 m/s) everywhere, except p_n at 0.25 a
+  at 500 m/s (never lost). p_n fails at the first one or two outputs, when the three meshes' contact radii still
+  differ (1.47 / 1.22 / 1.04 µm; the h/2 contact tolerance a possible cause, not shown); after that it passes at most
+  outputs at 0.25 a and 0.5 a, and fails at most at 0.75 a (up to 14 % after the first output, 24 % at it).
+- Y − 1: |q256 − q128| / |q256| at 0.25 a falls over the window from 24–37 % to 3–6 %; it stays 7–54 % at 0.5 a and
+  47–85 % at 0.75 a from the third output on (spikes to 1250 % where Y − 1 crosses zero; two passes at the second
+  output). The values rise monotonically with refinement (0.25 a, block, last output at 600 m/s:
+  0.124 / 0.130 / 0.135).
+
+**Answer (no route verdict):** in this deck the 0.5 µm averages can be judged only up to about 0.035 t_p (0.8 ns), when
+the finest mesh stops on a collapsing block cell near the contact edge, at both speeds. Within that window p_n
+converges by the rule at 0.25 a and 0.5 a after the start-up outputs, not at 0.75 a; Y − 1 does not converge at any
+disc.
+
+**Against the prediction:** stop times mostly right (wrong: R/128 at 600 m/s 0.054, just below 0.06–0.15; R/256 at
+500 m/s 0.036, not 0.05–0.15); 500 m/s added, right; t_p right; cost wrong (cheaper, 0.05 h against 0.1–0.3 h), memory
+right (0.70 ≤ 1.5 GB); p_n at the inner discs wrong (0.63–1.00, not 0.3–0.6), at 0.75 a right except 600 m/s block
+(0.33 against < 0.3); Y − 1 below 0.2 right; first lost at 0.75 a from the start right, at the inner discs right at
+600 m/s and wrong for p_n at 0.25 a at 500 m/s (never lost); "does not converge overall" right for Y − 1, wrong for
+p_n at the inner discs; 500 m/s fractions lower by 0.1 wrong (about the same). No "surprise" threshold reached.
