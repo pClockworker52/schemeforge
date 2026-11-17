@@ -5,6 +5,22 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-17-b: driver-convergence check, drivers 2–4 (post-processing) (open)
+
+**Basis:** DECISIONS 2026-11-17 "Driver check before the trigger run"; spec, rule and prediction in
+docs/research/driver-check-2026-11-17.md, fixed before any number. Do not change the definitions or the rule; if one
+cannot be computed as written, say so and report what was computed instead, labelled.
+
+1. From the §25 quad runs (fork binary `d0500106d`; Al–Al 600 and 500 m/s; R/64, R/128, R/256), outputs from the third
+   onwards up to t*, compute drivers 2–4 of the spec (W_ann, P_s, ring Y) for ℓ = 1.5 and 2.0 µm, each side. If the
+   field files are gone, rerun the §25 decks with the same binary (about 8 min each).
+2. Apply the spec's rule; report per driver, ℓ, ring, side and speed the fraction of converging points and whether
+   it is usable.
+3. Report the same drivers on the BCT-off TLSPH survival probe (§23.1, R/16 and R/32) if its outputs allow; reported
+   only.
+4. No solver changes. Rows `kind = calibration`, `results/tl_cal8_driver_*.csv`; schemeforge §27 on
+   `coldspray/opencourant-sph`. Then stop and report.
+
 ## Task 2026-11-17-a: cs12 (Bay activation) on TLSPH, then a He/H₂ multi-particle illustration (closed: §26, merged 9b03f79)
 
 **Basis:** DECISIONS 2026-11-17 "Track B continues with cs12 on TLSPH; illustration runs". The code serves Track B;

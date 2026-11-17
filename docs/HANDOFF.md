@@ -4,7 +4,9 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action:** Peter's open decisions on Track B:
+**First action:** merge WSL A task 2026-11-17-b (§27, drivers 2–4 of docs/research/driver-check-2026-11-17.md) and
+apply the spec's outcome rule. The trigger run is deferred until then (D4 in force). Peter's other open decisions on
+Track B:
 - VCIMR's D2 change and the trigger run (task 2026-11-16-a item 4);
 - the proposed outer-driven bond activation driver (`bond.driver` selectable; a zero-code driver-convergence check on
   §25 and the BCT-off survival probe first).
