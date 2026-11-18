@@ -223,7 +223,7 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
 
-## Task 2026-11-17-b12: step 3, outcomes of B06 (open)
+## Task 2026-11-17-b12: step 3, outcomes of B06 (closed: merged, scored; coldspray-results-b06.md)
 
 Predictions are frozen: commit c484494 (`docs/research/coldspray-preregistration-b06.md`,
 `docs/research/data/predictions_b06.csv`); the scorer `src/schemeforge/research/coldspray_blind_b06_score.py` is

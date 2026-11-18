@@ -1,17 +1,16 @@
-# Handoff — 2026-11-17, Track B route closed; reduced route adopted (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-18, B06 scored; single-impact phase at its end point (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action: Track A.** Merge WSL B task b12 (`coldspray/b06-outcomes`, B06 step 3), run
-`python -m schemeforge.research.coldspray_blind_b06_score`, and write docs/research/coldspray-results-b06.md. The
-**B06 pre-registration is frozen** (c484494; the scorer was committed before any outcome). Its content: predictions from Z6, Z18, CS-10 and CS-12 for the
-two B06 conditions (native Al oxide 4.5 nm; ZnO coating 20 nm), frozen before step 3 of the blind protocol. The T3
-measurement request was **dropped** (2026-11-17). Once B06 is scored the single-impact phase ends: write the
-synthesis (DECISIONS 2026-11-07 end point), then choose which of R1–R3 leads. Both are the first
-steps of the adopted reduced-route plan (docs/research/reduced-route-plan.md); the lead option among R1–R3 is chosen
-after them.
+**First action: write the single-impact synthesis** (DECISIONS 2026-11-07 end point, now reached): what is known
+about single-impact v_cr, scored, with the negative results and the open decisive experiment (T3, dropped). Then Peter
+chooses which of R1–R3 leads (docs/research/reduced-route-plan.md).
+
+**2026-11-18: B06 scored** (coldspray-results-b06.md): v_cr 746 (native Al oxide) / 778 m/s (20 nm ZnO); Z6 S1 0.059 /
+0.015 and the baseline 0.16 / 0.19, all out of domain; CS-07 supported by 1.5 m/s with the oxide-type confound;
+CS-12 T1 not refuted (bonded middle annulus, unbonded centre; exposed); T3 untested (request dropped 2026-11-17).
 
 **2026-11-17: Track B's interface-state route is closed** (DECISIONS "Track B interface-state route closed; reduced
 route adopted"), as unverifiable with the references available to this project:
