@@ -1,0 +1,8 @@
+kind,hunch,driver,ell,min_fraction_dq,f_500_block,f_500_particle,f_600_block,f_600_particle,max_fraction_abs,usable,verdict_part1
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,W_ann,1.5um,0.0,0.3333333333333333,0.0,0.2857142857142857,0.0,0.2857142857142857,0,refuted
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,W_ann,2um,0.0,0.3333333333333333,0.0,0.2857142857142857,0.0,0.42857142857142855,0,refuted
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,P_s,1.5um,0.05555555555555555,0.05555555555555555,0.1111111111111111,0.14285714285714285,0.14285714285714285,0.2222222222222222,0,refuted
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,P_s,2um,0.0,0.05555555555555555,0.1111111111111111,0.0,0.047619047619047616,0.23809523809523808,0,refuted
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,ring_Y,1.5um,0.0,0.0,0.05555555555555555,0.0,0.047619047619047616,0.19047619047619047,0,refuted
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,ring_Y,2um,0.0,0.0,0.0,0.047619047619047616,0.0,0.09523809523809523,0,refuted
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,disc_Y,0.5um_disc,0.0,0.05555555555555555,0.0,0.047619047619047616,0.047619047619047616,0.047619047619047616,0,refuted
