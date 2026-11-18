@@ -1257,3 +1257,20 @@ is scored, B05 closed without predictions, B06 frozen (no thickness series in it
 - The end point of the single-impact phase (DECISIONS 2026-11-07) is reached once B06 is scored: B03, B05, B12 are
   closed, B07 and B16 have no v_cr, and the T3 request is dropped. Then the synthesis is written.
 - The reduced-route plan's step 2 is done; which of R1–R3 leads is chosen after B06.
+
+## 2026-11-18 — CS-20 and CS-21 registered from the multi-particle brainstorm (Peter)
+*Context:* brainstorm docs/research/multi-particle-brainstorm-2026-11-18.md, items #1 (jetting window from the contact
+radius) and #2 (paired simulations). On drafting, #1 as an in-solver bond was found to need v_edge, which does not
+converge (driver-check-2026-11-17 §6.1), and the closed Track B route. Its rigid-geometry part is already in
+coldspray-kinematics.md and R3. For #2, the motivating facts are seen data and the film is not modelled.
+
+*Decision:*
+1. **CS-20** (#1 narrowed to R3): the inner radius of the bonded ring is set by the rigid subsonic-edge switch,
+   r_in/R = k V/sqrt(V^2 + c^2); judged on ratios, in which k cancels. Zero-code. Opposite in direction to CS-12 T1.
+2. **CS-21** (#2 registered as is, cold-worked target only): paired differences of the §27 drivers converge on the
+   §25 deck where absolute values do not. This is a reference-host check and does not reopen the 3D in-solver route.
+3. **Budget rule 1, "obtainable data" part, waived for both:** no unseen source is named for CS-20 or for CS-21 part 2.
+
+*Consequences:* hunch count **5 of 5**. A sixth hunch needs a retirement or parking first (CS-12 and CS-20 have no
+data source). CS-21 part 1 needs a WSL A task (six runs, about 8 minutes of engine time, plus post-processing as in
+§27); none has been written yet.

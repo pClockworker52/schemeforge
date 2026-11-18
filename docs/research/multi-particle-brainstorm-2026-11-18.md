@@ -45,6 +45,10 @@ things that list does not mention:
 - **#2's motivating facts are seen data.** The +4–17 %, −12 % and +15 % effects, and the ring maps exposed for CS-12
   T1, cannot test it. Under the hunch budget, registration needs a named unseen source.
 
+**Registered 2026-11-18:** #1, narrowed to the R3 ring-radius form, as
+[CS-20](coldspray-hunch-cs20.md); #2, cold-worked target only, as [CS-21](coldspray-hunch-cs21.md) (DECISIONS
+2026-11-18).
+
 ## Dropped after filtering
 
 | Idea | Reason |
