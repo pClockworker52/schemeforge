@@ -13,20 +13,19 @@ A new hunch (on either track) is registered only if both hold:
 2. **At most five hunches are open and untested.** "Open and untested" means registered, not parked, and without a
    verdict on unseen data. To register a sixth, one is retired: marked "retired" here, with one line on why.
 
-Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (CS-18 registered): 4 of 5. Count on 2026-11-13 (CS-18 refuted at T-S0): 3 of 5. Count on 2026-11-14 (CS-18b registered): 4 of 5. Count on 2026-11-14 (CS-18b refuted at T-S1): 3 of 5. Count on 2026-11-18 (CS-20 and CS-21 registered): 5 of 5. **Count on 2026-11-18 (CS-12 retired, CS-22 registered): 5 of 5.**
+Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (CS-18 registered): 4 of 5. Count on 2026-11-13 (CS-18 refuted at T-S0): 3 of 5. Count on 2026-11-14 (CS-18b registered): 4 of 5. Count on 2026-11-14 (CS-18b refuted at T-S1): 3 of 5. Count on 2026-11-18 (CS-20 and CS-21 registered): 5 of 5. Count on 2026-11-18 (CS-12 retired, CS-22 registered): 5 of 5. **Count on 2026-11-18 (CS-21 refuted at part 1): 4 of 5.**
 
 | Hunch | Why it is open and untested |
 |---|---|
 | CS-10 | no blind paper so far reported particle strength |
 | CS-17 | no unseen substrate series known |
 | CS-20 | no unseen ring-map source with r_in at two velocities or two materials; [coldspray-hunch-cs20.md](coldspray-hunch-cs20.md) |
-| CS-21 | part 1 needs six paired runs on the §25 deck (fork binary), WSL A task 2026-11-18-a; [coldspray-hunch-cs21.md](coldspray-hunch-cs21.md) |
-| CS-22 | part 1 needs 7 TLSPH runs with a cs12 start-time key, WSL A task 2026-11-18-a; [coldspray-hunch-cs22.md](coldspray-hunch-cs22.md) |
+| CS-22 | part 1 needs 7 TLSPH runs after the amended fork changes (A1), WSL A task 2026-11-18-b; [coldspray-hunch-cs22.md](coldspray-hunch-cs22.md) |
 
 Not counted:
 - retired: CS-12 (2026-11-18, Peter): its decisive test T3 has no data source since the request was dropped on 2026-11-17, and its in-solver form bonds the pole first (opencourant-verification.md §26);
 - parked: CS-14 / 14b (2026-11-07, DECISIONS "Thermal question and CS-14b parked");
-- tested hunches: CS-07 (also on B06: supported, Δ +32 m/s against w 30.5, oxide-type confound; coldspray-results-b06.md), CS-08, CS-09, CS-11, CS-13c, CS-16, CS-18 (refuted at T-S0, 2026-11-13), CS-18b (refuted at T-S1, 2026-11-14; [coldspray-hunch-cs18b.md](coldspray-hunch-cs18b.md));
+- tested hunches: CS-07 (also on B06: supported, Δ +32 m/s against w 30.5, oxide-type confound; coldspray-results-b06.md), CS-08, CS-09, CS-11, CS-13c, CS-16, CS-18 (refuted at T-S0, 2026-11-13), CS-18b (refuted at T-S1, 2026-11-14; [coldspray-hunch-cs18b.md](coldspray-hunch-cs18b.md)), CS-21 (part 1 refuted, 2026-11-18, opencourant-verification.md §28; [coldspray-hunch-cs21.md](coldspray-hunch-cs21.md));
 - zoo members (Z18 etc.).
 
 ```yaml

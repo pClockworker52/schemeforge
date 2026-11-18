@@ -14,6 +14,18 @@ Status:
 - **Budget:** CS-12 retired, CS-22 registered, so the count stays 5 of 5.
 - **Kept minimal on purpose:** one speed, one fork time, three meshes, 7 runs. A pass justifies widening it later.
   A fail ends the route cheaply.
+- **Amendment A1, 2026-11-18 (Peter; DECISIONS 2026-11-18, "Merge of §28–§29"), before any CS-22 run.** As frozen,
+  the bond setting could not be reached. cs12 refuses Y′ < 0, so f_B = 1 within 10⁻³ is impossible
+  (opencourant-verification.md §29). This was a drafting error: the parser bounds were not checked. A1 changes only
+  the fork changes and the bond line in `parameters` (marked [A1]):
+  - the parser accepts Y′ < 0, and Y′ = −10⁶;
+  - off-skin particles in contact (sentinel Y = −1) bond as well, an exception to CS12-DESIGN §2 for this setting
+    only;
+  - p_E = 0 stays, so "every contacting pair" means every pair with g < 0 and previous-cycle p_n,ij > 0;
+  - a key `bond.t_on` with default 0, so existing decks are unchanged.
+  The statement, mechanism, kill criterion and prediction are unchanged. A1 was written after §28 (CS-21 refuted)
+  was seen. §28 concerns another host (2D quads), another quantity (local drivers) and twins without a shared
+  history, so it bears on CS-22's odds, not on its rule.
 
 ```yaml
 - id: CS-22
@@ -23,7 +35,7 @@ Status:
     reason for the 2026-11-17 closure and for rejecting the one-way bond, DECISIONS 2026-11-15).
   statement: >-
     Run the same impact twice. The off branch never bonds. The on branch is identical except that, from
-    t_b = 0.5 t_p on, every contacting pair bonds. The difference in rebound, dR = e(on) - e(off), converges under
+    t_b = 0.5 t_p on, every contacting pair bonds (A1: every pair with p_n > 0). The difference in rebound, dR = e(on) - e(off), converges under
     refinement, although the local edge state does not.
   mechanism: >-
     Up to t_b the two branches are the same computation, so every error made there cancels exactly in dR. After t_b
@@ -36,8 +48,9 @@ Status:
     - Deck: the §26 survival deck (quarter model, CS-18b TL settings, BCT off, F2, stfac 3), with the material set to
       P-HG-Al (§8.3/§25). R = 10 um, V = 600 m/s, t_end = 2.0 D/V.
     - Fork time: t_b = 0.5 t_p, with t_p = 0.707 D/V from §25.
-    - Bond: cs12 with p_E = 0 and Y' set so far below any skin Y that f_B = 1 within 1e-3 (value set in the fork
-      design note before any run). Law `tie`, sigma_B = f_B sigma_flow,ij(t) frozen at damage onset (§26).
+    - Bond [A1]: cs12 with p_E = 0 and Y' = -1e6 (parser bound lowered to allow Y' < 0), so f_B >= 1 - 1e-3 for
+      every facet with A/A0 >= 1e-3; off-skin particles in contact bond too; activation from bond.t_on = t_b
+      (default 0). Was: "Y' set so far below any skin Y that f_B = 1 within 1e-3". Law `tie`, sigma_B = f_B sigma_flow,ij(t) frozen at damage onset (§26).
       delta_c = 31.25 nm on every mesh (the §26 survival value; a placeholder, not a physical value).
     - Rebound e: particle centre-of-mass z-velocity at t_end divided by V, positive away from the target.
     - Meshes: R/8, R/16, R/32.
@@ -68,9 +81,17 @@ Status:
 
 ## Fork change needed (WSL A, before any run)
 
-**One key: the activation start time** (e.g. `cs12.t_on`), unless one exists. A short design note comes before the
-code, then a T-A0 rerun (bit-identical). The bond-everywhere setting uses existing cs12 inputs (p_E = 0, low Y′). If
-cs12 rejects such a Y′, WSL A stops and reports; it does not write a new mode.
+**As amended (A1).** A short design note comes before any code. Then:
+1. the `bond.Yp` lower bound is removed, so Y′ < 0 is accepted;
+2. off-skin particles may bond when Y′ < −1, for this setting only;
+3. `bond.t_on` is added, with default 0;
+4. a T-A0 rerun, which must be bit-identical.
+
+p_E stays 0 and the p_n,ij > p_E test is unchanged. Nothing beyond 1–3 is changed. If more turns out to be needed,
+WSL A stops and reports.
+
+*Original (superseded by A1):* "One key: the activation start time (e.g. `cs12.t_on`), unless one exists. … If cs12
+rejects such a Y′, WSL A stops and reports; it does not write a new mode."
 
 ## Runs
 

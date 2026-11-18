@@ -19,3 +19,4 @@ Companion to [multi-particle-spec.md](multi-particle-spec.md). Use it in a secon
 | One-way bond (criterion evaluated afterwards) | proposed, not adopted (the bond must act in the solver) | DECISIONS 2026-11-15 |
 | Closed-form v_cr laws (sound speed, strength plus oxide, oxide jet model, substrate hardness) | sound speed works for pure metals; strength and hardness terms refuted; oxide-thickness test (T3) open | synthesis 2026-11-18 |
 | Eulerian / ALE, MPM, peridynamics, updated-Lagrangian SPH (Dai) | read, not run; none shows converged interface states | bonding_methods_reading.md, route review |
+| Paired differences (twins sharing the mesh, block hardened) of the outer drivers on 2D quads (CS-21) | refuted: no difference usable (0–0.33 of points); pairing does not cancel the edge error | §28 |

@@ -1301,3 +1301,22 @@ bond-on branch needs an in-solver bond, which is on Track B. That route was clos
 - Hunch count **5 of 5**.
 - WSL A task 2026-11-18-a covers CS-21 part 1 (six runs on the §25 deck) and CS-22 part 1 (one fork key, then 7 runs).
 - CS-21 no longer gates #9.
+
+## 2026-11-18 — Merge of §28–§29: CS-21 refuted; CS-22 amended before any run (Peter)
+*Context:* WSL A task 2026-11-18-a, merged a488f57.
+- §28: CS-21 part 1 is refuted by its frozen rule. No paired difference is usable at any ℓ (fractions 0–0.33; 0.80
+  needed), and pairing does not cancel the edge error on 2D quads. The neutrality check and the pipeline check pass.
+- §29: CS-22 stopped at the fork design note, with no runs and no verdict. cs12 refuses Y′ < 0, so the frozen setting
+  "f_B = 1 within 10⁻³" cannot be reached. This was a drafting error in the registration (the parser bounds were not
+  checked), not a result.
+
+*Decision:*
+1. **CS-21 is refuted at part 1.** Part 2 is not run. The result is recorded in multi-particle-tried.md.
+2. **CS-22 is amended (A1) before any run**, rather than re-registered:
+   - the parser accepts Y′ < 0, and Y′ = −10⁶;
+   - off-skin particles in contact bond as well (an exception to CS12-DESIGN §2, for this setting only);
+   - p_E = 0 stays ("every contacting pair" means every pair with p_n > 0);
+   - a `bond.t_on` key is added, with default 0.
+   The statement, mechanism, kill criterion and prediction are unchanged. A1 was written after §28 was seen.
+
+*Consequences:* hunch count **4 of 5**. WSL A task 2026-11-18-b runs the A1 fork changes and CS-22 part 1.

@@ -1,5 +1,7 @@
 # Cold spray: hunch CS-21 (paired differences converge where absolute edge drivers do not), registration (frozen)
 
+**Part 1 refuted 2026-11-18** (opencourant-verification.md §28): no paired difference is usable (fractions 0–0.33 against 0.80). Part 2 is not run. The registration below is unchanged.
+
 Drafted 2026-11-18 by claude from brainstorm item #2 ([multi-particle-brainstorm-2026-11-18.md](multi-particle-brainstorm-2026-11-18.md)).
 Registered on Peter's decision (chat 2026-11-18, DECISIONS 2026-11-18).
 - **Registered and frozen 2026-11-18**, before any paired run.

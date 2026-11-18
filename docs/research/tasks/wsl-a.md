@@ -5,7 +5,30 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-18-a: CS-21 part 1 and CS-22 part 1 (open)
+## Task 2026-11-18-b: CS-22 part 1 with amendment A1 (open)
+
+**Basis:** DECISIONS 2026-11-18, "Merge of §28–§29". **Judge, frozen:**
+[../coldspray-hunch-cs22.md](../coldspray-hunch-cs22.md), with amendment A1 (in the commit that adds this task).
+Cite it in every row. Run jobs one at a time. If anything beyond A1 is needed, stop and report.
+
+1. **Fork changes (A1)** on branch `cs12`. A short design note first (fork SPEC-TL-b), then:
+   - remove the `bond.Yp` lower bound;
+   - let off-skin particles bond when Y′ < −1, for this setting only;
+   - add `bond.t_on` with default 0.
+   Leave `bond.pE` and the p_n,ij > p_E test unchanged. Build, then rerun T-A0, which must be bit-identical.
+2. **Kill (a):** R/8 at 600 m/s.
+   - The on branch: Y′ = −10⁶, p_E = 0, `bond.t_on` = 1 s (never active within the run).
+   - The off branch: bond `none`.
+   - Compare all written metrics. If any differs, CS-22 is refuted: stop and report.
+3. **Kill (b):** off and on, with `bond.t_on` = 0.354 D/V = 11.8 ns (0.5 t_p; D/V = 33.3 ns), at R/8, R/16 and R/32. 600 m/s, to 2.0 D/V,
+   on the §26 deck with P-HG-Al and δ_c = 31.25 nm.
+   - Check R/32's memory before starting it. If it does not fit, CS-22 is inconclusive: stop and report.
+   - Report e(off) at each mesh, and the bonded-pair count at t_end. Both are reported, not judged.
+   Rows: `results/tl_cs22_*.csv`.
+4. Write up as a new section of opencourant-verification.md on `coldspray/opencourant-sph`, with a verdict line
+   against the frozen rule. Then stop and report.
+
+## Task 2026-11-18-a: CS-21 part 1 and CS-22 part 1 (closed: §28 CS-21 refuted; §29 CS-22 stopped at the design note; merged a488f57)
 
 **Basis:** DECISIONS 2026-11-18, "CS-20 and CS-21 registered" and "Track B reopened for the forked bond response".
 **Judges, frozen:**
