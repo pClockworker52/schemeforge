@@ -2741,3 +2741,77 @@ survival 4.5 min, plus diagnostics).
 The spec reads "no usable driver → the outer-driven activation route has no stable input; the modeller recommends
 stopping Track B (Peter decides)". Whether a(t) alone counts as a usable driver for that rule is for the modeller and
 Peter (the spec's §5 says a(t) alone would not be enough to drive a local bond law).
+
+## 28. CS-21 part 1: paired differences on the §25 quad deck (task 2026-11-18-a item 1; calibration)
+
+Judge: [coldspray-hunch-cs21.md](coldspray-hunch-cs21.md), frozen in e0cf087; every row cites it. Plan committed in
+the fork before any run: SPEC-TL-b §13.1 `fdac575ba`; results §13.2 `a6ed04190`. Script `hvi/scripts/tl_cs21.py`.
+Rows `opencourant/results/tl_cs21_{runs,neutral,series,conv,usable}.csv`.
+
+**Runs.** Six hardened twins of the §25 runs (600 and 500 m/s × R/64, R/128, R/256), binary `d0500106d`, one at a
+time, peak RSS ≤ 0.7 GB, 22 min engine time in all. The §25 deck gives both parts one material card. The twin adds a
+second LAW4 + Grüneisen pair for the block, identical except A' = 425.6 MPa. The §25 annealed runs were complete on
+disk and were not rerun.
+- **Neutrality check** (labelled): the same two-card deck with A' = A reproduces §25 at 600 m/s R/64. All 45 VTK
+  frames are byte-identical and the time history is identical.
+- **Pipeline check:** the absolute-value fractions on the same frames equal §27's in all 24 cells.
+
+**Window.** Time-step collapse ends both R/256 twins: 600 m/s annealed 0.0243 D/V, hardened 0.0231; 500 m/s 0.0212,
+0.0238. No coarser run stops earlier. The judged outputs are 3–9 at 600 m/s (7) and 3–8 at 500 m/s (6). Both are
+≥ 5, so the case can be judged.
+
+**Fraction of dq points that converge** (hunch rule with the 1 % no-signal clause; ring and disc drivers pooled over
+0.25 / 0.5 / 0.75 a):
+
+| driver | ℓ | 600 particle | 600 block | 500 particle | 500 block | usable | best absolute fraction |
+|---|---|---|---|---|---|---|---|
+| W_ann | 1.5 µm | 0.00 | 0.29 | 0.00 | 0.33 | no | 0.29 |
+| W_ann | 2 µm | 0.00 | 0.29 | 0.00 | 0.33 | no | 0.43 |
+| P_s | 1.5 µm | 0.14 | 0.14 | 0.11 | 0.06 | no | 0.22 |
+| P_s | 2 µm | 0.05 | 0.00 | 0.11 | 0.06 | no | 0.24 |
+| ring Y | 1.5 µm | 0.05 | 0.00 | 0.06 | 0.00 | no | 0.19 |
+| ring Y | 2 µm | 0.00 | 0.05 | 0.00 | 0.00 | no | 0.10 |
+| disc Y − 1 | 0.5 µm | 0.05 | 0.05 | 0.00 | 0.06 | no | 0.05 |
+
+Median mesh differences of dq over all judged points, |dq256 − dq128| / |dq256| and |dq128 − dq64| / |dq128|:
+
+| driver, side | R/128 → R/256 | R/64 → R/128 | dq / q (annealed) | note |
+|---|---|---|---|---|
+| W_ann, block | 6–7 % | 15–17 % | +0.49 | closest to passing; above 3.5 % at most points |
+| W_ann, particle | — | — | −0.001 to −0.007 | hardening the block barely changes particle-side work, so 9–11 of 13 points per ℓ have no signal |
+| P_s | 19–36 % | 14–27 % | −0.32 to −0.45 | |
+| ring Y | 40–76 % | 22–62 % | | |
+| disc Y − 1, block | 12 % | 9 % | | |
+| disc Y − 1, particle | 45 % | 44 % | | |
+
+Pairing does not cancel the edge error here. For P_s, ring Y and disc Y − 1, the mesh differences of dq are as large
+as those of the absolute values, or larger.
+
+**Verdict line (hunch part-1 rule): CS-21 part 1 refuted.** No driver is usable at any ℓ, disc Y − 1 included. Both
+speeds have ≥ 5 judged outputs, and no hardened twin failed before the third output. Part 2 is not run.
+- Against the author's prediction "supported 0.25": the outcome fell on the 0.75 side.
+- "Most likely P_s or disc Y − 1 at 0.25 a, block side": the block side was better only for W_ann and disc Y − 1,
+  and neither came close.
+- Side note: the hardened 500 m/s R/64 twin ran to t_end; the annealed one collapsed at 0.22 D/V.
+
+## 29. CS-22 part 1: stopped at the fork design note (task 2026-11-18-a items 2–4)
+
+Judge: [coldspray-hunch-cs22.md](coldspray-hunch-cs22.md), frozen in e0cf087. Fork SPEC-TL-b §14 `a6ed04190`.
+
+**Stop, as the task says ("if cs12 rejects such a Y′, stop and report; do not write a new mode").**
+- cs12 reads `bond.Yp` with lower bound 0 and refuses values ≥ 1 (fork `engine/source/elements/sph/hvi_mod.F90`
+  lines 204–206). A negative Y′ stops the run with "value out of range". The cs12 binary `01efb1558` is the last
+  engine commit on the branch.
+- With Y′ ≥ 0, f_B = (Y − Y′)/(1 − Y′) ≤ Y. Reaching f_B ≥ 1 − 10⁻³ needs 1 − Y ≤ 10⁻³, i.e. a skin facet area
+  grown 1000-fold. So no accepted Y′ gives f_B = 1 within 10⁻³.
+- Not done: no `t_on` key, no code, no build, no T-A0, no runs. Kill (a) and kill (b) are not evaluated. **CS-22
+  part 1: not run (no verdict).**
+
+**What a fix would need** (for the modeller and Peter; the fork's §14 has details):
+1. Allow Y′ < 0 in the parser (one line). Y′ = −10⁶ gives f_B ≥ 1 − 10⁻³ for every facet with A/A₀ ≥ 10⁻³.
+2. Decide on off-skin particles. With Y′ < −1, particles that are not on the skin (sentinel Y = −1) would also bond,
+   which goes against CS12-DESIGN §2 ("cannot bond"). That matches "every contacting pair bonds", but it changes a
+   stated cs12 rule.
+3. Add the start-time key, e.g. `bond.t_on` with default 0, so existing decks are unchanged.
+
+Whether 1 and 2 count as "a new mode" is the modeller's decision.

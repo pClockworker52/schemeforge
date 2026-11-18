@@ -1,0 +1,2 @@
+kind,hunch,check,frames_ref,frames_neutral,frames_byte_identical,th_identical,th_max_abs_diff,pass
+calibration,schemeforge docs/research/coldspray-hunch-cs21.md @ e0cf087,"neutral two-material deck vs section 10, 600 m/s R/64",45,45,45,1,0.0,1
