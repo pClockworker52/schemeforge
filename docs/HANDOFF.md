@@ -1,16 +1,51 @@
-# Handoff — 2026-11-18, B06 scored; single-impact phase at its end point (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-18 (late): brainstorm done; Track B reopened for the forked bond response; CS-22 waits on WSL A (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**Brainstorm session (Peter, 2026-11-18):** new approaches for multi-particle simulation on OpenCourant (TLSPH
-preferred). Start from docs/research/multi-particle-spec.md **only**; generate ideas; then filter them against
-docs/research/multi-particle-tried.md. Do not read the solver log or STATUS history before the first idea list, to
-avoid anchoring. Then register what survives as hunches under the budget (3 of 5 open).
+**First action: check WSL A task 2026-11-18-b.** Fetch `coldspray/opencourant-sph`.
+- **If WSL A has pushed:** merge with a merge commit. The diff should touch only opencourant-verification.md (§30)
+  and the results rows. Then judge CS-22 part 1 against its frozen rule, as amended by A1
+  (docs/research/coldspray-hunch-cs22.md):
+  - kill (a): the never-activated on branch is bit-identical to the off branch;
+  - kill (b): ΔR converges over R/8, R/16, R/32 by the §3 rule, and |ΔR32| ≥ 0.01.
+  Record the verdict in coldspray-hunches.md, DECISIONS and STATUS, and the author's prediction against it.
+- **If WSL A has not pushed:** Track B has nothing unblocked. Track A's open item is Peter's choice of R1–R3
+  (docs/research/reduced-route-plan.md).
 
-**First action: Peter chooses which of R1–R3 leads** (docs/research/reduced-route-plan.md). The single-impact
-synthesis is written (docs/research/coldspray-synthesis-single-impact.md, 2026-11-18).
+**Session 2026-11-18 (cloud, later), in order:**
+1. **Brainstorm** from multi-particle-spec.md alone, filtered against multi-particle-tried.md
+   (multi-particle-brainstorm-2026-11-18.md, afd8f52 and later). 30 raw ideas; 8 kept; #9, the forked bond response
+   (a synthesis of #2 paired runs and #5 rollback), added afterwards.
+2. **CS-20** (subsonic-edge ring radius, zero-code; no unseen data source) and **CS-21** (paired differences on the
+   §25 quad deck) registered (29a38e3).
+3. **Peter: CS-12 retired; Track B reopened for the forked bond-response route only.** Local interface-state drivers
+   stay closed, and the trigger run and VCIMR's D2 change stay dropped. **CS-22 frozen** (e0cf087), simplified to:
+   - Al–Al at 600 m/s on TLSPH with cs12;
+   - a fork at t_b = 0.5 t_p, after which every contacting pair bonds;
+   - R/8, R/16, R/32 and 7 runs; R/64 is out of reach (about 100 GB estimated).
+   The "obtainable data" part of rule 1 is waived for part 2 (the bistable band). The mesh study stays: Peter asked
+   whether it could be skipped, and it is the decisive test.
+4. **§28–§29 merged (a488f57):**
+   - **CS-21 part 1 refuted.** No paired difference is usable (0–0.33 of points against 0.80), so pairing does not
+     cancel the edge error on 2D quads.
+   - **CS-22 not run.** cs12 refuses Y′ < 0, so the frozen bond setting could not be reached; this was a modeller's
+     drafting error. Peter chose an **amendment before any run (A1, 8e6d95e)**:
+     - Y′ < 0 allowed, with Y′ = −10⁶;
+     - off-skin contacting particles bond;
+     - p_E = 0 kept;
+     - a `bond.t_on` key with default 0.
+     The rule is unchanged. WSL A task 2026-11-18-b.
+5. **Switch-radius check: PASS** (switch-check-2026-11-18.md; spec 7465e0f, result b6f23cc; zero-code on the §25
+   a(t) rows). The switch radius a_c from a fitted a(t) = A t′^p converges: last step 2.35 % at 600 m/s and 2.88 % at
+   500 m/s. Margins are thin, p alone drifts 6.5 % at 600 m/s, a_c is extrapolated, and the host is 2D quads.
+   a_c/a_c,rigid ≈ 1.14. This makes the **contact map** (run 1's converged a(t) decides where run 2 bonds, leaving the
+   centre out) a candidate trigger for CS-22 part 2, but only if part 1 passes and only on a host that resolves
+   a_c ≈ 1.1–1.3 µm. Nothing is registered.
+6. **Discussed in chat, not recorded at Peter's wish:** the wall-function (Fluent) analogy, and why it fails here.
+   The first layer is the badly represented one (§22), no outer input converges (§27), there is no overlap layer at
+   a separating edge, and there is no calibration data.
 
 **2026-11-18: B06 scored** (coldspray-results-b06.md): v_cr 746 (native Al oxide) / 778 m/s (20 nm ZnO); Z6 S1 0.059 /
 0.015 and the baseline 0.16 / 0.19, all out of domain; CS-07 supported by 1.5 m/s with the oxide-type confound;
@@ -139,7 +174,7 @@ it from §23, with frozen binary, decks and predictions, and Peter approves the 
   coating) and is not a thickness series, so it does not supply T3. B07 and B16 have no v_cr. B06 is frozen
   (c484494), step 3 is WSL B b12; the T3 measurement request was dropped (2026-11-17).
 - B03 and B12 are merged as exposed (d67f72c).
-- Open data hunches: **CS-10, CS-12, CS-17.** Details: docs/research/coldspray-hunches.md.
+- Open data hunches: **CS-10, CS-17, CS-20** (CS-12 retired 2026-11-18). Details: docs/research/coldspray-hunches.md.
 
 **B. SPH host track:** a solver host for an interface (bonding) law. Peter's requirements (DECISIONS 2026-11-12,
 amended 2026-11-14):
@@ -148,6 +183,11 @@ amended 2026-11-14):
 - interface outputs judged as **averages over 0.5 µm**, point values at the edge reported only;
 - since the route review 2026-11-15: p_n and Y measured on a measurement-only surface skin (0.5 µm surface discs),
   depth-band stresses reported only; a dead-end trigger is in force (DECISIONS 2026-11-15).
+
+**Route state:**
+- The interface-state route was closed on 2026-11-17 (no local driver converges).
+- It was **reopened on 2026-11-18 for the forked bond-response route only** (CS-22; DECISIONS "Track B reopened for
+  the forked bond response").
 
 ## 2. History of track B, in one table
 
@@ -192,9 +232,20 @@ amended 2026-11-14):
 
 ## 4. Hunch budget
 
-**3 of 5:** CS-10, CS-12, CS-17 (CS-18b refuted at T-S1, 2026-11-14).
+**4 of 5:** CS-10, CS-17, CS-20, CS-22.
+- Retired: CS-12 (2026-11-18).
+- Refuted: CS-21 part 1 (§28, 2026-11-18) and CS-18b (T-S1, 2026-11-14).
 
 ## 5. Open for Peter
+
+0. **New (2026-11-18), in order:**
+   1. After CS-22 part 1: if it passes, decide whether the contact map (switch check) becomes the part-2 trigger,
+      and on which host. TLSPH resolves a_c only at about R/32. If it fails, Track B closes again.
+   2. Which of R1–R3 leads (reduced-route-plan.md), still open.
+   3. CS-20 has no unseen ring-map source, so it is a candidate for parking (its author gave 0.3 odds that a source
+      appears within three months).
+
+Older items (state of 2026-11-15; items 1–3 lapsed with the 2026-11-17 closure, kept for the record):
 
 1. Track B is settled by the route review until the trigger run: nothing open for Peter until §23 arrives (the
    trigger-run task is drafted from §23 and frozen with Peter). If U_ref > 1.75 %, Peter decides how the reference
@@ -209,7 +260,7 @@ amended 2026-11-14):
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `tlsph`; results to `coldspray/opencourant-sph` | — (no open task; Track B route closed 2026-11-17) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-18-b** (CS-22 part 1 with A1: fork changes, kill (a), kill (b)); 2026-11-18-a closed (§28–§29, merged a488f57) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken
@@ -233,7 +284,10 @@ amended 2026-11-14):
 | What | Where |
 |---|---|
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log, all sections §1–§23 (§24 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log, all sections §1–§29 (§30 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Multi-particle brainstorm | docs/research/multi-particle-spec.md, multi-particle-tried.md, multi-particle-brainstorm-2026-11-18.md |
+| Driver and switch checks | docs/research/driver-check-2026-11-17.md; switch-check-2026-11-18.md (script scripts/switch_check.py) |
+| Today's hunches | coldspray-hunch-cs20.md, coldspray-hunch-cs21.md (refuted), coldspray-hunch-cs22.md (frozen with A1) |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
 | Hunches | coldspray-hunches.md (index), coldspray-hunch-cs18.md, coldspray-hunch-cs18b.md, and the earlier CS files |
 | Referee | sph-contact-referee-2026-11-11.md |
