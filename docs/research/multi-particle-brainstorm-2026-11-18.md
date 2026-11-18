@@ -19,7 +19,7 @@ impact) and the deposit level are untouched.
 
 | # | Idea | Mechanism | Predicted effect | Kill criterion | Label |
 |---|---|---|---|---|---|
-| 1 | **Kinematic jetting window, bond switched on in the solver from r_c(t)** | Edge speed v_e = dr_c/dt and collision angle β(r_c) come from contact-radius kinematics alone. Film is cleaned (and the bond activates as the edge passes) only where the edge is subsonic and β lies inside a window. Early on, v_e is supersonic, so there is no jet and the pole stays unjoined. That gives the ring without a local surface state. | Inner ring radius predicted from c and V without a fit. v_cr follows from the bonded ring surviving rebound under the existing cohesive law. | dr_c/dt not converged R/32→R/64 at the subsonic crossing; or predicted inner/outer ring radius outside ring-map scatter; or no ring at any V | variant of explosive-welding jetting criteria (Walsh 1953; weldability window); check overlap with the "oxide jet model" closed form |
+| 1 | **Kinematic jetting window, bond switched on in the solver from r_c(t)** | Edge speed v_e = dr_c/dt and collision angle β(r_c) come from contact-radius kinematics alone. Film is cleaned (and the bond activates as the edge passes) only where the edge is subsonic and β lies inside a window. Early on, v_e is supersonic, so there is no jet and the pole stays unjoined. That gives the ring without a local surface state. | Inner ring radius predicted from c and V without a fit. v_cr follows from the bonded ring surviving rebound under the existing cohesive law. | dr_c/dt not converged R/32→R/64 at the subsonic crossing; or predicted inner/outer ring radius outside ring-map scatter; or no ring at any V | variant of explosive-welding jetting criteria (Walsh 1953); **in the project record already: coldspray-kinematics.md (u = V cot β, switch radius a_c/R 0.09–0.27) and reduced-route option R3** (see correction below) |
 | 2 | **Paired (differential) simulations** | Use the same discretisation and change one factor (film, cold-worked target, sprayed surface). The non-convergent edge error is mostly common-mode, so Δ may converge where absolute values do not. The experimental facts are relative anyway (+4…17 %, −12 %, +15 %). | Δv_cr signs and magnitudes for the three facts | Δ of the driver changes by more than half the experimental effect between R/32 and R/64; or wrong sign | untried; generic common-mode rejection |
 | 3 | **Weak (statistical) convergence** | Run ensembles over lattice jitter or seeds. Require the *distribution* of edge quantities, or P(bond), to converge rather than pointwise values. This tests the working assumption directly and matches the statistical nature of v_cr. | Distribution moments stable under refinement even though samples are not | KS distance or mean shift R/32→R/64 not smaller than R/16→R/32 | untried |
 | 4 | **Edge intensity factor (contour integral)** | Treat the moving joining edge like a crack tip. Local fields diverge, but the energy flux into the edge (dynamic J-type, path-independent) may converge. Join where G_edge ≥ film fracture + adhesion energy. | Convergent edge driver, distinct from annulus averages | Path dependence > 10 % across contours, or no convergence (risk: §27 annulus plastic work failed) | variant of dynamic fracture mechanics (J-integral) |
@@ -30,6 +30,20 @@ impact) and the deposit level are untouched.
 
 Add-ons that need #1: stochastic hazard rate from the convergent kinematics (v_cr becomes the 50 % point by
 construction), and the energy criterion (bond energy over the ring ≥ elastic rebound energy, both integral).
+
+## Correction (2026-11-18, after the filter)
+
+The filter used only multi-particle-tried.md. A later check of the record (while drafting hunches) found three
+things that list does not mention:
+- **#1 is mostly in the record already.** coldspray-kinematics.md has the Walsh/Hassani-Gangaraj subsonic-edge
+  switch on rigid geometry, and reduced-route option R3 is the kinematic estimate of where bonding starts. Only two
+  parts of #1 are new to the record: reading the switch radius a_c as the inner radius of the ring, and an in-solver
+  bond. The in-solver bond needs the Track B route, which was closed on 2026-11-17.
+- **v_edge = da/dt from the solver does not converge** (driver-check-2026-11-17.md §6.1: 0 of 7 and 0 of 6 points),
+  although a(t) does. #1's first kill test is therefore already failed for raw differences. Only a derivative of a
+  fitted a(t), or the rigid-geometry formula, remains.
+- **#2's motivating facts are seen data.** The +4–17 %, −12 % and +15 % effects, and the ring maps exposed for CS-12
+  T1, cannot test it. Under the hunch budget, registration needs a named unseen source.
 
 ## Dropped after filtering
 
