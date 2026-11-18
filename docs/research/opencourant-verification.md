@@ -2746,17 +2746,18 @@ Peter (the spec's §5 says a(t) alone would not be enough to drive a local bond 
 
 Judge: [coldspray-hunch-cs21.md](coldspray-hunch-cs21.md), frozen in e0cf087; every row cites it. Plan committed in
 the fork before any run: SPEC-TL-b §13.1 `fdac575ba`; results §13.2 `a6ed04190`. Script `hvi/scripts/tl_cs21.py`.
-Rows `opencourant/results/tl_cs21_{runs,neutral,series,conv,usable}.csv`.
+Rows `opencourant/results/tl_cs21_{runs,neutral,series,conv,usable}.csv`. The
+`fork_sha` column holds the source tree's engine commit (01efb1558); the binary was `d0500106d` (`oc_root`).
 
 **Runs.** Six hardened twins of the §25 runs (600 and 500 m/s × R/64, R/128, R/256), binary `d0500106d`, one at a
-time, peak RSS ≤ 0.7 GB, 22 min engine time in all. The §25 deck gives both parts one material card. The twin adds a
+time, peak RSS ≤ 0.7 GB (`/usr/bin/time`), 22 min engine time in all. The §25 deck gives both parts one material card. The twin adds a
 second LAW4 + Grüneisen pair for the block, identical except A' = 425.6 MPa. The §25 annealed runs were complete on
 disk and were not rerun.
 - **Neutrality check** (labelled): the same two-card deck with A' = A reproduces §25 at 600 m/s R/64. All 45 VTK
   frames are byte-identical and the time history is identical.
 - **Pipeline check:** the absolute-value fractions on the same frames equal §27's in all 24 cells.
 
-**Window.** Time-step collapse ends both R/256 twins: 600 m/s annealed 0.0243 D/V, hardened 0.0231; 500 m/s 0.0212,
+**Window.** Time-step collapse ends both R/256 twins: 600 m/s annealed 0.0244 D/V, hardened 0.0231; 500 m/s 0.0212,
 0.0238. No coarser run stops earlier. The judged outputs are 3–9 at 600 m/s (7) and 3–8 at 500 m/s (6). Both are
 ≥ 5, so the case can be judged.
 
@@ -2790,8 +2791,8 @@ as those of the absolute values, or larger.
 **Verdict line (hunch part-1 rule): CS-21 part 1 refuted.** No driver is usable at any ℓ, disc Y − 1 included. Both
 speeds have ≥ 5 judged outputs, and no hardened twin failed before the third output. Part 2 is not run.
 - Against the author's prediction "supported 0.25": the outcome fell on the 0.75 side.
-- "Most likely P_s or disc Y − 1 at 0.25 a, block side": the block side was better only for W_ann and disc Y − 1,
-  and neither came close.
+- "Most likely P_s or disc Y − 1 at 0.25 a, block side": the block side was better for W_ann, disc Y − 1 and ring
+  Y at 2 µm, and none came close.
 - Side note: the hardened 500 m/s R/64 twin ran to t_end; the annealed one collapsed at 0.22 D/V.
 
 ## 29. CS-22 part 1: stopped at the fork design note (task 2026-11-18-a items 2–4)
@@ -2812,6 +2813,9 @@ Judge: [coldspray-hunch-cs22.md](coldspray-hunch-cs22.md), frozen in e0cf087. Fo
 2. Decide on off-skin particles. With Y′ < −1, particles that are not on the skin (sentinel Y = −1) would also bond,
    which goes against CS12-DESIGN §2 ("cannot bond"). That matches "every contacting pair bonds", but it changes a
    stated cs12 rule.
-3. Add the start-time key, e.g. `bond.t_on` with default 0, so existing decks are unchanged.
+3. Lowering Y′ is not enough on its own: activation also needs p_n,ij > p_E and σ_flow,ij > 0, and `bond.pE` cannot
+   go below 0. A contacting pair whose previous-cycle p_n,ij is 0 would still not bond. "Every contacting pair" also
+   needs p_E < 0 allowed, or the p_n test dropped for this setting.
+4. Add the start-time key, e.g. `bond.t_on` with default 0, so existing decks are unchanged.
 
-Whether 1 and 2 count as "a new mode" is the modeller's decision.
+Whether 1, 2 and 3 count as "a new mode" is the modeller's decision.
