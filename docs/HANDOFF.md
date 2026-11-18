@@ -4,6 +4,11 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
+**Brainstorm session (Peter, 2026-11-18):** new approaches for multi-particle simulation on OpenCourant (TLSPH
+preferred). Start from docs/research/multi-particle-spec.md **only**; generate ideas; then filter them against
+docs/research/multi-particle-tried.md. Do not read the solver log or STATUS history before the first idea list, to
+avoid anchoring. Then register what survives as hunches under the budget (3 of 5 open).
+
 **First action: Peter chooses which of R1–R3 leads** (docs/research/reduced-route-plan.md). The single-impact
 synthesis is written (docs/research/coldspray-synthesis-single-impact.md, 2026-11-18).
 
