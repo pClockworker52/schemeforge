@@ -1,4 +1,4 @@
-# Cold spray: hunch CS-22 (forked bond response converges on TLSPH), registration (DRAFT, not frozen)
+# Cold spray: hunch CS-22 (forked bond response converges on TLSPH), registration (frozen)
 
 Drafted 2026-11-18 by claude from brainstorm item #9
 ([multi-particle-brainstorm-2026-11-18.md](multi-particle-brainstorm-2026-11-18.md)), which combines #2 (paired runs)
@@ -8,7 +8,7 @@ and #5 (checkpoint and rollback). Peter's decisions (chat 2026-11-18):
 - waive the "obtainable data" part of rule 1 for part 2.
 
 Status:
-- **DRAFT.** Not frozen. No run may start until this file says "frozen" and the DECISIONS entry is committed with it.
+- **Registered and frozen 2026-11-18** (Peter: "Freeze"), together with the DECISIONS entry, before any run.
 - **Host:** TLSPH bodies with `cs12` in the fork, so this is in-solver, on Track B. The 2026-11-17 closure of the
   interface-state route stands for local drivers (skin Y, the §27 drivers, v_edge). CS-22 uses none of them.
 - **Budget:** CS-12 retired, CS-22 registered, so the count stays 5 of 5.
@@ -17,7 +17,7 @@ Status:
 
 ```yaml
 - id: CS-22
-  registered: 2026-11-18 (draft)
+  registered: 2026-11-18, frozen 2026-11-18
   assumption_broken: >-
     That an in-solver bond needs a verifiable local trigger before its effect on the impact can be computed (the
     reason for the 2026-11-17 closure and for rejecting the one-way bond, DECISIONS 2026-11-15).
@@ -62,7 +62,7 @@ Status:
     - one-way bond (DECISIONS 2026-11-15)
     - cs12 illustration (§26; central debonding on spring-back with a tuned delta_c; a picture, no claim)
   label: none yet (referee); never "novel"
-  status: open (draft)
+  status: open
   author: claude (from brainstorm #9), Peter (route and budget decisions)
 ```
 

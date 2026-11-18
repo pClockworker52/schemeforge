@@ -29,11 +29,7 @@ impact) and the deposit level are untouched.
 | 8 | **Bounds bracket** | Two limit bond laws (film always removed vs never) bracket v_cr. Check that the experiments fall inside. This is cheap verification without an interface reference (C6). | Bracket width < 20 % | Experiments outside the bracket | untried |
 | 9 | **Forked bond response (synthesis of #2 and #5; added after the filter, 2026-11-18)** | Checkpoint at the trigger time t_b and fork into a bond-on and a bond-off branch. The branches are identical up to t_b, so all error accumulated before the decision is shared exactly, not just the mesh as in #2. The measured quantity is ΔR = rebound(on) − rebound(off), built from integrals only. #5's failure mode (oscillation near v_cr) is read as bistability: over a velocity band both branches are self-consistent (a bond that forms holds; a bond that never forms lets the particle rebound). Forks with a small change also give the derivative of the fixed-point map (stability, Newton steps). | Width of the bistable band in V, without a fit, compared with the ±2 % windows of the v_cr definition (joining and rebound equally probable); the band shifts with target state | (a) a zero-change fork does not stay bit-identical (non-deterministic solver); (b) ΔR not converged R/32→R/64; (c) the band is empty at every V or wider than about 10 % | variant of common-random-numbers / twin-run methods; bistability reading untried in the record |
 
-**#9 status.** Not registered: the hunch count is 5 of 5 (DECISIONS 2026-11-18). It is held as a follow-on to
-CS-21, whose part 1 already plans paired runs with a fork binary on the §25 deck. If CS-21 part 1 passes, test kill
-(a) first, since it costs no physics. The bond-on branch needs a bond on the fork host. In the 3D solver that would
-mean reopening the Track B route (closed 2026-11-17), which is Peter's decision. Registration also needs a
-retirement or parking first (CS-12 or CS-20, neither of which has a data source).
+**#9 status.** Registered and frozen 2026-11-18 as [CS-22](coldspray-hunch-cs22.md), simplified to one speed, one fork time and 7 runs. CS-12 was retired to free the slot, and Track B was reopened for this route only (DECISIONS 2026-11-18). WSL A task 2026-11-18-a.
 
 Add-ons that need #1: stochastic hazard rate from the convergent kinematics (v_cr becomes the 50 % point by
 construction), and the energy criterion (bond energy over the ring ≥ elastic rebound energy, both integral).

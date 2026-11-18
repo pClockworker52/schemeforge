@@ -1,5 +1,7 @@
 # Cold spray: hunch CS-12 (bonding as local dissolution of the interface blanket), registration (frozen)
 
+**Retired 2026-11-18** (Peter; DECISIONS 2026-11-18, "Track B reopened for the forked bond response"): T3 has no data source since the request was dropped on 2026-11-17, and the in-solver form bonds the pole first (opencourant-verification.md §26). The registration below is unchanged.
+
 Drafted 2026-11-04. Idea: Peter (the interface as a Markov blanket). Criterion: cold pressure welding by surface
 expansion (Bay; from memory, not read in this track). **Status: frozen** 2026-11-05, approved by Peter as written. This commit comes before any test is run or read. Research track, not a ledger arena. Background: CS-11 outcome
 (opencourant-verification.md §10.6) and plan revision 2 (coldspray-go-nogo.md).

@@ -1274,3 +1274,30 @@ coldspray-kinematics.md and R3. For #2, the motivating facts are seen data and t
 *Consequences:* hunch count **5 of 5**. A sixth hunch needs a retirement or parking first (CS-12 and CS-20 have no
 data source). CS-21 part 1 needs a WSL A task (six runs, about 8 minutes of engine time, plus post-processing as in
 §27); none has been written yet.
+
+## 2026-11-18 — Track B reopened for the forked bond response; CS-12 retired; CS-22 registered (Peter)
+*Context:* brainstorm docs/research/multi-particle-brainstorm-2026-11-18.md item #9, a synthesis of #2 (paired runs)
+and #5 (checkpoint and rollback). The bond-on and bond-off branches share the whole history before a fork time t_b.
+The rebound difference dR is a whole-body quantity and needs no local trigger. The budget was at 5 of 5, and the
+bond-on branch needs an in-solver bond, which is on Track B. That route was closed on 2026-11-17.
+
+*Decision:*
+1. **Track B is reopened for the forked bond-response route only.** The 2026-11-17 finding stands for local
+   interface-state drivers (skin Y, the §27 drivers, v_edge). The trigger run and VCIMR's D2 change stay dropped.
+2. **CS-12 is retired.** T3 has no data source since the request was dropped on 2026-11-17, and the in-solver form
+   bonds the pole first (§26).
+3. **CS-22 is registered and frozen** (docs/research/coldspray-hunch-cs22.md), simplified at Peter's request:
+   - Al on Al at 600 m/s on TLSPH (the §26 deck with P-HG-Al);
+   - fork time t_b = 0.5 t_p, with cs12 bonding every contacting pair from t_b on;
+   - meshes R/8, R/16, R/32; 7 runs;
+   - kill (a): a never-activated on branch is bit-identical to the off branch;
+   - kill (b): dR converges by the driver-check §3 rule.
+   R/64 is out of reach for a plastic TLSPH quarter model (estimate from §26: about 100 GB).
+4. **Rule 1's "obtainable data" part is waived for CS-22 part 2** (the bistable band). Its trigger and kill rule are
+   registered only after part 1 is supported.
+5. **The mesh study stays** (Peter asked whether it could be skipped): it is the decisive test of part 1.
+
+*Consequences:*
+- Hunch count **5 of 5**.
+- WSL A task 2026-11-18-a covers CS-21 part 1 (six runs on the §25 deck) and CS-22 part 1 (one fork key, then 7 runs).
+- CS-21 no longer gates #9.

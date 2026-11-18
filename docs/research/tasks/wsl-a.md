@@ -5,6 +5,38 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-18-a: CS-21 part 1 and CS-22 part 1 (open)
+
+**Basis:** DECISIONS 2026-11-18, "CS-20 and CS-21 registered" and "Track B reopened for the forked bond response".
+**Judges, frozen:**
+- [../coldspray-hunch-cs21.md](../coldspray-hunch-cs21.md);
+- [../coldspray-hunch-cs22.md](../coldspray-hunch-cs22.md), frozen in the commit that adds this task.
+
+Cite the hunch file and its commit in every row. Do not change the set-ups, parameters or rules. If something cannot
+be run as written, stop and report. Run jobs one at a time (15 GB; §24 OOM).
+
+1. **CS-21 part 1** (2D quads, fork binary `d0500106d`, the §25 deck):
+   - six hardened twins (block A′ = 425.6 MPa) of the §25 runs, at 600 and 500 m/s × R/64, R/128 and R/256;
+   - if the §25 field files are gone, also rerun the annealed decks with the same binary;
+   - compute dq for the §27 drivers and disc Y − 1 as the hunch specifies, and apply its part-1 rule.
+   Rows: `results/tl_cs21_*.csv`.
+2. **CS-22 fork change** (fork branch `cs12`):
+   - a short design note before any code: a key for the activation start time (e.g. `cs12.t_on`), and the low Y′
+     value that gives f_B = 1 within 10⁻³ with p_E = 0;
+   - then code and build, and a T-A0 rerun (bit-identical);
+   - if cs12 rejects such a Y′, stop and report; do not write a new mode.
+3. **CS-22 kill (a):** an R/8 on branch with t_on = ∞ against the R/8 off branch. Compare all written metrics. If they
+   differ, CS-22 is refuted: stop and report.
+4. **CS-22 kill (b):** off and on (t_b = 0.5 t_p = 0.354 D/V) at R/8, R/16 and R/32, 600 m/s, to 2.0 D/V, on the §26
+   deck with P-HG-Al.
+   - Check R/32's memory before starting it. If it does not fit, CS-22 is inconclusive: stop and report.
+   - Report e(off) at each mesh as well. It is reported, not judged.
+   Rows: `results/tl_cs22_*.csv`.
+5. Write up both as new sections of opencourant-verification.md on `coldspray/opencourant-sph`, each with a verdict
+   line against its frozen rule. Then stop and report.
+
+Items 1 and 2–4 are independent. Item 1 is cheap (about 8 min engine time), so run it first.
+
 ## Task 2026-11-17-b: driver-convergence check, drivers 2–4 (post-processing) (closed: §27, merged 29c09ee)
 
 **Basis:** DECISIONS 2026-11-17 "Driver check before the trigger run"; spec, rule and prediction in
