@@ -72,4 +72,43 @@ the R/256 value. Raw da/dt does not converge.
 
 ## 6. Results
 
-(empty until computed)
+Cloud, 2026-11-18. `python scripts/switch_check.py`; inputs are the §2 columns of `tl_cal6_p3_series.csv` only.
+a_c,rigid comes out at 1.1237 / 0.9383 µm, matching §1. The largest fit residual over the judged frames is 2.3 %.
+
+| V | mesh | A (µm ns^−p) | p | t_c (ns) | t_c / t(frame 3) | a_c (µm) | a_c / a_c,rigid | a_c, frames 3–6 |
+|---|---|---|---|---|---|---|---|---|
+| 600 | R/64 | 3.687 | 0.445 | 0.121 | 0.48 | 1.440 | 1.281 | −0.2 % |
+| 600 | R/128 | 3.839 | 0.526 | 0.130 | 0.52 | 1.315 | 1.170 | −0.8 % |
+| 600 | R/256 | 3.942 | 0.562 | 0.136 | 0.54 | 1.285 | 1.143 | −0.6 % |
+| 500 | R/64 | 3.533 | 0.483 | 0.112 | 0.37 | 1.225 | 1.305 | +1.9 % |
+| 500 | R/128 | 3.597 | 0.547 | 0.112 | 0.37 | 1.086 | 1.158 | +0.6 % |
+| 500 | R/256 | 3.625 | 0.564 | 0.112 | 0.37 | 1.056 | 1.125 | +0.3 % |
+
+**Rule on a_c (§3):**
+- 600 m/s: |256 − 128| / 256 = 2.35 %, |128 − 64| / 128 = 9.48 %, so it converges.
+- 500 m/s: 2.88 % and 12.73 %, so it converges.
+
+**Verdict line: PASS.** a_c converges at both speeds.
+
+**Limits (stated with the verdict):**
+- **Thin margins:** 2.35 % and 2.88 % against the 3.5 % line.
+- **p by itself would not pass at 600 m/s.** It drifts from 0.445 to 0.526 to 0.562, which is 6.5 % between R/128
+  and R/256; at 500 m/s it is 3.0 %. a_c converges partly because the drifts in A and p offset each other
+  (a_c ≈ p A² / C₀ near p = 0.5).
+- **a_c is an extrapolation.** t_c is 0.37–0.54 of the time of the first judged output, so the switch itself was
+  never observed.
+- **Host:** 2D axisymmetric quads (the reference host), not TLSPH.
+- **Reported, post hoc:** a_c(600) / a_c(500) at R/256 is 1.217, against CS-20's sin β_c ratio of 1.198 (+1.6 %).
+  These are simulations, not measurements, so this is not a CS-20 test. The implied CS-20 k at the switch is
+  1.13–1.14 at both speeds.
+
+**Outcome rule applied:** the contact map may be drafted as a candidate trigger for CS-22 part 2, but only if CS-22
+part 1 passes, and only on a host that resolves a_c ≈ 1.1–1.3 µm with several particles. TLSPH gives about 4
+spacings at R/32 and fewer than one at R/8. Peter decides. Nothing is registered now.
+
+**Against the prediction (§5):**
+- Pass 0.35: it passed, the less likely side.
+- "Close to the 3.5 % line is likely": right (2.35 % and 2.88 %).
+- p within 0.45–0.60 on every mesh (0.6): miss. R/64 at 600 m/s has p = 0.445.
+- a_c / a_c,rigid within 0.7–1.3 (0.6): miss, narrowly. R/64 at 500 m/s is 1.305; all other meshes are within.
+- The frames 3–6 fit changes a_c by more than 10 % (0.4): no. The largest change is 1.9 %.
