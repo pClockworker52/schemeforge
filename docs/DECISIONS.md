@@ -1350,6 +1350,11 @@ SPEC-TL-b §15.3–§15.4), both after results were seen, so post hoc:*
 kill (b): the forked bond response gives no signal on this deck, because every bond breaks on rebound. Part 2 is not
 registered. Author's odds were (a) 0.85, (b) 0.35 given (a).
 
+*Scope (added 2026-11-19, Peter):* the refutation covers the registered setting only. The frozen δ_c (31.25 nm, a §26
+placeholder) made the bond too brittle to change the rebound, so the claim that dR converges was never tested above
+the signal floor; the result says nothing about stronger bonds. Whether the placeholder lets the bond visibly change
+the rebound was not checked before the freeze (a drafting gap like the Y′ bound before A1).
+
 *Consequences:* hunch count **3 of 5** (CS-10, CS-17, CS-20). Recorded in coldspray-hunches.md and
 multi-particle-tried.md. Whether Track B closes again (HANDOFF §5 item 0.1) is open for Peter.
 
