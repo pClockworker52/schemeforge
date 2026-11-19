@@ -1,18 +1,20 @@
-# Handoff — 2026-11-18 (late): brainstorm done; Track B reopened for the forked bond response; CS-22 waits on WSL A (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-19: CS-22 part 1 refuted; Track B's fate and R1–R3 open for Peter (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action: check WSL A task 2026-11-18-b.** Fetch `coldspray/opencourant-sph`.
-- **If WSL A has pushed:** merge with a merge commit. The diff should touch only opencourant-verification.md (§30)
-  and the results rows. Then judge CS-22 part 1 against its frozen rule, as amended by A1
-  (docs/research/coldspray-hunch-cs22.md):
-  - kill (a): the never-activated on branch is bit-identical to the off branch;
-  - kill (b): ΔR converges over R/8, R/16, R/32 by the §3 rule, and |ΔR32| ≥ 0.01.
-  Record the verdict in coldspray-hunches.md, DECISIONS and STATUS, and the author's prediction against it.
-- **If WSL A has not pushed:** Track B has nothing unblocked. Track A's open item is Peter's choice of R1–R3
-  (docs/research/reduced-route-plan.md).
+**Session 2026-11-19 (cloud):** merged §30 (adf2319; WSL A task 2026-11-18-b, now closed). **CS-22 part 1 refuted**
+(DECISIONS 2026-11-19):
+- as frozen, by kill (a), on output artefacts only (header date, an uninitialised padding byte, round-off sums,
+  `slip`); the motion and the interface fields are identical;
+- under Peter's post-hoc A2 (comparison set amended) and R/32 retry, by kill (b): dR −1.0·10⁻⁴ / +4.8·10⁻⁵ /
+  +7.1·10⁻⁴ at R/8/16/32, no signal and not converged. Every bond breaks on rebound (δ_c 31.25 nm, σ_B = σ_flow);
+- e(off), reported only: 0.094 / 0.065 / 0.057.
+Hunch count 3 of 5 (CS-10, CS-17, CS-20). WSL A has no open task.
+
+**First action next session:** ask Peter the open items in §5 item 0 (Track B closes again? R1–R3? CS-20 parked?).
+Nothing is unblocked without him.
 
 **Session 2026-11-18 (cloud, later), in order:**
 1. **Brainstorm** from multi-particle-spec.md alone, filtered against multi-particle-tried.md
@@ -232,15 +234,15 @@ amended 2026-11-14):
 
 ## 4. Hunch budget
 
-**4 of 5:** CS-10, CS-17, CS-20, CS-22.
+**3 of 5:** CS-10, CS-17, CS-20.
 - Retired: CS-12 (2026-11-18).
-- Refuted: CS-21 part 1 (§28, 2026-11-18) and CS-18b (T-S1, 2026-11-14).
+- Refuted: CS-22 part 1 (§30, 2026-11-19), CS-21 part 1 (§28, 2026-11-18) and CS-18b (T-S1, 2026-11-14).
 
 ## 5. Open for Peter
 
 0. **New (2026-11-18), in order:**
-   1. After CS-22 part 1: if it passes, decide whether the contact map (switch check) becomes the part-2 trigger,
-      and on which host. TLSPH resolves a_c only at about R/32. If it fails, Track B closes again.
+   1. CS-22 part 1 failed (2026-11-19, §30): confirm that Track B closes again. The contact-map trigger for part 2
+      lapses with it.
    2. Which of R1–R3 leads (reduced-route-plan.md), still open.
    3. CS-20 has no unseen ring-map source, so it is a candidate for parking (its author gave 0.3 odds that a source
       appears within three months).
@@ -260,7 +262,7 @@ Older items (state of 2026-11-15; items 1–3 lapsed with the 2026-11-17 closure
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-18-b** (CS-22 part 1 with A1: fork changes, kill (a), kill (b)); 2026-11-18-a closed (§28–§29, merged a488f57) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | — (2026-11-18-b closed: §30 merged adf2319) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken
@@ -284,7 +286,7 @@ Older items (state of 2026-11-15; items 1–3 lapsed with the 2026-11-17 closure
 | What | Where |
 |---|---|
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log, all sections §1–§29 (§30 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log, all sections §1–§30 (§31 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Multi-particle brainstorm | docs/research/multi-particle-spec.md, multi-particle-tried.md, multi-particle-brainstorm-2026-11-18.md |
 | Driver and switch checks | docs/research/driver-check-2026-11-17.md; switch-check-2026-11-18.md (script scripts/switch_check.py) |
 | Today's hunches | coldspray-hunch-cs20.md, coldspray-hunch-cs21.md (refuted), coldspray-hunch-cs22.md (frozen with A1) |

@@ -38,7 +38,7 @@ TRACKS = {
 }
 
 COLD_SPRAY_KEYS = (
-    "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1",
+    "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1", "CS-2",
     "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
     "odds review", "Track B continues", "cs12 illustration",
     "Driver check", "Track B interface-state", "T3 measurement",

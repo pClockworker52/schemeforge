@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-18-b: CS-22 part 1 with amendment A1 (open)
+## Task 2026-11-18-b: CS-22 part 1 with amendment A1 (closed: §30 CS-22 refuted; merged adf2319)
 
 **Basis:** DECISIONS 2026-11-18, "Merge of §28–§29". **Judge, frozen:**
 [../coldspray-hunch-cs22.md](../coldspray-hunch-cs22.md), with amendment A1 (in the commit that adds this task).
