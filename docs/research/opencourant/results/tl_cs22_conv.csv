@@ -1,0 +1,4 @@
+kind,hunch,n_r,e_off,e_on,dR,off_reached,on_reached,on_stuck,bonded_pairs_end_on,conv_rule,signal,verdict_b
+hunch test,schemeforge docs/research/coldspray-hunch-cs22.md @ e0cf087 + A1 8e6d95e,8,0.09362992273674861,0.0935285940757335,-0.0001013286610151154,1,1,0,0.0,0,0,refuted: no signal |dR32| < 0.01
+hunch test,schemeforge docs/research/coldspray-hunch-cs22.md @ e0cf087 + A1 8e6d95e,16,0.06492715005684191,0.06497489654632546,4.77464894835522e-05,1,1,0,0.0,0,0,refuted: no signal |dR32| < 0.01
+hunch test,schemeforge docs/research/coldspray-hunch-cs22.md @ e0cf087 + A1 8e6d95e,32,0.05712086428455304,0.057835151767227255,0.000714287482674214,1,1,0,0.0,0,0,refuted: no signal |dR32| < 0.01

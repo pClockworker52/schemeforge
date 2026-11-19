@@ -2819,3 +2819,56 @@ Judge: [coldspray-hunch-cs22.md](coldspray-hunch-cs22.md), frozen in e0cf087. Fo
 4. Add the start-time key, e.g. `bond.t_on` with default 0, so existing decks are unchanged.
 
 Whether 1, 2 and 3 count as "a new mode" is the modeller's decision.
+
+## 30. CS-22 part 1 with amendment A1: refuted, no signal (task 2026-11-18-b)
+
+Judge: [coldspray-hunch-cs22.md](coldspray-hunch-cs22.md), frozen in e0cf087, with amendment A1 (8e6d95e); every row
+cites both. Fork branch `cs12`: design note SPEC-TL-b §15.1 `545200150`, engine A1 `27e53d5f0`, plan §15.2
+`2e46c805c`, kill (a) and amendment A2 §15.3 `b29b86a4e`, stage b and R/32 attempts §15.4 `9792767d2`, results
+§15.5 `0df19de03`. Deck script `hvi/decks/al_cs22.py`. Rows `opencourant/results/tl_cs22_{killa,runs,conv}.csv`.
+The `fork_sha` column holds the engine source commit (27e53d5f0); the commit each run started from is in the fork's
+run log and §15.
+
+**A1 in the fork.** `bond.Yp` has no lower bound (still < 1); off-skin particles (sentinel Y = −1) bond when
+Y′ < −1, with no code change; `bond.t_on` (cs12 only, default 0) gates activation through the solver time.
+`bond.pE` and the p_n,ij > p_E test are unchanged. T-A0 on the new binary: 55 of 55 runs identical.
+
+**Deck.** The §26 survival deck (quarter model, CS-18b TL keys, BCT off, F2, stfac 3) with P-HG-Al at 600 m/s, to
+2.0 D/V (66.7 ns). On branch: cs12, Y′ = −10⁶, p_E = 0, δ_c = 31.25 nm, `bond.t_on` = 11.78 ns (0.354 D/V). Off
+branch: bond `none`. Never branch (kill (a)): as on with `bond.t_on` = 1 s. e = particle centre-of-mass z-velocity
+at the last time-history output / V.
+
+**Kill (a)** (R/8 never against off). Under the comparison set fixed before the runs (fork §15.1), 60 of 98 items
+differ. None of the differences comes from the motion: positions and every per-particle interface field over all
+100 records, the time-history values and `tl_diag.csv` are identical. The differing items:
+- the time-history file's header date and time;
+- one byte per animation frame in the title record, which the engine's writer pads from uninitialised memory;
+- the interface force and contact-energy sums, at round-off (relative ~10⁻¹⁶);
+- `slip`, which is only accumulated when a bond model is on.
+
+Peter (2026-11-18) amended the comparison set (A2: those four masked or compared to round-off, everything else
+unchanged); under A2, 98 of 98 items are identical. **By the hunch's wording ("any written metric differs") kill (a)
+alone would refute CS-22; the verdict below does not depend on A2.**
+
+**Kill (b).** All six runs reach t_end.
+
+| mesh | e(off) | e(on) | dR = e(on) − e(off) | bonded area max (on) | bond work at t_end (on) | bonded pairs at t_end (on) |
+|---|---|---|---|---|---|---|
+| R/8 | 0.0936 | 0.0935 | −1.0·10⁻⁴ | 63 µm² | 4.8·10⁻¹⁰ J | 0 |
+| R/16 | 0.0649 | 0.0650 | +4.8·10⁻⁵ | 59 µm² | 6.8·10⁻¹⁰ J | 0 |
+| R/32 | 0.0571 | 0.0578 | +7.1·10⁻⁴ | 57 µm² | 1.1·10⁻⁹ J | 0 |
+
+- Bonds form from t_on on every mesh, and every bond fails during the rebound. e changes by less than 10⁻³.
+- e(off), reported and not judged, changes 44 % from R/8 to R/16 and 14 % from R/16 to R/32.
+- Convergence clause: |dR32 − dR16| = 6.7·10⁻⁴ against 3.5 % |dR32| = 2.5·10⁻⁵; dR changes sign between meshes.
+
+**R/32 memory.** The pre-run estimate (9.4 GB) passed the rule, but the first R/32 attempt (24 threads, 20 GB
+virtual-memory cap) failed at t = 0, and the measured peaks were 13.3 GB (off) and 14.9 GB (on). On the 15.8 GB
+WSL VM the on run would not have fitted. Peter allowed one retry and raised the VM to 24 GB; both R/32 runs then ran
+on 24 threads (12.1 h and 10.9 h; the extra threads gained little over 8).
+
+**Verdict line (hunch cs22 A1 rule): CS-22 part 1 refuted — kill (b), no signal (|dR32| = 7.1·10⁻⁴ < 0.01).** Part
+2 is not registered.
+- Against the hunch's predictions: (a) passes 0.85: passed only after A2; (b) supported 0.35: refuted.
+- Author's additions (fork §15.2): |dR| > 0.01 on every mesh 0.8: wrong (largest 7·10⁻⁴); e(off) 0.05–0.2: right
+  on all meshes; R/32 fits 0.5: not on the 15.8 GB VM.
