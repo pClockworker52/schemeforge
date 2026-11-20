@@ -5,6 +5,27 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-20-a: CS-22b (δ_c ladder) (open)
+
+**Basis:** DECISIONS 2026-11-20, "CS-22b frozen". **Judge, frozen:**
+[../coldspray-hunch-cs22b.md](../coldspray-hunch-cs22b.md), frozen in the commit that adds this task. Cite it in
+every row. Run jobs one at a time, each under the watchdog. If anything beyond the hunch file is needed (a code
+change, another deck, another δ_c), stop and report.
+
+1. **Before any run:** report from the fork the opening at which a cross-body pair leaves the candidate list
+   (expectation only; it changes no rule).
+2. **Stage 1:** engine `27e53d5f0`, the §30 deck script (`hvi/decks/al_cs22.py`), on branch settings as §30 except
+   δ_c. On runs at δ_c = 0.09375, 0.3125 and 0.9375 µm, each at R/8 and R/16 (6 runs). No off runs: the off branch
+   is §30's AL08off, AL16off, AL32off.
+3. **Lost-bond check** on every run, from the interface file: a skin facet whose bond state goes from bonded to not
+   bonded between two records while D < 1. Any lost bond makes the run invalid for that δ_c.
+4. **Gate:** R/32 for a δ_c only if its R/8 and R/16 runs are valid, reach t_end (or the CS-22 stuck exception
+   applies) and |dR16| ≥ 0.01. At most 3 R/32 runs. Check memory before each (VM at 23.5 GiB).
+5. **Report per δ_c and mesh:** e(on), dR, bonded pairs and bonded area at t_end, maximum bonded area, bond work,
+   lost bonds. Rows `results/tl_cs22b_*.csv`.
+6. Write up as §31 of opencourant-verification.md on `coldspray/opencourant-sph`, with a verdict line per δ_c and
+   overall against the frozen rule. Then stop and report.
+
 ## Task 2026-11-18-b: CS-22 part 1 with amendment A1 (closed: §30 CS-22 refuted; merged adf2319)
 
 **Basis:** DECISIONS 2026-11-18, "Merge of §28–§29". **Judge, frozen:**

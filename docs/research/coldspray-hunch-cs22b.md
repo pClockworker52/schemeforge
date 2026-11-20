@@ -1,4 +1,4 @@
-# Cold spray: hunch CS-22b (forked bond response with a δ_c ladder), DRAFT — not frozen
+# Cold spray: hunch CS-22b (forked bond response with a δ_c ladder), registration (frozen)
 
 Drafted 2026-11-20 by claude at Peter's request (chat 2026-11-19), after CS-22 part 1 was refuted for its registered
 setting only (opencourant-verification.md §30; DECISIONS 2026-11-19 with its scope note). In CS-22 the placeholder
@@ -6,7 +6,8 @@ setting only (opencourant-verification.md §30; DECISIONS 2026-11-19 with its sc
 converges was never tested above the signal floor.
 
 Status:
-- **Draft, not frozen.** Not counted in the budget until Peter freezes it (then 4 of 5). No WSL task before the freeze.
+- **Registered and frozen 2026-11-20** (Peter: "Let's freeze"), as drafted in faac6d9, before any CS-22b run.
+  Budget 4 of 5. WSL A task 2026-11-20-a.
 - **Post hoc by construction.** The δ_c values are chosen after §30 was seen. They are fixed here, by the rule below,
   before any CS-22b run; nothing is chosen after a CS-22b run is seen.
 - **Host:** as CS-22 (TLSPH with `cs12` in the fork, Track B, forked bond-response route only).
@@ -15,7 +16,7 @@ Status:
 
 ```yaml
 - id: CS-22b
-  registered: draft 2026-11-20 (not frozen)
+  registered: 2026-11-20, frozen 2026-11-20
   assumption_broken: >-
     As CS-22: that an in-solver bond needs a verifiable local trigger before its effect on the impact can be computed.
   statement: >-
@@ -60,7 +61,7 @@ Status:
     - §26 illustration delta_c sweep (Ti-6Al-4V, 1584 m/s, R/12; seen data on another material)
     - brainstorm #9 (forked bond response); common random numbers / twin runs
   label: none yet (referee); never "novel"
-  status: draft
+  status: open
   author: claude (draft), Peter (route and request)
 ```
 

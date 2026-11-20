@@ -1,8 +1,18 @@
-# Handoff — 2026-11-19: CS-22 part 1 refuted; Track B's fate and R1–R3 open for Peter (cold-spray track; earlier versions in git history)
+# Handoff — 2026-11-20: CS-22b frozen, waits on WSL A task 2026-11-20-a (cold-spray track; earlier versions in git history)
 
 **Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read the top of
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
+
+**First action: check WSL A task 2026-11-20-a.** Fetch `coldspray/opencourant-sph`. If pushed: merge with a merge
+commit (diff only §31 and `results/tl_cs22b_*.csv`), recompute dR per δ_c from the rows with the §30 off runs, judge
+against coldspray-hunch-cs22b.md (frozen 2026-11-20), and record in coldspray-hunches.md, DECISIONS and STATUS with
+the author's predictions. If not pushed: the open items for Peter are R1–R3 and CS-20 parking.
+
+**Session 2026-11-19/20 (cloud):** CS-22 scope note (5b3114a; the refutation covers the registered setting only).
+CS-22b drafted (faac6d9) and **frozen 2026-11-20** (Peter: "Let's freeze"; DECISIONS 2026-11-20): δ_c ladder
+3×/10×/30× (0.09375, 0.3125, 0.9375 µm), §30 off runs reused, lost-bond check, R/8–R/16 gate on |dR16| ≥ 0.01, at
+most 3 R/32 runs. Track B stays open until CS-22b is judged. Hunch count 4 of 5.
 
 **Session 2026-11-19 (cloud):** merged §30 (adf2319; WSL A task 2026-11-18-b, now closed). **CS-22 part 1 refuted**
 (DECISIONS 2026-11-19):
@@ -13,8 +23,6 @@ docs/research/coldspray-procedure.md (who writes where; tasks for the other sess
 - e(off), reported only: 0.094 / 0.065 / 0.057.
 Hunch count 3 of 5 (CS-10, CS-17, CS-20). WSL A has no open task.
 
-**First action next session:** ask Peter the open items in §5 item 0 (freeze CS-22b? R1–R3? CS-20 parked?).
-Nothing is unblocked without him.
 
 **Session 2026-11-18 (cloud, later), in order:**
 1. **Brainstorm** from multi-particle-spec.md alone, filtered against multi-particle-tried.md
@@ -234,16 +242,14 @@ amended 2026-11-14):
 
 ## 4. Hunch budget
 
-**3 of 5:** CS-10, CS-17, CS-20.
+**4 of 5:** CS-10, CS-17, CS-20, CS-22b.
 - Retired: CS-12 (2026-11-18).
 - Refuted: CS-22 part 1 (§30, 2026-11-19), CS-21 part 1 (§28, 2026-11-18) and CS-18b (T-S1, 2026-11-14).
 
 ## 5. Open for Peter
 
 0. **New (2026-11-18), in order:**
-   1. CS-22 part 1 failed for its registered setting only (placeholder δ_c too brittle). Freeze (or edit) the
-      CS-22b draft (coldspray-hunch-cs22b.md: δ_c ladder 3×/10×/30×, §30 off runs reused, R/8–R/16 gate,
-      at most 3 R/32 runs)? If not, Track B closes again.
+   1. CS-22b frozen 2026-11-20 (resolved). After its verdict: if it fails, does Track B close again?
    2. Which of R1–R3 leads (reduced-route-plan.md), still open.
    3. CS-20 has no unseen ring-map source, so it is a candidate for parking (its author gave 0.3 odds that a source
       appears within three months).
@@ -263,7 +269,7 @@ Older items (state of 2026-11-15; items 1–3 lapsed with the 2026-11-17 closure
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | — (2026-11-18-b closed: §30 merged adf2319) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b δ_c ladder); 2026-11-18-b closed (§30 merged adf2319) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken
