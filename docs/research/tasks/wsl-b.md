@@ -325,6 +325,8 @@ modeller leak-scans and merges.
 and the comparison table. **Open:**
 - Tang 2021 and Ge 2026: Peter downloads them in a browser into `coldspray-papers/` (Tang 2021 moved to task b11,
   2026-11-15);
+- **Ge 2026: read in the cloud on 2026-11-20** from Peter's copy ([../data/ge2026_reading.md](../data/ge2026_reading.md));
+  no longer open for WSL B;
 - Dai et al. 2025, doi:10.1007/s00466-025-02714-1 (closed; this is the task's "Wang et al. 2025").
 
 Continue on the same branch, then stop.

@@ -251,6 +251,9 @@ amended 2026-11-14):
 0. **New (2026-11-18), in order:**
    1. CS-22b frozen 2026-11-20 (resolved). After its verdict: if it fails, does Track B close again?
    2. Which of R1–R3 leads (reduced-route-plan.md), still open.
+   2b. Physical length scale (length-scale-note-2026-11-20.md; Ge 2026 read, its ℓ is calibrated): pursue after
+       CS-22b? First steps would be reading Chakrabarty & Song 2020 and Tang et al. 2024 (blind screen first) and
+       finding a measured grain size or gradient length for an Al powder; a hunch only after that (budget 4 of 5).
    3. CS-20 has no unseen ring-map source, so it is a candidate for parking (its author gave 0.3 odds that a source
       appears within three months).
 
