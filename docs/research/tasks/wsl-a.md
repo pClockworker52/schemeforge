@@ -26,6 +26,19 @@ change, another deck, another δ_c), stop and report.
 6. Write up as §31 of opencourant-verification.md on `coldspray/opencourant-sph`, with a verdict line per δ_c and
    overall against the frozen rule. Then stop and report.
 
+## Task 2026-11-20-b: softening check (QUEUED: start only after 2026-11-20-a is pushed)
+
+**Basis:** Peter, chat 2026-11-20. **Spec, rule and prediction, fixed:**
+[../softening-check-2026-11-20.md](../softening-check-2026-11-20.md). Cite it in every row. `kind = check`.
+
+1. From the §25 R/256 field files (600 and 500 m/s, binary `d0500106d`), compute the JC softening factor
+   S = 1 − T*ᵐ as the spec defines: disc averages at 0.25, 0.5, 0.75 a_256 on both sides, the edge minimum, and the
+   maximum temperature, at every judged output.
+2. If the field files hold no temperature: rerun the two R/256 decks with temperature output added and nothing else
+   changed; the stop time and a_256(t) must match §25 exactly, else stop and report.
+3. Rows `results/softening_check_*.csv`; a short section of opencourant-verification.md with the verdict line
+   (uninformative / informative) against the spec's rule. Then stop and report.
+
 ## Task 2026-11-18-b: CS-22 part 1 with amendment A1 (closed: §30 CS-22 refuted; merged adf2319)
 
 **Basis:** DECISIONS 2026-11-18, "Merge of §28–§29". **Judge, frozen:**
