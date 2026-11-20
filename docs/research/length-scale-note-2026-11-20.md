@@ -3,6 +3,9 @@
 Status: **note, not a hunch, not counted.** Written from a chat with Peter on 2026-11-20, while CS-22b runs on
 WSL A. Labels: variant of nonlocal and strain-gradient plasticity; never "novel".
 
+**Corrected 2026-11-20 (Peter): one fixed ℓ; no nm resolution.** The evolving ℓ and the "two-zone reading" of an
+earlier version are set aside (§4, §4b).
+
 ## 1. The problem in one paragraph
 
 Johnson–Cook plus an EOS has no length. At the contact edge thermal softening localises the shear into the thinnest
@@ -18,8 +21,9 @@ no meaning below it. Resolving the edge below that scale asks the model a questi
 not be a regularisation knob: it can be the model's own validity limit, made explicit.
 - Wall function: y+ = y u_τ/ν says where the universal inner law holds; the first cell sits outside it and the law
   covers the inside.
-- Here: a material length says below which scale JC is invalid; the solution is smeared at that scale, and a sub-scale
-  law (the interface/bond law) covers what lies below.
+- Here: a material length says below which scale JC is invalid; the JC solution is smeared at that scale, and the
+  interface/bond law at the contact covers what lies below. This is **one model**: smeared JC plus the bond law we
+  already have. The "inner zone" is only what the bond law stands in for, not a separate region in the simulation.
 
 ## 3. Candidate physical lengths
 
@@ -30,7 +34,7 @@ not be a regularisation knob: it can be the model's own validity limit, made exp
 | Thermal diffusion length | √(κt) | computed | ≈ 0.7 µm at 5 ns (Al) | too small (CS-13c) |
 | Ge 2026 characteristic length | calibrated to morphology | no (fitted) | 4 µm = 0.4 d (Cu, 10 µm) | not physical (ge2026_reading.md §5) |
 
-## 4. Peter's evolving ℓ
+## 4. Peter's evolving ℓ (considered, set aside 2026-11-20)
 
 Etched sections of cold-sprayed particles show smaller grains near the bond zone. So ℓ could start at the feedstock
 grain size and shrink with deformation, as a state variable:
@@ -42,6 +46,9 @@ grain size and shrink with deformation, as a state variable:
 Risk: if ℓ shrinks to sub-µm at the bond zone during the impact, the resolution problem returns exactly where it
 matters. Whether most refinement happens before or after bonding is decided is the first question for the
 literature.
+
+Set aside because §4b shows the grains collapse to tens of nm in the band during the impact, while every quantity we
+judge is measured at µm scale; following the grains would buy precision no measurement can confirm.
 
 ## 4b. Grain-size evidence (added later on 2026-11-20)
 
@@ -56,24 +63,24 @@ second-hand until read in the original):
 - Tiamiyu et al. 2022 (Nature Mater.; a blind-list-2 candidate): starting grain sizes 0.24, 3, 13 and 34 µm in a
   DRX study. Only grain sizes were seen, no v_cr; not on the frozen list, so no B4 entry.
 
-**Reading:**
-- The starting grain size is in the range Peter wants (Cu powder 5–10 µm), so an initial ℓ of 2 µm or more is
-  physically defensible for the bulk of the particle.
-- In the shear band the grains fall to tens of nm **during** the impact (DRX), not only afterwards. An evolving ℓ
-  that follows the grains would therefore collapse to tens of nm exactly at the bond zone, far below any reachable
-  resolution.
-- That suggests a two-zone reading instead of one evolving ℓ: JC with ℓ ≈ feedstock grain size outside the band,
-  and the band itself (nanocrystalline, a different material) treated as a sub-scale zone covered by the interface
-  law. That is the wall-function structure (§2), with the band as the "viscous sublayer". The band thickness, from
-  the grain gradient (about 0.5 µm in Al per Liu), would set where the outer model stops.
-- Tang et al. 2024 (data/tang2024_reading.md) measured bond strength against radius with a Bay-type law: a
-  candidate inner law **and** calibration data for it.
+**Reading (corrected):**
+- Feedstock grains are µm (Cu powder 5–10 µm), so a **fixed** ℓ ≈ feedstock grain size of 2 µm or more is
+  physically defensible for the particle.
+- The band's nm grains need not be resolved. The model's resolution should match the measurements': Tang's bond
+  strengths come from about 5 µm micro-tensile slabs; v_cr and rebound are whole-particle quantities.
+- One model: JC with a fixed ℓ, plus the interface law at the contact. The nm physics (DRX grains, oxide break-up)
+  enters only through the law's parameters, calibrated on µm-scale data such as Tang's strength against radius
+  (data/tang2024_reading.md).
+- Risk: smearing at ℓ = 2 µm widens the real band (about 0.5 µm in Al per Liu) about fourfold. That may change the
+  jet, the contact pressure and the surface exposure that feed the bond law. The ℓ-plateau test (§5) decides. Ge's
+  ℓ = 4 µm still matched Cu morphology, but that ℓ was tuned to it.
 
 ## 5. The test that would decide it (ℓ-plateau)
 
 The y+ analogue of scale separation: converged outputs (rebound, bonded area, v_cr) stay the same over a range of ℓ
 around the physical value (for example 1.5–4 µm). If they keep changing with ℓ, the smeared physics matters and the
-sub-scale law must carry it. Scale separation is weak here (ℓ of 2–4 µm against R = 10 µm).
+sub-scale law must carry it. Scale separation is weak here (ℓ of 2–4 µm against R = 10 µm). If the plateau fails,
+revisit an evolving ℓ (§4).
 
 ## 6. Link to the wall-function analogy (HANDOFF item 6, 2026-11-18)
 
@@ -82,7 +89,7 @@ sub-scale law must carry it. Scale separation is weak here (ℓ of 2–4 µm aga
 | The first layer is the badly represented one (§22) | the first layer is only as thin as ℓ, resolvable at R/16–R/32 |
 | No outer input converges (§27) | testable: the ℓ-averaged edge state at fixed ℓ |
 | No overlap layer at a separating edge | becomes the ℓ-plateau test |
-| No calibration data for the inner law | still open (v_cr only; grain-size profiles may help) |
+| No calibration data for the inner law | Tang et al. 2024: bond strength against radius at µm scale (Bay-type law); its surface-exposure input still comes from the non-converging skin Y on TLSPH |
 
 ## 7. What Ge 2026 adds (ge2026_reading.md)
 
