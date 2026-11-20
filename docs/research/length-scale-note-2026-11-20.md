@@ -43,6 +43,32 @@ Risk: if ℓ shrinks to sub-µm at the bond zone during the impact, the resoluti
 matters. Whether most refinement happens before or after bonding is decided is the first question for the
 literature.
 
+## 4b. Grain-size evidence (added later on 2026-11-20)
+
+Source: an AI literature summary Peter pasted in chat (not checked against the primary papers; every number below is
+second-hand until read in the original):
+- Panova & Schuh (Cu on Cu, LIPIT, 17–21 µm, 552–875 m/s; released by Peter 2026-11-08): powder grains about
+  5–10 µm, substrate 15–20 µm; metadynamic recrystallisation (mDRX) grains of 1.3–3.0 µm at the interface,
+  formed right after the impact by residual heat; sub-100 nm DRX bands from peak shear cited, not resolved.
+- Liu et al. 2019/2020 (Scripta Mater., pure Al, two bonded particles, TEM): nanograins 10–30 nm at the
+  particle–particle interface (about 30 % below 10 nm), a continuous gradient to about 500 nm toward the centre.
+- Zou et al. 2009 (Ni, EBSD): 100–200 nm grains at the bond interface, elongated parent grains in the core.
+- Tiamiyu et al. 2022 (Nature Mater.; a blind-list-2 candidate): starting grain sizes 0.24, 3, 13 and 34 µm in a
+  DRX study. Only grain sizes were seen, no v_cr; not on the frozen list, so no B4 entry.
+
+**Reading:**
+- The starting grain size is in the range Peter wants (Cu powder 5–10 µm), so an initial ℓ of 2 µm or more is
+  physically defensible for the bulk of the particle.
+- In the shear band the grains fall to tens of nm **during** the impact (DRX), not only afterwards. An evolving ℓ
+  that follows the grains would therefore collapse to tens of nm exactly at the bond zone, far below any reachable
+  resolution.
+- That suggests a two-zone reading instead of one evolving ℓ: JC with ℓ ≈ feedstock grain size outside the band,
+  and the band itself (nanocrystalline, a different material) treated as a sub-scale zone covered by the interface
+  law. That is the wall-function structure (§2), with the band as the "viscous sublayer". The band thickness, from
+  the grain gradient (about 0.5 µm in Al per Liu), would set where the outer model stops.
+- Tang et al. 2024 (data/tang2024_reading.md) measured bond strength against radius with a Bay-type law: a
+  candidate inner law **and** calibration data for it.
+
 ## 5. The test that would decide it (ℓ-plateau)
 
 The y+ analogue of scale separation: converged outputs (rebound, bonded area, v_cr) stay the same over a range of ℓ
@@ -67,7 +93,7 @@ sub-scale law must carry it. Scale separation is weak here (ℓ of 2–4 µm aga
 
 ## 8. Next, if Peter wants to pursue it (after CS-22b)
 
-1. Read Chakrabarty & Song 2020 (strain-gradient JC for cold spray) and Tang et al. 2024 (strength gradient), after a
-   blind screen.
+1. Chakrabarty & Song 2020 (strain-gradient JC for cold spray): no open copy; Peter downloads it. Tang et al.
+   2024: read (main text; SI not read). Check the grain-size numbers of §4b in Panova & Schuh and Liu et al.
 2. Find a measured grain size or gradient length for an Al powder like P-HG-Al.
 3. Only then: draft a hunch built on the ℓ-plateau test (budget 4 of 5).
