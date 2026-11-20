@@ -20,6 +20,7 @@ Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (
 | CS-10 | no blind paper so far reported particle strength |
 | CS-17 | no unseen substrate series known |
 | CS-20 | no unseen ring-map source with r_in at two velocities or two materials; [coldspray-hunch-cs20.md](coldspray-hunch-cs20.md) |
+| CS-22b | **draft, not frozen, not counted**: CS-22 with a δ_c ladder (3×, 10×, 30×), §30 off runs reused, R/8–R/16 gate; waits on Peter's freeze; [coldspray-hunch-cs22b.md](coldspray-hunch-cs22b.md) |
 
 Not counted:
 - retired: CS-12 (2026-11-18, Peter): its decisive test T3 has no data source since the request was dropped on 2026-11-17, and its in-solver form bonds the pole first (opencourant-verification.md §26);

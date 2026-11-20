@@ -13,7 +13,7 @@ docs/research/coldspray-procedure.md (who writes where; tasks for the other sess
 - e(off), reported only: 0.094 / 0.065 / 0.057.
 Hunch count 3 of 5 (CS-10, CS-17, CS-20). WSL A has no open task.
 
-**First action next session:** ask Peter the open items in §5 item 0 (Track B closes again? R1–R3? CS-20 parked?).
+**First action next session:** ask Peter the open items in §5 item 0 (freeze CS-22b? R1–R3? CS-20 parked?).
 Nothing is unblocked without him.
 
 **Session 2026-11-18 (cloud, later), in order:**
@@ -241,8 +241,9 @@ amended 2026-11-14):
 ## 5. Open for Peter
 
 0. **New (2026-11-18), in order:**
-   1. CS-22 part 1 failed (2026-11-19, §30): confirm that Track B closes again. The contact-map trigger for part 2
-      lapses with it.
+   1. CS-22 part 1 failed for its registered setting only (placeholder δ_c too brittle). Freeze (or edit) the
+      CS-22b draft (coldspray-hunch-cs22b.md: δ_c ladder 3×/10×/30×, §30 off runs reused, R/8–R/16 gate,
+      at most 3 R/32 runs)? If not, Track B closes again.
    2. Which of R1–R3 leads (reduced-route-plan.md), still open.
    3. CS-20 has no unseen ring-map source, so it is a candidate for parking (its author gave 0.3 odds that a source
       appears within three months).
