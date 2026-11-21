@@ -3039,3 +3039,137 @@ those were not checked.
 - The spec lists "(b): an output change as in §33" as the consequence. From the source that is not needed for SPH:
   adding `/ANIM/ELEM/TEMP` to a deck should be enough (a deck change, not tested here). This departs from the spec's
   listed consequence; the modeller decides.
+
+## 35. Formalism note against the source: eq. 3, 6, 10, 11 right; eq. 5, 7, 12 and 14 differ in detail (task 2026-11-22-a)
+
+Note: [problem-formalism.md](problem-formalism.md) §1 and §4 (7a15329). Reading only: no run, no build. Source =
+fork `cs12` at engine `27e53d5f0` (engine, starter and common_source unchanged up to `34af57e10`). Settings are those
+of the §30/CS-22b decks (AL16 listing): P-HG-Al LAW4 + `/EOS/GRUNEISEN`, `tl.visc = lammps` (q1 0.1, q2 0),
+`tl.hg_alpha` 5, BCT and VCI off, `contact.stfac` 3, `contact.dc` 1, `contact.damp` 0.05, `surface.normal = colour`.
+On decks (§30, CS-22b): `bond.model = cs12`, Y′ = −10⁶, p_E = 0, `bond.t_on` = 11.78 ns, δ_c per run (31.25 nm in §30;
+93.75 nm, 312.5 nm, 937.5 nm in CS-22b).
+The note is not edited.
+
+| Eq. | Verdict | Main point |
+|---|---|---|
+| 3, 14 | right; eq. 14 omits two force terms | P-form force sum with corrected gradients; hourglass and pair viscosity are added |
+| 5 | right in compression; expansion differs | Γ = γ₀ exactly for this card (a = 0 defaults to γ₀); linear in expansion |
+| 6 | right; the rate is Jaumann | first-order rotation, one-step radial return |
+| 7 | the rate term differs | ε̇ is the largest component of the total d, not ε̇_p |
+| 10, 11 | right | B = ρ₀C₀² from the EOS |
+| 12 | right in outline; three differences | extra activation conditions; σ_B at melt; no traction while g ≤ 0 |
+
+**1. Eq. 3 and 14: TLSPH (`engine/source/elements/sph/tl_mod.F90`).** The form of eq. 3 is right.
+- Kernel: the solver's cubic spline, support 2h̄, h̄ = ½(h_i + h_j) (`:264, 1055–1072`). Uncorrected reference
+  gradient ∇W_ij = W′(|X_ij|) X_ij/|X_ij|, X_ij = X_j − X_i (`:271`).
+- Correction: K_i = Σ_j V⁰_j ∇W_ij ⊗ X_ij, inverted at setup, in the reference configuration (`:305, 330`). Corrected gradient K_i⁻¹∇W_ij, with the
+  check Σ_j V⁰_j X_ij ⊗ K_i⁻¹∇W_ij = I at setup (`:335–339`).
+- F_i = I + Σ_j V⁰_j (u_j − u_i) ⊗ K_i⁻¹∇W_ij; Ḟ_i the same with v (`:575–576, 587, 589`).
+  L_i = Ḟ_i (F_i − ½Δt Ḟ_i)⁻¹ at mid-step (`:592–595`). ρ = ρ₀/det F (`:600`).
+- P_i = J σ_i F_i⁻ᵀ from the material call's Cauchy stress, Q_i = P_i K_i⁻¹ (`:644–645`).
+- Internal force: f_i = Σ_j V⁰_i V⁰_j (Q_i + Q_j) ∇W_ij (`:896`). Image neighbours of the symmetry planes enter
+  reflected.
+  - By hand (not tested): this is the work-conjugate of the F operator above, Σ_i f_i·v_i = −Σ_i V⁰_i P_i : Ḟ_i.
+    This is exact for real pairs; across the symmetry planes it holds for the mirrored full body, since images
+    carry reflected fields. It therefore discretises ρ₀ẍ = ∇_X·P in the form of eq. 3.
+- **Eq. 14 omits two terms in f_int:**
+  - Penalty hourglass force −½α V⁰_i V⁰_j W_ij/|X_ij|² (E_i δ_i + E_j δ_j) along x_ij, with δ = (F X_ij − x_ij)·x̂_ij
+    from each end (`:909`). α = 5, modulus E: for LAW4 it is always Young's modulus; only LAW2 switches to σ_y
+    (`:622–626`).
+  - LAMMPS-form pair viscosity (`:923–925`).
+  - The hourglass term vanishes for a linear displacement field. The viscosity is proportional to the relative
+    normal velocity (`:914, 921–925`): it is non-zero in any deforming linear velocity field (e.g. uniform
+    compression), vanishes only for rigid motion, and scales with h, so it goes to zero as s → 0.
+  - Whether the scheme is "consistent as s → 0" is not shown by the source. Only the linear completeness of the
+    gradient is checked.
+
+**2. Eq. 5: `/EOS/GRUNEISEN` (`common_source/eos/gruneisen.F`, starter `hm_read_eos_gruneisen.F`).**
+- μ = ρ/ρ₀ − 1 (`gruneisen.F:81`). E = ρ₀e, internal energy per reference volume (`eosmain.F:218`).
+  e is the total specific internal energy: deviatoric work, plastic work included (`meint.F:99–105`), plus −p dV (and −½dV(q_old + q_new) where q ≠ 0, `meint.F:118`; q = 0
+  for SPH, §34).
+- Compression (μ > 0), with S₂ = S₃ = 0 on the card (`gruneisen.F:140–149`):
+  p = ρ₀C₀²μ [1 + (1 − γ₀/2)μ − (a/2)μ²] / [1 − (S₁ − 1)μ]² + (γ₀ + aμ) E.
+  - This is p_H(μ) + Γρ(e − e_H(μ)), with the linear U_s–u_p Hugoniot and e_H = ½ p_H μ/(ρ₀(1 + μ)), for
+    Γρ = ρ₀(γ₀ + aμ). Expanding by hand reproduces the bracket.
+  - The card has a = 0, which the reader replaces by a = γ₀ (`hm_read_eos_gruneisen.F:100`). Then
+    γ₀ + aμ = γ₀(1 + μ), so **Γ = γ₀ exactly, constant**. The note's "Γ ≈ γ₀" is exact for this card.
+- **Expansion (μ ≤ 0):** p = ρ₀C₀²μ + (γ₀ + aμ)E (FAC = 1). This is linear and not the Hugoniot-reference form.
+  Eq. 5 does not separate the two branches.
+- No tension cut-off: p ≥ PMIN = −10³⁰ from the LAW4 card (`eosmain.F:232`). The step solves for p at n+1 with
+  E at n+1 implicit: p = (AA + BB E′)/(1 + BB ½ dV ρ₀/(ρV)) (`gruneisen.F:148–149`). The compression heating of
+  eq. 8 comes from the same Γ (`eosmain.F:474–486`, §34).
+
+**3. Eq. 6: objective rate for SPH/TL (`spstres.F`, `spdefo3.F`, `srota3.F`, `m4law.F`).**
+- **Jaumann.** The spin comes from the mid-step L that TL passes in (`spload3.F:74–82`):
+  the code's WZZ = ½Δt (L_yx − L_xy) = Δt W_yx, likewise WXX, WYY (`spdefo3.F:59–67`), W = skew L. The stress is rotated explicitly, to first order:
+  σ ← σ + Δt(Wσ − σW) (`srota3.F:80–91`; skipped only for laws 6, 17, 46, 47 and ISMSTR 10/12).
+- LAW4 then forms the deviatoric trial s* = s + 2GΔt d′ (`m4law.F:105–110`).
+- SPH uses JPLASOL = 1 (`forintp.F:678`), a one-step radial return with linearised hardening:
+  Δε_p = (σ*_vm − σ_y)/(3G + H), σ_y ← σ_y + H Δε_p, s = (σ_y/σ*_vm) s* (`m4law.F:201–214`).
+- The pressure is from the EOS. The note's continuous form is right, and its "objective rate" is Jaumann.
+
+**4. Eq. 7: LAW4 rate term (`m4law.F:114–152`; reader `hm_read_mat04.F:215–222`).**
+σ_y = min(σ_max, A + B ε_pⁿ) · CE · CT, with:
+- **ε̇ in CE is not ε̇_p.** It is max(|d₁₁|, |d₂₂|, |d₃₃|, |d₁₂|, |d₂₃|, |d₁₃|): the largest absolute component of the
+  total strain rate in global axes (`:114`; D4 = 2d₁₂, so ½|D4| = |d₁₂|). It is not frame-invariant and includes the
+  elastic part.
+- CE = 1 + C ln(ε̇/ε̇₀) for ε̇ > ε̇₀, else 1 (`:138–141`). CE has no cap. ε̇₀ = 1 s⁻¹ on the card (set to 1 when
+  C = 0, `hm_read_mat04.F:219`).
+- σ_max and ε_p,max are 0 on the card and default to 10²⁰, inactive. For ε_p > ε_p,max, A + Bε_pⁿ would be 0.
+- CT = 1 − T*ᵐ only for T > T_r; m = 1 above T_max (10²⁰, inactive); σ_y = 0 and s = 0 for T ≥ T_m (`:127–135`).
+  T* = max(0, (T − T_r)/(T_m − T_r)) (`mmain.F90:793–794`).
+- ε_p in the hardening term is that of the step start; the step adds H Δε_p (item 3).
+- With C = 0.001 the difference from ε̇_p is small for σ_y: at ε̇ = 10⁸ s⁻¹, CE = 1.018. The note's §2(b) table is
+  not affected materially. Eq. 7's ln(ε̇_p/ε̇₀) should still read "ε̇ = max |d_ij|, total, global axes".
+
+**5. Eq. 10–12: hvi contact and cs12 (`hvi_contact.F90`, `hvi_bond.F90`, `hvi_mod.F90`).**
+- **Eq. 10, right.** For a cross-body pair (`hvi_contact.F90:55–95`):
+  - s_ij = ½(s⁰_i + s⁰_j) (reference spacings); g = r − d_c s_ij with d_c = 1 (radial gap);
+  - k = stfac s_ij B_ij, B_ij the harmonic mean;
+  - f_n = max(0, k(−g) − c v_n), with c = 2ζ√(k m*), m* the reduced mass, ζ = 0.05. The damping cannot pull.
+  - Direction n_ij = (n_i − n_j)/|n_i − n_j| from the colour normals, with the centre line as the fallback.
+  - B = PM(32) (`hvi_mod.F90:380`), which the EOS reader sets to ρ₀C₀² = 76.0 GPa (`hm_read_eos_gruneisen.F:176`;
+    listing "B min/max 7.600049E+10"). It is not E/(3(1 − 2ν)) = 77.8 GPa.
+- **Eq. 11, right.** With bond `none` only f_n acts; there is no tangential force.
+- **Eq. 12, right in outline (activation, f_B, σ_B, area s², G_c), with these differences:**
+  1. **Activation** also needs the pair to be in contact (g < 0), t ≥ `bond.t_on` and σ_flow,ij > 0
+     (`hvi_bond.F90:129`).
+     - Y is per particle, area-weighted over its skin facets: Y_i = 1 − ΣA₀/ΣA (`:287`). The pair takes the
+       minimum (`hvi_contact.F90:269`).
+     - p_n,i = Σ_pairs f_n / (s⁰_i² r), from the previous gather pass, with r the Nanson area ratio
+       (`hvi_contact.F90:212, 305`). The pair takes the minimum (`:270`).
+     - f_B = (Y_ij − Y′)/(1 − Y′) is a running maximum while the conditions hold (`hvi_bond.F90:130, 151`).
+  2. **σ_B = f_B σ_flow,ij(t).** σ_flow,ij is the current LAW4 SIGY, rate and thermal factors included, minimum over
+     the pair (§34). σ_B is refreshed every cycle while D = 0 and frozen from damage onset, as the note says
+     (`:141, 152`).
+     - Below T_m an existing bond weakens with σ_flow (CT → 0 toward T_m). If σ_flow,ij = 0 (T ≥ T_m), σ_B is
+       frozen at its last positive value, and no new bond can activate there. §2(f)'s conclusion (weakest at the
+       hot edge) stands, with that qualifier.
+  3. **Bilinear law (`:161–174, 218`):**
+     - K₀ is the contact penalty k itself; peak force T_max = σ_B s_ij²; d₀ = T_max/k.
+     - Mixed mode with one damage variable: δ = √(g² + |δ_t|²), κ = max δ (irreversible),
+       D = δ_c(κ − d₀)/(κ(δ_c − d₀)); δ_c = `cohesive.delta_c` (`:97`).
+     - Dissipation per pair = ½ T_max δ_c = ½ σ_B δ_c s_ij² (`:108`). So G_c = ½ σ_B δ_c per bonded area s_ij²
+       holds exactly, provided δ_c > d₀ (otherwise δ_c is raised to d₀(1 + 10⁻⁹)).
+       For σ_B = 400 MPa, s = 0.6 µm: d₀ ≈ 1 nm.
+     - The opening is measured from r = s_ij (g = 0).
+  4. **No bond traction while g ≤ 0.** The cohesive force (1 − D) k (g n + δ_t) is applied only while the pair is
+     open (g > 0) (`hvi_contact.F90:279–280`). In compression a bonded pair carries only the frictionless penalty
+     of eq. 10. The tangential opening δ_t accumulates while bonded and acts once the pair reopens.
+     - So the "normal and tangential" t(δ) of eq. 12 holds in opening only. A bonded interface under contact
+       pressure transmits no shear.
+  - Bookkeeping: a bonded pair that leaves the candidate list is broken (state 2), and its remaining fracture
+    energy counts as W_b (`hvi_bond.F90:185–206`). That remainder uses the owner's equal-partner stiffness and
+    spacing (`hvi_contact.F90:197`, `hvi_bond.F90:201–204`), not the pair's s_ij and B_ij, so it is approximate
+    for unequal pairs. Bonded area A_b = Σ s_ij² over bonded pairs, ghost pairs ½
+    (`:180`).
+
+**For the modeller (not edited in the note):**
+- Eq. 7: ε̇ is max |d_ij|.
+- Eq. 5: the expansion branch.
+- Eq. 14: hourglass and viscosity terms.
+- Eq. 12: activation conditions; no traction while g ≤ 0.
+- §2(f): bonds weaken toward T_m; at T ≥ T_m σ_B is frozen and no new bonds form.
+- In the on decks Y′ = −10⁶, so f_B ≈ 1, σ_B ≈ σ_flow and the Y test always passes (also off the skin, Y = −1,
+  `hvi_bond.F90:286`). The binding conditions there are g < 0, t ≥ t_on, p_n > 0 and σ_flow > 0.
+- The "source, WSL A" statuses in the note can be set from this section.
