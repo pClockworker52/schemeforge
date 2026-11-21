@@ -1,0 +1,2 @@
+kind,spec,judged_points,S_disc_min,S_disc_min_at,S_edge_min,T_max_K,T_max_over_T_m,verdict
+check,schemeforge docs/research/softening-check-2026-11-20.md @ 66636c8,102,1.0,500 m/s frame 1 S_block_0.25a,1.0,293.0,0.3140407288317256,"stopped: TEMP output is the initial GBUF%TEMP (T_r everywhere), not LAW4's adiabatic LBUF%TEMP"
