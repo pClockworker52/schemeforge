@@ -104,3 +104,25 @@ revisit an evolving ℓ (§4).
    2024: read (main text; SI not read). Check the grain-size numbers of §4b in Panova & Schuh and Liu et al.
 2. Find a measured grain size or gradient length for an Al powder like P-HG-Al.
 3. Only then: draft a hunch built on the ℓ-plateau test (budget 4 of 5).
+
+## 9. After §33 (2026-11-21): which assumptions changed
+
+The softening check (softening-check-2026-11-20.md, frozen 66636c8) read **informative** on the engine's own quad
+temperature (§33): S = 1 − T*ᵐ is 0.91–0.94 at 0.25 a and 0.5 a already at the first judged frame, and the edge
+exceeds T_m (1.03–1.08 T_m) at the last.
+- **Retracted:** "the early Y − 1 failure is not thermal" (stated in chat on 2026-11-21 from the §32 reconstruction,
+  which left out compression and q heating). Softening is 6–9 % at the first output.
+- **Now justified:** "softening acts in the §25 window", the first unjustified step of the softening-off test.
+- **Newly unjustified:** "the softening in this deck is physical". Part of the early heat is bulk-viscosity work
+  (numerical) and reversible Grüneisen compression heating (§2.1); §33 does not separate them. A softening-off test
+  switches off both kinds.
+- **Newly false late in the window:** "JC is valid at the edge". At T ≥ T_m LAW4 sets the strength to zero and there
+  is no latent heat. This is a second reason, besides the grain scale (§2), why JC is out of range at the edge.
+- **Held:** the §32 reconstruction was a lower bound on the heating.
+- **Unchanged:** step 0 ("the edge fails to converge because of a missing length") is still unjustified; §33
+  removes one obstacle to testing it, it is not evidence for it.
+
+Open before a softening-off test is drafted (its own first unjustified steps):
+- with softening off the deck may run longer, so the judged windows of the twins differ;
+- part of what is switched off is numerical (q) heating;
+- the melt cut-off (strength zero at T ≥ T_m) goes with it.

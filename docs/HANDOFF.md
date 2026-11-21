@@ -11,12 +11,8 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. WSL A's order (DECISIONS 2026-11-21):
-1. **Task 2026-11-21-a:** fork output change for the quad temperature, then the softening check's verdict as §33.
-   When pushed: merge with a merge commit (diff only §33 and `results/softening_check2_*`), judge against
-   docs/research/softening-check-2026-11-20.md (frozen 66636c8, prediction "uninformative" 0.6), update
-   solver-facts.md §1.
-2. **Task 2026-11-20-a:** CS-22b (δ_c ladder), paused after a Windows-update abort, resumes on engine `27e53d5f0`.
+Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) is merged. WSL A resumes CS-22b:
+1. **Task 2026-11-20-a:** CS-22b (δ_c ladder), resumed after a Windows-update abort, on engine `27e53d5f0`.
    When pushed: merge (diff only §31 and `results/tl_cs22b_*`), recompute dR per δ_c with the §30 off runs, judge
    against coldspray-hunch-cs22b.md (frozen c8a6c5c; author's odds 0.15), record in coldspray-hunches.md,
    DECISIONS, STATUS and solver-facts.md.
@@ -41,7 +37,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-21-a** (now), then **2026-11-20-a** (CS-22b, resume) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, resume now); 2026-11-21-a closed (§33 merged) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
@@ -51,6 +47,8 @@ If nothing is pushed: the open items for Peter below.
 3. Physical length scale: pursue after CS-22b? Next steps: Chakrabarty & Song 2020 (needs Peter's download), check
    the grain-size numbers (Panova & Schuh, Liu et al.) in the originals, find a grain size for an Al powder like
    P-HG-Al; a hunch only after that.
+3b. Softening-off test on the §25 deck: draft it now or not? §33 says it can discriminate; its open first steps
+   (twin windows differ, q heating, melt cut-off) are in length-scale-note-2026-11-20.md §9.
 4. CS-20: no unseen ring-map source; candidate for parking.
 
 ## Hunch budget
@@ -76,7 +74,7 @@ CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§30, §32 (§31 reserved for CS-22b, §33 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§30, §32, §33 (§31 reserved for CS-22b, §34 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); open: coldspray-hunch-cs22b.md; recent: cs20, cs21, cs22 |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |

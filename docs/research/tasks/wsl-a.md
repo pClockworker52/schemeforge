@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-21-a: softening check with a quad temperature output (open; do NOW, then resume 2026-11-20-a)
+## Task 2026-11-21-a: softening check with a quad temperature output (closed: §33 informative; merged)
 
 **Basis:** DECISIONS 2026-11-21, "Softening check stopped; quad temperature output to be fixed" (Peter: option (b)
 of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.md](../softening-check-2026-11-20.md)
@@ -24,7 +24,7 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
-## Task 2026-11-20-a: CS-22b (δ_c ladder) (open; paused 2026-11-21 after a Windows-update abort, resume after 2026-11-21-a)
+## Task 2026-11-20-a: CS-22b (δ_c ladder) (open; RESUME NOW on engine 27e53d5f0, after the 2026-11-21 Windows-update abort)
 
 **Abort handling (Peter, DECISIONS 2026-11-21):** an externally killed run (OS update, VM restart) is not a run
 failure under the frozen rule. Report which runs reached t_end (they stand). Rerun the killed run from t = 0 with the
