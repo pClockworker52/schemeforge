@@ -2933,3 +2933,48 @@ reconstruction points against both.
 lower-bound part of T); (b) a fork output change that writes the Gauss-point average of `LBUF%TEMP` for quads, as
 shells and bricks already do (code change; neutral for the solution, checkable byte for byte on the §25 frames; it
 would also close §5.3); (c) leave it. CS-22b resumes as DECISIONS 2026-11-21 orders, independent of this choice.
+
+## 33. Softening check on the quad temperature output: informative (task 2026-11-21-a)
+
+Spec, rule and prediction unchanged: [softening-check-2026-11-20.md](softening-check-2026-11-20.md) (66636c8);
+`kind = check`. This is option (b) of §32 (DECISIONS 2026-11-21).
+- Fork branch `quadtemp` (from `cs12`; CS-22b stays on `27e53d5f0`): design note SPEC-TL-b §18.1 `f72a140f4`,
+  code `078380a0f`, A-0 rows and script `aa2542b36`, result §18.2 `7f310d7cf`, number fix `7aef5e39f`, review fixes `3c51097d9`.
+- Script `hvi/scripts/softening_check2.py`; rows
+  `opencourant/results/softening_check2_{runs,series,verdict,compare}.csv`.
+
+**Verdict line: informative.** S = 1 − T*ᵐ falls below 0.95 at the first judged frame of both speeds, and the disc
+minimum is 0.21.
+
+- **The change (output only):** `dfuncc.F`, quad animation TEMP. Without a thermal analysis it now writes the
+  Gauss-point average of the layer temperature that LAW4 heats and softens with, as 3D solids already do. H3D and
+  time history are unchanged. `check_untouched.sh` is clean.
+- **T-A0 on the new build:** PASS, 55 of 55 identical.
+- **Reruns of the two §32 R/256 decks** (decks copied byte for byte, one thread): every output except the
+  temperature is identical to §32's reruns.
+  - Stop times 0.8126793 / 0.8500526 ns.
+  - Time history CSV and raw file (date masked) identical.
+  - All animation frames: coordinates, cells and every field except `2DELEM_Temperature` equal. The raw frames
+    differ in one block no larger than the temperature field.
+  - Listings identical except dates, timings, paths and one reported memory figure; restart files identical
+    except the stored runtimes.
+- **Temperature now shown:** T_max 343 / 334 K at the first judged frame and 965 / 1005 K (1.03 / 1.08 T_m) at the
+  last (600 / 500 m/s).
+- **Disc S (judged):** below 0.95 first at t/t_p 0.0035 (600) and 0.0042 (500), at 0.25 a and 0.5 a, both sides
+  (0.91–0.94; 0.75 a still 0.95–0.96). At the last judged frame: 0.25 a 0.91–0.93, 0.5 a 0.76–0.77, 0.75 a 0.21–0.36.
+- **Edge minimum (reported, not judged):** 0.09–0.21 at frames 6–8 of 600 m/s, −0.04 / −0.10 at the last frame. A
+  negative value is the formula above T_m; LAW4 itself sets the deviatoric stress and yield to zero at a Gauss
+  point with T ≥ T_m (`m4law.F:127–132`), so the strength factor there is 0 (S uses the element mean of four
+  Gauss points).
+- **Against the §32 reconstruction (plastic-work part, reported only):** the engine S is lower at all 102 points (by
+  0.03–0.21), and T_max is higher at every frame (by 34–213 K). The early gap at the disc centre (0.91 against 0.99
+  at 0.25 a) fits compression and q heating (§2.1), which the reconstruction leaves out; this is not separated in
+  the output. The §32 reading "probably a lower bound" holds for these runs.
+- **§5.3 / §7 item 1:** closed for the animation output of builds with `078380a0f` (fork branch `quadtemp`) only.
+  The CS-22b binary (`27e53d5f0`) and upstream OpenCourant still write T₀. H3D and `/TH/QUAD` still write T₀
+  for 4-point quads in every build. The report to OpenCourant (§7 item 1) is still open.
+
+**Against the prediction:**
+- Spec: uninformative (0.6) and T_max < 0.5 T_m (0.7) were both wrong.
+- Fork §18.1: T-A0 identical (0.95), identical except T (0.9), engine T above the reconstruction (0.8; at all
+  compared points), informative (0.85) and T_max reaching T_m (0.6) all held.

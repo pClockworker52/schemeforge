@@ -1,0 +1,2 @@
+kind,spec,judged_points,S_disc_min,S_disc_min_at,S_edge_min,T_max_K,T_max_over_T_m,first_below_0p95,verdict
+check,schemeforge docs/research/softening-check-2026-11-20.md @ 66636c8,102,0.20822959352649303,600 m/s frame 9 S_particle_0.75a,-0.10054477260980099,1005.31,1.0775026795284028,"600 m/s frame 1 t/t_p 0.0035 ['S_particle_0.25a', 'S_particle_0.5a', 'S_block_0.25a', 'S_block_0.5a']; 500 m/s frame 1 t/t_p 0.0042 ['S_particle_0.25a', 'S_particle_0.5a', 'S_block_0.25a', 'S_block_0.5a']",informative
