@@ -38,13 +38,15 @@ If nothing is pushed: the open items for Peter below.
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
 | WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-23-a** (bonded stick + per-pair output, no impact runs); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
-| WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
+| WSL B | `coldspray/blind-list2-count`; `coldspray/bonding-methods-reading` | **2026-11-23-b13** (metadata count for list 2); b9: only Dai 2025 left (closed access) |
 
 ## Open for Peter
 
 1. Track B decided 2026-11-22 (DECISIONS): bonded pairs stick (WSL A task 2026-11-23-a), then CS-23 for your freeze.
    Still open: friction for unbonded contact (the off branch is frictionless).
-2. R1 started 2026-11-22 in parallel (status note r1-status-2026-11-23.md); R2 and R3 stay open.
+2. R1 started 2026-11-22 in parallel (status note r1-status-2026-11-23.md). Blind list 1 is used up for v_cr. Peter
+   (2026-11-23): count candidates for a list 2 first (WSL B task 2026-11-23-b13, metadata only); build it only if
+   N_v ≥ 4 and N_q ≥ 2 (§5), else write R1 up as it stands. R2 and R3 stay open.
 3. Physical length scale: pursue after CS-22b? Next steps: Chakrabarty & Song 2020 (needs Peter's download), check
    the grain-size numbers (Panova & Schuh, Liu et al.) in the originals, find a grain size for an Al powder like
    P-HG-Al; a hunch only after that.

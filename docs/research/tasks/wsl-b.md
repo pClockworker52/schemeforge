@@ -223,6 +223,24 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
 
+## Task 2026-11-23-b13: metadata count for a blind list 2 (open; no paper opened)
+
+**Basis:** Peter, chat 2026-11-23; stop rule fixed in [../r1-status-2026-11-23.md](../r1-status-2026-11-23.md) §5.
+Branch `coldspray/blind-list2-count`. The blind rules bind you as for list 1.
+
+1. Search for single-particle impact papers (LIPIT or similar) from 2019–2026 that may report a measured critical
+   or bonding velocity. Use titles and venue metadata only (Crossref or similar).
+   - **Do not open any abstract or full text.**
+   - Ignore or suppress any search snippet that shows numbers. If a value reaches you anyway, log it (paper, what was
+     seen, where) and do not pass it on.
+   - Skip list-1 papers (coldspray-blind-literature.md) and the excluded exposed ones (Tang2025, Panova2024,
+     HG2018b).
+2. Write `docs/research/data/blind_list2_candidates.csv` with columns: title, first author, year, venue, DOI, N_v
+   (yes / half / no), N_q (yes / half / no), a one-line reason from the title only, and `seen_values` ("none" or the
+   logged item).
+3. Report the two counts N_v and N_q (halves included) at the top of a short note in the same commit. Do not judge
+   the stop rule; the modeller applies it. Push and stop.
+
 ## Task 2026-11-17-b12: step 3, outcomes of B06 (closed: merged, scored; coldspray-results-b06.md)
 
 Predictions are frozen: commit c484494 (`docs/research/coldspray-preregistration-b06.md`,
