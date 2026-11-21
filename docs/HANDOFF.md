@@ -17,9 +17,10 @@ Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) and §34 
    against coldspray-hunch-cs22b.md (frozen c8a6c5c; author's odds 0.15), record in coldspray-hunches.md,
    DECISIONS, STATUS and solver-facts.md. Also report the effective G_c (W_b / bonded area) per δ_c against the
    hunch file's G_c estimates, which assumed room-temperature σ_flow and are upper bounds (solver-facts §4; a
-   rationale caveat, not a rule change). Also check, if the rows allow it, whether bonds fail when they reopen
-   (accumulated slip δ_t against δ_c): bonded pairs carry no shear under compression (§35; problem-formalism.md
-   §2(g)); if the rows do not allow it, state that limitation in the reading.
+   rationale caveat, not a rule change). Also check whether bonds fail when they reopen: the interface file of the
+   on-runs accumulates `slip` per facet whenever a bond model is on (§30); compare slip at reopening with δ_c, and
+   report how much tangential motion went into interface slip (bonded pairs carry no shear under compression, §35;
+   problem-formalism.md §2(g)).
 
 If nothing is pushed: the open items for Peter below.
 

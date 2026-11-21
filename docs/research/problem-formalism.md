@@ -88,6 +88,18 @@ slip. **Modeller's reading, not tested:** this may explain §30's "every bond fa
 brittle placeholder alone, and it may cap CS-22b's larger δ_c values. A real bonded interface sticks; this is a second
 modelling choice in cs12 to question, next to (f).
 
+*Not the same as adiabatic shear instability* (added 2026-11-22 after Peter's question; modeller's reading):
+- **ASI** is localisation **inside the material**: the displacement stays continuous, and plastic shear concentrates
+  in a thin band next to the interface, driven by thermal softening (§2(b), h_eff < 0).
+- **Interface slip** is a **jump** in tangential displacement across the contact surface: the two bodies slide past
+  each other. In the model it is possible because the contact is frictionless and a bonded pair carries no shear
+  while compressed.
+- Physically, at GPa contact pressure with friction and adhesion, the tangential motion near the interface is thought
+  to be carried largely by ASI in the material. In the model, part of it can go into slip instead. Then slip
+  accumulates in δ_t and can break bonds on reopening, and shear that would load the material band is relieved at the
+  surface, so the model may under-represent or misplace the ASI. How the tangential motion splits between slip and
+  band shear is not measured.
+
 ## 3. Check output (`uv run python scripts/formalism_check.py`, 2026-11-22)
 
 - h_eff symbolic form as in (b); adiabat table as above; onset ε_p 0.367 (10⁶ s⁻¹), 0.365 (10⁸ s⁻¹).
