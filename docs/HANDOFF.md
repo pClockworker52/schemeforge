@@ -11,16 +11,8 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) and §34 (TLSPH heats and softens; temperature not written) are merged. WSL A resumes CS-22b:
-1. **Task 2026-11-20-a:** CS-22b (δ_c ladder), resumed after a Windows-update abort, on engine `27e53d5f0`.
-   When pushed: merge (diff only §31 and `results/tl_cs22b_*`), recompute dR per δ_c with the §30 off runs, judge
-   against coldspray-hunch-cs22b.md (frozen c8a6c5c; author's odds 0.15), record in coldspray-hunches.md,
-   DECISIONS, STATUS and solver-facts.md. Also report the effective G_c (W_b / bonded area) per δ_c against the
-   hunch file's G_c estimates, which assumed room-temperature σ_flow and are upper bounds (solver-facts §4; a
-   rationale caveat, not a rule change). Also check whether bonds fail when they reopen: the interface file of the
-   on-runs accumulates `slip` per facet whenever a bond model is on (§30); compare slip at reopening with δ_c, and
-   report how much tangential motion went into interface slip (bonded pairs carry no shear under compression, §35;
-   problem-formalism.md §2(g)).
+Fetch `coldspray/opencourant-sph`. §31 (CS-22b supported), §33, §34 and §35 are merged; **WSL A has no open task**.
+Nothing is pending from the other sessions.
 
 If nothing is pushed: the open items for Peter below.
 
@@ -31,7 +23,8 @@ If nothing is pushed: the open items for Peter below.
   (reduced-route-plan.md).
 - **Track B (SPH host for a bond law):** the interface-state route is closed (2026-11-17: no local driver
   converges). Open only for the forked bond response: CS-22 refuted for its registered setting (placeholder bond too
-  brittle; scope note), **CS-22b frozen** and running. History: handoff-archive.md §2, solver-facts.md §3.
+  brittle; scope note); **CS-22b supported at δ_c 30×** (§31, DECISIONS 2026-11-22), with caveats: two meshes in one
+  regime, a pass by near-cancellation of two drifts, post hoc ladder. History: handoff-archive.md §2, solver-facts.md §3.
 - **Length-scale idea (not a hunch):** docs/research/length-scale-note-2026-11-20.md: one fixed ℓ at the feedstock
   grain size plus the interface law. First unjustified step: that the edge failure is caused by a missing length.
   The softening check (task 2026-11-21-a) tests the premise of a cheap test of that step. Readings: data/ge2026_reading.md
@@ -42,12 +35,17 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, running), 2026-11-21-a/b closed (§33, §34), 2026-11-22-a closed (§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | — (2026-11-20-a closed: §31; 2026-11-21-a/b and 2026-11-22-a closed: §33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
 
-1. After CS-22b's verdict: if it fails, does Track B close again?
+1. **Next step after CS-22b (supported, with caveats).** Options:
+   (a) a confirmatory pre-registered test of the 30× result (another speed, or δ_c 20× / 50×, on R/16 and R/32) to
+   see whether the cancellation is robust;
+   (b) the reopening/slip analysis of the existing on-runs (post-processing only, cheap; problem-formalism.md §2(g));
+   (c) part 2, the bistable band in V (trigger and kill rule registered first);
+   (d) R1–R3 (item 2).
 2. Which of R1–R3 leads (reduced-route-plan.md).
 3. Physical length scale: pursue after CS-22b? Next steps: Chakrabarty & Song 2020 (needs Peter's download), check
    the grain-size numbers (Panova & Schuh, Liu et al.) in the originals, find a grain size for an Al powder like
@@ -60,8 +58,8 @@ If nothing is pushed: the open items for Peter below.
 
 ## Hunch budget
 
-**4 of 5:** CS-10, CS-17, CS-20, CS-22b. Retired: CS-12. Refuted: CS-22 part 1 (§30), CS-21 part 1 (§28),
-CS-18b (§20). Index: docs/research/coldspray-hunches.md.
+**3 of 5:** CS-10, CS-17, CS-20. Supported: CS-22b (§31). Retired: CS-12. Refuted: CS-22 part 1 (§30), CS-21 part 1
+(§28), CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 
 ## Rules that must not be broken
 
@@ -81,8 +79,8 @@ CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§30, §32–§35 (§31 reserved for CS-22b, §36 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
-| Hunches | coldspray-hunches.md (index); open: coldspray-hunch-cs22b.md; recent: cs20, cs21, cs22 |
+| Solver log §1–§35 (§36 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Hunches | coldspray-hunches.md (index); recent: cs20, cs21, cs22, cs22b (supported) |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
 | Multi-particle brainstorm | multi-particle-spec.md, multi-particle-tried.md, multi-particle-brainstorm-2026-11-18.md |

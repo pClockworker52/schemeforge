@@ -49,7 +49,7 @@ reading and post-processing of existing files is needed, stop and report.
 3. Rows `results/tlsph_temp_check_*.csv`; a short section of opencourant-verification.md (next free number) with the
    verdict line (a)–(d) against the spec's rule. Then return to CS-22b.
 
-## Task 2026-11-20-a: CS-22b (δ_c ladder) (open; RESUME NOW on engine 27e53d5f0, after the 2026-11-21 Windows-update abort)
+## Task 2026-11-20-a: CS-22b (δ_c ladder) (closed: §31 CS-22b supported at 30×; merged)
 
 **Abort handling (Peter, DECISIONS 2026-11-21):** an externally killed run (OS update, VM restart) is not a run
 failure under the frozen rule. Report which runs reached t_end (they stand). Rerun the killed run from t = 0 with the
