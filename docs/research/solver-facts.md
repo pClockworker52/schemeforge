@@ -60,6 +60,7 @@ the verification log, which stops at §13. **Kept current by the modeller at eve
 | T-A0 (55 runs) is the neutrality check for every fork build; "bit-identical" is on written metrics; output headers carry dates and uninitialised padding bytes, contact sums differ at round-off between `none` and a never-active bond | compare written metrics, mask headers; see A2 | §16.2, §30 |
 | Costs (Al–Al quarter, TLSPH): R/8 about 100 s; R/16 about 0.5 h, 1.6 GB; R/32 11–12 h on 24 threads, 12.7–14.2 GiB (WSL VM now 23.5 GiB); R/64 estimated about 100 GB (out of reach) | | §26, §30, coldspray-hunch-cs22.md |
 | e(off) (Al–Al 600 m/s, P-HG-Al) does not converge: 0.094 / 0.065 / 0.057 at R/8 / R/16 / R/32 | any rebound-based quantity inherits this drift | §30 |
+| Temperature output of TLSPH / SPH bodies: **never read**; whether it is the material temperature is unknown | check the output before any spec relies on it (cf. the quad case, §32) | (none; noted 2026-11-21) |
 
 ## 4. `cs12` bond model and its keys
 
@@ -70,6 +71,7 @@ the verification log, which stops at §13. **Kept current by the modeller at eve
 | Off-skin particles carry the sentinel Y = −1; they bond only when Y′ < −1 (A1) | | §29, §30 |
 | **Placeholders, not physical:** Y′, p_E (survival 0.3 / 0.5 GPa) and δ_c. δ_c = 31.25 nm (0.05 s at R/16) gives a bond of a few J/m²; every bond tears on rebound and dR < 10⁻³ | check that a placeholder lets the effect act before freezing (CS-22 scope note) | §26, §30, DECISIONS 2026-11-19 |
 | Skin Y peaks at the particle's pole (largest facet Y 0.72 at r < 3 µm), so skin-Y activation bonds the centre first; no thresholds give a bonded ring | | §26 |
+| σ_B = f_B σ_flow(T) uses the material's current temperature (rate and adiabatic heating included). Where the interface nears T_m, σ_B → 0 (LAW4 sets the strength to zero at T ≥ T_m; the 2D edge reaches 1.03–1.08 T_m in the §25 window) | bond fracture energies estimated from room-temperature σ_flow are upper bounds (e.g. CS-22b's G_c estimates); report W_b / bonded area | §26, §33 |
 | Illustration δ_c sweep (Ti, 1584 m/s, R/12): still-bonded share 0.06–0.11 / 0.63 / 1.00 at δ_c/s = 0.3 / 1 / 3 | seen data on another material | §26 |
 
 ## 5. Material data in use

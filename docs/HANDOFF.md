@@ -15,7 +15,9 @@ Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) is merged
 1. **Task 2026-11-20-a:** CS-22b (δ_c ladder), resumed after a Windows-update abort, on engine `27e53d5f0`.
    When pushed: merge (diff only §31 and `results/tl_cs22b_*`), recompute dR per δ_c with the §30 off runs, judge
    against coldspray-hunch-cs22b.md (frozen c8a6c5c; author's odds 0.15), record in coldspray-hunches.md,
-   DECISIONS, STATUS and solver-facts.md.
+   DECISIONS, STATUS and solver-facts.md. Also report the effective G_c (W_b / bonded area) per δ_c against the
+   hunch file's G_c estimates, which assumed room-temperature σ_flow and are upper bounds (solver-facts §4; a
+   rationale caveat, not a rule change).
 
 If nothing is pushed: the open items for Peter below.
 
