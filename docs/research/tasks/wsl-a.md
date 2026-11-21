@@ -24,7 +24,7 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
-## Task 2026-11-22-a: confirm the formalism note's equations against the source (QUEUED: after CS-22b, reading only)
+## Task 2026-11-22-a: confirm the formalism note's equations against the source (closed: §35; merged)
 
 **Basis:** Peter, chat 2026-11-22. Note: [../problem-formalism.md](../problem-formalism.md), §1 and §4. No run, no
 build. For each item give the exact expression as coded, with file and line references, and say whether the note's

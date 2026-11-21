@@ -17,7 +17,9 @@ Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) and §34 
    against coldspray-hunch-cs22b.md (frozen c8a6c5c; author's odds 0.15), record in coldspray-hunches.md,
    DECISIONS, STATUS and solver-facts.md. Also report the effective G_c (W_b / bonded area) per δ_c against the
    hunch file's G_c estimates, which assumed room-temperature σ_flow and are upper bounds (solver-facts §4; a
-   rationale caveat, not a rule change).
+   rationale caveat, not a rule change). Also check, if the rows allow it, whether bonds fail when they reopen
+   (accumulated slip δ_t against δ_c): bonded pairs carry no shear under compression (§35; problem-formalism.md
+   §2(g)); if the rows do not allow it, state that limitation in the reading.
 
 If nothing is pushed: the open items for Peter below.
 
@@ -39,7 +41,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, running), then **2026-11-22-a** (formalism equations against the source, reading only); 2026-11-21-a/b closed (§33, §34) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, running), 2026-11-21-a/b closed (§33, §34), 2026-11-22-a closed (§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
@@ -52,6 +54,8 @@ If nothing is pushed: the open items for Peter below.
 3b. Softening-off test on the §25 deck: draft it now or not? §33 says it can discriminate; its open first steps
    (twin windows differ, q heating, melt cut-off) are in length-scale-note-2026-11-20.md §9.
 4. CS-20: no unseen ring-map source; candidate for parking.
+5. Two modelling choices in cs12 to question before any further bond-law work (problem-formalism.md §2(f), §2(g)):
+   σ_B ∝ σ_y(T) makes bonds weakest at the hot edge; bonded pairs do not stick under compression.
 
 ## Hunch budget
 
@@ -76,7 +80,7 @@ CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§30, §32–§34 (§31 reserved for CS-22b, §35 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§30, §32–§35 (§31 reserved for CS-22b, §36 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); open: coldspray-hunch-cs22b.md; recent: cs20, cs21, cs22 |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |

@@ -46,7 +46,7 @@ the verification log, which stops at §13. **Kept current by the modeller at eve
 
 | Fact | Consequence for specs | Where |
 |---|---|---|
-| hvi contact is frictionless penalty, F = k⟨−g⟩n + damping, repulsive only, k = stfac·B·s; no friction (fatal if requested), max 2 bodies, OpenMP only, no restart | the "no bond" branch is frictionless; no restart means a killed run starts from t = 0 | sph-hvi-contact-plan.md A2, DECISIONS 2026-11-21 |
+| hvi contact is frictionless penalty, F = k⟨−g⟩n + damping, repulsive only, k = stfac·B·s with **B = ρ₀C₀² from the EOS card (76.0 GPa for P-HG-Al, not the elastic bulk modulus)**; damping 0.05 of critical, cannot pull; no friction (fatal if requested), max 2 bodies, OpenMP only, no restart | the "no bond" branch is frictionless; no restart means a killed run starts from t = 0 | sph-hvi-contact-plan.md A2, DECISIONS 2026-11-21, §35 |
 | Separable SPH–SPH contact on collocated SPH: B-2, B-3 and D-1 FAIL; S′ (ξ + order 1) not adopted | collocated SPH is not the host | §14, §15 |
 | TLSPH plateau offset is finite strain; end layers 1–2 carry 0.655 / 0.845 of the stress under a point-loaded face (also against a deformable wall) | judge against finite-strain references; face-layer deficit exists with any point load | §17, §22 |
 | **BCT** (boundary-consistent traction): exact on flat uniform loads; **fails on small or changing patches** (rim loads 2–3×), feeds energy with the kinematic wall (B 1.135 / 20.4); with BCT the engine wall force reads 1.485× the transmitted force | BCT off for curved and body-on-body contact; read wall forces from momentum rates | §19, §20, §21, §23 |
@@ -68,18 +68,20 @@ the verification log, which stops at §13. **Kept current by the modeller at eve
 
 | Fact | Consequence for specs | Where |
 |---|---|---|
-| Activation: g < 0, Y_ij > Y′, p_n,ij > p_E, with min over the pair; p_n from the **previous cycle** (activation lags contact by one cycle); f_B = (Y − Y′)/(1 − Y′) running maximum; σ_B = f_B σ_flow(T) frozen at damage onset; law `tie` (bilinear, normal and tangential, A_ij = s²) | | §26 |
+| Activation needs **all of** g < 0, t ≥ `bond.t_on`, Y_ij > Y′, p_n,ij > p_E and σ_flow,ij > 0 (pair minima; Y per particle, area-weighted over its skin facets; p_n from the previous gather pass, so activation lags contact by one cycle); f_B = (Y − Y′)/(1 − Y′) running maximum; σ_B = f_B σ_flow(T) refreshed while D = 0, frozen from damage onset; law: bilinear, one damage variable on δ = √(g² + \|δ_t\|²), K₀ = the contact penalty k, d₀ = σ_B s²/k, G_c = ½ σ_B δ_c per area s² | | §26, §35 |
+| **A bonded pair carries no cohesive traction while g ≤ 0**: in compression it transmits no shear; its tangential opening δ_t keeps accumulating and counts in δ when it reopens. A bonded pair leaving the candidate list counts as broken (remaining G_c booked to W_b, approximate for unequal pairs) | bonds formed under compression may reopen with δ ≫ δ_c after microns of slip and fail at once (untested reading; problem-formalism.md §2(g)) | §35 |
 | **Parser bounds:** `bond.Yp` < 1 (lower bound 0 removed by A1); `bond.pE` ≥ 0; `bond.t_on` (cs12 only, default 0) | check every key against its bounds before freezing | §29, §30 |
 | Off-skin particles carry the sentinel Y = −1; they bond only when Y′ < −1 (A1) | | §29, §30 |
 | **Placeholders, not physical:** Y′, p_E (survival 0.3 / 0.5 GPa) and δ_c. δ_c = 31.25 nm (0.05 s at R/16) gives a bond of a few J/m²; every bond tears on rebound and dR < 10⁻³ | check that a placeholder lets the effect act before freezing (CS-22 scope note) | §26, §30, DECISIONS 2026-11-19 |
 | Skin Y peaks at the particle's pole (largest facet Y 0.72 at r < 3 µm), so skin-Y activation bonds the centre first; no thresholds give a bonded ring | | §26 |
-| σ_B = f_B σ_flow(T) uses the material's current temperature (rate and adiabatic heating included). Where the interface nears T_m, σ_B → 0 (LAW4 sets the strength to zero at T ≥ T_m; the 2D edge reaches 1.03–1.08 T_m in the §25 window) | bond fracture energies estimated from room-temperature σ_flow are upper bounds (e.g. CS-22b's G_c estimates); report W_b / bonded area. Confirmed for engine `27e53d5f0`: from T_lb alone σ_flow is 19–23 % below room temperature at the median strained particle, 39 % at the hottest | §26, §33, §34 |
+| σ_B = f_B σ_flow(T) uses the material's current temperature (rate and adiabatic heating included). Where the interface nears T_m, σ_B of an unbroken bond falls with σ_flow; at T ≥ T_m σ_B is frozen at its last positive value and no new bond forms (LAW4 sets the strength to zero at T ≥ T_m; the 2D edge reaches 1.03–1.08 T_m in the §25 window) | bond fracture energies estimated from room-temperature σ_flow are upper bounds (e.g. CS-22b's G_c estimates); report W_b / bonded area. Confirmed for engine `27e53d5f0`: from T_lb alone σ_flow is 19–23 % below room temperature at the median strained particle, 39 % at the hottest | §26, §33, §34, §35 |
 | Illustration δ_c sweep (Ti, 1584 m/s, R/12): still-bonded share 0.06–0.11 / 0.63 / 1.00 at δ_c/s = 0.3 / 1 / 3 | seen data on another material | §26 |
 
 ## 5. Material data in use
 
 | Fact | Consequence for specs | Where |
 |---|---|---|
+| LAW4 rate term: CE = 1 + C ln(ε̇/ε̇₀) with **ε̇ = max \|d_ij\| of the total strain rate in global axes** (not ε̇_p, not frame-invariant, no cap); Grüneisen: compression branch with Hugoniot reference, **linear expansion branch** p = ρ₀C₀²μ + γ₀E, Γ = γ₀ exactly for a = 0, no tension cut-off; stress rate Jaumann | small for C = 0.001 (CE 1.018 at 10⁸ s⁻¹) | §35 |
 | P-HG-Al: JC A 148.4, B 345.5 MPa, n 0.183, C 0.001, m 0.895, T_r 293 K, T_m 933 K; Grüneisen C₀ 5305.5 m/s (√(B/ρ)), s 1.339, γ₀ 2.17; k 237 W/(m K) | | §8.3, data/properties.csv |
 | Ti-6Al-4V JC and EOS are second-hand (Khamsepour 2022 citing Meyer & Kleponis, Steinberg); primaries not retrieved | verify before any claim | §26 |
 
