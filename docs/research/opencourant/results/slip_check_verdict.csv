@@ -1,0 +1,17 @@
+kind,spec,case,n_torn,P_median,P_p10,P_p90,share_P_ge_1,share_P_le_0p2,share_L_ge_1,share_U_le_0p2,verdict,verdict_with_L_U,unit
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL08on_dc3,40,1.895937284545157,0.6345957418698974,9.108024413081939,0.825,0.025,0.375,0.0,slip decides,mixed,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL16on_dc3,174,2.2634710286339756,0.3334071626446623,5.78245713689951,0.8160919540229885,0.034482758620689655,0.46551724137931033,0.0,slip decides,mixed,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL08on_dc10,40,1.011040391975663,0.282642309477272,2.7288213004885034,0.525,0.075,0.225,0.0,mixed,mixed,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL16on_dc10,174,0.9144101600314616,0.35336936507348726,1.7248450028455047,0.367816091954023,0.005747126436781609,0.1724137931034483,0.005747126436781609,mixed,mixed,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL08on_dc30,40,0.7136748054071098,0.16251825627277428,0.9989172241351417,0.075,0.125,0.0,0.0,mixed,mixed,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL16on_dc30,12,0.9672918102371442,0.9601581745554035,1.007843754629922,0.16666666666666666,0.0,0.0,0.0,mixed,mixed,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL32on_dc30,0,,,,,,,,no torn particle,,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,"pooled (body 1, all runs)",480,1.139844229120136,0.32619004765194953,3.5309768503266876,0.5520833333333334,0.03333333333333333,0.28125,0.0020833333333333333,mixed,mixed,SURF0 particle
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL08on_dc3,40,1.895937284545157,0.6345957418698974,9.108024413081939,0.825,0.025,0.375,0.0,slip decides,mixed,particle (SURF0 + contact lists)
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL16on_dc3,189,2.3091632371658775,0.3390374860605914,5.179162171263834,0.8201058201058201,0.031746031746031744,0.48677248677248675,0.0,slip decides,mixed,particle (SURF0 + contact lists)
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL08on_dc10,40,1.011040391975663,0.282642309477272,2.7288213004885034,0.525,0.075,0.225,0.0,mixed,mixed,particle (SURF0 + contact lists)
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL16on_dc10,189,0.9242201644476632,0.3841687999758704,1.5207231751699462,0.3968253968253968,0.005291005291005291,0.1693121693121693,0.005291005291005291,mixed,mixed,particle (SURF0 + contact lists)
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL08on_dc30,40,0.7136748054071098,0.16251825627277428,0.9989172241351417,0.075,0.125,0.0,0.0,mixed,mixed,particle (SURF0 + contact lists)
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL16on_dc30,19,0.9706581112884939,0.9629383224121206,1.0485231755636444,0.3684210526315789,0.0,0.0,0.0,mixed,mixed,particle (SURF0 + contact lists)
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,AL32on_dc30,0,,,,,,,,no torn particle,,particle (SURF0 + contact lists)
+check,schemeforge docs/research/slip-check-2026-11-22.md @ f855e6e,"pooled (body 1, all runs)",517,1.150046591918049,0.33582015838736134,3.8333689537094866,0.5686653771760155,0.030947775628626693,0.2862669245647969,0.0019342359767891683,mixed,mixed,particle (SURF0 + contact lists)

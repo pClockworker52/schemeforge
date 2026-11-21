@@ -3258,3 +3258,129 @@ The note is not edited.
 - In the on decks Y′ = −10⁶, so f_B ≈ 1, σ_B ≈ σ_flow and the Y test always passes (also off the skin, Y = −1,
   `hvi_bond.F90:286`). The binding conditions there are g < 0, t ≥ t_on, p_n > 0 and σ_flow > 0.
 - The "source, WSL A" statuses in the note can be set from this section.
+
+## 36. Slip check: mixed; slip is of the order of δ_c when bonds tear, pure opening is rare (task 2026-11-22-b)
+
+Spec, rule and prediction: [slip-check-2026-11-22.md](slip-check-2026-11-22.md) (frozen, f855e6e); `kind = check`.
+Reading and post-processing of the existing CS-22b on-run interface files (§31) only: no run, no build, engine
+`27e53d5f0` untouched.
+- Fork `cs12`: script `hvi/scripts/slip_check.py` `9a92ccc31`, first-pass rows and unit extension `40c9bf700`, rows
+  `695507ba9`, review fixes `cc222998d`.
+- Rows `opencourant/results/slip_check_{q1,q2,verdict}.csv` (per-particle values in the fork's
+  `hvi/results/slip_check_torn_*.npz`).
+- One case at a time with a memory guard; peak RSS at R/32 1.6 GB (first pass) and 0.77 GB (judged pass).
+
+**Verdict line: mixed.** Pooled over 517 torn body-1 particles of the six runs with tearing, 56.9 % have
+slip ≥ δ_c before tearing and 3.1 % have slip ≤ 0.2 δ_c. Both are below the rule's 80 %. The unit is a particle, not
+a pair, and the quantity is a proxy for δ_t (Q1).
+
+**Q1 (source; references in `slip_check_q1.csv`):**
+1. **What `slip` is.** Per particle, the maximum over its pair records of |S_r| (`hvi_contact.F90:286`, reset each
+   gather pass at `:156`; written as field 6, `hvi_out.F90:231`).
+   - S_r is the sum of the tangential relative displacement increments of the pair since its record was created at
+     its first g < 0 (`hvi_contact.F90:257–258`). It is added on every owner pass, in every state: contact only,
+     bonded and debonded (`hvi_bond.F90:124–125`). It is not reset while the record exists. A contact-only record is freed
+     when its pair leaves the list and a new one starts at 0 (`hvi_bond.F90:197–198, 86`); bonded and debonded records
+     are kept.
+   - The bonded pair's δ_t starts at 0 at activation (`hvi_bond.F90:137, 146`) and takes the same increments only
+     while bonded (`:148`). So for a bonded record **S_r = S_r(t_act) + δ_t,r**, and
+     |S(t)| − |S(t_act)| ≤ |δ_t| ≤ |S(t)| + |S(t_act)|.
+   - A particle's maximum runs over the pairs in its current candidate list, from both sides of each pair
+     (`hvi_contact.F90:159–177`; ghost pairs only on the real particle, `:194`).
+2. **Per-pair δ_t, g and D are in no existing file.** `rec_r` is used only in `hvi_bond.F90` and `hvi_contact.F90`.
+   hvi writes no restart. The interface file holds per-particle maxima of D and σ_B, n_bonded and slip
+   (`hvi_out.F90:224–243`), and per-facet vertex state and maximum D (`:195–214`). `tl_diag.csv` and `energy.npy`
+   hold global sums.
+3. **Determinable through a proxy, so the check went on.** The proxy is per-particle `slip`, whose relation to δ_t
+   is item 1. It is written at every record (out.interval 6.67·10⁻¹⁰ s) for the fixed SURF0 set
+   (`hvi_out.F90:100–125, 172`), and for every particle in contact in the per-record contact lists (`:175–185`).
+
+**Q2 definitions (fixed in the script's docstring before any slip number was read):**
+- **Unit:** a body-1 particle (every cross-body pair has exactly one).
+- **k_b:** the first record with n_bonded > 0.
+- **Torn:** the particle's D (its maximum over its records) reaches 1. k_t is the first such record. The judged value
+  is **P = slip / δ_c at the last record before k_t**.
+- **Reported estimates of δ_t / δ_c**, not judged:
+  - L = (slip(k_t−1) − slip(k_b)) / δ_c, a lower estimate that removes the pre-activation slip;
+  - U = (slip(k_t−1) + slip(k_b)) / δ_c, an upper estimate.
+- **Held:** n_bonded > 0 at the last record. P, L and U are taken at that record.
+- **Lost:** bonded, never seen at D = 1, and not bonded at the last record (counted, not judged).
+
+**One change to the unit, made after the first pass.** The first pass used only the SURF0 set. It printed its slip
+statistics, including its run verdicts, so these were seen before the change. The change rests on its coverage counts, which showed that SURF0 misses bonded particles: at R/8, 3 of 43 bonded body-1
+particles and all 51 bonded substrate particles. The spec asks for every bond, so the unit was extended to SURF0
+plus the contact lists, with definitions and rule unchanged.
+
+The judged result uses the extended unit. The first-pass rows are kept, and they give the same verdict: 480 torn
+particles, 55.2 % ≥ 1, 3.3 % ≤ 0.2.
+
+**Torn body-1 particles. P is slip / δ_c at the last record before D = 1; the median and the 10th–90th percentile
+are given.**
+
+| Run | Bonded | Torn | Lost | P median (p10–p90) | Share P ≥ 1 | Share P ≤ 0.2 | L median | U median | Run verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| 3× R/8 | 43 | 40 | 3 | 1.90 (0.63–9.11) | 0.825 | 0.025 | 0.40 | 4.39 | slip decides |
+| 3× R/16 | 217 | 189 | 28 | 2.31 (0.34–5.18) | 0.820 | 0.032 | 0.78 | 3.45 | slip decides |
+| 10× R/8 | 43 | 40 | 3 | 1.01 (0.28–2.73) | 0.525 | 0.075 | 0.61 | 1.59 | mixed |
+| 10× R/16 | 217 | 189 | 28 | 0.92 (0.38–1.52) | 0.397 | 0.005 | 0.68 | 1.11 | mixed |
+| 30× R/8 | 43 | 40 | 3 | 0.71 (0.16–1.00) | 0.075 | 0.125 | 0.67 | 0.85 | mixed |
+| 30× R/16 | 214 | 19 | 0 | 0.97 (0.96–1.05) | 0.368 | 0 | 0.83 | 1.11 | mixed |
+| 30× R/32 | 895 | 0 | 0 | – | – | – | – | – | no torn particle |
+| **Pooled** | | **517** | 65 | 1.15 (0.34–3.83) | **0.569** | **0.031** | | | **mixed** |
+
+- **The verdict does not depend on the estimate or on the lost particles.**
+  - On the estimates, 28.6 % have L ≥ 1 and 0.2 % have U ≤ 0.2, which is also mixed.
+  - The 65 lost particles were not judged. Even if all of them fell on one side, the shares would be at most
+    61.7 % (slip) or 13.9 % (opening).
+- **Record interval:** 6.67·10⁻¹⁰ s, against t_p = 23.6 ns, with 100–101 records to t_end = 66.7 ns. The tear
+  happens up to one interval after the record used.
+- **No torn particle sits at the first record, and no bond formed and tore between two records.**
+
+**Held body-1 particles (reported, not judged):**
+
+| Run | Held | P median (p10–p90) | L median | U median |
+|---|---|---|---|---|
+| 30× R/16 | 214 | 0.49 (0.03–0.93) | 0.35 | 0.54 |
+| 30× R/32 | 895 | 0.30 (0.13–0.53) | 0.18 | 0.39 |
+
+At 30× R/16 every torn particle also holds other pairs at t_end: a particle tears some of its pairs and keeps the
+rest. The substrate side is in the rows, not judged. It has similar medians, but many substrate particles are lost,
+because a torn substrate particle often leaves the contact list before a record shows D = 1.
+
+**Reading (not a rule):**
+- **Opening alone is rare.** In no run do more than 12.5 % of torn particles have P ≤ 0.2, and on the upper
+  estimate almost none do. Bonds that tear have slid by a large fraction of δ_c.
+- **Slip ≥ δ_c before tearing is the majority only at 3×.** There 82 % reach it, on both meshes. The share falls with
+  δ_c: 40–53 % at 10×, 8–37 % at 30×.
+  - In absolute terms the median slip before tearing grows with δ_c: about 0.2 µm at 3×, 0.3 µm at 10×, and
+    0.7–0.9 µm at 30×.
+  - At 3× the lower estimate L is only 0.4–0.8, so part of that slip happened before activation, which does not count
+    in δ.
+- **At 30× R/16 the 19 torn particles cluster at P = 0.96–1.05.** They tear when the slip proxy is close to δ_c.
+- **The held bonds slide mostly less than δ_c.** At R/32 P ≤ 0.53 at the 90th percentile; at R/16 the 90th
+  percentile is 0.93 and 5.1 % have P ≥ 1.
+- Together this points to slip as a large, δ_c-dependent part of the tear criterion, but not the only one. This
+  reading rests on a per-particle proxy that includes pre-activation slip and slip on contact-only records.
+
+**Caveats:**
+- **P is not δ_t.** It is a per-particle maximum of each record's total slip since first contact. The record that
+  sets the maximum need not be the record that tears.
+  - Pairs that touched before t_on = 0.5 t_p carry slip from before activation. L and U bracket that, but only
+    approximately, because both use particle maxima.
+- **Sweep breaks (§31) are mostly in "lost", not "torn".** `bond_sweep` sets D = 1 only on records whose pair has
+  left the candidate list (`hvi_bond.F90:199–206`), and a particle's D is built only over current candidates
+  (`hvi_contact.F90:159–178, 285`). A swept record reaches D only if its pair comes back into the list; otherwise it
+  shows as "lost", or not at all if the particle holds other bonds. "Lost" can also hold δ ≥ δ_c tears whose pair
+  left the list before the next record.
+- **D is updated only while g > 0** (`hvi_bond.F90:157`). So a compressed bond can accumulate δ_t past δ_c and tear
+  at its first reopening; a value of P > 1 before tearing is consistent with that.
+- **The unit was changed once,** after the first pass's numbers had been printed (above). Both units give the same
+  verdict.
+
+**Against the prediction:** slip decides 0.40, mixed 0.35, opening decides 0.25. The outcome is mixed.
+
+**What follows (spec):** mixed means report and decide. CS-22b's verdict (§31) stands; the slip check does not enter
+its rule.
+- Pair-level δ_t, g and D at tearing are not in any existing file.
+- Separating slip from pre-activation sliding, or sweep breaks from δ ≥ δ_c tears, would need a pair-level output.
+  Deciding on that rerun is outside this task.
