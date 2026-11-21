@@ -2887,6 +2887,91 @@ is not registered.
   not converged; e(off) 0.05–0.2: right on all meshes; RSS₃₂ 11–13 GB: off inside, on outside; R/32 fits 0.5: not
   on the 15.5 GiB VM.
 
+## 31. CS-22b (δ_c ladder): supported, 30× passes; 3× and 10× refuted at the gate (task 2026-11-20-a)
+
+Judge: [coldspray-hunch-cs22b.md](coldspray-hunch-cs22b.md), frozen in c8a6c5c; every row cites it. Fork branch
+`cs12`:
+- plan SPEC-TL-b §16.1–16.2 `9942efd65`, review fixes `7caae4eff` (before any run);
+- stage 1 rows `f903332e9`; R/32 try rows `455abfb8d`, `b35142b51`; R/32 row and §16.3 `3a0fe6365`, review fixes `cd538c477`.
+
+Deck script `hvi/decks/al_cs22b.py`: the §30 decks byte for byte except the `cohesive.delta_c` line. Engine
+`27e53d5f0` (binary `ocroot_27e53d5f0`, engine sha256 5cf13537…, as §30). Off branch: the §30 off rows. Rows
+`opencourant/results/tl_cs22b_{runs,conv}.csv`. The `fork_sha` column holds the engine source commit; for try1 it
+first held the repo HEAD (f903332e9) and was corrected in `b35142b51`.
+
+**Item 1 (before any run, expectation only; fork §16.1).** A cross-body pair leaves the candidate list at the latest
+at the first sort cycle with r > 2.51 s, i.e. an opening g_L ≈ 1.51 s along the centre line (earlier through list
+truncation or the symmetry-plane ghosts). `bond_sweep` then breaks the bond (D = 1, rest of the fracture energy counted
+in W_b), and the facet shows 1 → 0 with D < 1 only if nothing else on it stays bonded, so the facet check is a lower
+bound on lost bonds. δ_c / g_L at 30×: 0.50, 0.99, 1.99 on R/8, R/16, R/32.
+
+**Runs.** All 7 on runs reach t_end (1.99 D/V), engine rc 0, energy balance within 0.994–1.018 (min/max over the runs), 8 threads at R/8 and R/16,
+24 at R/32 (as the off runs).
+- R/32 30×: try1 killed at frame 10 of 51 by a Windows Update restart (2026-11-21 00:32); try2 stopped by hand after
+  about 1 min (Peter). Both are rows with reached_t_end = 0 and the cause. Try3 from t = 0 with the same engine, deck
+  and δ_c (DECISIONS 2026-11-21): engine time 10.8 h (wall clock 10.7 h), peak RSS 14.2 GiB (§30 AL32on 14.2 GiB). It ran beside the §34 check
+  (CPUs 24–31, 255 MB), Peter's permission.
+
+| δ_c | mesh | e(on) | e(off) | dR | lost bonds | bonded pairs, end | A_b end / max (µm²) | W_b (nJ) |
+|---|---|---|---|---|---|---|---|---|
+| 3× (93.75 nm) | R/8 | 0.0934 | 0.0936 | −0.0002 | 0 | 0 | 0 / 63.0 | 1.45 |
+| | R/16 | 0.0648 | 0.0649 | −0.0001 | 0 | 0 | 0 / 61.3 | 2.04 |
+| 10× (312.5 nm) | R/8 | 0.0897 | 0.0936 | −0.0039 | 0 | 0 | 0 / 68.6 | 4.82 |
+| | R/16 | 0.0603 | 0.0649 | −0.0046 | 0 | 0 | 0 / 70.7 | 6.47 |
+| 30× (937.5 nm) | R/8 | 0.0462 | 0.0936 | −0.0474 | 0 | 0 | 0 / 77.0 | 13.5 |
+| | R/16 | −0.0087 | 0.0649 | −0.0736 | 0 | 276 | 96.7 / 101.9 | 8.93 |
+| | R/32 | −0.0178 | 0.0571 | −0.0750 | 0 | 1295 | 113.3 / 113.3 | 4.69 |
+
+Areas and W_b per quarter model. e(on) < 0: the bonded particle's centre of mass still moves into the target at t_end, with the target surface
+(v_target/V at t_end −0.0046 at R/16, −0.0066 at R/32, the same order as e(on)).
+
+**Verdict lines (frozen rule):**
+- **3×: refuted** at the gate, |dR16| = 0.0001 < 0.01.
+- **10×: refuted** at the gate, |dR16| = 0.0046 < 0.01.
+- **30×: passes.** Gate: both runs valid, reach t_end, |dR16| = 0.0736. |dR32| = 0.0750 ≥ 0.01;
+  |dR32 − dR16| = 0.0014 ≤ 3.5 % |dR32| = 0.0026; and 0.0014 ≤ 0.8 |dR16 − dR8| = 0.021.
+- **Overall: CS-22b supported** (one δ_c passes). Post hoc by construction (the ladder was chosen after §30 was seen),
+  and three δ_c values gave three chances, as the hunch states.
+
+**Reading (observation, not a rule change):**
+- At R/16 and R/32 the particle stays bonded; at R/8 every bond tears. The R/16 → R/32 step of dR is the difference of
+  two drifts of similar size: e(on) −0.0092, e(off) −0.0078. The pass rests on that near-cancellation; the 3.5 % clause
+  is the binding one (0.0014 against 0.0026). R/8, in the other regime, makes the ratio clause easy.
+- For a stuck particle, e(on) and so dR partly measure the residual motion of the target, not a rebound.
+- The hunch's advance note (a δ_c that sticks on every mesh fails by construction) does not apply: R/8 does not stick,
+  and e(on) of the stuck particle is not 0 but drifts with the mesh.
+- No lost bond at 30× R/32, although δ_c / g_L ≈ 2 there: no 30× facet debonded on R/32 at all (0 transitions; 3513
+  facets ever bonded, all bonded at t_end). At R/16 (δ_c / g_L ≈ 0.99) the 34 debond transitions all show D = 1. On
+  both meshes a sweep-broken pair on a still-bonded facet would be hidden; the check is a lower bound.
+
+**Against the predictions.** Hunch author: supported 0.15 (supported); "if one passes, most likely 10×" (30×); 30×
+sticks on at least one mesh 0.6 (yes, R/16 and R/32); a lost bond at 30× R/32 0.4 (none). Fork §16.2: 3× refuted at the
+gate 0.7 (yes); 10× |dR16| ≥ 0.01 0.5 (no); 30× sticks at R/16 0.6 (yes); a lost bond at R/32 0.6 (none); a lost bond at R/16 0.25 (none); R/32 fits
+within 10 % of 14.2 GiB 0.8 (yes).
+
+**Effective G_c (HANDOFF): W_b / A_b,max, J/m²,** against the hunch's ½ σ_B δ_c estimates with σ_B 200–550 MPa
+(room-temperature 450–540 MPa, softened about half; the temperature-free end is an upper bound, §34 and
+solver-facts §4):
+
+| δ_c | hunch estimate | R/8 | R/16 | R/32 | 2 G_c,eff / δ_c (MPa) |
+|---|---|---|---|---|---|
+| 3× | 9–26 | 23.0 | 33.3 | – | 490, 710 |
+| 10× | 31–86 | 70.3 | 91.4 | – | 450, 585 |
+| 30× | 94–258 | 175.5 | 87.6 | 41.4 | 374, 187, 88 |
+
+- W_b / A_b,max is not a clean fracture energy.
+  - Where every bond tore (3×, 10×, 30× R/8), pairs bond and tear at different times, so the area that ever bonded
+    exceeds A_b,max and the ratio overstates the mean ½ σ_B δ_c. At 3× and 10× debonded facets also re-pair (44–1300
+    transitions back from debonded). The implied 710 MPa at 3× R/16 is above any σ_flow of this card (about 550 MPa at
+    most, strain hardening and rate factor included), which shows the area undercount. At 30× R/8 nothing re-paired
+    (189 facets bonded, all torn); its 374 MPa is still biased upward and is consistent with the card's range, not a
+    check of it.
+  - At 30× R/16 the bonds are mixed: 34 facets tore fully (their whole fracture energy is in W_b), the rest hold.
+  - At 30× R/32 every bond holds, so W_b is only damage dissipated short of full damage (plus any sweep remainders);
+    it is not G_c. The stored bond energy E_b (1.9 nJ at R/16, 2.1 nJ at R/32) is of the same order.
+  - So the rows confirm the order of the estimates at 3× and 10× but cannot separate σ_B (temperature, §34) from the
+    area count. A G_c per torn pair would need the per-pair σ_B from the interface file (not done; beyond the task).
+
 ## 32. Softening check: stopped, the quad temperature output is not the material temperature (task 2026-11-20-b)
 
 Spec, rule and prediction: [softening-check-2026-11-20.md](softening-check-2026-11-20.md) (66636c8); every row cites
