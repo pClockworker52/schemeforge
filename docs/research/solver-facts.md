@@ -60,7 +60,7 @@ the verification log, which stops at §13. **Kept current by the modeller at eve
 | T-A0 (55 runs) is the neutrality check for every fork build; "bit-identical" is on written metrics; output headers carry dates and uninitialised padding bytes, contact sums differ at round-off between `none` and a never-active bond | compare written metrics, mask headers; see A2 | §16.2, §30 |
 | Costs (Al–Al quarter, TLSPH): R/8 about 100 s; R/16 about 0.5 h, 1.6 GB; R/32 11–12 h on 24 threads, 12.7–14.2 GiB (WSL VM now 23.5 GiB); R/64 estimated about 100 GB (out of reach) | | §26, §30, coldspray-hunch-cs22.md |
 | e(off) (Al–Al 600 m/s, P-HG-Al) does not converge: 0.094 / 0.065 / 0.057 at R/8 / R/16 / R/32 | any rebound-based quantity inherits this drift | §30 |
-| Temperature output of TLSPH / SPH bodies: **never read**; whether it is the material temperature is unknown | check the output before any spec relies on it (cf. the quad case, §32) | (none; noted 2026-11-21) |
+| Temperature output of TLSPH / SPH bodies: **never read**; whether it is the material temperature is unknown | check the output before any spec relies on it (cf. the quad case, §32); **whether TL particles heat at all is also unchecked** (D-3 ran at small strain) | tlsph-temperature-check-2026-11-21.md (pending) |
 
 ## 4. `cs12` bond model and its keys
 

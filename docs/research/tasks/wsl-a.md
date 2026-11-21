@@ -24,6 +24,18 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
+## Task 2026-11-21-b: TLSPH temperature check (open; do between CS-22b runs, never alongside an R/32 run)
+
+**Basis:** Peter, chat 2026-11-21. **Spec, rule and prediction, fixed:**
+[../tlsph-temperature-check-2026-11-21.md](../tlsph-temperature-check-2026-11-21.md). Cite it in every row.
+`kind = check`. No engine run, no build; CS-22b's binary `27e53d5f0` stays untouched. If anything beyond source
+reading and post-processing of existing files is needed, stop and report.
+
+1. Q1 from the source, with file and line references.
+2. Q2 from the §30 runs AL08off and AL16off (existing files only).
+3. Rows `results/tlsph_temp_check_*.csv`; a short section of opencourant-verification.md (next free number) with the
+   verdict line (a)–(d) against the spec's rule. Then return to CS-22b.
+
 ## Task 2026-11-20-a: CS-22b (δ_c ladder) (open; RESUME NOW on engine 27e53d5f0, after the 2026-11-21 Windows-update abort)
 
 **Abort handling (Peter, DECISIONS 2026-11-21):** an externally killed run (OS update, VM restart) is not a run

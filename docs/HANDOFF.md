@@ -19,6 +19,10 @@ Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) is merged
    hunch file's G_c estimates, which assumed room-temperature σ_flow and are upper bounds (solver-facts §4; a
    rationale caveat, not a rule change).
 
+2. **Task 2026-11-21-b** (between CS-22b runs): TLSPH temperature check. When pushed: merge, judge against
+   docs/research/tlsph-temperature-check-2026-11-21.md (prediction (a) 0.35, (b) 0.35, (c) 0.25), update solver-facts
+   §3/§4. Outcome (c) would mean every TLSPH impact so far ran without thermal softening.
+
 If nothing is pushed: the open items for Peter below.
 
 ## State in brief
@@ -39,7 +43,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, resume now); 2026-11-21-a closed (§33 merged) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, resume now) and **2026-11-21-b** (TLSPH temperature check, between runs); 2026-11-21-a closed (§33) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
@@ -78,7 +82,7 @@ CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
 | Solver log §1–§30, §32, §33 (§31 reserved for CS-22b, §34 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); open: coldspray-hunch-cs22b.md; recent: cs20, cs21, cs22 |
-| Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md |
+| Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
 | Multi-particle brainstorm | multi-particle-spec.md, multi-particle-tried.md, multi-particle-brainstorm-2026-11-18.md |
 | Readings | data/ge2026_reading.md, data/tang2024_reading.md, data/bonding_methods_reading.md, data/boundary_integration_reading.md, data/profizi2016_reading.md |
