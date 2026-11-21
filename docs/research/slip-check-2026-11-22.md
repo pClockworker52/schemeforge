@@ -1,4 +1,6 @@
-# Slip check: why do 30× bonds hold and 3× / 10× bonds tear? (spec and prediction; DRAFT until Peter freezes it)
+# Slip check: why do 30× bonds hold and 3× / 10× bonds tear? (spec and prediction, frozen)
+
+Frozen 2026-11-22 (Peter: "Freeze"), as drafted in 1237591, before any slip number was read.
 
 Written 2026-11-22 (cloud, modeller) at Peter's request. `kind = check`; no hunch, no budget.
 
