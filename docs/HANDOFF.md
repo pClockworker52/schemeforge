@@ -14,7 +14,7 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 Fetch `coldspray/opencourant-sph`. **WSL A task 2026-11-23-a** (cs12 option "bonded pairs stick" plus per-pair
 output; design note, code, checks; no impact runs). When pushed: merge, check the design against DECISIONS
 2026-11-22, update solver-facts §4, then draft **CS-23** (the CS-22b set-up with `bond.stick = on`) for Peter's freeze.
-In the cloud: **R1** (closed-form v_cr law), starting from docs/research/r1-status-2026-11-23.md.
+R1 is at its end point (DECISIONS 2026-11-23).
 
 If nothing is pushed: the open items for Peter below.
 
@@ -38,15 +38,15 @@ If nothing is pushed: the open items for Peter below.
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
 | WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-23-a** (bonded stick + per-pair output, no impact runs); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
-| WSL B | `coldspray/blind-list2-count`; `coldspray/bonding-methods-reading` | **2026-11-23-b13** (metadata count for list 2); b9: only Dai 2025 left (closed access) |
+| WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
 
 1. Track B decided 2026-11-22 (DECISIONS): bonded pairs stick (WSL A task 2026-11-23-a), then CS-23 for your freeze.
    Still open: friction for unbonded contact (the off branch is frictionless).
-2. R1 started 2026-11-22 in parallel (status note r1-status-2026-11-23.md). Blind list 1 is used up for v_cr. Peter
-   (2026-11-23): count candidates for a list 2 first (WSL B task 2026-11-23-b13, metadata only); build it only if
-   N_v ≥ 4 and N_q ≥ 2 (§5), else write R1 up as it stands. R2 and R3 stay open.
+2. **R1 is at its end point** (DECISIONS 2026-11-23): no blind list 2 (N_q = 1.5 against 2); synthesis §4b; further
+   progress needs new measurements. Open: pre-register Mohanty 2022 alone (oxide-thickness series in Al), labelled
+   post hoc, or not. R2 and R3 stay open.
 3. Physical length scale: pursue after CS-22b? Next steps: Chakrabarty & Song 2020 (needs Peter's download), check
    the grain-size numbers (Panova & Schuh, Liu et al.) in the originals, find a grain size for an Al powder like
    P-HG-Al; a hunch only after that.

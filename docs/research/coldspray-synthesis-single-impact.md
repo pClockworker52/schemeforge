@@ -59,6 +59,20 @@ CS-11 (interface bracket).
 - The modeller's predictions on the simulation track were repeatedly too optimistic; independent reviewers estimated
   about ten times lower odds (odds review 2026-11-16), and the data agreed.
 
+## 4b. R1 end point (2026-11-23)
+
+R1 (the closed-form v_cr law) has no unseen data left. Blind list 1 is used up for measured single-impact v_cr
+(r1-status-2026-11-23.md §1), and a list 2 fails its stop rule fixed before the count (§5–§6: N_q = 1.5 against 2).
+So the R1 claims stand as in §1–§2: Z6 for pure metals, the oxide direction (CS-07, twice, type confounded), and the
+refuted hunches. **Further R1 progress needs new measurements:**
+- an oxide-thickness series within one metal (CS-10; the T3 question);
+- a particle strength or temper series within one metal (CS-10 against CS-08's refutation on B10);
+- a substrate series of one metal with known hardening capacity (CS-17).
+
+The one candidate found that fits a question is Mohanty 2022 (J. Therm. Spray Technol., Al microspheres on Al with
+varying oxide thicknesses; possibly partly simulated). Pre-registering it alone would be a decision made after the
+count, so it would be labelled post hoc (DECISIONS 2026-11-23).
+
 ## 5. Next (Peter)
 
 The reduced-route plan is adopted (docs/research/reduced-route-plan.md). Which option leads — R1 closed-form v_cr law,

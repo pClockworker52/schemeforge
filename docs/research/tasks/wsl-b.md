@@ -223,7 +223,7 @@ Use the step-3 prompt (`docs/research/coldspray-extraction-prompt-step3.md`) on 
 Commit only `docs/research/data/vcr_lipit.csv` on a new branch `coldspray/b03-b12-outcomes` from
 `claude/exciting-fermi-qy077p`, push, and stop. **Do not merge.**
 
-## Task 2026-11-23-b13: metadata count for a blind list 2 (open; no paper opened)
+## Task 2026-11-23-b13: metadata count for a blind list 2 (closed: merged; N_v 7, N_q 1.5, no list 2)
 
 **Basis:** Peter, chat 2026-11-23; stop rule fixed in [../r1-status-2026-11-23.md](../r1-status-2026-11-23.md) §5.
 Branch `coldspray/blind-list2-count`. The blind rules bind you as for list 1.
