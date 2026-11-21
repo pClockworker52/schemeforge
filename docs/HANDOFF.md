@@ -39,7 +39,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, running); 2026-11-21-a closed (§33), 2026-11-21-b closed (§34) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, running), then **2026-11-22-a** (formalism equations against the source, reading only); 2026-11-21-a/b closed (§33, §34) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
@@ -83,4 +83,5 @@ CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 | Multi-particle brainstorm | multi-particle-spec.md, multi-particle-tried.md, multi-particle-brainstorm-2026-11-18.md |
 | Readings | data/ge2026_reading.md, data/tang2024_reading.md, data/bonding_methods_reading.md, data/boundary_integration_reading.md, data/profizi2016_reading.md |
 | Tasks | docs/research/tasks/wsl-a.md, wsl-b.md |
+| Problem as equations (working note) | docs/research/problem-formalism.md (checks: scripts/formalism_check.py) |
 | Archives | docs/handoff-archive.md, docs/status-archive.md |

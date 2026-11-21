@@ -24,6 +24,19 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
+## Task 2026-11-22-a: confirm the formalism note's equations against the source (QUEUED: after CS-22b, reading only)
+
+**Basis:** Peter, chat 2026-11-22. Note: [../problem-formalism.md](../problem-formalism.md), §1 and §4. No run, no
+build. For each item give the exact expression as coded, with file and line references, and say whether the note's
+form is right; do not edit the note.
+1. Eq. 3 and 14: the TLSPH force sum, deformation gradient and gradient correction (SPEC-TL).
+2. Eq. 5: the `/EOS/GRUNEISEN` pressure expression (compression and expansion, μ convention, energy per volume or
+   per mass, the role of γ₀ and a).
+3. Eq. 6: the objective stress rate used for SPH/TL particles.
+4. Eq. 7: LAW4's rate term as implemented (which ε̇, any cap, ε̇₀).
+5. Eq. 10–12: hvi penalty contact and the cs12 law as coded.
+Results as a short section of opencourant-verification.md (next free number). Then stop.
+
 ## Task 2026-11-21-b: TLSPH temperature check (closed: §34 (b) heats, not written; merged)
 
 **Basis:** Peter, chat 2026-11-21. **Spec, rule and prediction, fixed:**
