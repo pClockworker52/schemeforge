@@ -5,7 +5,12 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-20-a: CS-22b (δ_c ladder) (open)
+## Task 2026-11-20-a: CS-22b (δ_c ladder) (open; paused 2026-11-21 after a Windows-update abort, resume after 2026-11-20-b)
+
+**Abort handling (Peter, DECISIONS 2026-11-21):** an externally killed run (OS update, VM restart) is not a run
+failure under the frozen rule. Report which runs reached t_end (they stand). Rerun the killed run from t = 0 with the
+same engine, deck and δ_c (no restart). Report the killed attempt as a row with `reached_t_end = 0` and the cause, as
+with §30's try rows. Before the long R/32 runs, defer Windows updates (active hours or pause) if possible.
 
 **Basis:** DECISIONS 2026-11-20, "CS-22b frozen". **Judge, frozen:**
 [../coldspray-hunch-cs22b.md](../coldspray-hunch-cs22b.md), frozen in the commit that adds this task. Cite it in
@@ -26,7 +31,7 @@ change, another deck, another δ_c), stop and report.
 6. Write up as §31 of opencourant-verification.md on `coldspray/opencourant-sph`, with a verdict line per δ_c and
    overall against the frozen rule. Then stop and report.
 
-## Task 2026-11-20-b: softening check (QUEUED: start only after 2026-11-20-a is pushed)
+## Task 2026-11-20-b: softening check (open; do NOW, before resuming 2026-11-20-a; Peter 2026-11-21)
 
 **Basis:** Peter, chat 2026-11-20. **Spec, rule and prediction, fixed:**
 [../softening-check-2026-11-20.md](../softening-check-2026-11-20.md). Cite it in every row. `kind = check`.

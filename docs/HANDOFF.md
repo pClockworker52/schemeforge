@@ -4,7 +4,7 @@
 docs/STATUS.md and the DECISIONS index. Branch: `claude/exciting-fermi-qy077p`. Procedure:
 docs/research/coldspray-procedure.md (who writes where; tasks for the other sessions in docs/research/tasks/).
 
-**First action: check WSL A task 2026-11-20-a.** Fetch `coldspray/opencourant-sph`. If pushed: merge with a merge
+**First action (updated 2026-11-21): WSL A does the softening check (task 2026-11-20-b) first, then resumes CS-22b (2026-11-20-a) after a Windows-update abort (DECISIONS 2026-11-21). Merge and judge the softening check against softening-check-2026-11-20.md when pushed.** Then: check WSL A task 2026-11-20-a. Fetch `coldspray/opencourant-sph`. If pushed: merge with a merge
 commit (diff only §31 and `results/tl_cs22b_*.csv`), recompute dR per δ_c from the rows with the §30 off runs, judge
 against coldspray-hunch-cs22b.md (frozen 2026-11-20), and record in coldspray-hunches.md, DECISIONS and STATUS with
 the author's predictions. If not pushed: the open items for Peter are R1–R3 and CS-20 parking.
@@ -272,7 +272,7 @@ Older items (state of 2026-11-15; items 1–3 lapsed with the 2026-11-17 closure
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b δ_c ladder); 2026-11-18-b closed (§30 merged adf2319) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-b** (softening check, now), then **2026-11-20-a** (CS-22b, resume after the abort); 2026-11-18-b closed (§30 merged adf2319) |
 | WSL B | `coldspray/bonding-methods-reading` | b9 (remaining: Ge 2026, Dai 2025); b10 and b11 merged |
 
 ## 7. Rules that must not be broken
