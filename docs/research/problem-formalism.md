@@ -85,7 +85,9 @@ it is open (g > 0). Under contact pressure it transmits no shear, and its tangen
 When it reopens, δ = √(g² + |δ_t|²) includes the whole slip. During jetting the interface slides by up to microns
 while compressed, so a bond formed in compression may reopen with δ ≫ δ_c and fail at once, for any δ_c below the
 slip. **Modeller's reading, not tested:** this may explain §30's "every bond fails on rebound" better than the
-brittle placeholder alone, and it may cap CS-22b's larger δ_c values. A real bonded interface sticks; this is a second
+brittle placeholder alone, and it may cap CS-22b's larger δ_c values. **Evidence (§36, slip check, mixed):**
+pure opening is rare at tearing (3 %); slip ≥ δ_c before tearing for 57 % of torn particles (82 % at 3×); at 30× R/16
+bonds tear at slip ≈ δ_c and held bonds slide less (per-particle proxy, includes pre-activation slip). A real bonded interface sticks; this is a second
 modelling choice in cs12 to question, next to (f).
 
 *Not the same as adiabatic shear instability* (added 2026-11-22 after Peter's question; modeller's reading):

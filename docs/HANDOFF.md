@@ -35,19 +35,19 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-22-b** (slip check, open; spec frozen); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | — (2026-11-22-b closed: §36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
 
-1. **Next step after CS-22b (supported, with caveats).** Options:
-   (a) a confirmatory pre-registered test of the 30× result (another speed, or δ_c 20× / 50×, on R/16 and R/32) to
-   see whether the cancellation is robust;
-   (b) the reopening/slip analysis of the existing on-runs (post-processing only, cheap; problem-formalism.md §2(g)):
-       **chosen 2026-11-22**; spec docs/research/slip-check-2026-11-22.md **frozen 2026-11-22**; WSL A task
-       2026-11-22-b open. It cannot change CS-22b's verdict;
-   (c) part 2, the bistable band in V (trigger and kill rule registered first);
-   (d) R1–R3 (item 2).
+1. **Next step after CS-22b (supported) and the slip check (§36, mixed).** The slip check shows that whether a 30×
+   bond holds or tears depends substantially on how far it slides while compressed (cs12's no-stick feature; pure
+   opening is rare). CS-22b's verdict stands. Options:
+   (i) change cs12 so bonded pairs stick under compression (tangential cohesion while g ≤ 0, or no δ_t accumulation
+       while compressed), then retest the CS-22b set-up as a new pre-registered hunch;
+   (ii) a pair-level output rerun at R/8 and R/16 (minutes) to separate pre-activation slip and sweep breaks;
+   (iii) a confirmatory test or part 2 on the current law, knowing slip is entangled;
+   (iv) R1–R3 (item 2).
 2. Which of R1–R3 leads (reduced-route-plan.md).
 3. Physical length scale: pursue after CS-22b? Next steps: Chakrabarty & Song 2020 (needs Peter's download), check
    the grain-size numbers (Panova & Schuh, Liu et al.) in the originals, find a grain size for an Al powder like
@@ -81,9 +81,9 @@ If nothing is pushed: the open items for Peter below.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§35 (§36 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§36 (§37 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); recent: cs20, cs21, cs22, cs22b (supported) |
-| Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md |
+| Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md, slip-check-2026-11-22.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
 | Multi-particle brainstorm | multi-particle-spec.md, multi-particle-tried.md, multi-particle-brainstorm-2026-11-18.md |
 | Readings | data/ge2026_reading.md, data/tang2024_reading.md, data/bonding_methods_reading.md, data/boundary_integration_reading.md, data/profizi2016_reading.md |

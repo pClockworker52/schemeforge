@@ -24,7 +24,7 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
-## Task 2026-11-22-b: slip check (open; spec frozen 2026-11-22)
+## Task 2026-11-22-b: slip check (closed: §36 mixed; merged)
 
 **Basis:** Peter, chat 2026-11-22. **Spec, rule and prediction:** [../slip-check-2026-11-22.md](../slip-check-2026-11-22.md).
 Do not start before its title reads "frozen". `kind = check`. Reading and post-processing of the existing CS-22b
