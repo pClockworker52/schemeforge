@@ -11,8 +11,10 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. §31 (CS-22b supported), §33, §34 and §35 are merged; **WSL A has no open task**.
-Nothing is pending from the other sessions.
+Fetch `coldspray/opencourant-sph`. **WSL A task 2026-11-23-a** (cs12 option "bonded pairs stick" plus per-pair
+output; design note, code, checks; no impact runs). When pushed: merge, check the design against DECISIONS
+2026-11-22, update solver-facts §4, then draft **CS-23** (the CS-22b set-up with `bond.stick = on`) for Peter's freeze.
+In the cloud: **R1** (closed-form v_cr law), starting from docs/research/r1-status-2026-11-23.md.
 
 If nothing is pushed: the open items for Peter below.
 
@@ -35,20 +37,14 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | — (2026-11-22-b closed: §36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-23-a** (bonded stick + per-pair output, no impact runs); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
 
-1. **Next step after CS-22b (supported) and the slip check (§36, mixed).** The slip check shows that whether a 30×
-   bond holds or tears depends substantially on how far it slides while compressed (cs12's no-stick feature; pure
-   opening is rare). CS-22b's verdict stands. Options:
-   (i) change cs12 so bonded pairs stick under compression (tangential cohesion while g ≤ 0, or no δ_t accumulation
-       while compressed), then retest the CS-22b set-up as a new pre-registered hunch;
-   (ii) a pair-level output rerun at R/8 and R/16 (minutes) to separate pre-activation slip and sweep breaks;
-   (iii) a confirmatory test or part 2 on the current law, knowing slip is entangled;
-   (iv) R1–R3 (item 2).
-2. Which of R1–R3 leads (reduced-route-plan.md).
+1. Track B decided 2026-11-22 (DECISIONS): bonded pairs stick (WSL A task 2026-11-23-a), then CS-23 for your freeze.
+   Still open: friction for unbonded contact (the off branch is frictionless).
+2. R1 started 2026-11-22 in parallel (status note r1-status-2026-11-23.md); R2 and R3 stay open.
 3. Physical length scale: pursue after CS-22b? Next steps: Chakrabarty & Song 2020 (needs Peter's download), check
    the grain-size numbers (Panova & Schuh, Liu et al.) in the originals, find a grain size for an Al powder like
    P-HG-Al; a hunch only after that.

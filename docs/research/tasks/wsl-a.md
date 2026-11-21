@@ -24,6 +24,31 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
+## Task 2026-11-23-a: cs12 option "bonded pairs stick" and per-pair output (open; no impact runs)
+
+**Basis:** DECISIONS 2026-11-22, "Bonded pairs stick under compression". Fork branch `cs12` (new commits on top of
+`27e53d5f0`; CS-22b's binary stays available unchanged). If anything beyond the items below is needed, stop and
+report.
+
+1. **Design note first** (fork SPEC-TL-b, own section), committed before any code:
+   - new key `bond.stick` (default off; off must be bit-identical to `27e53d5f0` in every output);
+   - with stick on, a bonded pair with g ≤ 0 carries a tangential traction t_t = −k δ_t,el (k the contact penalty
+     stiffness), capped at τ_B = σ_B/√3; beyond the cap the pair slides at τ_B, and that plastic slip dissipates, is
+     booked separately (energy and per pair), and does **not** enter δ or D;
+   - for g > 0 the existing mixed-mode law is unchanged; state exactly what δ_t is at reopening (the elastic part
+     δ_t,el only);
+   - unbonded contact unchanged (frictionless);
+   - per-pair output at each interface record: pair ids, δ_t (elastic), g, D, bond state, compressed-slip total,
+     σ_B (new file or a new interface-file version; the reader updated).
+2. **Code and build.** T-A0 must be 55 of 55 identical; with stick off, a §30 deck must be bit-identical in its written
+   metrics to `27e53d5f0`.
+3. **Checks (calibration, not rungs):**
+   - two TL blocks, bonded, pressed then sheared: the transmitted shear equals k δ_t,el below the cap and τ_B at the
+     cap; zero shear with stick off; the energy balance closes (plastic slip work booked);
+   - D-3/D-4 of §26 unchanged with stick off;
+   - the per-pair output, summed to particles, reproduces §36's per-particle slip on one existing deck with stick off.
+4. Write up as the next free section with rows; then stop and report. **No impact runs**: they wait for CS-23's freeze.
+
 ## Task 2026-11-22-b: slip check (closed: §36 mixed; merged)
 
 **Basis:** Peter, chat 2026-11-22. **Spec, rule and prediction:** [../slip-check-2026-11-22.md](../slip-check-2026-11-22.md).
