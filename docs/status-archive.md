@@ -1,0 +1,500 @@
+# STATUS archive
+
+Entries moved verbatim from docs/STATUS.md on 2026-11-21 (everything before 2026-11-18; DECISIONS 2026-11-21,
+"Solver facts register"). Newest first, as in STATUS. Not maintained.
+
+2026-11-17 (cloud, later): Peter dropped the T3 measurement request (DECISIONS); campaign trigger lapsed; CS-12 stays open and untested (budget 3 of 5). Single-impact phase ends once B06 is scored (WSL B b12), then the synthesis and the choice of R1-R3.
+2026-11-17 (cloud, later): B06 pre-registration FROZEN (c484494, Peter approved); scorer coldspray_blind_b06_score.py with tests committed before any outcome; WSL B task b12 (step 3, B06 outcomes, branch coldspray/b06-outcomes). Next: merge b12, score, results note; then the T3 decision. Blockers: WSL B.
+2026-11-17 (cloud, later): B06 pre-registration DRAFTED, not frozen (docs/research/coldspray-preregistration-b06.md, data/predictions_b06.csv, coldspray_blind_b06.py + test): Z6 805.1 / 807.0 and baseline 611.5 m/s for both conditions, all out of domain (d withheld); DW_size, CS-10, Z18 no prediction; CS-07 sign test; CS-12 T4 reported, T1 exposed. B06 hardly discriminates between open hunches. Next: Peter approves the freeze, then WSL B step 3; T3 decision. Blockers: Peter.
+2026-11-17 (cloud, end): merged §27 (29c09ee): drivers 2-4 (annulus plastic work, pressure-slip history, ring Y) none usable by the pre-fixed rule; only a(t) converges. Peter (DECISIONS): Track B's 3D in-solver interface-state route closed as unverifiable with available references (not impossible in principle); trigger run and VCIMR D2 dropped; reduced-route plan adopted; negative results recorded; code and animation kept. Next: Track A, B06 pre-registration draft, then T3 decision. Blockers: none. Numbers: hunch count 3 of 5; WSL A no open task.
+2026-11-17 (cloud, later): Peter: driver-convergence check before the trigger run (trigger deferred, D4 in force). Spec and prediction committed first (docs/research/driver-check-2026-11-17.md); driver 1 a(t) in the cloud, drivers 2-4 WSL A task 2026-11-17-b (section 27).
+2026-11-17 (cloud, later): merged §26 (9b03f79): cs12 on TLSPH neutral, D-3/D-4 pass; Ti-6Al-4V survival 1584 m/s R/16 pass (material second-hand); skin Y peaks at the pole, so skin-Y activation bonds the centre first (no ring for any thresholds). Illustration (fork hvi/illustration/v2/, Y' 0.2, delta_c 1 s tuned for the picture): ring from central debonding on spring-back. Peter's go and tuning recorded (DECISIONS). Open: VCIMR D2 / trigger run; outer-driven activation driver proposal. Blockers: Peter. Numbers: hunch count 3 of 5.
+2026-11-17 (cloud, later): Peter: Track B continues (DECISIONS 2026-11-17); cs12 (Bay activation) built in the fork for TLSPH, skin feeds activation only, f_B running max with sigma_B = f_B*sigma_flow(T). WSL A task 2026-11-17-a: design note, build, D-3/D-4 checks, Ti-6Al-4V survival at 1584 m/s, then a homepage illustration (kind = illustration; Ti-6Al-4V 20 um, ~5 particles per side, He/N2 1347 vs H2/N2 1584 m/s). Open: VCIMR D2, trigger run. Blockers: none. Numbers: hunch count 3 of 5.
+2026-11-17 (cloud): merged §24 and §25 (5ab274d; calibration). §25 P3 probe (2D quads, Al-Al 600/500 m/s, R/64-R/256): finest mesh stops at ~0.035 t_p; p_n converges at 0.25 a and 0.5 a, not 0.75 a; Y-1 converges nowhere. §24: interface file v5 complete; VCIMR passes its gate, S 0.132 vs F2 0.369 (skin p_n axis +6.6 % vs +3.6 %; R/16 |B-1| 0.026), recorded as candidate, F2 frozen; trigger run not run (waits on D2). Modeller's reading (judgment): P3 negative in the reference host itself, whole chain further below 1 %. Next: Peter's Track B decision (stop on P3 / trigger on F2 then stop / VCIMR + trigger). Blockers: Peter. Numbers: hunch count 3 of 5.
+2026-11-16 (cloud, later): odds review by two independent reviewers (docs/research/odds-review-2026-11-16/): trigger pass 6-8 %, P3 7 %, whole chain ~0.3 %, one-way first claim ~1 %; modeller's figures ~10x higher, superseded. Peter (DECISIONS 'After the odds review'): VCI variant time-boxed to 2 days; clause 2 noise floor (post hoc); trigger run added to WSL A 2026-11-16-a; P3 probe WSL A 2026-11-16-b (2D quads, Al-Al 600 m/s, R/64-R/256); reduced-route plan drafted (not in force). State report odds updated. Next: §24, §25. Blockers: none. Numbers: hunch count 3 of 5.
+2026-11-16 (cloud): merged §23 (calibration): energy closes with BCT off (0.25 %), BCT on put energy in; BCT-off survival probe passes (trigger clause 3 not fired); VCI fails its committed momentum gate, F2 chosen and frozen (S 0.369 vs lattice 0.381); skin T-S1 R/64 p_n +3.6/+3.1 %, Y-1 13 % low; quad T-B2 reference U_ref > 1.75 % for 12 of 16. Peter (DECISIONS 2026-11-16): reference accepted as is, threshold 3.5 % + measured U_ref (post hoc); momentum-restoring VCI by the same gate. WSL A task 2026-11-16-a (contact-particle interface file, then the VCI variant). Next: §24, then the trigger-run task. Blockers: none. Numbers: hunch count 3 of 5; modeller's trigger-pass odds 10-20 % (judgment; Y-1).
+2026-11-15 (cloud, later): merged WSL B b10 (5f7bf7d; B06 2 v_cr conditions, native Al oxide vs ZnO coat, not a thickness series; B07, B16 no v_cr; B03 row same as published) and b11 (9d954b1; face-layer deficit = Galerkin nodal-integration constraint failure, Hillman 2013 / Chen 2001: rediscovery; VCI is the known remedy). Leak scans clean. Peter reopened D3 (DECISIONS): VCI design note first, then one construction (fitted face or VCI) by a committed criterion on non-trigger cases; D4 host = the chosen construction. WSL A step 3 replaced by 3'. Next: WSL A steps 1-2, then the note. Track A: B06 pre-registration and T3 decision later (Peter). Blockers: none. Numbers: hunch count 3 of 5.
+2026-11-15 (cloud, session end): HANDOFF rewritten after the route review. Done: review, decisions, tasks, state report (Claude Docs rev 24). Next: merge WSL A §23 and WSL B b10/b11 when pushed; then draft the trigger-run task from §23 for Peter's freeze. Blockers: none. Numbers: hunch count 3 of 5; no run or hunch this session.
+2026-11-15 (cloud): **route review held** (DECISIONS 2026-11-15 'Route review 2026-11-15'; folder docs/research/route-review-2026-11-15/). Two independent reviewers (reviewer-1.md, reviewer-2.md, verbatim; brief §4 withheld). Peter: D1 (i) bond stays in the solver (reviewers and modeller had recommended one-way); D2 (ii) p_n and Y judged on a measurement-only skin as 0.5 um surface-disc averages, depth bands reported only (amends 2026-11-14 item 4); D3 (i) one bounded TLSPH attempt (BCT off, skin, fitted flat face) plus a BCT-off survival probe, fallback (iv) reduced route; D4 dead-end trigger fixed (p_n, Y-1 within 3.5 % + U_ref at R/64 on T-B2, convergence R/32->R/64, survival probe; U_ref = quad R/128 vs R/256 <= 1.75 %; fires -> reduced route); D5 order adopted. Done: DECISIONS entry, tasks WSL A 2026-11-15-b and WSL B b11. Next: WSL A step 1 (quad R/256, TL internal energy, contact list), WSL B b10 then b11. Blockers: none. Numbers: hunch count 3 of 5; no run, no hunch in the session.
+2026-11-15 (cloud): route review prepared: docs/research/route-review-2026-11-15/ (brief.md with decisions D1-D6; inputs.md with two external texts verbatim and critiques). Main new point: the 0.5 um window lies inside the kernel reach at R/32 (about 0.7 um), so depth-band averages measure the boundary error; several kernel reaches would need about R/100 in 3D. State report updated with §22.
+2026-11-15 (cloud): merged §22: with BCT off, 0.5 um averages under body-on-body contact are within 3.5 % for 4 of 20 (R/32) and 6 of 20 (R/64); block band 1 -24/-18 % (R/32), -8/-9 % (R/64); face-layer deficit (0.62/0.86) also against a deformable wall, so it comes with any point-loaded face. Rule not met -> next failure -> Peter's review session before anything else (DECISIONS 2026-11-15). CS-18c not defined.
+2026-11-15 (cloud): Peter filed the publisher PDFs of B03, B05, B06, B07, B12, B16 (identified from metadata only). WSL B task b10: step 1 for B06, B07, B16 (inputs only; B06 oxide-fracture outcomes withheld), plus a check of row B-B03-c1 (from the accepted manuscript) against the published B03. Track A unblocked.
+2026-11-15 (cloud): merged §21 (7073f1e; calibration): BCT's diagonal wall scaling fails on any small or changing loaded patch (rim loads 2-3x, flat faces too); BCT also harms body-on-body contact (T-B2 deck R/32 approach -9.9 % on vs -4.8 % off); variant 'interior' fixes the energy but makes the force noisy (not adopted); T-S1 peak reference 1.062 (frozen 1.073 is 1.0 % high); BCT off clean on contact, column end layers 0.62/0.86. 'BCT on flat walls only' rejected. WSL A task 2026-11-15-a: is the BCT-off deficit visible in 0.5 um averages under body-on-body contact? Rule fixed (DECISIONS 2026-11-15): within 3.5 % -> CS-18c = CS-18b with BCT off; else review session.
+2026-11-14 (cloud, later): Peter keeps the requirements (bond in the solver) and continues with CS-18c; a review session follows the next failure (inputs in HANDOFF: surface failures throughout, one-way bond option, dead-end trigger).
+2026-11-14 (cloud): merged §20.4-20.5 (c329481): T-S1 R/64 with BCT on meets its criteria (rebound 0.9788); T-S1 R/32 with BCT off rebound 0.9988, all errors inside R/32 limits (viscous work 0.0016 vs 0.33 KE0). Cause of the CS-18b failure: BCT coupling to curved, few-particle wall patches. Peter: stay with TL, CS-18c with a corrected BCT; UL SPH (CS-19) is the fallback; no route review (DECISIONS 2026-11-14). WSL A task 2026-11-14-c: BCT defect analysis, body-on-body probe, one BCT variant calibrated, T-S1 peak reference check; results to §21.
+2026-11-14 (cloud): merged §20 (7984e1c; diff only verification log and results). CS-18b core rungs: T-A0 PASS (55/55), T-S0 PASS (200: plateau 1.0066, contact 0.9941, rebound 0.976), T-S0p PASS; **T-S1 FAIL** (R/32: contact at 1e-2 0.890, 5.3 % vs 3.5 %; rebound 0.860 vs >= 0.9796; R/16 unstable, KE up to 9.0 KE0). **CS-18b refuted** by its frozen kill rule (DECISIONS 2026-11-14); hunch count 3 of 5. My 'host rungs likely pass' was wrong. R/64 still running (reported only). Next for track B: Peter (HANDOFF §5).
+2026-11-14 (cloud, session end): HANDOFF rewritten before /clear. WSL A pushed §20 (7984e1c; commit line: T-A0, T-S0, T-S0p pass, T-S1 FAIL, campaign stopped, R/64 to follow), not yet read or merged; first action of the next session.
+2026-11-14 (cloud): CS-18b and its ladder frozen (6f0786a; Peter approved; T-tension/T-D1 limit 0.095 V from the collocated welded bar alone, source noted, loose by construction). Hunch count 4 of 5. WSL A task 2026-11-14-a: CS-18b core rungs in frozen order (wall forces from the momentum rate under BCT), results to §20.
+2026-11-14 (cloud): merged §19 (b5a4424): BCT guard 0.45 robust on the sphere, but the sphere's layer 2 stays 26-30 % low with BCT; BCT implemented (column end layers 0.9999, T-A0 55/55; engine wall-force output 1.485x under BCT, so metrics read the momentum rate); quad two-body Hertz peak 1.047 / approach 0.976 at R/128; alpha 5 / Q1 0.1 from the committed procedure; survival probe PASSES at 800 m/s, R/16 and R/32 to 1.0 D/V (my 'leaning fail' was wrong). Peter: alpha 5 / Q1 0.1, T-B2 peak 8.0 % / approach 5.5 %, sphere layer reported, averaging length 0.5 um. Drafts awaiting Peter: coldspray-hunch-cs18b.md and sph-tlsph-b-ladder-draft.md (open: T-tension limit).
+2026-11-13 (cloud): CS-18b hold lifted (Peter: the remaining papers will not decide). WSL A task 2026-11-13-c item 5: TLSPH survival probe (Al-Al 800 m/s, R/16 and R/32, contact only, E-1 survival checks) after BCT, before the freeze; survives -> draft and freeze CS-18b; fails -> updated-Lagrangian variant as its own hunch. Edge-state requirement amended: interface outputs averaged over a stated length (proposed 0.2 um, confirm at freeze). WSL B b9 continues in the background.
+2026-11-13 (cloud): merged WSL B b9 partial (51f1e6d; leak-scanned clean). Dai 2026: updated-Lagrangian SPH with kernel correction, no hourglass control; Lennard-Jones bond switched on at eps_p >= 1.4 at both particles, range tied to the spacing; no exact verification; resolution study of the flattening ratio only (still moving at d/80); energy +4-5 %; survives 3D Cu impacts at about R/30-R/40, 605-768 m/s. Field pattern so far: validation against experiment, no convergence of edge quantities shown. Open: Tang 2021, Ge 2026 (browser download), Dai 2025 (closed). CS-18b stays on hold.
+2026-11-13 (cloud): CS-18b freeze on hold (DECISIONS 2026-11-13) after Peter found Dai et al. 2026 (Comput. Mech. 78; updated-Lagrangian SPH, multi-particle cold spray with a bonding model) and a modeller sweep found more missed method work (Wang 2025 SPH bonding model; MPM bonding independent of discretisation, Tang 2021 / Khoei 2023; FE with nonlocal regularisation, Ge et al. 2026; peridynamic bonding). WSL B task 2026-11-13-b9: F-level reading and comparison table (open papers first; Dai 2026 and Wang 2025 from Peter/Alex). WSL A task 2026-11-13-c continues. Lesson: literature steps must sweep for competing methods.
+2026-11-13 (cloud): merged §18 (3a89b1c): finite-strain references (T-S0 plateau 1.00659, contact time 0.99294, rebound 0.99654), threshold rule 1.25x larger error of quads/collocated, LAMMPS viscosity Q1 0.05, end-layer error explained exactly with BCT fix proposed. Peter: BCT in CS-18b; T-surface and T-B2 thresholds = quad error + 3 points (T-surface within 3.5 %); host rungs by the §18.2 rule. WSL A task 2026-11-13-c: BCT sphere check, BCT implementation, quad two-body Hertz for T-B2, alpha recalibration; then CS-18b and its ladder are drafted.
+2026-11-13 (cloud): merged §17 (7638d1a): T-S0 plateau offset is finite strain (judge's linear reference), contact-time error = offset + ~1 spacing, viscosity ~half the rebound loss, TL end layers carry 0.655/0.845 of the true stress. Peter supplied a meta-review (saved verbatim with response); the SPH route review is rewritten in place (§7a requirements conflict, change log); literature check of the critique's expert answers (S level; Ge et al. 2026 nonlocal mesh-sensitivity mitigation for cold spray is the key new source; Li 2006 confirms edge mesh dependence in FE). DECISIONS 2026-11-13: CS-18b with a calibration phase before its freeze; WSL A task 2026-11-13-b (finite-strain references, threshold calibration on quads and collocated SPH, literature viscosity on non-rung cases, end-layer design note and T-surface rung).
+2026-11-13 (cloud): SPH route review written (docs/research/sph-route-review-2026-11.md) and critiqued by an independent agent (sph-route-review-2026-11-critique.md, verbatim): 12 of 14 numbers confirmed, 4 mismatches corrected in a dated section; main points: H5 (T-S0) is a bulk test and no evidence for the surface-layer thread; the contact edge may be unconvergent in any method without a physical length scale; next per the critique: test edge-quantity convergence directly (2D axisymmetric remeshed FE), band-averaged outputs, one-way coupled bond, impact-regime judge calibrated on a method known to pass.
+2026-11-13 (cloud): merged §16 (c31ab53): TLSPH implemented in the fork (tlsph eac1040b2), T-A0 PASS, T-S0 FAIL (contact time 1.49 / 1.10 % short at 100 / 200, rebound 0.942 at 100, plateau error grows to a converged 1.0066). CS-18 refuted by its frozen kill rule (hunch count 3 of 5); my 'elastic rungs likely pass' prediction was wrong; lesson: growth clause without a noise floor. Readings: viscosity takes 5.6-15.7 % of KE; plateau and start spike match collocated order 1. WSL A task 2026-11-13-a: T-S0 diagnosis (viscosity off/Profizi, alpha 0/20, V/2 and V/4, width 16, per-layer stress), then Peter decides on CS-18b or another route.
+2026-11-12 (cloud): hunch CS-18 and the TLSPH ladder frozen (583912a; Peter approved the thresholds; tl.cond_max 30, tl.smin_min 0.025; journal check of Ganzenmueller eqs. deferred to before the first claim). Hunch count 4 of 5. WSL A task 2026-11-12-c: TLSPH implementation per SPEC-TL §6, then core rungs T-A0 ... T-B3, T-survival (kill clause), T-C1, T-D1, T-D2; results to §16.
+2026-11-12 (cloud): merged the Profizi 2016 reading note (bc3376b, F level): TLSPH + pinball contact + cohesive pair law, no hourglass control, no update, no exact-reference checks, runs at R/5; finer meshes failed at 600-900 m/s; author recommends updated Lagrangian. SPEC-TL set-up adopted (DECISIONS 2026-11-12), early T-survival rung added (Al-Al 800 m/s, R/16 and R/32, after T-B2), Taylor bar reported only. CS-18 draft gains the T-survival kill clause and the author's prediction (elastic rungs likely pass; T-survival leaning fail). Freeze waits on Peter's threshold approval and WSL A task 2026-11-12-b (journal check of 4 equations, tl.cond_max).
+2026-11-12 (cloud): TLSPH literature check (docs/research/tlsph-literature-check.md, S level only; two hosts blocked): TLSPH removes tensile instability but needs hourglass control and struggles with reference updates at large strain; Profizi, Combescure & Ogawa 2016 already used TLSPH + adhesion for Al-Al cold spray (CS-18 at best a variant). Drafts awaiting Peter: hunch CS-18 (would make 4 of 5), TLSPH ladder (numeric host thresholds, tension, zero-energy, contact rungs; large-strain rungs reported). WSL A task 2026-11-12-a: read Profizi 2016 + thesis, SPEC-TL and CODEMAP addendum on fork branch tlsph; no code, no runs until the freeze.
+2026-11-12 (cloud): merged WSL A task 2026-11-11-b (b48acc2; §15): S' host rungs FAIL (S0 4/12, S1 11/12; order 1 alone causes the S0 change, part symmetry-plane artefact; S1 rebound falls with refinement), F0 and A-0 PASS; stop accepted, S' not adopted (DECISIONS 2026-11-12). Peter: first claim needs shape, rebound/v_cr and interface state; bond in-solver; 3D; TLSPH directly in the fork (branch tlsph; prototype-first recommendation overruled). Fork analysis hvi/ANALYSIS-2026-11-12.md. Revised modeller estimates (judgment): milestone-1 ladder in collocated SPH ~20-30 %, convergent edge histories ~25-35 %, whole chain ~5-10 %. History note: 500c87d added Peter's untracked impact_homepage_frames.py, 3e46d09 removed it (visible in history only).
+2026-11-11 (cloud): E-1 gate draft revised after Peter's strictness question (detached mass instead of 3 V; energy reported until the fork computes SPH internal energy; 6 bins incl. 50/60 deg rim; smoothed peaks; 3 % noise floor in the convergence rule); still not in force, awaiting Peter.
+2026-11-11 (cloud): merged WSL A task 2026-11-11-a (5a251fc; opencourant-verification.md §14): all hvi runs recorded with binary_state; on committed binaries C-1 and D-2 PASS (reproduced digit for digit), A-0 PASS; B-2, B-3 FAIL, deferred C-2, C-3, D-1 FAIL, D-3 not run. Peter's decisions (§14.6) recorded: ladder Addendum 1 frozen (140b84a, post hoc), work past the stop rule approved after the fact, base d791761 accepted, stfac 3 for E-1 (DECISIONS 2026-11-11). WSL A task 2026-11-11-b: S' reruns (host S0/S1/F0 first, then A-0, A-2, B-1, B-2 R/16-R/32-R/48, B-3, C-1, D-2, cost, D-3 after A3.5). E-1 waits for the E-1 gate (draft, Peter).
+2026-11-11 (cloud): E-1 decision point drafted (docs/research/sph-contact-e1-gate-draft.md, not in force): edge Y/p_n histories in 4 Lagrangian bins x 3 velocities, R/16-R/32-R/48, converge if d2 <= 10 % and d2 <= d1; PASS -> E-2/CS-15, FAIL -> in-solver route stops, fallbacks particle-level rule then closed form. Modeller's success estimate (judgment, not judge results): milestone 1 ~60-70 %, convergent edge histories ~30-40 %, predictive interface law ~10-20 %, whole chain to the application ~10 %.
+2026-11-11 (cloud): fork sph-hvi-contact read at 6a8084b. Under the frozen ladder (36c34bd): A-0, A-2, B-1 PASS; B-2, B-3 FAIL; deferred D-1 FAIL; C-1 and D-2 reported PASS but not admissible (no committed rows; uncommitted binaries). Diagnostic: xi 0.3 + kernel order 1 puts B-2 inside limits at R/32 (F2, outside the frozen set-up). Referee rulings (docs/research/sph-contact-referee-2026-11-11.md): S' set-up only as post-hoc addendum with full reruns + convergence; D-1 stays vs exact bar (modeller's welded-bar proposal overruled); R/32 stays; E-1 allowed with conditions. Addendum draft awaiting Peter (sph-contact-ladder-addendum-1-draft.md, not in force). WSL A task 2026-11-11-a (commit all rows first). WSL B b8 merged (d67f72c, leak-scanned clean; B03 588-590 m/s, B12 no v_cr; exposed).
+2026-11-08 (cloud): **no-fork dropped** (Peter; DECISIONS): SPH-SPH contact + cohesive bond + Bay activation in a separate private fork sph-hvi-contact (sidecar config, Siemens parts untouched, OpenMP only). Plan docs/research/sph-hvi-contact-plan.md; judge frozen docs/research/sph-contact-ladder.md (core rungs A-0, A-2, B-1-3, C-1, D-2, D-3; rest deferred; E-1/E-2 exploratory, no v_cr). WSL A task 2026-11-08-a. Effort ~80 % build/performance, ~20 % verification.
+2026-11-08 (cloud, next session): fetched; WSL B b8 (branch coldspray/b03-b12-outcomes) not pushed yet, no other unmerged remote work. Nothing unblocked: b8 waits on WSL B, B06/B07/B16 on Alex, T3 trigger on B06, HANDOFF §9 on Peter.
+2026-11-08 (cloud, session end): B03, B05, B12 closed without pre-registration (nothing discriminates; Peter); WSL B task b8 (their outcomes for the data table, labelled exposed, no verdicts). Remaining blind papers: B06, B07, B16 (Alex). HANDOFF rewritten.
+2026-11-08 (cloud): WSL B b6 and b7 merged (leak-scanned clean). b6: B12-c2 Al reuses HG2018b/HG2019b impacts (exposed); B03 and B12-c1 probably not independent (B4 log). b7: Panova & Schuh 2024 Cu (Alfa Aesar) on H02: V_cr 540 +- 5 (row P24-Cu), powder Y_d 403 +- 90 MPa; bonded fraction 6-89 % peaking at 1.30 V_cr, 13 % at 1.62 V_cr. Correction: Panova2026b's PA rows used a different powder (Praxair CU-159-3), so the PA gap stays open.
+2026-11-08 (cloud): Panova & Schuh 2024 released by Peter (B4 log); WSL B task b7 queued after b6 (powder Y_d, v_cr, bonded fraction vs velocity from thesis ch. 2; B03 points on pp. 56-57 still excluded).
+2026-11-08 (cloud): WSL B task b6 written (provenance of the B03 and B12 data, citations only; settles the possible HG2018b exposure before the B03 freeze).
+2026-11-07 (cloud, 14th): WSL B b5 merged (b6d21c6; leak-scanned clean): step-1 inputs for B03 (Cu 12 um, measures v_cr: yes), B05 (no v_cr), B12 (Cu and Al, unclear); possible exposure via shared HG2018b materials logged (B4). WSL B b4 merged (55d7c85): no powder has a failure strain or n in the Lucas, Panova or Lienhard theses; Lucas's plate eps_c are derived n, not measured (note added to the Z7 addendum).
+2026-11-07 (cloud, 13th): WSL B tasks b4 (powder properties from the Lucas, Panova, Lienhard theses) and b5 (step 1 for B03, B05, B12, fetched by WSL B from open copies; B06, B07, B16 closed, still Alex) written; standing fetch rule added to wsl-b.md.
+2026-11-07 (cloud, goal C): particle-property gap inventory (data/README.md): impacted-powder strength only for H20 (Y_d, partly circular), B10 (Y_d and static strength) and B02 (Y_d); no row has a powder failure strain or n; possible sources listed (three theses via WSL B, Na2025 curves, micro-compression measurement).
+2026-11-07 (cloud, goal B): judge v2 proposal drafted, not adopted (coldspray-judge-v2-proposal.md; scripts/judge_v2_sensitivity.py reproduces every recorded verdict under (i)). R1 primaries + R2 widen brackets by the stated velocity error: CS-05 refuted with primaries alone (0.104), back to inconclusive with R2 (0.084); under R2 CS-09 (B10) would be refuted (spread 77 > 2w 70) and CS-07 (B10) inconclusive; RH-95-D vs RH-95 drops from 1.56 w to 0.88 w. Other verdicts unchanged.
+2026-11-07 (cloud, goal A): WSL B b3 merged after leak scan (9023ce6, clean): Panova2026a = thesis ch. 5 (3 Cu two-particle stacks, particle-particle beta 7/18/9 %, upper bounds); audit row A -> F via thesis; no change to questions 2, 4 or Q-B1. Screen facts in HANDOFF (one 2024 paper, ch. 2: maps yes, oxide series no; B03 values on thesis pp. 56-57, 146).
+2026-11-07 (cloud, 12th): thermal question and CS-14b parked (Peter; DECISIONS); hunch count 3 of 5.
+2026-11-07 (cloud, 11th): HG2018b primary read (DSpace CDN host added to the Default environment): rows P18 in vcr_lipit.csv; Panova2026b and Dowding quote it correctly, H20 rows are Hassani2020's own equal-count windows (not containing the primary for Cu, Zn); results-v1 caveat 2: CS-05 would cross its kill line (d 0.104) against the primary Al window, frozen verdict stays inconclusive. Z7 post hoc on B02 (scripts/z7_cu_posthoc.py): soft/hard 1.064 vs measured 1.133 +- 0.032 (right sign, half the contrast); mixing rule needs particle eps_c 0.01-0.09. WSL B task b3 (Panova thesis) written.
+2026-11-07 (cloud, 10th): near-threshold-striker hunch parked (Peter); budget stays 4/5. Panova PhD thesis (MIT 2026) as a Panova2026a substitute: not opened by the modeller (likely contains blind-list-2 candidates and quotes pending blind papers); proposed route WSL B screen, then extraction.
+2026-11-07 (cloud, 9th): Q-B1 adopted by Peter; Reiser2024 Figs. 3b/5b digitized (data/buildup_reiser2024.csv, 137 shots, 9 stacks, 7 fracture events; stack means within 2.2 m/s of printed). Exploratory answer (coldspray-buildup-track.md 'Q-B1'): fracturing shots all 0.98-1.20 v_cr, none clearly sub-v_cr (no grit blasting by rebounders); slower part of their stack (P = 0.067); slow history in 3 of 5 fractured stacks only; common-window separation p = 0.095 (survivorship). Neither striker nor history alone; no hunch registered.
+2026-11-07 (cloud, 8th): build-up data audit (coldspray-buildup-track.md, 33152ad): Reiser2024 re-read; its ~330 m/s is a stack-survival threshold on stack-mean velocity, not a particle-on-particle bonding v_cr (a particle bonded on a stack at 249 m/s); intact and fractured stack means overlap at 326-329 m/s; questions 1-4 not answerable on seen data. Proposed Q-B1 (erosion set by striker or by deposit history; Reiser Figs. 3b/5b, 9 stacks, 7 fracture events). No blind papers arrived. Awaiting Peter.
+2026-11-07 (cloud, session end): HANDOFF updated (two tracks, budget 4/5, end point, six papers requested from Alex). Next session: build-up data audit; blind papers via WSL B as they arrive.
+2026-11-07 (cloud, 7th): hunch budget (max 5 open untested, must discriminate on obtainable data; now 4/5) and end point of the single-impact phase (6 pending papers scored + T3 request sent or dropped -> synthesis) adopted (DECISIONS 2026-11-07).
+2026-11-07 (cloud, 6th): build-up track opened (DECISIONS 2026-11-07; coldspray-buildup-track.md): questions and data audit first, no hunches yet.
+2026-11-07 (cloud, 5th, /goal): kinematic impact view (impact_kinematics.py, tests, figures in docs/research/figures/kinematics/, note coldspray-kinematics.md: geometry only; edge turns subsonic at every speed, Al 5-12 deg, Cu 7-16 deg); B02/B14 evidence added to H2 and H4 (post hoc); HANDOFF refreshed with 'Open for Peter'.
+2026-11-07 (cloud, 4th): CS-17 frozen (substrate strain-hardening capacity; directional; post-hoc domain restriction to wrought substrates because Panova PA-02 contradicts it otherwise). No known unseen test data yet.
+2026-11-07 (cloud, 3rd): B02/B14 scored (outcomes add80b8 after freeze 27e7eea, addendum 542f810, scorer f8fb8f5): CS-16 refuted (hard Cu substrate bonds at 566 vs 641 m/s on soft); CS-07 on B14 supported (exposed); dehydrated RH-95-D is 68.5 m/s below RH-95 at near-equal thickness; Z6 within 1-6 % on dry B14 (in-sample material). coldspray-results-b02-b14.md.
+2026-11-07 (cloud, session end): measurement request for T3 drafted (coldspray-measurement-request-t3.md; send only under the campaign trigger); HANDOFF rewritten (docs/HANDOFF.md). Open for Peter: parking of the thermal question and CS-14b, the blind-list-2 screening task.
+2026-11-07 (cloud, 2nd): CS-16 registered (substrate hardness, B02: 480 / 583 m/s, +102); WSL B task 2026-11-07-b2 (step 3, B02 and B14 outcomes, branch coldspray/b02-b14-outcomes).
+2026-11-07 (cloud): B02, B04, B13, B14 inputs leak-scanned and merged (7a9e0b5; WSL B, from the Lienhard and Lucas theses). Predictions frozen for B02 and B14 (coldspray-preregistration-b02-b14.md, coldspray_blind2.py); B04, B13 have no v_cr. CS-10 and Z18 give no prediction (no particle strength). B14 exposed, B02 partly exposed. Next: step-3 outcomes after Peter decides on a B02 substrate-hardness hunch.
+2026-11-05 (WSL, merged by cloud 2026-11-06): CS-13c refuted by both clauses (opencourant-verification.md §13, 3bf56fe): rungs B0, H0-k0 and check E pass; conductive t_f still falls 22-37 % R/32 -> R/48, P2 rises 35-66 %, twins agree within 3.5 %; a first campaign with thermal softening off (T1 = 0) was discarded and rerun. By the stop rule, no CS-13d.
+2026-11-05 (cloud, 13th): CS-14 rung: DEM cell built (blanket_dem.py), R0 on a triangular lattice (E_f passes; cracks start at the grips and arrest), figures in docs/research/figures/cs14/. CS-14b frozen: CS-14 clarified as an interface submodel; method changed to a continuum film with cohesive cracks; DEM rung superseded. Next: continuum rung protocol, frozen before any run.
+2026-11-05 (cloud, 12th): CS-14 frozen with review notes 1, 2, 4, 5 folded in (length scales named, consequence reworded, interface strength open, mechanism split).
+2026-11-05 (cloud, 11th): CS-14 drafted (Peter: blanket-only DEM cell; t/w, Y', p_E vs oxide thickness 5-25 nm), with review notes; awaiting Peter.
+2026-11-05 (cloud, 10th): zoo member Z18 (Na2025 Eq. 6) registered (bd85147) and fitted: Z18_Yd k = 0.062 reproduces Na (896 vs 887), in-sample RMS 29.0 (constant 26.9); Z18_static k = 0.07139, RMS 72.5, predicted B10 contrast +95 vs -30.5 (fails on its own calibration data). docs/research/coldspray-zoo-z18.md.
+2026-11-05 (cloud, 9th): read Na2025 (F): Eq. 6 = Lienhard jet rule of mixtures (oxide t0/t, t = 100 nm jet; k = 0.062 on AR; Yd from CoR). CS-10 relabelled relative, not variant. T3 now a three-way decider: Na Eq. 6 ~ +126 m/s, CS-10 ~ +37, CS-12 0 (Al 6061, 17 -> 25 nm). WSL B task b1 closed.
+2026-11-05 (cloud, 8th): read Zhang & Bay 1997 (F): CS-12(b) is a hybrid of Bay's film and cover-layer mechanisms; thickness enters only via t/w of a cover layer; several literature-report claims not confirmed (docs/research/coldspray-reading-zhangbay1997.md).
+2026-11-05 (cloud, 7th): campaign trigger revised (DECISIONS "Campaign trigger"; go-nogo step 5): a measurement request only to decide frozen, conflicting predictions (CS-12 T3 vs CS-10), after B14/B06/B05 are scored.
+2026-11-05 (cloud, 6th): external literature search merged (51e147b) with exposure header; B4 exposure log added; labels proposed (CS-12 variant of Bay, CS-13 rediscovery, CS-10 likely variant of Lienhard2020); CS-12 T1 exposed. Bay 1983 primary not read (host blocked, environment change declined). WSL B task: Na2025 Eq. 6.
+2026-11-05 (cloud, 5th): stop rule for the OpenCourant thermal path, data side first (DECISIONS 2026-11-05).
+2026-11-05 (cloud, 4th): CS-13c frozen (15fe42f); WSL A task 2026-11-05-b in docs/research/tasks/wsl-a.md.
+2026-11-05 (WSL, merged by cloud): CS-13b blocked before its runs, no verdict (opencourant-verification.md §12, 19d6316): H0-SPH fails 2.5 %; conductive bricks + adiabatic SPH particle crashes (OOM) or overheats the particle (9e4 K). Options to Peter.
+2026-11-05 (cloud, 3rd): CS-13b frozen (9a36aae); procedure changed (docs/research/coldspray-procedure.md, DECISIONS 2026-11-05); WSL A task in docs/research/tasks/wsl-a.md.
+2026-11-05 (cloud, 2nd): merged §11 (ed656b6): CS-13 rung H0 fails, OpenCourant has no conduction on 2D quads (bricks pass); k(Al) = 237 sourced. Drafted CS-13b (3D setup F, conductive vs adiabatic twins, 500/800/1100 m/s, R/16-R/48, 6 % rule for the 1.5 refinement step, adiabatic-twin control, H0-SPH rung). Awaiting Peter.
+2026-11-05 (cloud): **CS-11 inconclusive; CS-12 and CS-13 frozen; H8 added** (DECISIONS 2026-11-05). Literature-search prompt for the interface agenda: docs/research/coldspray-literature-prompt-2026-11.md (separate session, branch coldspray/lit-interface; blind rules; oxide series and bonded-area maps reported as citations only). Next: WSL A sources Al conductivity and runs rung H0, then the CS-13 diagnostic; CS-12 T3 waits for an unseen same-type oxide series.
+2026-11-04 (cloud, 6th): merged §10 (CS-11: F0 passes, W0 fails, F no crossing and unevaluable at R/32; inconclusive, Peter to accept). Drafted CS-12 (Peter's idea: interface as Markov blanket; bonding = local dissolution; criterion C surface expansion Y > Y' with extrusion pressure m sigma_flow; minimal variant: no oxide-thickness effect at fixed oxide type, decisive simulation-free test T3, disagrees with CS-10) and CS-13 (heat conduction regularises the contact edge; 2D Isolid 17 diagnostic with conduction after rung H0; needs sourced Al conductivity). Both drafts await Peter; proposed H8 (solver contact option can represent the interface) not yet in the inventory.
+2026-11-05 (WSL): **CS-13 rung H0 fails; no impact run** (opencourant-verification.md §11, branch coldspray/opencourant-sph). k(Al) = 237 W/(m K) sourced into properties.csv (P-HG-Al, HG2018a Ext. Data Table 1, no temperature printed; Al 6061 not sourced). H0 (100 K step, erfc, t = 10 ns): Isolid 17 axisymmetric quads conduct nothing (max dT 0.0 K; Isolid 0 the same), error 0.32/0.41/0.45 at h = 0.625/0.3125/0.156 um; temperature is written (nodal TEMP). Same deck on 3D Isolid 17 bricks: 0.28/0.068/0.017 % (passes). Cause: RG /THERMAL 'solid, shell and sph' only; no quad conduction routine in the source (sforc3 calls STHERM, qforc2/q4forc2 nothing). **Blocker for Peter:** CS-13 fallback (JAX 2D with conduction) or a 3D protocol change.
+2026-11-04 (WSL): **CS-11 run per protocol: inconclusive** (opencourant-verification.md §10, branch coldspray/opencourant-sph). F0 (SPH sphere on Isolid 17 bricks, TYPE7 friction 0, two-body Hertz 20 m/s) passes: R/32 peak 1.037, approach 0.987, rebound 0.992; frozen Isolid 17, gap s/2, Stfac 10 (Isolid 24/1: nodal dt 30x smaller). W0 (SPH on SPH) fails: peak 1.37/1.19, approach 0.57/0.68 at R/16/R/32; started outside 2h the sphere bounces before lattice contact (no defined contact). SPH failure: failed particles leave the neighbour search (spmall3.F/sphprep.F), RG silent. Cost one F run R/16 35 s (8 thr); projected ~6.5 h < 48 h. F sweep R/16 400-1200: all stop on contact-edge brick collapse at 0.115-0.17 D/V; J <= 1.06, no crossing of 1.5; J_s 1.43-2.28. Diagnostic R/24, R/32 (500/800/1100): collapse 0.11-0.085 / 0.09-0.068 D/V, R/32 unevaluable, J rises with refinement. W sweep not run (W0 failed). **Blockers for Peter:** accept CS-11 inconclusive; whether any OpenCourant interface route remains without a fork.
+2026-11-04 (cloud, 5th): **CS-11 approved and frozen; S1 accepted at 20 m/s** (DECISIONS "Rung S1 accepted at 20 m/s; CS-11 approved"): peak about 4 % low, rebound 0.98, 2 m/s not passed and not pursued. Next (WSL A): rungs F0 and W0, the SPH material-failure check, the cost of one F run at R/16, then the CS-11 sweep.
+2026-11-04 (cloud, 4th): **plan revision 2: the interface law is the core** (DECISIONS "Cold-spray plan revision"; docs/research/coldspray-go-nogo.md): CS-11 bracket -> interface-law hunches (<= 2 parameters, unseen oxide series; first: oxide interphase) with the closed-form track in parallel; blind papers B14/B06/B05 first; campaign becomes the next step if < 2 unseen oxide series; second upgrade trigger for the interface component. CS-11 edits: bracket width reported against measured oxide effects; plan placement. CS-11 still a draft awaiting Peter.
+2026-11-04 (cloud, 3rd): **SPH interface route decided: A + B** (DECISIONS "SPH particle–substrate interface: bracket, bond decided afterwards"). Merged coldspray/opencourant-sph (f156b94). Hunch CS-11 drafted (docs/research/coldspray-hunch-cs11.md): simulated jetting onset v_on, welded SPH-SPH vs frictionless SPH-on-TYPE7 bricks, refuted if |Delta| > 45 m/s; prerequisite rungs F0 (TYPE7 Hertz) and W0 (welded Hertz, loading only). Draft until Peter approves; no Al-Al run before that commit. Open: S1 acceptance (Peter), oxide-interphase option C (needs a check of SPH material failure in OpenCourant).
+2026-11-04 (WSL): **3D SPH ladder** (opencourant-verification.md §9, branch coldspray/opencourant-sph). §8.3 rerun with sourced γ₀ = 2.17: conclusion unchanged (medium 750 m/s now fails at 0.20 t_p). SPH settings: cubic net, h = 2^(1/6) s (starter default; 1.5 s unstable), default q (q off unstable), ξ = 0, dt scale 0.3, /RWALL on particle nodes, /SPHBCS planes at cell boundaries. S0 column: plateau 0.9957, contact 1.011→1.005, rebound 0.888→0.964 (25–200). S0p: σ₂ 0.995, ε_p 0.988, fronts converge (matches quads). S1 Hertz quarter sphere, surface-conforming: 20 m/s contact 1.107/1.019/0.975, peak 1.193/1.030/1.027, approach 1.122/1.014/0.986 at R/16/32/64 (JAX 0.953/1.073/0.957); 2 m/s still 7–10 % off at R/64; plain lattice sphere fails. Quarter = half to 0.15 % (peak/approach/rebound). Cost 4.6 µs/particle-cycle (1 thread), 0.9 µs at 8 workers; R/64 Hertz 94–122 min. Pitfalls: /SPHCEL mass overrides h; SPH parts are kernel-welded (sph_twopart.py). **Blockers for Peter:** particle–substrate interaction method (§9.8) and S1 verdict; Al–Al not started.
+2026-11-04 (cloud, 2nd): **CS-10 registered and fitted** (handoff step 3). No new pushes on the WSL branches (SPH ladder, blind inputs), so steps 1-2 wait. CS-10: v_cr^2 = (0.15 c)^2 + beta sigma_p/rho + gamma (t_ox/d)/rho, form, fit rule and K1-K3 kill rules registered in 3f181ed before fitting (docs/research/coldspray-hunch-cs10.md). Fit on B10 (2ce15c6, docs/research/coldspray-cs10-fit.md): beta 0.3774, gamma 3.19e11 Pa, both > 0 (not dead on arrival); in-sample RMS 23.0 vs constant 26.9 m/s, leave-one-out 34.9 vs 33.7 (no better than a constant); beta 0-0.99 across folds (fragile), gamma 2.4-3.7e11; gamma too large for shell fracture alone (k sigma_ox ~ 53 GPa). All in-sample. Next: freeze CS-10 predictions with the other zoo members for each blind paper as inputs arrive (B14 K1 is exposed, report separately). Blockers unchanged.
+2026-11-04 (cloud): **cold-spray session end** (handoff docs/HANDOFF.md). Done: retrospective test v1 (abce3f6/045409d/2324a43: CS-02, CS-03 supported; CS-01, CS-05 inconclusive; CS-06 refuted; judge-noise 8/9); literature-blind set frozen (5f41784, 16 papers, rules B1-B6); first blind result B10 Na2025 Al 6061 heat treatments (freeze 060fff8, outcomes 94fd173, scores b31cdae): CS-08 (strength) refuted, Delta = -30.5 m/s; CS-07 not refuted, CS-09 undetermined (no window bounds; rule B6 adopted a5fd07e); Z6 under-predicts B10 by 8-16 %. Data: vcr_lipit.csv 49 rows, properties.csv with Hassani2020 Table S1 and gamma0, HG2019b primaries for Au/Ag. Solvers: JAX rung 0 passes (ccec9db); OpenCourant replaces OpenRadioss (d089779), Isolid=17 required, 2D Lagrangian fails at the jet root, post-onset route 3D SPH, no fork (2eab23f). Next: 3D SPH ladder (WSL, branch coldspray/opencourant-sph); 10 blind papers pending (Peter fetching); combined strength+oxide hunch before the next freeze. Blockers: tensile strength and failure strain of tested powders; primary HG2018b; OpenCourant temperature output with Isolid=17; licence of the Siemens parts (local use only).
+2026-11-04 (WSL): **Jet distortion (open item 8), Peter's guidance** (opencourant-verification.md §8): SPH is 3D-only (no N2D use, 3D cubic-spline kernel only; runs silently with N2D3D=1). No Lagrangian remeshing for /QUAD (/ADMESH shells only; rezoning only in ALE). Option 1 diagnostic Al-Al LAW4+Grüneisen, Isolid 17, no erosion, 500/750/1000 m/s x h=R/16,R/32,R/64: finest mesh fails (dt collapse at jet-root substrate cell, min angle <0.5 deg) at 0.40/0.08/0.06 t_p; failure earlier with refinement; edge eps_p not converged; T not output with Isolid 17. Answer: a bonding criterion cannot be evaluated before mesh failure in 2D Lagrangian. No v_cr claimed. Decision for Peter: 3D question is back (3D SPH ladder outlined, cost estimate only) vs 2D ALE after own verification.
+2026-11-04 (WSL): **OpenCourant rung 1 (Hertz sphere) + element finding** (docs/research/opencourant-verification.md §5). Default axisymmetric quad is area-weighted: Hertz ~5x too stiff, axial momentum not conserved in free flight. Isolid=17 (4-point quad) fixes it: agrees with JAX on disc (0.004 V) and Hertz sphere (~1 %: contact 0.956/peak 1.075/approach 0.958 vs JAX 0.953/1.073/0.957 at 20x40); ocdeck default now 17. Isolid=17 is Lagrangian only (ALE falls back to the area-weighted element). LAW4 temperature = plastic work exactly (0.4 %) + q work + EOS compression heat; EFRAC ignored; with Isolid=17 T is computed but not written out (to report upstream). Centre lift-off of the unconfined plate is physical (release waves), same with Isolid=17. Blocker/decision for Peter: how to treat jet distortion given Lagrangian-only verified element (Lagrangian+erosion, ALE after own verification, SPH, 3D).
+2026-11-03 (WSL): **OpenCourant verification, option 1 + rung 0 + rung 0p** (docs/research/opencourant-verification.md). JC (LAW4) + /EOS/GRUNEISEN run on axisymmetric quads; LAW4 built-in temperature works, /HEAT/MAT gives T≈0 on quads (open). Rung 0 elastic vs JAX: contact +1.05/+0.36/−0.04/−0.31 %, rebound 0.965/0.978/0.986/0.991 V (JAX +1.9/+0.9/+0.7/+0.4 %, 0.966/0.979/0.987/0.992); plateau +0.66 % = finite strain (≈0.42·V/c_d, no small-strain option for quads). Rung 0p elastic-plastic: wall σ₂ 0.9997, c_b front 0.993, c_d front 0.997 at 200 el. Pitfalls: /TH/RWALL FNZ = ∫σ dr in 2D axisym (use momentum); default q + dt 0.9 unstable on 50:1 quads. Next: rung 1 (Hertz sphere) in OpenCourant; /HEAT/MAT on bricks; option 4 on hold.
+2026-11-03 (cloud): **cold-spray track: go, discipline only** (DECISIONS "Cold-spray track: discipline only"): no component has an honest judge yet; best candidate is single-impact v_cr judged on LIPIT data (Hassani2020: 16 windows, 11 matched materials; trigger ~15 plus a blind held-out set). Notes: docs/research/coldspray-{questions,data-and-zoo,go-nogo}.md. Next: open v_cr table, pre-registered zoo and hunch predictions, disagreement map for a blind LIPIT campaign.
+2026-11-03: **Phase 6 paused** at a clean checkpoint (DECISIONS "Arena 2 paused; cold-spray question opened"). Resume = step 6. Next: cold-spray research in a fresh session, brief docs/plans/2026-11-03-coldspray-research-brief.md.
+Handoff 2026-10-30: docs/HANDOFF.md (Phase 6 steps 1–2 done; next: step 3, Hertz and the error floor).
+2026-10-30: **judge euler1d-v1.6 kept** (DECISIONS 2026-10-30): B-0042, B-0052, B-0054 in dev; zoo check
+docs/judge/2026-10-30-v16-check.md (no member newly rejected, old-case dev and all promo identical to v1.5). The
+reconstruction_stateful rescore is deferred until a round 5 or the benchmark leaderboard needs it. H-0019..H-0025 closed by Peter
+2026-10-30 (H-0019 refuted; H-0020/21/22/25 refuted; H-0023, H-0024 inconclusive). Benchmark release prepared (BENCHMARK.md, GPL-3.0 LICENSE,
+CITATION.cff; Peter: GPL-3.0-or-later, held-out seed stays private, scoring on request); tag `benchmark-v1.0` on main after the merge.
+2026-10-30 (WSL): **benchmark-v1.0 released** — annotated tag on main 8c2f1ef (pytest 277, judge euler1d-v1.6 integrity
+ok, LICENSE GPL v3, pyproject GPL-3.0-or-later); GitHub release "benchmark-v1.0 (judge euler1d-v1.6)" published by Peter
+from the web UI at 2026-10-30T06:09Z (no gh): https://github.com/pClockworker52/schemeforge/releases/tag/benchmark-v1.0
+Phase 6 tooling spike done in the cloud
+(docs/spikes/2026-10-30-phase6-tooling.md): FElupe meets the tested criteria (Hertz, Q2, 9.5k DOF: 11.6 s, 181 MB;
+jax.numpy energies via JAX AD give identical results). FElupe is GPL-3.0: the repository switched to GPL-3.0-or-later
+(DECISIONS 2026-10-30). Phase 6 plan approved (D1–D5 defaults, step 7 added):
+docs/plans/2026-10-30-phase6.md. Step 1 (cloud, 2026-10-30): per-arena judges
+(DECISIONS "Each arena is its own judge"), no euler1d defaults in CLI/MCP, contact arena skeleton contact-v0.1.dev
+(medium slot, smoke C0a, zoo neo_hooke); acceptance run r-20261030-071154-7111 ok (cloud registry). Arena 1 zoo dev
+identical before/after, 21/21 (docs/judge/2026-10-30-phase6-step1-euler1d-check.md). **Step 1 done.** Step 2 done (judge contact-v0.2.dev, 5858abe): C0a laterally
+confined (exact homogeneous solution for any medium; FE agrees to 1e-9 or better), C0b simple shear (exact from psi),
+wall pressure from reactions (exact for uniform pressure), classical ContactRigidPlane + penalty extrapolation (2e-10).
+Spec: docs/judge/contact_spec.md. Zoo neo_hooke dev r-20261030-082524-e9a2 (cloud registry): leak_pre 0.0187 / 1.95e-4 and gap_res
+0.0316 / 6.5e-4 at gamma 1e-3 / 1e-5, shear_parasitic 1e-5. Step 3 partly done (2026-11-03, judge contact-v0.3.dev,
+f84d504): C2 Hertz on a rigid flat with medium + classical reference; judge error floor (classical vs Hertz) dev
+mesh a +0.9 % / p0 -0.5 %, 0.3 % at 128 columns; fixed HuHu regularization kr = 5e-7 (5e-6 adds ~4 % p0 tension,
+5e-8 fails on finer meshes); dev suite 26.4 s, zoo dev r-20261103-072519-256c (cloud registry): C2-g5 a_err +12 %,
+C2-g6 a_err -3.9 %, 87 Newton iterations. Spec: docs/judge/contact_spec.md. C1 patch test done (contact-v0.4.dev, c9bf0ad): C0a on
+distorted meshes (TMC meshes are conforming, so non-matching interfaces do not occur), exact to 1e-13, wall pressure
+uniform to 5e-9; zoo dev r-20261103-082551-03b8. Mesh plots: scripts/plot_contact_meshes.py, docs/judge/figures/. mesh_sens done
+(contact-v0.5.dev): a_err and p0_err mesh-stable (<= 0.4 points), p_l2 and leak_out mesh-sensitive; Q1 not
+applicable (the regularization needs Q2); promo-only (~30 s per medium). **Step 3 done.** Step 4 built (contact-v0.6.dev,
+dcb372b): full hard constraints (tangent, non-negative, compression, unit scaling), held-out families GF/SF/HF/HX,
+promo suite with mesh_sens and max_step; test-seed run 114 s, all instances converge.
+**Phase 6 step 4** (2026-11-03, WSL, main eeee641, pytest 296, contact-v0.6.dev b1c0a79d integrity ok, euler1d-v1.6
+integrity ok): first real promo run of the contact zoo. Zoo neo_hooke dev r-20261103-123419-802b ok, 22.7 s, no
+violations, converged 1 on all cases: C0a-g3 leak_pre 0.0187 / gap_res 0.0316, C0a-g5 1.95e-4 / 6.53e-4, C0a-g6
+gap_res 8.23e-5, C0b-s2 shear_parasitic 1.00e-5, C2-g5 a_err 0.123 / p0_err 0.00121, C2-g6 a_err -0.039 / leak_out
+0.011 / 87 Newton iterations, C1 pressure_spread 5.14e-9. Promo r-20261103-123550-7e5a **ok**, 70.1 s, seed
+fingerprint d4f3b5e7dedec0f6, no violations, pass_rate 1.0 and converged 1 (worst) in all families (GF 10, SF 10, HF 6,
+HX 1). Medians: GF leak_pre 3.08e-4, gap_res 1.04e-3; SF shear_parasitic 2.47e-4; HF a_err -0.0059, p0_err 0.0042;
+HX max_step 0.25, mesh_sens_a_err 0.0066. Worst values: GF force_err 0.115, gap_res 0.046; HF a_err 0.119, leak_out
+0.053, 87 Newton iterations. No family with violations or converged < 1. WSL git has no GitHub credentials; push via
+Windows git. Step 5 (cloud, 2026-11-03, contact-v0.7.dev 48ced4b): zoo
+member neo_hooke_iv (FElupe variant); front over gamma 1e-3..1e-7 in docs/judge/contact_baseline.md: **the trade-off
+exists** (accuracy improves by orders of magnitude as gamma falls, max_step falls from 1 to 1/6, gamma 1e-7 fails);
+classical contact is the ideal corner. Zoo widened (contact-v0.8.dev cbd5854): wriggers2013
+(via felupe ex20) and faltus2026 (arXiv 2603.13063 Eq. 1); the newer media are far more robust (faltus2026 gamma 1e-6:
+Hertz a_err +1.0 %, one load step) at a 1-4 % residual gap: a second trade-off axis. Mixed formulation and other
+regularizations belong to the regularization slot. Next: step 6 (blind audit, Target D pre-registration, tag).
+Handoff 2026-10-28: docs/HANDOFF.md (next steps, open items, traps). sforge MCP server did not connect from the
+desktop session on 2026-10-28; restart it before round-4 evolve.
+2026-10-28 (desktop): evolve e-20261028-201918-36b6 stopped after gen 0 (16/16 rejected, 14 false timeouts, $1.17;
+seed alone: smoke 57.6 s r-20261028-204346-2c47, dev 406–492 s). Peter chose option 1: timeouts raised to smoke 300 s /
+dev 1500 s (DECISIONS 2026-10-28). Rerun e-20261028-212642-e595 failed the same way ($0.87): the real cause is memory
+(4.4 GB peak per worker, r-20261028-220113-4600, vs 2 GB assumed for K = 7). Round-4 evolve restarted with
+SFORGE_MAX_PARALLEL=3 (~1 h per generation).
+2026-10-29: **round 4 done, waiting at the step-5 gate.** Evolve e-20261028-220902-e988 completed (15 gens, 240
+children, front 200, $20.34; Windows Update restart at 03:34, resumed 06:52). Promo + promote A/Ac on the top 5: none
+promoted. Nearest miss c-4ece6bb6f7 r-20261029-122317-32a7 fails only A4 (NF1 Newton 0.85) and passes A1 2.243, A5
+1.47e-5 and A7b together; c-82efea7caf r-20261029-122320-15bb fails only A4 (0.75). H-0019 table: 0 kill rows,
+ρ = −0.936 (n = 12; −0.943 over the 6 distinct rows). Summary + proposed verdicts:
+docs/rounds/2026-10-29-euler1d-reconstruction_stateful-r4.md. Open: breakers on the top 3 (need WSL claude + sforge
+MCP), Peter's call on H-0024, then the negative-result note per the stop rule.
+2026-10-29: **negative-result note drafted**, docs/results/arena1-negative.md (Peter's choice at the step-5 gate):
+what was tried per round, the conflict between Target A's criteria (overshoot → long-run accuracy → roughness → Newton),
+the v1.5 zoo front with run ids, every hunch verdict (round 4 proposed), method results, limits. Next: Peter closes
+H-0019..H-0025, breakers on the round-4 top 3, benchmark release (PLAN §20), Phase 6.
+2026-10-29/30 (WSL): **Phase 3 wrap-up done, waiting for Peter.** Pre-checks: merged 864641b, pytest 277, judge
+euler1d-v1.5 integrity ok, sforge MCP connected (its process has no SFORGE_MAX_PARALLEL; breakers evaluated strictly
+one at a time). (1) H-0019 evidence: v1.5 promo of the round-2 limiters, both ok and both meet the kill criterion:
+c-b5cb82a0ef r-20261029-185257-3e4a (shock 2.581, Newton 1.00, roughness 0.00175), c-fb8db52bca
+r-20261029-185256-7cd3 (2.582, 1.00, 0.00142); neither promoted (A7, A8; A6 nan, no v1.5 dev run). Table rerun:
+2 kill rows, ρ −0.592 (n 14). H-0019 proposed *refuted*, not closed. (2) Breakers, one at a time:
+c-4ece6bb6f7 B-0037..B-0044, c-82efea7caf B-0045..B-0051, c-60c5ed6928 B-0052..B-0056 (20 cases in quarantine;
+17 nozzle Newton stalls where both van Leer members converge, worst in low-Mach flow; 3 slow-shock overshoot up to
+5.96 × vL). Report docs/rounds/2026-10-29-round4-breakers.md; note updated (H-0019 table, Limits). Next (Peter):
+close H-0019..H-0025, decide H-0024, review B-0037..B-0056 (any acceptance = new judge version + zoo eval + rescore).
+Open: add `"env": {"SFORGE_MAX_PARALLEL": "3"}` to .mcp.json so MCP evals respect the memory cap.
+
+## Gate 1 — passed 2026-10-20
+Blind audit (audit/euler1d/REPORT.md): 1,002 random instances agree to 6.5e-13; the one judge bug it found
+(p_b within rounding of p_crit2) is fixed. Peter's decisions: Roe dropped, Target A thresholds accepted
+(docs/targets/A.md), Target B and Venkatakrishnan K > 0 later. Judge tagged `euler1d-v1.0`; zoo re-evaluated.
+
+## Round 4 running (plan step 4; scripts/headless/round4.txt; interactive WSL session, 2026-10-24)
+- Pre-checks passed: merged f30cb60; pytest 277; judge euler1d-v1.5 integrity ok; H-0019 open; sforge MCP server
+  restarted by Peter (stale since 08:50) and tested (smoke r-20261024-194523-43d5 ok, v1.5); nothing else evaluating.
+- Hunches registered 2026-10-24 from the hunch-generator, as written: H-0020 strength-inverse compression (shock
+  physics), H-0021 motion-gated compression (steady-convergence), H-0022 positivity scaling (structure preservation),
+  H-0023 history not sharpness (contrarian), H-0024 diffused BVD weight (transfer), H-0025 characteristic WENO
+  (approximation theory). Four target the steady shock-position / roughness problem directly (generator's count:
+  H-0021, H-0023, H-0024, H-0025).
+- Proposers done 2026-10-24 (reports: docs/rounds/2026-10-24-round4/proposers/; agents' own verdicts, dev, v1.5):
+  H-0020 c-cb9fe80826 r-20261024-202537-69d0 (R1 shock 2.48, N4 roughness 1.3e-5; kill clause 2 fires: B-0010
+  overshoot +18.5 % over base); H-0021 c-698b39759f r-20261024-204336-e65e (R1 shock 2.48, N4 roughness = base 1.27e-5,
+  B-0011 Newton 0.5; "supported on dev"); H-0022 c-9a3faab538 r-20261024-202309-21b3 (hunch's ε still non-finite on
+  B-0030, r-20261024-201321-dc41: "refuted as specified"); H-0023 c-af3143be0c r-20261024-202133-76b1 (N4 roughness
+  6.8e-4, R1 2.475, extra safety switches; "partly"); H-0024 c-5ff53c2690 r-20261024-201845-0539 **rejected** (B-0016,
+  B-0030; "inconclusive"); H-0025 c-47838d9365 r-20261024-201754-e32b (char. WENO5-Z + van Leer fallback, R1 2.56, N4
+  roughness 8.1e-6; promo pending). Most proposers needed positivity/expansion fallbacks outside their mechanism.
+- Promo + promote A on the leaderboard top 3 (docs/rounds/2026-10-24-round4/proposer_promo.txt; references limiter/mc
+  r-20261024-153251-db77, van_albada r-20261024-153252-8783, van_leer r-20261024-153251-4a12): **c-698b39759f**
+  (H-0021) r-20261024-210131-4dcc fails only A4 (NF1 Newton 0.85) and A7b (RF2 overshoot 0.0295 vs 0.0256); passes
+  A1 2.19 and A5 0.0014 together (A4 < 1, so not an H-0019 kill). c-9a3faab538 (H-0022) r-20261024-211946-b555 fails
+  A1 (2.90) and A4 (0.85). c-47838d9365 (H-0025) r-20261024-205819-e795 fails A3 (0.85), A5 (0.31), A7b (0.0314).
+  Islands: H-0021, H-0022 (seeds candidates/H-0021/proposer/cand_1.py, candidates/H-0022/proposer/cand_3.py).
+- **Evolve e-20261024-213316-3d46 stopped at 23:33 in generation 0 (0 children)**: Claude Code killed the background
+  command because the system was low on memory (its reaper, not the run's own memory use). 7 seeding runs left (1
+  rejected, 6 `running`). Not restarted; waiting for Peter.
+
+## Round-4 plan step 2.6 done — judge euler1d-v1.5 tagged and checked (WSL, 2026-10-24)
+- Tag commit 919c544 `euler1d-v1.5` (pushed with the tag); `judge version` euler1d-v1.5 (8a8b8304…), integrity ok;
+  pytest 277 passed after the registry fix 26818b5 (a changed zoo file gets its own id; failed inserts roll back).
+  The first two `zoo eval` attempts died with "database is locked" (duplicate id for the changed thinc_bvd); their
+  18 runs stay in status `running` (nothing reads them).
+- **Zoo dev** (runs/zoo_v15.log; r-20261024-1526..1529): 19 ok; rejected exactly limiter/koren (B-0030,
+  r-20261024-152652-a5d6) and reconstruction/thinc_bvd, now id `zoo-reconstruction-thinc_bvd-f23f9c` (B-0016, B-0030,
+  r-20261024-152919-1578). All 20 unchanged members (incl. limiter/van_leer c-38addf805f r-20261024-152651-8c93) are
+  identical to their v1.4 zoo runs on the 18 old cases (89 scores each, wall times and wall-time `cost` excepted).
+  thinc_bvd vs v1.4 r-20261022-164139-e8e3: 7 scores at rounding level (≤ 8e-9), Newton means B-0011 137.5 → 135.5
+  (−1.5 %; the cloud record said < 1 %) and N4 126.7 → 127.4.
+- **Zoo promo** (r-20261024-1532..1540): all 168 aggregates identical to v1.4 for the 20 unchanged members (e.g.
+  limiter/van_leer r-20261024-153251-4a12 = r-20261022-164508-7c66, limiter_stateful/van_leer r-20261024-153727-dffe
+  = r-20261022-164948-bba4, reconstruction_stateful/muscl_van_leer r-20261024-154024-c9f9 = r-20261022-165255-03a8;
+  superbee_frozen rejected in both). thinc_bvd r-20261024-154009-f309 vs r-20261022-165235-e685: 38 aggregates differ,
+  mostly < 2e-5; beyond rounding only NF1 Newton: converged_impl 0.60 → 0.65, newton_iters median 177 → 153.5
+  (relative EPS changes the steady nozzle iteration).
+- **Rescore reconstruction_stateful** (2026-10-24, runs/rescore_v15.log; stands, not repeated): 376 candidates, 0 ok;
+  360 rejected for the scaling constraint alone, 4 scaling + another violation, 3 TypeError, 2 shape, 1 ValueError,
+  2 B-0030 crash, 1 B-0021 + B-0030 crash, 4 not run (file changed since registration). Round-4 parents, rejected for
+  scaling only: c-2ca8842812 r-20261024-123127-eb8e, c-a411e8accb r-20261024-130330-3ce1, c-2637af56a6
+  r-20261024-125340-04f6. Peter keeps the constraint (DECISIONS "2026-10-24 — scaling constraint kept"): round-4
+  proposers start from the parent files and make thresholds relative.
+- Open (Peter, own terminal): `sforge case accept` B-0016 B-0019 B-0021 B-0030 (registry only; files already in
+  cases/accepted, so the judge is unaffected). Next: round 4 (scripts/headless/round4.txt), started by Peter.
+
+## Round-4 plan step 2 — prepared on the branch, waiting for WSL (2026-10-24)
+- Done (cloud): judge clean-up with zoo dev scores identical to v1.4 (21/21), then v1.5 contents: B-0016, B-0019,
+  B-0021, B-0030 in dev; zoo thinc_bvd relative EPS; scaling hard constraint (ρ, p × 1e-12 / 1e12, reconstructions
+  and fluxes); target Ac; engine selection by failed Target A dev screens, duplicates removed, unreached requests
+  free; promote takes references from the target; run-id rule in the agent prompts; scripts/headless/round4.txt.
+  Record with run ids: docs/judge/2026-10-24-v15-refactor-check.md; DECISIONS "Judge v1.5 contents".
+- Decided (Peter, DECISIONS 2026-10-24): under v1.5 two zoo members stay rejected on dev: limiter/koren (B-0030
+  crash) and reconstruction/thinc_bvd (B-0016, B-0030). Target A's references (van Leer, van Albada, MC) are unaffected; the
+  limiter and reconstruction leaderboards lose those members from their vs-zoo comparison.
+- Deferred: stateless-as-stateful unification and one limiter checker (behaviour-neutral; not needed for round 4).
+- Next (WSL): merge; pytest; `sforge case accept` B-0016 B-0019 B-0021 B-0030 (registry only, files already moved);
+  zoo eval dev + promo, checking promo of the 19 unaffected members against v1.4; tag euler1d-v1.5 (version string
+  without .dev); rescore reconstruction_stateful; then round 4 (scripts/headless/round4.txt).
+
+## Gate 3e passed 2026-10-24 (Peter: round-4 plan docs/plans/2026-10-24-round4.md approved with defaults D1–D5)
+- Step 1 done: round-3 hunches closed (D1): H-0012 supported, H-0013 inconclusive, H-0014..H-0017 refuted. Swarm
+  outcome (D2) recorded as **H-0018** (orchestrator/method), closed supported (S1 met, S2 weakly). DECISIONS.md
+  "2026-10-24 — Gate 3e (Peter)".
+- Step 3 done: pre-registered hunch H-SR registered as **H-0019** (ledger/drafts/r4_sharp_vs_smooth.yaml), open.
+- Not done yet: quarantine cases are **not** accepted (D3 lands with judge v1.5 from the branch); no evaluations.
+- Next: step 2 of the plan (judge v1.5 and engine changes, prepared on the branch; WSL tags, zoo eval, rescore), then
+  step 4 (round 4).
+
+## Round 3 results (2026-10-24)
+Summary: docs/rounds/2026-10-23-euler1d-reconstruction_stateful.md (all run ids there).
+- Suggested verdicts (not closed): H-0012 supported; H-0013 inconclusive (2 of 8 grid points run); H-0014, H-0015,
+  H-0016, H-0017 refuted. H-0014 and H-0017 are refuted by the overshoot clauses their proposers did not check (R6
+  0.0190–0.0199 vs 1.1 × vL 0.0166; H-0017 B-0010 0.0367 vs 1.2 × thinc_bvd 0.0313).
+- Target A: nothing promoted. Best held-out result is still the H-0013 proposer's c-2ca8842812 (fails only A3 0.90,
+  A5 0.077; r-20261023-040314-a528). Engine top five (one scheme in four spellings plus one) fail A1 (RF1 shock 3.41)
+  and A3 (0.90), c-58306b67e7 REJECTED on promo (NF1 3/20).
+- Swarm (docs/targets/swarm.md): S1 met (suggested); S2 met on one island of three, with small gains: H-0012 island
+  c-a411e8accb (promo r-20261023-232730-c8f5: A4 1.00 vs 0.95, A7b 0.0236 vs 0.0250, rest within 0.1 %) and
+  c-c0644880db / c-0428b6020b. H-0013 and H-0014 islands lose A1 against their seeds.
+- Evolve e-20261023-041826-802c: 480 children, 70 duplicates, 29 rejected, 62 LLM errors, $33.99 ($7.08 / 100).
+- Breakers: 21 cases in quarantine (B-0016 … B-0036): LeBlanc contact ×5, cold-collision NaN ×6, THINC EPS
+  scale dependence ×4, double-rarefaction NaN ×2, low-γ blast, γ 5/3 collision TV, stationary Mach 20, Anderson γ 1.2.
+  Two zoo failures found and not proposed (frozen van Leer on a parabolic nozzle; thinc_bvd on planar Noh).
+
+## Earlier results (2026-10-22): round 2 closed (PLAN §11.5 step 3a)
+- e-20261021-123207-3146 finished: 20 generations, 480 children, $25.71 list ($11.81 for gens 11–19 against the
+  plan's ~$5 estimate; ~$1.3 and ~35 min per generation of 24 at K = 7). Stagnation stop never fired.
+- The 90 evolve-time timeouts were memory, not CPU: a `limiter_stateful` dev worker peaks at ~1.45 GB, and 15 of them
+  thrash a 15.6 GB machine (reproduced: 15/15 timed out at ~606 s). Fix 2fc0fa7: K is capped at one worker per 2 GB of
+  RAM (K = 7 here). All 90 were ok when re-evaluated alone. `scripts/readmit_timeouts.py` put them back into the
+  archive (26 duplicates; 64 returned to islands = 5 new cells + 3 replaced elites + 56 declined by the archive;
+  backup state.before-readmit.json). Gens 11–19: 0 timeouts.
+- Verdicts: H-0006 (ratchet) supported; H-0005, H-0007, H-0009, H-0010 refuted; H-0008 inconclusive. No open hunch.
+- Target A: nothing promoted. Near misses on held-out data: c-b5cb82a0ef passes A1–A5, B1, B2, B5 and fails A6
+  (S1 order 0.13) and A7 (r-20261022-060255-0a90); c-fb8db52bca passes A1, A2, A4–A6, B1, B2, B5 and fails A3 (0.90)
+  and A7 (r-20261022-060626-894c). A7 (overshoot ≤ 1.1 × van Leer) is now the binding criterion.
+
+## Earlier results (2026-10-20, evening)
+- Reports 2026-10-21: docs/reports/2026-10-21-interim.html (the day's work, round 2 so far) and
+  docs/reports/2026-10-21-big-picture.html (what was built, what it found, whether to continue → plan v1.2).
+- Dummy engine run (runs/e2e-dummy): 208 children, all ok on dev; survived a kill, a SQLite lock crash (fixed:
+  WAL + busy timeout) and its own stagnation stop, each resumed from state.json. → Gate 2 item 1 met.
+- C1 real backend (runs/c1, sonnet + haiku for wild): 96 calls, 90 ok, 1 rejected, 5 LLM errors (gen 3);
+  36 duplicates, 5 distinct zoo limiters rediscovered (MC 11, van Leer 7, Koren 4, van Albada 4, superbee 2)
+  → fingerprints work (≥ 4 required); only 6 archive cells occupied (grid too coarse / descriptors cluster).
+  Cost: $4.34 per 100 candidates (list price, subscription), 10.5 s mean latency, ~19k/630 tokens per call,
+  ~570 candidates/h. The 5 LLM errors (all in the last generation, 20:44 UTC) had zero API time and zero
+  tokens: the requests never reached the model — the subscription usage limit ran out at that time. Fixed:
+  the backend now reports such calls as "did not reach the model" with the CLI's own message, and `evolve`
+  pauses (state saved, `--resume`) when half a generation's requests do not reach the model.
+- C2 done 2026-10-21 (runs/c2, run e-20261021-032121-30b5; flux slot, Rusanov seed, 2 islands × 3 gens × 8,
+  sonnet + haiku for wild): 48 calls, 48 ok on dev, 0 rejected, 0 LLM errors, no interruption.
+  9 duplicates, 2 distinct zoo fluxes rediscovered (HLLC 4, Rusanov 3); only 3 archive cells occupied
+  (6,0 / 6,3 / 7,0) — same clustering as C1; Pareto front 40 of 48 (the 7-objective issue again).
+  Cost $3.09 list = $6.43 per 100 candidates (longer outputs than limiters: ~20.8k/2.1k tokens per call),
+  16.0 s mean latency, 516 candidates/h. Run took 8 min.
+  PLAN task 4 (HLLC-level contact on R5 without losing robustness) — reached on dev:
+  c-edd6d69254 (run r-20261021-032658-20c4; gen-2 crossover, HLLC star states with Rusanov speeds ±max(|u|+a))
+  has R5 contact_width 0.90 cells and l1_smooth 0 (= zoo HLLC, r-20261020-194829-470b; Rusanov 10.5 cells) and
+  converges explicitly on N1 like Rusanov/HLL (res_orders_expl 12.0, no limit cycle; HLLC: 2.5 orders, limit
+  cycle), Newton 44 steps (HLLC 60, HLL 61, Rusanov 35). R1 contact 6.56 (HLLC 6.29, HLL 6.72), R7 l1_ref 0.0064
+  (HLLC 0.0058). Label: variant of HLLC (wave-speed choice; Rusanov/Davis bounds are textbook options). Dev
+  only, one instance per case — no held-out evidence. The leading c-6d6bcaf064 (r-20261021-032702-c051) is
+  HLLC-like and inherits HLLC's N1 limit cycle.
+  Caveat: in an isolated workdir `leaderboard --vs-zoo` compares against the seed only (no zoo in that
+  registry), so its "best zoo member" ratios there are ratios to Rusanov.
+- Archive grids re-binned 2026-10-21 (DECISIONS.md): every zoo member now has its own cell; re-binning the
+  existing children gives C1 6 → 14 cells, C2 3 → 7. Gate 2's "spread over the descriptor grid" should be
+  re-checked on the next real run.
+- Red team done 2026-10-21 by the orchestrator (the cheater subagent could not be launched; docs/judge/redteam.md):
+  12 attempts. Four got through v1.0: case detection from the batch size or from batch statistics (limiter:
+  superbee sharpness on Riemann cases plus van Albada convergence on nozzles; flux: HLLC contacts plus HLL
+  convergence), and cost gaming via the same channel. Fixed in judge v1.1 (2f4652f, tagged): candidates are
+  applied one item at a time in runs, plus a hard batch-independence check; `lax.stop_gradient` rejected. All 12
+  attempts caught under v1.1 (run ids in the log). Zoo re-evaluated (dev + promo) with unchanged scores;
+  `judge verify` 49/49. Known gap: derivative decoupling via zero-derivative ops (no gain seen; Phase 5
+  `grad_mismatch`).
+- Registry: `connect` no longer re-sets WAL mode on every open (it took a lock and crashed 6 of 12 parallel zoo
+  dev evaluations with "database is locked").
+
+## Gate 2 (PLAN §10)
+- [x] `sforge evolve` runs ≥ 200 candidates unattended and resumes after an interruption — dummy backend,
+      208 children in runs/e2e-dummy; survived a kill, a SQLite lock crash and its stagnation stop, each resumed.
+- [x] C1: fingerprints recognize ≥ 4 different zoo limiters (5: MC, van Leer, Koren, van Albada, superbee) and
+      archive entries spread over the descriptor grid — after the 2026-10-21 re-binning: C1 14 cells, round-1
+      evolve 7 cells from two smooth seeds (were 6 for C1 on the old grid).
+- [x] Every red-team strategy caught and documented — docs/judge/redteam.md, judge v1.1 (attacks run by the
+      orchestrator, not an independent cheater agent; a cheater run against v1.1 from WSL is still advisable).
+- [x] Cost per 100 candidates measured and the Phase 3 budget agreed — Peter 2026-10-21: full PLAN §18 round
+      size (DECISIONS.md "Gate 2 decisions").
+
+**Gate 2 passed 2026-10-21** (Peter's decisions on budget, stagnation stop, round 2 and dev nozzles: DECISIONS.md).
+- [x] Proposer, breaker and hunch-generator run without Bash, through the `sforge` MCP server (.mcp.json).
+- [x] First hunch round with ledger verdicts and a docs/rounds/ summary — 2026-10-21,
+      docs/rounds/2026-10-21-euler1d-limiter.md: H-0001, H-0002, H-0004 refuted, H-0003 inconclusive; evolve
+      e-20261021-045407-c003 (48 children, $2.70); best candidate c-44f8015f87 not promoted for Target A (promo
+      r-20261021-050453-0b6a). Run by the orchestrator without subagents (see the summary).
+
+## Done in Phase 2
+- Build-or-adopt: own engine (OpenEvolve and ShinkaEvolve reviewed; DECISIONS.md).
+- Ledger (`sforge hunch add|list|show|close`), `sforge submit`, `sforge leaderboard --pareto --vs-zoo`.
+- Engine (`sforge evolve`): islands per hunch, Pareto/MAP-Elites selection from the registry, Appendix E
+  operators, smoke → dev with probes, duplicate detection by fingerprint, stagnation stop, budget, resume.
+- Backends: `dummy`, `claude-cli` (verified with real calls: ~19 s, ~20k in / 1.5k out tokens, list price
+  ~$0.05 per call; subscription login, apiKeySource none).
+- `sforge` MCP server; proposer, breaker, hunch-generator and cheater use it instead of Bash.
+- `sforge case propose|accept`. Promo aggregates carry the mean (share of instances for 0/1 flags).
+
+## Next (ordered; PLAN §11.5, plan v1.2, DECISIONS.md "Phase 3 revision")
+State: judge euler1d-v1.4 on main (71a3d94, tagged); rounds 2 and 3 closed; open hunch: H-0019 (H-SR). Peter's review
+2026-10-22 (DECISIONS.md "Judge v1.4"): accept B-0002, B-0004, B-0010, B-0011; add held-out long-run families LF1,
+LF2. **Step 0 done 2026-10-22 (see below). 3b(i) closed without an independent cheater (DECISIONS.md).**
+**Round 3 done 2026-10-24; gate 3e passed (see top)** (reconstruction_stateful, scripts/headless/round3.txt, run from the interactive WSL session
+because the headless run.sh session could not use the shell). Hunches registered 2026-10-22 from the
+hunch-generator, as written: H-0012 field-selective compression (shock physics), H-0013 chatter lock
+(steady-convergence), H-0014 entropy-production blend (structure preservation), H-0015 steep shock less overshoot
+(contrarian), H-0016 delayed MOOD (transfer), H-0017 dictionary BVD (approximation theory).
+Proposers done 2026-10-23 (first launch got 0 evals: the sforge MCP server was stale since 2026-10-21 and failed
+every `eval`; Peter restarted it, proposers resumed with full budget). Suggested (agents' own, dev, judge v1.4):
+H-0012 partly (c-975db22244 r-20261023-034330-2669: R1 contact 3.06 vs van Leer 6.29, shock 2.92, N5/N6 converge);
+H-0013 partly (c-2ca8842812 r-20261023-034337-d53f); H-0014 partly (c-920a251254 κ 0.6 r-20261023-035305-d9f5,
+c-7246c9ff18 κ 0.3); H-0015 refuted (overshoot rises with THINC β: B-0010 0.026 / 0.058 / 0.087 at β 1.6 / 2.2 /
+3.0); H-0016 refuted (B-0010 overshoot only −35 %, nozzle convergence lost); H-0017 partly (c-a4173db23e, S1 2.31).
+Promo (docs/rounds/2026-10-23-round3/proposer_promo.txt): c-975db22244 **rejected** (LF1 1/5 hard constraints,
+r-20261023-040031-554c); **c-2ca8842812 r-20261023-040314-a528 passes A1 (2.18), A2, A4, A6, A7a/b, A8a/b, B1, B2,
+B5; fails only A3 (0.90) and A5 (NF3 roughness 0.077)**; c-920a251254 r-20261023-040946-4698 fails A1 (2.80), A5,
+A7b. Tool gap: `promote --slot reconstruction_stateful` found no zoo references; fixed on the branch (0e9586b, merged:
+Target A references always come from the limiter zoo, and promote prints them). Re-run without --slot gives the same
+verdicts for c-2ca8842812; references: limiter/mc r-20261022-164508-76ad, limiter/van_albada r-20261022-164507-b391,
+limiter/van_leer r-20261022-164508-7c66. **Van Leer check (2026-10-23): no inconsistency.** limiter/van_leer
+r-20261022-164508-7c66 and limiter_stateful/van_leer r-20261022-164948-bba4 agree exactly: LF1 n = 5, contact_width
+median 16.507, mean 15.723, p90 18.255 (n 5); per family LF1 5, LF2 5, NF1 20, NF2 10, NF3 5, RF1 20, RF2 10
+instances, all pass rate 1.00, no violations. The "24.76" was the orchestrator's misreading: promote prints the A8a
+threshold 1.5 × 16.507 = 24.76, not van Leer's value.
+Islands: H-0013, H-0014, H-0012 (seeds = the three promo candidates). Evolve e-20261023-041826-802c started
+06:18: gens 0–6 done (168 children, ~9 min per generation, $11.77), then paused on the usage limit in gen 6
+(19 LLM errors); resumed with --resume. **Evolve finished 2026-10-24 00:29:** 20 generations, 480 children, archive
+front 289; 29 rejected, 70 duplicates, 62 LLM errors (usage-limit pauses in gens 6, 12, 18; gen 18 lost all 24 to the
+limit and still counts against the budget); cost $33.99 list (runs/round3-evolve.log). Leaderboard top 5
+(`--pareto --vs-zoo`): c-58306b67e7 (H-0014 island, dev r-20261023-171400-1476, 0.489 × zoo), c-2637af56a6,
+c-b799935c6b, c-954f644254 (H-0014, same dev numbers to 1e-9: R1 contact 3.16, shock 3.64, S1 1.94), c-140c60abbe
+(H-0013). Promo + promote on these five (docs/rounds/2026-10-23-round3/evolve_promo.txt), S2 promo on the H-0012
+island (s2_h0012_promo.txt), five breakers (breaker/*.md): see the round summary.
+Target A gained A8 (long runs, LF1/LF2) on 2026-10-22, before round 3 (DECISIONS.md, docs/targets/A.md).
+Evaluation slots K = 7.
+Step 3d prerequisite done 2026-10-22 (WSL): pytest 264 passed; judge verify 49/49; worker peak RSS thinc_bvd
+(reconstruction) 1.80 GiB / 160 s, muscl_van_leer_frozen (reconstruction_stateful) 1.76 GiB / 68 s, so the 2 GB
+per-worker cap (K = 7, 12.6 of 15.5 GiB) still fits. Zoo v1.3: dev r-20261022-065926-0314 .. r-20261022-070148-7b30
+(20 runs, all ok), promo r-20261022-070434-1135 .. r-20261022-071140-e7de (20 runs; superbee_frozen rejected 2/20
+NF1 as under v1.2); limiter, stateful and flux scores unchanged from v1.2 (runs/zoo_dev_v13.txt, zoo_promo_v13.txt).
+Rescore (scripts/rescore.sh, SKIP_ZOO=1 for the second slot): limiter 64 → 59 ok / 5 rejected, limiter_stateful
+493 → 489 ok / 4 rejected; all 9 rejections were rejected under v1.2 too. 15 stateful candidates whose latest v1.2
+run was not ok are ok now: 14 round-2 timeouts and 1 run left `running` by the timeout reproduction.
+0. Judge v1.4 done 2026-10-22 (WSL, nothing else running). Branch merged (3de614a); pytest 269 passed, ruff clean.
+   First registry open (schema-v2 indexes) 9.2 s, second 3.1 s; the limiter_stateful leaderboard that hung > 1800 s
+   now answers in seconds. B-0002, B-0004, B-0010, B-0011 recorded as accepted by Peter (`case accept` needs a TTY).
+   JUDGE_VERSION euler1d-v1.4 (71a3d94, tagged); judge verify 49/49. Zoo v1.4: dev r-20261022-163902-3046 ..
+   r-20261022-164145-f56b (20, all ok), promo r-20261022-164507-7f58 .. r-20261022-165311-dc5d (20; superbee_frozen
+   rejected, NF1 2/20, as under v1.2/v1.3). Rescore (dev): limiter 96 → 91 ok / 5 rejected, limiter_stateful
+   493 → 489 ok / 4 rejected, reconstruction and reconstruction_stateful 0 candidates (runs/rescore_v14.log).
+   **LF1/LF2 (held-out, v1.4 promo; LF1 shock / contact width median in cells, LF2 smooth order median / p90):**
+
+   | | run | status | LF1 shock | LF1 contact | LF2 order |
+   |---|---|---|---|---|---|
+   | van_leer (reference) | r-20261022-164948-bba4 | ok | 3.35 | 16.5 | 1.97 / 1.96 |
+   | van_leer_frozen | r-20261022-164957-2c18 | ok | 11.2 | 90.6 | 1.11 / 0.89 |
+   | superbee_frozen | r-20261022-164737-d545 | rejected (NF1) | 11.2 | 90.4 | 2.32 / 2.06 |
+   | muscl_van_leer_frozen | r-20261022-165311-dc5d | ok | – | 90.6 | 1.11 / 0.89 |
+   | first_order (reconstruction) | r-20261022-165215-3367 | ok | – | 96.0 | 0.83 / 0.79 |
+   | c-a84758f0e8 (ratchet seed) | r-20261022-193105-eeb2 | ok | 11.2 | 106.6 | −1.41 / −2.88 |
+   | c-b5cb82a0ef | r-20261022-193422-b79e | ok | 11.2 | 111.2 | 0.26 / −0.54 |
+   | c-fb8db52bca | r-20261022-193859-3650 | ok | 11.2 | 106.8 | −1.50 / −3.91 |
+   | c-3e9a18586c | r-20261022-194241-014d | ok | 11.2 | 94.7 | −1.40 / −1.59 |
+
+   Every frozen or ratcheted limiter is first-order-like on LF1 (contact ~90–111 cells vs 16.5 for van Leer, shock
+   11.2 vs 3.35); on LF2 the frozen van Leer drops to order ~1, the round-2 ratchets to negative order (error grows
+   with refinement), confirming the breakers' ψ = 0 lock-in on held-out data. All runs still pass the hard
+   constraints (status ok), so LF hurts only via scores; whether LF becomes a promotion criterion is Peter's call
+   (DECISIONS.md). Round-2 promo outputs: runs/round2_promo_v14.txt.
+1. 3b: swarm test from WSL. (i) Red team: **closed 2026-10-22 (Peter, DECISIONS.md)** as "independent cheater
+   agent not available (two classifier halts, v1.3 and v1.4)"; covered by structural defenses, regression tests,
+   Target A8 and breakers; residual gaps: metric skipping and unanticipated attacks; revisit at gate 3e. (ii) Breaker done 2026-10-22 11:51–16:15
+   (`run.sh breaker_ratchet.txt breaker-round2`, opus orchestrator + 3 breaker subagents, $16.03, judge v1.3).
+   **15 cases quarantined, B-0001..B-0015** (cases/quarantine/, plus drafts/ with the probes they were cut from);
+   none breaks every zoo member, so none is a hard case. Reports verbatim in docs/rounds/2026-10-22-breaker-round2/.
+   Shared cause in all three reports: constant-state cells get r = 0 → φ = ψ = 0, the ratchet stores ψ = 0 at
+   K0 there and at extrema, so those cells stay first order for the rest of the run. Main findings: smooth wave past
+   K0 drops to order 0.31 / negative (B-0001, B-0002, all three candidates); explicit stall near critical back
+   pressure in the Anderson nozzle (B-0005, B-0011..B-0013); K0 = 600 hits before the frozen zoo freezes
+   (B-0007, B-0008, c-b5cb82a0ef only). B-0011/B-0012 may be merged (same stall, γ 1.2 vs 5/3). Side note:
+   c-a84758f0e8 R1 mirror error 0.0188 vs ~1e-15 for the zoo. Peter accepted B-0002, B-0004, B-0010, B-0011
+   (judge v1.4); B-0001, B-0003, B-0005..B-0009, B-0012..B-0015 stay in quarantine.
+2. 3c done 2026-10-22 16:16–17:06: **H-0011 supported (for this family only)**. Dev sweep of
+   phi = max(0, smin_10(s0 r, 1 + (c-1) tanh(r-1))), 30 points + the stateless bases of c-b5cb82a0ef and
+   c-fb8db52bca (judge v1.3, r-20261022-141618-00a7 .. r-20261022-145146-bcea): no point meets R1 shock <= 2.6 and
+   R1/R6 overshoot <= 1.1 x van Leer together (best corner ratio 1.22, s0 2 c 1.8); the family's sharpest shock is
+   2.80 cells; the two round-2 bases are sharp (2.69 / 2.71) but overshoot ~3 x on R6. Promo + promote --target A
+   on the three points nearest the corner, all not promoted: c-6711291203 r-20261022-145321-e725 (RF1 shock 2.72,
+   A7a 0.049), c-b3897b3f5e r-20261022-145609-942b (2.85, 0.035), c-c04b63eb05 r-20261022-145855-58d9 (3.04, 0.032;
+   A7b passes). None meets A1 or A7a; all three also miss A3 (NF1 explicit 0.50–0.55). Table, plot, promo output
+   and the two base files: docs/rounds/2026-10-22-h0011/. Supports PLAN step 3d: sharpness has to come from a
+   richer slot than phi(r). Caveat (cloud review): the dev threshold R1 shock <= 2.6 was too strict (dev R1 runs
+   ~0.1 cell above the RF1 median; superbee itself is ~2.67 on dev), so the family never reached A1 on dev and
+   the evidence rests on the three promo points and the two round-2 bases.
+3. 3d: judge v1.3, red team, then round 3 on `reconstruction` with agent-written hunches. Measure worker RSS for
+   the new slot first. Done on the branch (`euler1d-v1.3.dev`): reconstruction constraints (one 6-cell interface
+   window per call; locality, grid size, position, constant state), THINC/BVD zoo member, the
+   `reconstruction_stateful` slot (state layout of `limiter_stateful`; zoo `muscl_van_leer`,
+   `muscl_van_leer_frozen`), probes, archive grids and objectives for both reconstruction slots. Cloud-registry
+   dev checks only (not in the WSL registry): thinc_bvd r-20261022-054308-f275 (R1 shock 2.47, contact 2.65; N5/N6
+   stall), muscl_van_leer_frozen r-20261022-054646-b2c7 = limiter_stateful van_leer_frozen r-20261022-054759-f751.
+   Version bump, tag, zoo eval and rescore done (see State). Cheater pass (redteam_v13.txt) **not run**, see
+   Blockers.
+4. 3e: decision point with Peter after round 3; §11.4 kill criterion still applies (4 rounds / ~2,000 candidates).
+
+## Blockers / questions for Peter
+- *(Gate 3e answered 2026-10-24, DECISIONS.md.)* Open: the two zoo failures found by round-3 breakers (frozen van Leer
+  on a parabolic nozzle, thinc_bvd on planar Noh) are not covered by D1–D5.
+- *(3b(i) closed by Peter 2026-10-22, see DECISIONS.md; the two halts below are kept for the record.)*
+- **Red team v1.4 did not run either** (2026-10-22 ~21:55–22:20, interactive WSL session, cheater subagent, task
+  from redteam_v13.txt verbatim with folder candidates/redteam/v13/). A safety classifier stopped the cheater while it
+  was planning attacks, after reading only the slot docs, sandbox.py and the judge sources: 0 files, 0 eval runs
+  (docs/rounds/2026-10-22-redteam-v14-halted.md). The write-guard folder was not the cause (stop came before any
+  write). Not resent reworded. 3b(i) stays open; judge v1.4 has not been red-teamed by an independent agent.
+  Options for Peter: run the cheater himself interactively, or narrow the task (one concrete probe per run).
+- **Red team v1.3 did not run** (2026-10-22 11:17–11:50, `run.sh redteam_v13.txt redteam-v13`, $1.10, 4 turns).
+  A safety classifier stopped the cheater subagent before it wrote any file: 0 candidates, 0 eval runs, no
+  LOG.md. All 12 planned attempts are "not attempted" (candidates/redteam-v13/REPORT.md, gitignored;
+  runs/headless/redteam-v13.json). Not resent with reworded instructions. v1.3 is therefore not red-teamed. Options:
+  resend unchanged, split by slot/idea, or run the cheater interactively. Side finding: the cheater's MCP
+  `leaderboard` query for `limiter_stateful` timed out after 1800 s (the reconstruction one returned). The
+  registry on /mnt/c is slow and needs a look before round 3.
+- Round 2 questions answered 2026-10-22 (DECISIONS.md): A7 stays as written; breaker on all three candidates.
+- Subagents: launching `scripts/headless/run.sh … redteam` from the desktop session was blocked by the auto-mode
+  classifier ("Create Unsafe Agents"), and the desktop session has no sforge MCP tools. The red team and round 1
+  were therefore run by the orchestrator itself. Recommended: one cheater-agent run against v1.1 from WSL
+  (independent attacker), and proposer/breaker agents for round 2 from a WSL session.
+
+## Notes
+- Run everything in WSL; the venv lives at ~/.venvs/schemeforge behind the `.venv` symlink (DECISIONS.md).
+- Calibration runs use their own working directory (own registry, ledger, candidates): scripts/e2e_evolve.py.
+- Use `set -o pipefail` when chaining tests with `| tail` before a commit.
+- Never run other evaluations next to `sforge evolve`: on 2026-10-21 evolve + a 6-way rescore + promo runs pushed
+  dev evaluations from ~40 s to > 600 s (45 children rejected as timeouts, all ok when re-evaluated alone) and
+  the WSL service crashed. A resumed run keeps such false rejections in its archive; re-evaluate them by id.
+- Long WSL jobs need an attached `wsl.exe` client; processes started with setsid/nohup die when it exits.
+
+## Numbers to remember (run ids, best candidates, costs)
+- Machine: 16 physical cores / 32 threads, 15.6 GB RAM in WSL → evaluation lock K = 7 (memory cap, 2 GB per worker;
+  was 15). `limiter_stateful` dev worker: ~1.45 GB peak RSS, ~70 s alone; promo ~2.5–4.5 min alone.
+- Round 2: 480 children, $25.71 list ($5.36 per 100); best held-out: c-b5cb82a0ef (RF1 2.58 / 5.11, NF1 expl 0.95).
+- Dev suite 25.7 s per candidate alone; zoo dev ~70 s, zoo promo ~5 min wall (12 members in parallel).
+- Engine (dummy backend): ~1.5 min per generation of 16 children on the dev suite.
+- Zoo results: docs/judge/euler1d_baseline.md; Target A: docs/targets/A.md.

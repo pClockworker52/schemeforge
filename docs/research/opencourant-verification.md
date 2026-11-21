@@ -12,6 +12,8 @@ is used or copied.
 
 ## Summary
 
+**Superseded (2026-11-21) by [solver-facts.md](solver-facts.md),** which covers all sections and is kept current. This table stops at §13 and is kept as written.
+
 | Question | Answer |
 |---|---|
 | JC + Mie–Grüneisen on axisymmetric quads? | **Yes.** `/MAT/LAW4` + `/EOS/GRUNEISEN` on `/QUAD` with N2D3D = 1 is accepted and runs; confined and unconfined plates at 500 m/s; pressure peak −4 % of the Hugoniot estimate. |

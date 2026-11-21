@@ -1,0 +1,83 @@
+# Solver facts register (cold-spray track)
+
+**Read before drafting or freezing any spec, hunch, ladder or task.** One line per fact about the tools: what they
+output, what they cannot do, their parser bounds, what converges and what does not, costs, and placeholders. Every
+line cites its source; nothing here is new or re-derived. "§n" = docs/research/opencourant-verification.md.
+
+Created 2026-11-21 (DECISIONS 2026-11-21, "Solver facts register"). It supersedes the summary table at the top of
+the verification log, which stops at §13. **Kept current by the modeller at every merge** (coldspray-procedure.md).
+
+## 1. OpenCourant, 2D axisymmetric quads (`/QUAD`, N2D3D = 1)
+
+| Fact | Consequence for specs | Where |
+|---|---|---|
+| Use `Isolid = 17` (4-point quad); the default area-weighted 2D solid fails Hertz (about 5× too stiff) and loses momentum in free flight. ALE falls back to the default element | always Isolid 17, Lagrangian only | §5 |
+| **The element temperature is computed but never written out with Isolid 17**: every output reads `GBUF%TEMP` (stays at T₀ / 293 K); LAW4 heats and softens through `LBUF%TEMP` | no temperature field from quads until the fork writes it (task 2026-11-21-a) | §5.3, §32 |
+| LAW4's temperature = plastic work (∫σ_y dε_p/ρc_p, to 0.4 %) **plus** bulk-viscosity work **plus** reversible Grüneisen compression heating (6–19× the plastic part in coarse plate shocks); no Taylor–Quinney fraction | any "temperature" from LAW4 is not plastic heating alone | §2.1 |
+| `/HEAT/MAT` gives T ≈ 0 on quads; **no heat conduction on 2D quads** at all | conduction studies need 3D bricks or SPH | §2, §11 |
+| Rigid-wall force `FNZ` is ∫σ dr, not a force, in axisymmetric runs | convert, or use momentum rates | §1, summary |
+| Time-history internal energy (and the ERR % energy column) reads zero in axisymmetric runs | no energy balance from TH on quads | summary |
+| Default bulk viscosity costs 5–7 % rebound in the elastic case; with default q and dt scale, 50:1 quads go unstable at cycle 0 | state q explicitly; dt scale 0.4 | summary |
+| Plateau +0.69 % at every mesh = finite strain (0.42 V/c_d); no small-strain option for quads | use finite-strain references (§18.1) | §3, §18.1 |
+| Rung 0, 0p and Hertz (rung 1) agree with exact/JAX to about 1 % | the quads are a valid elastic reference | §3–§6 |
+| **Al–Al plastic impact: the mesh fails at the jet root**, earlier with refinement (5–37 % of penetration time; §25: R/256 stops at about 0.8 ns ≈ 0.034 t_p on a collapsing block cell near the contact edge) | anything judged on the §25 deck lives in a ≤ 0.035 t_p window, before the jet is evaluated | §8, §25 |
+| In that window: p_n (0.5 µm discs) converges at 0.25 a and 0.5 a, not 0.75 a; **Y − 1 converges at no disc** and rises with refinement; contact radius a(t) converges; v_edge, W_ann, P_s, ring Y do not | local edge drivers are not usable inputs on this host | §25, §27, driver-check-2026-11-17.md |
+| Y − 1 already fails at the first output (t/t_p ≈ 0.004); reconstructed softening factor there 0.98–0.99 | the early failure is not thermal | §25, §32 |
+| Paired (hardened-twin) differences do not cancel the edge error | pairing is no fix on this deck | §28 (CS-21) |
+| Switch radius a_c from a fitted a(t) converges (2.35 % / 2.88 %), thin margins, p drifts 6.5 % | usable only with those caveats | switch-check-2026-11-18.md |
+| §25 decks: about 3 min per R/256 run, 0.7 GB; the six runs of a speed pair in about 8 min | cheap; reruns reproduce exactly (§32) | §25, §32 |
+| Quad T-B2 reference: U_ref above 1.75 % for 12 of 16 judged averages at R/256 | not a ≤ 1.75 % reference for skin averages | §23.1 |
+
+## 2. OpenCourant 3D bricks and native SPH
+
+| Fact | Consequence for specs | Where |
+|---|---|---|
+| Native SPH is 3D only; two SPH parts are kernel-welded (tension and shear across the interface) | no native SPH contact between parts | §9, §9.8 |
+| `/HEAT/MAT` works on 3D bricks but ignores EFRAC for LAW4 (β via ρc_p/β) | | summary |
+| Brick conduction matches erfc to 0.017 %; SPH conduction (H0-SPH) is first order, 2.5 % at s = 0.156 µm | | §11, §12 |
+| Conductive bricks with an adiabatic SPH particle: OOM without a particle `/HEAT/MAT`, particle overheats to about 9·10⁴ K with one | that set-up cannot run | §12.2 |
+| Brick contact edge collapses at 0.115–0.17 D/V (R/16), before 0.1 D/V at R/32 (setup F) | brick impact decks have short windows too | §10 |
+| Heat conduction as a regulariser: t_f still falls 22–37 % from R/32 to R/48, edge ε_p rises 35–66 % (CS-13c refuted) | the thermal length (≈ 0.7 µm at 5 ns) is too small to resolve | §13 |
+| Failed SPH particles leave the kernel interaction | | §10.4 |
+
+## 3. Fork `sph-hvi-contact`: hvi contact, TLSPH, BCT, VCI, skin
+
+| Fact | Consequence for specs | Where |
+|---|---|---|
+| hvi contact is frictionless penalty, F = k⟨−g⟩n + damping, repulsive only, k = stfac·B·s; no friction (fatal if requested), max 2 bodies, OpenMP only, no restart | the "no bond" branch is frictionless; no restart means a killed run starts from t = 0 | sph-hvi-contact-plan.md A2, DECISIONS 2026-11-21 |
+| Separable SPH–SPH contact on collocated SPH: B-2, B-3 and D-1 FAIL; S′ (ξ + order 1) not adopted | collocated SPH is not the host | §14, §15 |
+| TLSPH plateau offset is finite strain; end layers 1–2 carry 0.655 / 0.845 of the stress under a point-loaded face (also against a deformable wall) | judge against finite-strain references; face-layer deficit exists with any point load | §17, §22 |
+| **BCT** (boundary-consistent traction): exact on flat uniform loads; **fails on small or changing patches** (rim loads 2–3×), feeds energy with the kinematic wall (B 1.135 / 20.4); with BCT the engine wall force reads 1.485× the transmitted force | BCT off for curved and body-on-body contact; read wall forces from momentum rates | §19, §20, §21, §23 |
+| BCT off: energy closes to 0.25 %; T-S1 R/32 rebound 0.9988; survives Al–Al 800 m/s R/16 and R/32 | the CS-18b set-up with BCT off is the working host | §20.5, §23.1 |
+| **No TL internal energy in the engine output**; the hourglass-work diagnostic is unreliable | energy balance only via the fork's B diagnostic | §17, §19.5, §23 |
+| Face constructions: F2 frozen (flat faces only; the sphere stays the lattice); VCIMR candidate (S 0.132; skin p_n on the axis +6.6 %; R/16 \|B − 1\| 0.026) | | §23.2, §24 |
+| **Skin** (`out.skin`, output only, bitwise neutral): T-S1 R/64 p_n +3.6 / +3.1 %, **Y − 1 13 % low** (R/32: 33–37 % low) | skin Y is the weakest skin output | §23.3 |
+| Interface file v5 lists every particle with hvi or rigid-wall contact force; the static surface set (SURF0) misses most conforming-sphere contact particles | sphere-side averages come from the list or the skin, not SURF0 | §24.1 |
+| Interface file: a facet that was debonded can show state 0 or 1 later (pair leaving the pair list or re-pairing; not checked) | bond-state histories need a lost-bond check (CS-22b) | §26 |
+| Bonded pairs and the candidate list: cross-body pairs within 2h; whether a bonded pair is kept beyond that range is not documented | report the release opening before relying on large δ_c (task 2026-11-20-a item 1) | sph-hvi-contact-plan.md A2, §26 |
+| T-A0 (55 runs) is the neutrality check for every fork build; "bit-identical" is on written metrics; output headers carry dates and uninitialised padding bytes, contact sums differ at round-off between `none` and a never-active bond | compare written metrics, mask headers; see A2 | §16.2, §30 |
+| Costs (Al–Al quarter, TLSPH): R/8 about 100 s; R/16 about 0.5 h, 1.6 GB; R/32 11–12 h on 24 threads, 12.7–14.2 GiB (WSL VM now 23.5 GiB); R/64 estimated about 100 GB (out of reach) | | §26, §30, coldspray-hunch-cs22.md |
+| e(off) (Al–Al 600 m/s, P-HG-Al) does not converge: 0.094 / 0.065 / 0.057 at R/8 / R/16 / R/32 | any rebound-based quantity inherits this drift | §30 |
+
+## 4. `cs12` bond model and its keys
+
+| Fact | Consequence for specs | Where |
+|---|---|---|
+| Activation: g < 0, Y_ij > Y′, p_n,ij > p_E, with min over the pair; p_n from the **previous cycle** (activation lags contact by one cycle); f_B = (Y − Y′)/(1 − Y′) running maximum; σ_B = f_B σ_flow(T) frozen at damage onset; law `tie` (bilinear, normal and tangential, A_ij = s²) | | §26 |
+| **Parser bounds:** `bond.Yp` < 1 (lower bound 0 removed by A1); `bond.pE` ≥ 0; `bond.t_on` (cs12 only, default 0) | check every key against its bounds before freezing | §29, §30 |
+| Off-skin particles carry the sentinel Y = −1; they bond only when Y′ < −1 (A1) | | §29, §30 |
+| **Placeholders, not physical:** Y′, p_E (survival 0.3 / 0.5 GPa) and δ_c. δ_c = 31.25 nm (0.05 s at R/16) gives a bond of a few J/m²; every bond tears on rebound and dR < 10⁻³ | check that a placeholder lets the effect act before freezing (CS-22 scope note) | §26, §30, DECISIONS 2026-11-19 |
+| Skin Y peaks at the particle's pole (largest facet Y 0.72 at r < 3 µm), so skin-Y activation bonds the centre first; no thresholds give a bonded ring | | §26 |
+| Illustration δ_c sweep (Ti, 1584 m/s, R/12): still-bonded share 0.06–0.11 / 0.63 / 1.00 at δ_c/s = 0.3 / 1 / 3 | seen data on another material | §26 |
+
+## 5. Material data in use
+
+| Fact | Consequence for specs | Where |
+|---|---|---|
+| P-HG-Al: JC A 148.4, B 345.5 MPa, n 0.183, C 0.001, m 0.895, T_r 293 K, T_m 933 K; Grüneisen C₀ 5305.5 m/s (√(B/ρ)), s 1.339, γ₀ 2.17; k 237 W/(m K) | | §8.3, data/properties.csv |
+| Ti-6Al-4V JC and EOS are second-hand (Khamsepour 2022 citing Meyer & Kleponis, Steinberg); primaries not retrieved | verify before any claim | §26 |
+
+## Maintenance
+
+- At every merge of a WSL section, the modeller adds or updates the lines it touches, in the same commit.
+- A fact that is later found wrong is struck through and corrected, with the section that corrected it.

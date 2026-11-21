@@ -12,7 +12,8 @@ verification ladder, CLAUDE.md iron rules) are unchanged.
 | Results of runs | the session's own section of its verification doc (e.g. opencourant-verification.md §n) | the running session | as it goes |
 | Changes of direction (route, plan, rules) | `docs/DECISIONS.md`, with the index regenerated | modeller | when Peter decides one |
 | Session log | `docs/STATUS.md`: **one short line per session**, with commit ids and pointers, no copied content | modeller (cloud), also when merging another session's branch | at session end or at merge |
-| Hand-over state | `docs/HANDOFF.md` | modeller | at session end only |
+| Hand-over state | `docs/HANDOFF.md`, **current state only** (history goes to DECISIONS, STATUS and the archives) | modeller | at session end only |
+| Facts about the tools | `docs/research/solver-facts.md`, one line per fact with its source | modeller | **at every merge of a WSL section, in the merge's records commit** |
 | Next task for another session | `docs/research/tasks/<session>.md` | modeller | when the task is decided |
 
 Not recorded in DECISIONS any more: routine approvals of hunches or rungs. The freeze commit is the proof.
@@ -34,6 +35,14 @@ such as "jetting onset", "bonded area" or "edge convergence" must first be shown
 known (or on an agreed reference case), to detect what it is meant to detect. Origin: CS-11's jet metric J was
 frozen without such a rung, and its non-crossing in setup F could not be interpreted (opencourant-verification.md
 §10.5).
+
+## Solver facts check before a freeze (adopted 2026-11-21)
+
+Before a spec, hunch, ladder or task is frozen, the modeller checks every output quantity it reads, every parser
+key it sets and every placeholder it relies on against `docs/research/solver-facts.md`, and writes one line in the
+draft: "facts checked; not covered: …" (or "none"). Anything not covered is marked "never read/used before; check
+the output first". Origin: three misses in three days (CS-22's Y′ bound, CS-22's placeholder δ_c, the quad
+temperature output of the softening check), all facts already on record (DECISIONS 2026-11-21).
 
 ## Unchanged and still required
 
