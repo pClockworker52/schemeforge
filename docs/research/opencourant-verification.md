@@ -2884,3 +2884,50 @@ is not registered.
 - Author's additions (fork §15.2): |dR| > 0.01 on every mesh 0.8: wrong (largest 7·10⁻⁴); convergence of dR 0.3:
   not converged; e(off) 0.05–0.2: right on all meshes; RSS₃₂ 11–13 GB: off inside, on outside; R/32 fits 0.5: not
   on the 15.5 GiB VM.
+
+## 32. Softening check: stopped, the quad temperature output is not the material temperature (task 2026-11-20-b)
+
+Spec, rule and prediction: [softening-check-2026-11-20.md](softening-check-2026-11-20.md) (66636c8); every row cites
+it; `kind = check`. (§31 is kept for CS-22b, task 2026-11-20-a, paused per DECISIONS 2026-11-21.) Fork branch `cs12`:
+plan SPEC-TL-b §17.1 `eaddaac6b`, guard and reconstruction `548efbab0`, result §17.2 and rows `0a6c6646a`,
+review fixes `9486f6914`. Script `hvi/scripts/softening_check.py`; rows
+`opencourant/results/softening_check_{runs,series,verdict,reconstructed}.csv`.
+
+**Verdict line: not determined; stopped.** The spec's quantity, S = 1 − T*ᵐ from the element temperature, cannot be
+read from this binary's output for this deck. Neither "uninformative" nor "informative" is given.
+
+- **Item 1:** the §25 R/256 field files hold no temperature (EPSP, P, VONM, VEL, stresses).
+- **Item 2, reruns reproduced exactly:** both R/256 decks with `/ANIM/ELEM/TEMP` added and nothing else (starter deck
+  byte-identical, engine deck + that line), binary `d0500106d`, one thread. Stop times 0.8126793 / 0.8500526 ns, equal
+  to §25; a_256(t) equal at all 9 / 8 judged frames; node coordinates identical in every frame.
+- **The temperature output is T_r = 293 K in every element and frame**, while ε_p reaches 10.1–10.45. From the source:
+  LAW4 heats adiabatically (σ_y dε_p / ρC_p) into the layer buffer `LBUF%TEMP`, and its softening factor uses that
+  temperature, so **thermal softening is active** in the §25 runs. Every element output for 2D quads (animation,
+  H3D, time history) reads `GBUF%TEMP`, which the engine updates only in a thermal analysis (`/HEAT/MAT`). Shells and
+  3D solids output the layer temperature; 4-point quads (this deck's Isolid 17) do not (a 1-point element would).
+  "Softening is active" is read from the source, not measured. File and line references in fork §17.2.
+- **Known since §5.3 (2026-11-04):** the same result there (temperature computed and used with `Isolid = 17`, written
+  as T₀; open item 1 of §7). The rerun confirms it on the §25 deck; the spec and the plan should have cited it.
+- **Why stop:** getting the temperature needs an output change in the code or another deck (`/HEAT/MAT` changes the
+  solution); both are beyond the spec.
+
+**Reconstruction (not the spec's quantity; reported, not judged): plastic-work part only.** The engine's LAW4
+temperature also contains Grüneisen compression heating (added while an element is compressed) and bulk-viscosity
+work; §2.1 measured the total at 6–19× the plastic part in coarse plate shocks. So this is not the engine's
+temperature; it is probably a lower bound on its heating (not shown). The plastic part is a function of ε_p alone at
+a fixed rate factor; integrated from T_r and applied to the EPSP field on the §25 discs (fork §17.2):
+- T = 322 K at ε_p = 0.2, 370 K at 0.5, 447 K at 1 (S = 0.94, 0.85, 0.72).
+- Disc S below 0.95 first at t/t_p ≈ 0.011 (600 m/s) and 0.013 (500 m/s), at 0.75 a; at the last judged output
+  0.25 a 0.95–0.96, 0.5 a 0.81–0.85, 0.75 a 0.37–0.47, both sides and speeds. Edge minimum 0.02–0.03 and
+  T_max 914–918 K (0.98 T_m) at the last output.
+- Not checked against the engine's own temperature (no output shows it); T is taken from the Gauss-point average
+  ε_p, and the rate factor (1 to 1.023) is an assumed bound. If the engine heats at least this much, the rule would
+  read informative; this is not a verdict.
+
+**Against the prediction:** uninformative 0.6 and T_max < 0.5 T_m 0.7 are not graded (no valid T); the
+reconstruction points against both.
+
+**Open for Peter:** (a) accept the reconstruction as the measurement (a substitution after the run, and only a
+lower-bound part of T); (b) a fork output change that writes the Gauss-point average of `LBUF%TEMP` for quads, as
+shells and bricks already do (code change; neutral for the solution, checkable byte for byte on the §25 frames; it
+would also close §5.3); (c) leave it. CS-22b resumes as DECISIONS 2026-11-21 orders, independent of this choice.
