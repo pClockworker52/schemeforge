@@ -1,0 +1,2 @@
+kind,spec,meshes,q1_update_used_in_sigma_y,temperature_written,T_lb_max_over_T_m_last,share_epsp_gt_0p5_last,verdict
+check,schemeforge docs/research/tlsph-temperature-check-2026-11-21.md @ ca6bdcf,AL08off AL16off,1,not written,0.469 / 0.556,0.0234 / 0.0224,"(b) heats, not written"

@@ -2978,3 +2978,64 @@ minimum is 0.21.
 - Spec: uninformative (0.6) and T_max < 0.5 T_m (0.7) were both wrong.
 - Fork §18.1: T-A0 identical (0.95), identical except T (0.9), engine T above the reconstruction (0.8; at all
   compared points), informative (0.85) and T_max reaching T_m (0.6) all held.
+
+## 34. TLSPH temperature check: TL particles heat and soften; the §30 runs write no temperature (task 2026-11-21-b)
+
+Spec, rule and prediction: [tlsph-temperature-check-2026-11-21.md](tlsph-temperature-check-2026-11-21.md) (ca6bdcf);
+`kind = check`. No engine run, no build; CS-22b's binary `27e53d5f0` untouched.
+- Fork `cs12`: script `hvi/scripts/tlsph_temp_check.py` `21bc77a4f`, rows `57dfde436`, review fixes `34af57e10`.
+- Rows `opencourant/results/tlsph_temp_check_{q1,q2,verdict}.csv`.
+- Run beside CS-22b's R/32 (Peter, 2026-11-21), on CPUs the engine does not use, with its own memory guard; peak
+  255 MB, and the engine's available memory did not change (8.8 GB).
+
+**Verdict line: (b) heats, not written.** TL particles heat through LAW4, and the heated temperature sets σ_y and
+cs12's σ_flow. The §30 runs request no temperature output, so none is written.
+
+**Q1 (source, engine `27e53d5f0`; references in `tlsph_temp_check_q1.csv`):**
+1. **Heating and softening: yes.**
+   - TL particles use the standard SPH material call unchanged (`tl_mod.F90:24`, `spstres.F:250` → `MMAIN`).
+   - Without `/HEAT/MAT` the material temperature is `LBUF%TEMP` (`mmain.F90:747–752`). LAW4 sets it up for SPH
+     groups as for quads (`hm_read_mat04.F:253, 257`, starter `elbuf_ini.F:900`).
+   - It is heated each cycle by plastic work (`m4law.F:232`) and by Grüneisen compression while μ > 0
+     (`mmain.F90:1759`, `eosmain.F:474–486`). Unlike on quads, **there is no bulk-viscosity heating**: `mqviscb`
+     runs only for non-SPH elements (`mmain.F90:982`), and the TL pair viscosity has no temperature term.
+   - The next cycle's σ_y uses it: T* from `LBUF%TEMP` (`mmain.F90:793–794`), CT = 1 − T*ᵐ, and zero strength at
+     T ≥ T_m (`m4law.F:127–135, 152, 220`).
+2. **Outputs.**
+   - Animation (`dfunc0.F:193–196`) and H3D (`h3d_sph_scalar.F:273–277`) write `GBUF%TEMP`. SPH elements have one
+     point (`spgrtails.F:261`), so `GBUF%TEMP` is the same array as `LBUF%TEMP` (engine
+     `elements/elbuf/allocbuf_auto.F:173–175, 1774, 1789`; starter copy `:475, 490`). A
+     `/ANIM/ELEM/TEMP` request would therefore show the heated temperature. This is read from the source, not shown.
+   - Time history (`thsph.F:205–224`) writes TEMP only with a thermal analysis.
+   - The §30 decks request EPSP, P and VEL animations and `/TH/PART`; `tl_diag.csv` and the sidecar hold no
+     temperature.
+3. **cs12's σ_flow,ij** is SIGY of that material call (`spstres.F:288` → `tl_mod.F90:623`, minimum over the pair in
+   `hvi_contact.F90:271`). It therefore includes the thermal factor of the heated temperature.
+
+**Q2 (AL08off and AL16off, existing frames; written temperature: not written):** T_lb is the plastic-work lower
+bound, rate factor 1 (the §32 table).
+
+| Run, frame | t/t_p | ε_p max | Share ε_p > 0.5 (all / particle) | T_lb max (K) | T_lb max / T_m | Median T_lb, ε_p > 0.5 (K) |
+|---|---|---|---|---|---|---|
+| AL08off A010 | 0.51 | 0.80 | 0.0076 / 0.148 | 417 | 0.446 | 382 |
+| AL08off A050 (last) | 2.77 | 0.94 | 0.0233 / 0.650 | 438 | 0.469 | 394 |
+| AL16off A010 | 0.51 | 1.37 | 0.0114 / 0.226 | 500 | 0.536 | 399 |
+| AL16off A051 (last) | 2.83 | 1.52 | 0.0224 / 0.535 | 519 | 0.556 | 416 |
+
+- At T_lb the softening factor 1 − T*ᵐ is 0.61 at the hottest SPH particle (AL16, last frame, in the substrate; 0.64
+  at the hottest particle of the impacting body), and 0.77–0.81 at the median of the strained particles (last frames;
+  0.77–0.83 over all four rows). The engine's T also has a reversible compression part; whether the engine's T is
+  ≥ T_lb is not checked (no output).
+- T_lb rises with refinement (max 0.47 → 0.56 T_m), as ε_p does (§30: e(off) does not converge).
+
+**Against the prediction:** (a) 0.35, (b) 0.35, (c) 0.25, (d) 0.05. The outcome is (b). The 0.25 on (c), "TLSPH runs
+are thermally unsoftened", is not borne out for §30 and CS-22b (engine `27e53d5f0`, P-HG-Al card): they ran with
+thermal softening, without q heating. CS-18b and §26 ran on earlier engines and other cards (Ti-6Al-4V in §26);
+those were not checked.
+
+**Consequences (for the modeller):**
+- CS-22b's G_c estimates from room-temperature σ_flow are upper bounds, as solver-facts §4 already says. From T_lb alone, σ_flow is 19–23 % below its room-temperature value at the median strained particle and 39 % below at
+  the hottest SPH particle (substrate; 36 % in the impacting body).
+- The spec lists "(b): an output change as in §33" as the consequence. From the source that is not needed for SPH:
+  adding `/ANIM/ELEM/TEMP` to a deck should be enough (a deck change, not tested here). This departs from the spec's
+  listed consequence; the modeller decides.
