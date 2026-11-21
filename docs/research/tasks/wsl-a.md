@@ -5,7 +5,26 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-20-a: CS-22b (δ_c ladder) (open; paused 2026-11-21 after a Windows-update abort, resume after 2026-11-20-b)
+## Task 2026-11-21-a: softening check with a quad temperature output (open; do NOW, then resume 2026-11-20-a)
+
+**Basis:** DECISIONS 2026-11-21, "Softening check stopped; quad temperature output to be fixed" (Peter: option (b)
+of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.md](../softening-check-2026-11-20.md)
+(66636c8), unchanged. `kind = check`. If anything beyond an output change is needed, stop and report.
+
+**Keep CS-22b's binary untouched:** build this on a separate fork commit and engine directory. Before resuming
+2026-11-20-a, confirm that its engine is still `27e53d5f0` (same binary hash as in §30's runs).
+
+1. A short design note (fork SPEC-TL-b) first: write the Gauss-point average of `LBUF%TEMP` as the element
+   temperature output for 2D quads (Isolid 17), as shells and 3D solids already do. Output only.
+2. Run `hvi/scripts/check_untouched.sh`. If any Siemens-licensed file would change, stop and report.
+3. Build; T-A0 must be bit-identical (55 of 55).
+4. Rerun the two §25 R/256 decks (600 and 500 m/s, `/ANIM/ELEM/TEMP` as in §32) on the new build. Every output
+   except the temperature field must be byte-identical to §32's reruns; else stop and report.
+5. Compute the spec's quantity S = 1 − T*ᵐ (disc averages, edge minimum, T_max) at every judged output and apply the
+   spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
+   `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
+
+## Task 2026-11-20-a: CS-22b (δ_c ladder) (open; paused 2026-11-21 after a Windows-update abort, resume after 2026-11-21-a)
 
 **Abort handling (Peter, DECISIONS 2026-11-21):** an externally killed run (OS update, VM restart) is not a run
 failure under the frozen rule. Report which runs reached t_end (they stand). Rerun the killed run from t = 0 with the
@@ -31,7 +50,7 @@ change, another deck, another δ_c), stop and report.
 6. Write up as §31 of opencourant-verification.md on `coldspray/opencourant-sph`, with a verdict line per δ_c and
    overall against the frozen rule. Then stop and report.
 
-## Task 2026-11-20-b: softening check (open; do NOW, before resuming 2026-11-20-a; Peter 2026-11-21)
+## Task 2026-11-20-b: softening check (closed: §32 stopped, the quad temperature output is not the material temperature; merged)
 
 **Basis:** Peter, chat 2026-11-20. **Spec, rule and prediction, fixed:**
 [../softening-check-2026-11-20.md](../softening-check-2026-11-20.md). Cite it in every row. `kind = check`.
