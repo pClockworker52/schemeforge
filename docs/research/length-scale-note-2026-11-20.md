@@ -119,6 +119,8 @@ exceeds T_m (1.03–1.08 T_m) at the last.
 - **Newly false late in the window:** "JC is valid at the edge". At T ≥ T_m LAW4 sets the strength to zero and there
   is no latent heat. This is a second reason, besides the grain scale (§2), why JC is out of range at the edge.
 - **Held:** the §32 reconstruction was a lower bound on the heating.
+- **Added after §34:** TLSPH particles heat and soften too, but without bulk-viscosity heating; the "numerical
+  heating" caveat above applies to the quad deck, not to TLSPH (engine `27e53d5f0`).
 - **Unchanged:** step 0 ("the edge fails to converge because of a missing length") is still unjustified; §33
   removes one obstacle to testing it, it is not evidence for it.
 

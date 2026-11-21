@@ -24,7 +24,7 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
-## Task 2026-11-21-b: TLSPH temperature check (open; do between CS-22b runs, never alongside an R/32 run)
+## Task 2026-11-21-b: TLSPH temperature check (closed: §34 (b) heats, not written; merged)
 
 **Basis:** Peter, chat 2026-11-21. **Spec, rule and prediction, fixed:**
 [../tlsph-temperature-check-2026-11-21.md](../tlsph-temperature-check-2026-11-21.md). Cite it in every row.

@@ -11,17 +11,13 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) is merged. WSL A resumes CS-22b:
+Fetch `coldspray/opencourant-sph`. §33 (softening check, informative) and §34 (TLSPH heats and softens; temperature not written) are merged. WSL A resumes CS-22b:
 1. **Task 2026-11-20-a:** CS-22b (δ_c ladder), resumed after a Windows-update abort, on engine `27e53d5f0`.
    When pushed: merge (diff only §31 and `results/tl_cs22b_*`), recompute dR per δ_c with the §30 off runs, judge
    against coldspray-hunch-cs22b.md (frozen c8a6c5c; author's odds 0.15), record in coldspray-hunches.md,
    DECISIONS, STATUS and solver-facts.md. Also report the effective G_c (W_b / bonded area) per δ_c against the
    hunch file's G_c estimates, which assumed room-temperature σ_flow and are upper bounds (solver-facts §4; a
    rationale caveat, not a rule change).
-
-2. **Task 2026-11-21-b** (between CS-22b runs): TLSPH temperature check. When pushed: merge, judge against
-   docs/research/tlsph-temperature-check-2026-11-21.md (prediction (a) 0.35, (b) 0.35, (c) 0.25), update solver-facts
-   §3/§4. Outcome (c) would mean every TLSPH impact so far ran without thermal softening.
 
 If nothing is pushed: the open items for Peter below.
 
@@ -43,7 +39,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, resume now) and **2026-11-21-b** (TLSPH temperature check, between runs); 2026-11-21-a closed (§33) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-20-a** (CS-22b, running); 2026-11-21-a closed (§33), 2026-11-21-b closed (§34) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
@@ -80,7 +76,7 @@ CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§30, §32, §33 (§31 reserved for CS-22b, §34 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§30, §32–§34 (§31 reserved for CS-22b, §35 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); open: coldspray-hunch-cs22b.md; recent: cs20, cs21, cs22 |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
