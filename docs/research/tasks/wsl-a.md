@@ -24,6 +24,17 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
+## Task 2026-11-22-b: slip check (WAIT: start only once the spec says "frozen")
+
+**Basis:** Peter, chat 2026-11-22. **Spec, rule and prediction:** [../slip-check-2026-11-22.md](../slip-check-2026-11-22.md).
+Do not start before its title reads "frozen". `kind = check`. Reading and post-processing of the existing CS-22b
+on-run files only: no run, no build. If anything more is needed, stop and report.
+
+1. Q1 from the source, with file and line references. If Q1 says "not determinable", stop and report.
+2. Q2 from the existing CS-22b on-runs (§31).
+3. Rows `results/slip_check_*.csv`; the next free section of opencourant-verification.md with the verdict line
+   (slip decides / opening decides / mixed / not determinable) against the spec's rule. Then stop and report.
+
 ## Task 2026-11-22-a: confirm the formalism note's equations against the source (closed: §35; merged)
 
 **Basis:** Peter, chat 2026-11-22. Note: [../problem-formalism.md](../problem-formalism.md), §1 and §4. No run, no

@@ -35,7 +35,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | — (2026-11-20-a closed: §31; 2026-11-21-a/b and 2026-11-22-a closed: §33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | 2026-11-22-b (slip check), waits for the spec's freeze; 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); Ge 2026 read in the cloud |
 
 ## Open for Peter
@@ -43,7 +43,9 @@ If nothing is pushed: the open items for Peter below.
 1. **Next step after CS-22b (supported, with caveats).** Options:
    (a) a confirmatory pre-registered test of the 30× result (another speed, or δ_c 20× / 50×, on R/16 and R/32) to
    see whether the cancellation is robust;
-   (b) the reopening/slip analysis of the existing on-runs (post-processing only, cheap; problem-formalism.md §2(g));
+   (b) the reopening/slip analysis of the existing on-runs (post-processing only, cheap; problem-formalism.md §2(g)):
+       **chosen 2026-11-22**; spec docs/research/slip-check-2026-11-22.md DRAFTED, waits for Peter's freeze, then
+       WSL A task 2026-11-22-b. It cannot change CS-22b's verdict;
    (c) part 2, the bistable band in V (trigger and kill rule registered first);
    (d) R1–R3 (item 2).
 2. Which of R1–R3 leads (reduced-route-plan.md).
