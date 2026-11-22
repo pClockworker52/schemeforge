@@ -3473,3 +3473,78 @@ off: estimate memory before any R/32 run.
 
 **Not done:** no impact run with stick on. Per-pair δ_t at tearing for §36's runs can now be read from a rerun with
 `out.pairs` (R/8 about 2 min, R/16 about 0.5 h); that is not asked here.
+
+## 38. Stick law, energy-consistent cap shrink: built; S2 passes; S3 release passes, two predictions missed; neutral; R/32 fits (task 2026-11-22-c)
+
+Basis: §37 limitations; task 2026-11-22-c (modeller's decision 2026-11-22, approved by Peter). `kind = calibration`
+(checks, not rungs). No impact run with stick on; CS-23 waits for its freeze.
+- Fork `cs12`: design note SPEC-TL-b §20.1–20.3 `047588f6e` (before any code; two corrections before any run,
+  `2b948ac22`, `3ef149e4a`), engine `38639859c` on top of `0153cae04`, results §20.5 `3a312fb51`, `027331c09`. Binary
+  `~/oc_runs/ocroot_38639859c`; the binaries of §37 (`0153cae04`) and CS-22b (`27e53d5f0`) are unchanged.
+- Script `hvi/decks/stick2_cs12.py` (S2, S3); S0/S1 rerun with `stick_cs12.py` unchanged. Rows
+  `opencourant/results/stick2_{cs12,s01,s01_oldbin,d3,neutral,neutral_fields,a0}.csv`.
+
+**What changed (SPEC-TL-b §20.1; stick on, bonded pair, g ≤ 0).** The stick step is split into three sub-steps:
+1. **Projection.** The stored δ_t is projected onto the current tangent plane, as before. The elastic energy this
+   drops, ½ (1 − D) k (δ_t·n)², is now booked into W_s and into a new per-pair counter W_proj.
+2. **Cap shrink (new).** If the cap δ_cap = τ_B s²/k lies below the stored |δ_t,el|, δ_t,el is scaled down to δ_cap
+   with its direction kept. This happens after σ_B softening or at the first compressed pass after tension. The
+   released ½ (1 − D) k (|δ_t,el|² − δ_cap²) is booked into W_s; s_pl is unchanged.
+3. **Trial and slip at the cap**, as in §37. W_s gets the cap force × slip.
+
+Further changes:
+- The per-pair W_s and W_proj carry the ghost weight ½, as the global does, so the per-pair sum equals the global.
+- The record has 17 slots (slot 17 = W_proj). The per-pair file is version 2 (16 fields) with stick on, and version
+  1, unchanged, with stick off.
+- The interface file is unchanged; its W_s now includes the releases.
+
+**Checks (item 4).** s_c is the pair's compressed tangential path (its path while g ≤ 0); s_pl is its slip at the cap.
+
+| Check | Expected | Result |
+|---|---|---|
+| S2: σ_B ramped down at the cap (judged item), energy balance | within 1 % of W_in after the press | **passes: ≤ 0.30 %** (0.21 % at the end); σ_B 0.487 of start |
+| S2: ΔW_s in the soften phase | = −ΔE_b (to 10⁻⁶) | passes: 6·10⁻¹⁵; s_pl unchanged; \|δ_t,el\| = δ_cap to 1.6·10⁻¹⁵ |
+| S3: re-compression with \|δ_t\| = 1.5 δ_cap, release | ½ k (\|δ_t\|² − δ_cap²) per pair, 10⁻³ | passes: 2.7·10⁻⁴ |
+| S3: s_pl | stays 0 | **missed:** 0.030 δ_cap over the re-press. Reading: genuine slip of the tilted pair at the cap (equals s_c to 10⁻⁹) |
+| S3: energy balance | within 1 % of W_in after the press | **missed:** 8.5 % where W_in is smallest. Reading: residual 7.8–10·10⁻¹³ J, set by the press; +1·10⁻¹⁴ J at re-compression |
+| S1 rerun, force-law rows | unchanged | force, δ_t, s_pl, g, D, σ_B histories bit-identical; W_s +2·10⁻¹⁷ J (W_proj) |
+| S0 rerun | interface and per-pair files identical | byte-identical |
+| D-3/D-4, stick off | identical to `0153cae04` | byte-identical |
+| CS-22b R/8 3× + `out.pairs`, stick off | per-pair file identical | byte-identical; interface as §37 (globals 10⁻¹⁶, frame stamp) |
+| T-A0 | 55/55 | 55/55 identical (2 h 34 min) |
+| Memory, R/8 (check of the formula) | +9 977 KiB vs CS-22b R/8, ±5 MB | passes: +10 112 KiB |
+
+- **The same decks on `0153cae04`:**
+  - S2 still closes (0.27 %), because the old error is second order per pass for a gradual ramp (noted before the
+    runs). But s_pl grows by the whole δ_cap drop, 0.00152 s, without any motion.
+  - In S3 the release is booked 20 % too low, as slip of 0.50 δ_cap at the cap force. That is the pre-run
+    prediction: slip work 0.5 k δ_cap² against a release of 0.625 k δ_cap².
+  - So the old limitation mattered for sudden drops (re-compression), not for gradual softening.
+- **S3 s_pl miss.** The shear in tension tilts the pair normal (by about 1.5 δ_cap/s). Pressing then moves the pair
+  tangentially while it sits at the cap. The design note expected this motion for the release tolerance but did not
+  carry it into the s_pl prediction.
+- **S2 deck:** the §37 blocks with LAW4 (A = 300 MPa, B = C = 0, m = 1, T_m 893 K, ρc_p lowered to 3.9·10⁴ J/(m³ K),
+  γ₀ = 0). After the shear, both blocks get the same isochoric in-plane strain (5 % in 2 ns, prescribed). Facing pairs
+  therefore keep their relative position, while plastic heating softens σ_flow and hence σ_B. W_in comes from the
+  per-particle contact forces and the prescribed velocities.
+- **After the first reading** (disclosed in §20.5): eight evaluation columns were added (four s_pl columns, three
+  residual columns and the W_in minimum, behind the S3 readings above). S2 and S3 were run once more on the new binary to fill
+  them (seconds). The pass/fail columns were not changed.
+- **One run beyond the plan:** S0 on `0153cae04` (seconds). §37's S0 run and the new one differ in the T01
+  hourglass energy at 10⁻²⁴ J; the old binary's own rerun differs at the same level and is byte-identical to the new
+  run.
+- **Ghost weighting:** checked by reading the code only. The block decks have no bonded ghost pairs, and the per-pair
+  sum equals the global to 10⁻¹⁴ there.
+- Evidence outside the rows (cited in §20.5): the S1 history comparison (`trace.npz`), the R/8 per-pair `cmp`, the
+  peak RSS (`run.log`) and the per-pair record counts.
+
+**Memory for CS-23 (item 4).**
+- The §30/CS-22b R/32 deck (1 238 463 particles, 12 pair slots) with stick on and `out.pairs` needs about
+  **14.8 GiB**: the measured 14.2 GiB on `27e53d5f0` plus 0.61 GiB for 17 slots and the list flag (14.7 GiB with
+  16). That fits the 23.5 GiB VM with 8.7 GiB to spare.
+- The formula was checked at R/8 (+10 112 KiB measured, +9 977 KiB predicted).
+- Stick on adds no memory: the pair arrays are static.
+- The per-pair file is small: 59 records per output at R/8, and below 1 MB per output and 100 MB per run expected at
+  R/32. The design note's disk estimate (0.5–1 GB) was too high.
+
+**Not done:** no impact run with stick on; no deck with bonded ghost pairs.
