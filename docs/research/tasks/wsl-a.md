@@ -24,7 +24,7 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
-## Task 2026-11-22-c: stick law, energy-consistent cap shrink (open; no impact runs)
+## Task 2026-11-22-c: stick law, energy-consistent cap shrink (closed: §38; merged)
 
 **Basis:** §37 limitations (settle before CS-23); modeller's decision 2026-11-22 (approved by Peter). Fork branch
 `cs12`, on top of `0153cae04`; earlier binaries stay unchanged. Design note first (SPEC-TL-b, own subsection). If

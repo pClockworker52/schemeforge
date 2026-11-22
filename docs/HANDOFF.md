@@ -1,4 +1,4 @@
-# Handoff — 2026-11-22 (end of session): CS-22b supported; bonded stick built; cap fix and CS-23 pending (cold-spray track; current state only)
+# Handoff — 2026-11-22: CS-22b supported; bonded stick built and made energy-consistent (§38); CS-23 waits for Peter's freeze (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -11,13 +11,10 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. §37 (bonded stick built, checks pass; engine `0153cae04`) is merged. **WSL A
-task 2026-11-22-c**: energy-consistent cap shrink for the stick law, ghost weighting, R/32 memory estimate; no impact
-runs. When pushed: merge, update solver-facts §4, then put **CS-23** (draft: coldspray-hunch-cs23.md) to Peter for the
-freeze. Before asking for the freeze, check the CS-23 draft's "facts checked" line against the cap-fix result
-(the engine commit to freeze, the R/32 memory estimate with 16-slot records).
-
-If nothing is pushed: the open items for Peter below.
+§38 (WSL A task 2026-11-22-c, cap fix) is **merged**; engine `38639859c`. CS-23 (coldspray-hunch-cs23.md) is updated
+(engine named, facts line rewritten, ghost-weighting validity check proposed) and **waits for Peter's freeze**. If
+Peter has frozen it: write the freeze line as its own commit, then the WSL A task (stage gate as CS-22b, R/8 and R/16
+first). If he edited it: apply the edits, recheck the facts line, ask again.
 
 ## State in brief
 
@@ -29,8 +26,10 @@ If nothing is pushed: the open items for Peter below.
   - Slip check mixed (§36): whether bonds tear or hold depends largely on slip accumulated while compressed.
   - §37: `bond.stick` (bonded pairs stick, shear capped at σ_B/√3) and `out.pairs` built on engine `0153cae04`;
     the old law books G_c·A at reopening without work input.
-  - Pending: cap fix (WSL A 2026-11-22-c); **CS-23 drafted** (coldspray-hunch-cs23.md: the CS-22b set-up with
-    sticking bonds; not frozen, not counted).
+  - §38: energy-consistent cap shrink on engine `38639859c` (S2 ≤ 0.30 %, release 2.7·10⁻⁴; two S3 predictions
+    missed, read post hoc; R/32 with stick on + `out.pairs` ≈ 14.8 GiB; no run yet with bonded ghost pairs).
+  - **CS-23 drafted and updated** (coldspray-hunch-cs23.md: the CS-22b set-up with sticking bonds; not frozen, not
+    counted).
 - **Length-scale idea (not a hunch):** length-scale-note-2026-11-20.md. Softening is active from the first judged
   frame on quads (§33); TLSPH heats and softens without q heating (§34). Step 0 ("a missing length causes the edge
   failure") is still unjustified; the softening-off test is on hold.
@@ -42,12 +41,12 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-22-c** (stick-law cap fix, no impact runs); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none (CS-23 waits for its freeze); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
 
-1. Freeze CS-23 (or edit it) once the cap fix is merged.
+1. Freeze CS-23 (or edit it); the cap fix is merged (§38). Includes the proposed ghost-weighting validity check.
 2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
 3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
 4. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
@@ -78,7 +77,7 @@ If nothing is pushed: the open items for Peter below.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§37 (§38 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§38 (§39 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); recent: cs20, cs21, cs22, cs22b (supported) |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md, slip-check-2026-11-22.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
