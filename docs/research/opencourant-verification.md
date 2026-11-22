@@ -3384,3 +3384,92 @@ its rule.
 - Pair-level δ_t, g and D at tearing are not in any existing file.
 - Separating slip from pre-activation sliding, or sweep breaks from δ ≥ δ_c tears, would need a pair-level output.
   Deciding on that rerun is outside this task.
+
+## 37. cs12 option "bonded pairs stick" and per-pair output: built, checks pass, neutral at run-to-run level (task 2026-11-23-a)
+
+Basis: DECISIONS 2026-11-22 "Bonded pairs stick under compression". `kind = calibration` (checks, not rungs). No impact
+run with stick on; CS-23 waits for its freeze.
+Beyond the plan (reported): a third R/8 run, the §30 deck on the old binary `27e53d5f0`, made to read the §30
+comparison (run-to-run reference).
+- Fork `cs12`: design note SPEC-TL-b §19.1–19.4 `08ea8839f` (before any code), engine `0153cae04` on top of
+  `27e53d5f0`, results §19.5 `a93d5b30c`, review fixes `134247f92`. Binary `~/oc_runs/ocroot_0153cae04`; CS-22b's binary `ocroot_27e53d5f0` is
+  unchanged (sha256 `5cf13537…`).
+- Scripts `hvi/decks/stick_cs12.py` (shear check), `hvi/scripts/stick_rerun.py` (reruns, comparisons, per-pair
+  check), `read_interface.read_pairs`. Rows `opencourant/results/stick_{cs12,d3,neutral,neutral_fields,pairs,a0}.csv`.
+
+**What the option does (SPEC-TL-b §19.1).** `bond.stick = on` (cs12 only, default off):
+- A bonded pair with g ≤ 0 carries a tangential traction (1 − D) k δ_t,el, with k the contact penalty stiffness (the
+  cohesive K₀).
+- The elastic part is capped at |δ_t,el| ≤ τ_B s²/k, with τ_B = σ_B/√3 and σ_B the pair's current value. Beyond the
+  cap the pair slides. The plastic slip s_pl and its work W_s = (1 − D) τ_B s² Δs_pl are booked per pair and as a
+  global (interface file version 7). They do not enter δ, κ or D.
+- In tension the existing mixed-mode law is unchanged. **At reopening δ_t is exactly the elastic part δ_t,el.**
+- Unbonded and debonded contact stay frictionless.
+- Choices made in the note, not in the decision:
+  - the cap carries the same (1 − D) as the stiffness;
+  - δ_t,el is projected onto the current tangent plane each compressed pass;
+  - E_b includes ½ (1 − D) k |δ_t,el|² while compressed;
+  - W_s, like E_b and W_b, is not in the engine's energy balance.
+- `out.pairs = <file>`: per-pair records (owner uid, partner key, state, in-list flag; g, δ_t vector and norm, D, σ_B,
+  κ, compressed slip path s_c, s_pl, W_s, |S| and S) at every interface record.
+
+**Build and neutrality (item 2).**
+- **T-A0:** 55 of 55 identical.
+- **§30 R/8 on deck with stick off, rerun on the new binary: identical in every metric that the old binary itself
+  reproduces.**
+  - Identical: `T01` (header date masked), `tl_diag.csv`, and every per-record time, cycle, per-particle field,
+    contact-list field and skin value of the interface file.
+  - Not identical, and equally not reproduced by `27e53d5f0` against its own §30 run on a same-day rerun:
+    - the global contact sums (E_c, W_d, A_b, body forces), at 1–3·10⁻¹⁶ relative. They are reduced across threads in
+      an OpenMP critical section, in varying order (likely cause, not traced);
+    - an unidentified per-run integer in each animation frame's GLOBAL MODEL header (1–2 bytes; constant within a
+      run).
+  - The design note predicted "identical" for the interface file and frames: missed.
+  - **So the task's "bit-identical in its written metrics" is met except where bit-identity is not reproducible
+    without any change.** This reading is stated here; the modeller decides whether it suffices.
+- **D-3/D-4 with stick off:** byte-identical to the `01efb1558` runs (§26).
+
+**Checks (item 3).**
+
+| Check | Expected | Result |
+|---|---|---|
+| Shear S1, stick on: force below the cap | k δ_t,el | rel. dev. ≤ 4.8·10⁻¹³ (26 records) |
+| S1: force while sliding | (1 − D) τ_B s² = 1.732·10⁻⁴ N per pair | rel. dev. ≤ 1.6·10⁻¹³ (145 records); \|δ_t,el\| = δ_cap |
+| S1: plastic slip at the end of the shear | u − δ_cap (within 1 %) | 0.9974 (u − δ_cap) |
+| S1: energy W_in = E_c + W_d + E_b + W_b + W_s | within 1 % after the press | ≤ 0.34 % (0.19 % at the end); W_s per pair sums to the global |
+| S1: δ_t at reopening | δ_t,el (predicted = δ_cap) | 0.865 δ_cap = δ_t,el after elastic unloading in the pull; all 36 pairs stay bonded, D = 0 |
+| Shear S0, stick off: shear while compressed | 0 | ≤ 1.6·10⁻¹³ of the cap |
+| Per-pair output, summed to particles (CS-22b R/8 3× on, stick off) | `slip`, `D`, `n_bonded` exactly | 211 546 particle entries (5 786 with slip > 0, 2 161 bonded), 0 mismatches |
+
+- **Shear deck:** the D-3 blocks (6 × 6 × 4, s = 1 µm, every particle under /IMPVEL), centre normals, Y′ = −10⁶,
+  p_E = 0, t_on = 1 ns, δ_c = 0.02 s. The sequence is press δ_p = 0.02 s, shear u = 0.02 s (about 7 δ_cap), hold, pull.
+- **Predictions missed** (besides the §30 byte identity above):
+  - S1's δ_t at reopening is 0.865 δ_cap, not δ_cap. The shear tilts the pair normal, so the pull, while still
+    compressed, unloads δ_t,el elastically.
+  - In S0 the bonds reach D = 1 at g = 0.0044 s, not at the first tension pass. D jumps to 0.99 there.
+  - Minor: S0's δ_t at reopening is 0.979 δ_c (predicted δ_c); S1's plastic slip is 0.26 % below u − δ_cap
+    (predicted ≤ 0.1 %; most likely the 0.02 ns velocity ramp, not the normal's turn).
+- **Two evaluation corrections were made after the first S1 reading** (SPEC-TL-b §19.5):
+  - "at the cap" now means sliding in this record;
+  - W_in now uses the prescribed velocity. The record trapezoid missed F Δv Δt/2 at the 0.02 ns velocity switches,
+    4.6 %; that value is kept in the rows.
+
+**Finding: the existing law (stick off) books G_c A at reopening without work input.** In S0, over the reopening
+record (27.30 → 27.32 ns) the work on the bodies changes by about 3·10⁻¹⁷ J, while E_b + W_b jumps from 0 to
+1.079·10⁻¹⁰ J, the full G_c A of the 36 pairs. E_b and W_b are not in the engine's energy balance, so the engine total
+is not changed; the cohesive accounting is.
+- The cause: the tangential opening accumulated without traction while compressed enters δ at reopening. Damage and
+  its dissipation then happen without work.
+- This is §36's slip mechanism seen from the energy side. In CS-22b's runs W_b can therefore include energy that no force
+  supplied, which would bias §31's G_c,eff. That was not measured here.
+- With stick on, the balance closes.
+
+**Limitations of the stick law (found in review; SPEC-TL-b §19.5; no code change, to settle before CS-23):** the cap
+is a radial return, so if δ_cap drops below a stored |δ_t| without new motion (σ_B softening, or re-compression from
+tension with δ_cap < |δ_t| < d0), the excess is booked as plastic slip at the cap force while the elastic energy
+released is larger; the tangent-plane projection also drops a small unbooked part. Neither occurs in the shear check.
+Per-pair W_s is unweighted (ghost records count ½ in the global). The record grows from 12 to 16 slots even with stick
+off: estimate memory before any R/32 run.
+
+**Not done:** no impact run with stick on. Per-pair δ_t at tearing for §36's runs can now be read from a rerun with
+`out.pairs` (R/8 about 2 min, R/16 about 0.5 h); that is not asked here.

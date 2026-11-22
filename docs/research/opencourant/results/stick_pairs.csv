@@ -1,0 +1,2 @@
+kind,label,dst,records_interface,records_pairs,records_time_mismatch,particle_values_checked,pair_records_last,listed_last,mismatch_slip,mismatch_D,mismatch_n_bonded,max_absdiff_slip,max_absdiff_D,max_absdiff_n_bonded,exact
+check (per-pair output),CS-22b dc3 AL08on stick off,/home/peter/oc_runs/hvi_stick/r36_AL08on_dc3,100,100,0,211546,59,8,0,0,0,0.0,0.0,0.0,1
