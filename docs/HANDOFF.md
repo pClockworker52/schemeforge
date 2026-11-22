@@ -1,4 +1,4 @@
-# Handoff — 2026-11-21 (cold-spray track; current state only)
+# Handoff — 2026-11-22 (end of session): CS-22b supported; bonded stick built; cap fix and CS-23 pending (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -14,24 +14,28 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 Fetch `coldspray/opencourant-sph`. §37 (bonded stick built, checks pass; engine `0153cae04`) is merged. **WSL A
 task 2026-11-22-c**: energy-consistent cap shrink for the stick law, ghost weighting, R/32 memory estimate; no impact
 runs. When pushed: merge, update solver-facts §4, then put **CS-23** (draft: coldspray-hunch-cs23.md) to Peter for the
-freeze.
-R1 is at its end point (DECISIONS 2026-11-23).
+freeze. Before asking for the freeze, check the CS-23 draft's "facts checked" line against the cap-fix result
+(the engine commit to freeze, the R/32 memory estimate with 16-slot records).
 
 If nothing is pushed: the open items for Peter below.
 
 ## State in brief
 
-- **Track A (single-impact data):** single-impact phase ended (DECISIONS 2026-11-07); B06 scored 2026-11-18
-  (coldspray-results-b06.md); synthesis in coldspray-synthesis-single-impact.md. Next is Peter's choice of R1–R3
-  (reduced-route-plan.md).
-- **Track B (SPH host for a bond law):** the interface-state route is closed (2026-11-17: no local driver
-  converges). Open only for the forked bond response: CS-22 refuted for its registered setting (placeholder bond too
-  brittle; scope note); **CS-22b supported at δ_c 30×** (§31, DECISIONS 2026-11-22), with caveats: two meshes in one
-  regime, a pass by near-cancellation of two drifts, post hoc ladder. History: handoff-archive.md §2, solver-facts.md §3.
-- **Length-scale idea (not a hunch):** docs/research/length-scale-note-2026-11-20.md: one fixed ℓ at the feedstock
-  grain size plus the interface law. First unjustified step: that the edge failure is caused by a missing length.
-  The softening check (task 2026-11-21-a) tests the premise of a cheap test of that step. Readings: data/ge2026_reading.md
-  (ℓ calibrated, not physical), data/tang2024_reading.md (measured bond strength against radius; Bay-type law).
+- **Track A (single-impact data):** R1 is at its end point (DECISIONS 2026-11-23): blind list 1 used up, no blind
+  list 2 (stop rule), synthesis §4b; further R1 progress needs new measurements. R2 and R3 stay open.
+- **Track B (SPH host for a bond law), forked bond response only:**
+  - CS-22b supported at δ_c 30× (§31), with caveats: two meshes in one regime, a pass by near-cancellation of two
+    drifts, post hoc ladder; addendum: §31's G_c,eff biased upward (§37).
+  - Slip check mixed (§36): whether bonds tear or hold depends largely on slip accumulated while compressed.
+  - §37: `bond.stick` (bonded pairs stick, shear capped at σ_B/√3) and `out.pairs` built on engine `0153cae04`;
+    the old law books G_c·A at reopening without work input.
+  - Pending: cap fix (WSL A 2026-11-22-c); **CS-23 drafted** (coldspray-hunch-cs23.md: the CS-22b set-up with
+    sticking bonds; not frozen, not counted).
+- **Length-scale idea (not a hunch):** length-scale-note-2026-11-20.md. Softening is active from the first judged
+  frame on quads (§33); TLSPH heats and softens without q heating (§34). Step 0 ("a missing length causes the edge
+  failure") is still unjustified; the softening-off test is on hold.
+- **Problem as equations:** problem-formalism.md, every equation checked against the fork source (§35); points
+  (c) crack-tip bond boundary, (e) identifiability, (f) bonds weakest at the hot edge, (g) slip vs ASI.
 
 ## Sessions and open tasks
 
@@ -43,23 +47,17 @@ If nothing is pushed: the open items for Peter below.
 
 ## Open for Peter
 
-1. Track B decided 2026-11-22 (DECISIONS): bonded pairs stick (WSL A task 2026-11-23-a), then CS-23 for your freeze.
-   Still open: friction for unbonded contact (the off branch is frictionless).
-2. **R1 is at its end point** (DECISIONS 2026-11-23): no blind list 2 (N_q = 1.5 against 2); synthesis §4b; further
-   progress needs new measurements. Open: pre-register Mohanty 2022 alone (oxide-thickness series in Al), labelled
-   post hoc, or not. R2 and R3 stay open.
-3. Physical length scale: pursue after CS-22b? Next steps: Chakrabarty & Song 2020 (needs Peter's download), check
-   the grain-size numbers (Panova & Schuh, Liu et al.) in the originals, find a grain size for an Al powder like
-   P-HG-Al; a hunch only after that.
-3b. Softening-off test on the §25 deck: draft it now or not? §33 says it can discriminate; its open first steps
-   (twin windows differ, q heating, melt cut-off) are in length-scale-note-2026-11-20.md §9.
-4. CS-20: no unseen ring-map source; candidate for parking.
-5. Two modelling choices in cs12 to question before any further bond-law work (problem-formalism.md §2(f), §2(g)):
-   σ_B ∝ σ_y(T) makes bonds weakest at the hot edge; bonded pairs do not stick under compression.
+1. Freeze CS-23 (or edit it) once the cap fix is merged.
+2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
+3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
+4. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
+   Schuh, Liu et al.) in the originals; a grain size for an Al powder like P-HG-Al; a hunch only after that.
+5. CS-20: no unseen ring-map source; candidate for parking.
+6. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
 
 ## Hunch budget
 
-**3 of 5:** CS-10, CS-17, CS-20. Supported: CS-22b (§31). Retired: CS-12. Refuted: CS-22 part 1 (§30), CS-21 part 1
+**3 of 5:** CS-10, CS-17, CS-20 (CS-23 is a draft, not counted). Supported: CS-22b (§31). Retired: CS-12. Refuted: CS-22 part 1 (§30), CS-21 part 1
 (§28), CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 
 ## Rules that must not be broken
