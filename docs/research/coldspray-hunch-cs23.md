@@ -1,8 +1,14 @@
-# Cold spray: hunch CS-23 (forked bond response with sticking bonds), DRAFT — not frozen
+# Cold spray: hunch CS-23 (forked bond response with sticking bonds), registration (frozen)
 
-Drafted 2026-11-22 by claude (DECISIONS 2026-11-22, "Bonded pairs stick under compression"). Not frozen, not counted
-(4 of 5 at the freeze). Freeze only after WSL A task 2026-11-22-c (energy-consistent cap shrink) is merged (merged 2026-11-22: §38, engine `38639859c`), so the
-frozen engine is known.
+Drafted 2026-11-22 by claude (DECISIONS 2026-11-22, "Bonded pairs stick under compression"), after WSL A task
+2026-11-22-c (energy-consistent cap shrink) was merged (§38, engine `38639859c`).
+
+Status:
+- **Registered and frozen 2026-11-22, approved by Peter** ("Freeze"), as drafted in ba4bcb3, before any CS-23 run.
+  The freeze adopts the two items of "Proposed before the freeze" (W_s validity check; swept-pair wording) into the
+  rule below. Budget 4 of 5. WSL A task 2026-11-22-d.
+- **Post hoc by construction**, as CS-22b: the set-up, ladder and rule were chosen after §30, §31 and §36–§38 were
+  seen. Nothing is chosen after a CS-23 run is seen.
 
 **Why:** CS-22b is supported at δ_c 30× (§31), but the slip check (§36, mixed) and §37 showed that its tear/hold
 outcome depends substantially on slip accumulated while compressed, which cs12 allowed because a bonded pair carried no
@@ -20,7 +26,7 @@ not an error.
 
 ```yaml
 - id: CS-23
-  registered: draft 2026-11-22 (not frozen)
+  registered: frozen 2026-11-22 (Peter: "Freeze")
   assumption_broken: >-
     As CS-22/CS-22b, and in addition: that CS-22b's support depends on bonded pairs sliding freely while compressed.
   statement: >-
@@ -38,8 +44,13 @@ not an error.
     - New: bond.stick = on; out.pairs on; engine = fork cs12 `38639859c` (binary ~/oc_runs/ocroot_38639859c, §38).
     - Off branch: the §30 off runs (stick does not act without a bond; neutrality of the new engine shown in §37 and
       §38).
-    - Lost-bond check as CS-22b, now at pair level from out.pairs (a pair whose state leaves "bonded" with D < 1 and
-      is not swept as described in §31 counts as lost).
+    - Lost-bond check as CS-22b, now at pair level from out.pairs: a pair that leaves "bonded" by neither tearing
+      (D reaching 1 under the law) nor a sweep from the candidate list (§31 item 1) is lost; any lost pair makes the
+      run invalid for that delta_c. A pair swept with D < 1 just before the sweep is reported (count, delta/delta_c
+      at the sweep) and does not invalidate the run.
+    - W_s validity check on the first R/8 on-run (before any other on-run is read): the per-pair W_s summed over the
+      out.pairs records equals the interface file's global W_s to 1e-10 relative at every record; if not, stop and
+      report before any dR is read.
     - Stage gate as CS-22b: R/8 and R/16 first; R/32 for a delta_c only if both are valid, reach t_end (or the stuck
       exception) and |dR16| >= 0.01; at most 3 R/32 runs; memory checked before each (VM 23.5 GiB; estimate
       14.8 GiB, §38).
@@ -53,13 +64,14 @@ not an error.
     exception, or R/32 does not fit. Externally killed runs are rerun (DECISIONS 2026-11-21).
     CS-23 supported if at least one delta_c passes; refuted if every delta_c is refuted; otherwise inconclusive.
     Reported, not judged: per-pair delta_t at tearing against delta_c; s_pl and W_s; the energy balance including
-    W_s; for a stuck particle, e(on) as target motion (§31).
+    W_s; for a stuck particle, e(on) as target motion (§31); W_proj against W_s; s_pl gained at re-compression;
+    swept pairs (count, delta/delta_c at the sweep).
   known_relatives:
     - CS-22b (same set-up; free slip while compressed)
     - §36 slip check (mixed), §37 old-law energy finding
     - sticking friction / bonded-interface shear limited by the shear flow stress (metal forming, textbook)
   label: none yet (referee); never "novel"
-  status: draft
+  status: frozen
   author: claude (draft), Peter (decision to make bonds stick)
 ```
 
@@ -72,7 +84,7 @@ not an error.
 - **30× passes again: 0.5.**
 - **Tears that remain are opening-driven** (per-pair δ_t at tearing mostly below 0.2 δ_c): 0.6.
 
-## Proposed before the freeze (2026-11-22, after §38; for Peter, not part of the rule until frozen)
+## Proposed before the freeze (2026-11-22, after §38; adopted into the rule at the freeze)
 
 - **Ghost-weighting validity check:** on the first R/8 on-run, the per-pair W_s summed over the pairs file must equal
   the global W_s in the interface file to 1e-10 relative at every record. If not, stop and report before any dR is

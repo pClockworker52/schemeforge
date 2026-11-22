@@ -1,4 +1,4 @@
-# Handoff — 2026-11-22: CS-22b supported; bonded stick built and made energy-consistent (§38); CS-23 waits for Peter's freeze (cold-spray track; current state only)
+# Handoff — 2026-11-22: CS-23 frozen (sticking bonds, engine `38639859c`); WSL A runs it (task 2026-11-22-d) (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -11,10 +11,14 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-§38 (WSL A task 2026-11-22-c, cap fix) is **merged**; engine `38639859c`. CS-23 (coldspray-hunch-cs23.md) is updated
-(engine named, facts line rewritten, ghost-weighting validity check proposed) and **waits for Peter's freeze**. If
-Peter has frozen it: write the freeze line as its own commit, then the WSL A task (stage gate as CS-22b, R/8 and R/16
-first). If he edited it: apply the edits, recheck the facts line, ask again.
+Fetch `coldspray/opencourant-sph`. **CS-23 is frozen** (coldspray-hunch-cs23.md; Peter 2026-11-22) and runs as **WSL A
+task 2026-11-22-d** (§39). When pushed: check that the W_s validity check on the first R/8 run passed (else WSL A has
+stopped; nothing is judged), check that the deck diff against CS-22b is only `bond.stick` and `out.pairs`, recompute
+dR and the convergence clauses per δ_c from the rows, then judge by the frozen rule and compare with the reassessed
+odds (supported 0.45; 30× 0.45; 10× 0.35). Record the outcome in the hunch index, the DECISIONS entry, solver-facts
+(how a swept pair appears in out.pairs) and STATUS.
+
+If nothing is pushed: the open items for Peter below.
 
 ## State in brief
 
@@ -28,8 +32,8 @@ first). If he edited it: apply the edits, recheck the facts line, ask again.
     the old law books G_c·A at reopening without work input.
   - §38: energy-consistent cap shrink on engine `38639859c` (S2 ≤ 0.30 %, release 2.7·10⁻⁴; two S3 predictions
     missed, read post hoc; R/32 with stick on + `out.pairs` ≈ 14.8 GiB; no run yet with bonded ghost pairs).
-  - **CS-23 drafted and updated** (coldspray-hunch-cs23.md: the CS-22b set-up with sticking bonds; not frozen, not
-    counted).
+  - **CS-23 frozen 2026-11-22** (coldspray-hunch-cs23.md: the CS-22b set-up with sticking bonds; W_s validity check;
+    pair-level lost-bond rule; odds reassessed before the freeze, Brier 0.30 on the track record).
 - **Length-scale idea (not a hunch):** length-scale-note-2026-11-20.md. Softening is active from the first judged
   frame on quads (§33); TLSPH heats and softens without q heating (§34). Step 0 ("a missing length causes the edge
   failure") is still unjustified; the softening-off test is on hold.
@@ -41,23 +45,21 @@ first). If he edited it: apply the edits, recheck the facts line, ask again.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none (CS-23 waits for its freeze); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-22-d** (CS-23 runs, §39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
 
-1. Freeze CS-23 (or edit it); the cap fix is merged (§38). Includes the proposed ghost-weighting validity check, the
-   pair-level lost-bond wording (swept pairs) and the reassessed odds (supported 0.45; draft section "Odds reassessed").
-2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
-3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
-4. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
+1. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
+2. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
+3. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
    Schuh, Liu et al.) in the originals; a grain size for an Al powder like P-HG-Al; a hunch only after that.
-5. CS-20: no unseen ring-map source; candidate for parking.
-6. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
+4. CS-20: no unseen ring-map source; candidate for parking.
+5. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
 
 ## Hunch budget
 
-**3 of 5:** CS-10, CS-17, CS-20 (CS-23 is a draft, not counted). Supported: CS-22b (§31). Retired: CS-12. Refuted: CS-22 part 1 (§30), CS-21 part 1
+**4 of 5:** CS-10, CS-17, CS-20, CS-23 (frozen 2026-11-22, running). Supported: CS-22b (§31). Retired: CS-12. Refuted: CS-22 part 1 (§30), CS-21 part 1
 (§28), CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 
 ## Rules that must not be broken

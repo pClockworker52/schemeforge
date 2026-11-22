@@ -13,13 +13,14 @@ A new hunch (on either track) is registered only if both hold:
 2. **At most five hunches are open and untested.** "Open and untested" means registered, not parked, and without a
    verdict on unseen data. To register a sixth, one is retired: marked "retired" here, with one line on why.
 
-Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (CS-18 registered): 4 of 5. Count on 2026-11-13 (CS-18 refuted at T-S0): 3 of 5. Count on 2026-11-14 (CS-18b registered): 4 of 5. Count on 2026-11-14 (CS-18b refuted at T-S1): 3 of 5. Count on 2026-11-18 (CS-20 and CS-21 registered): 5 of 5. Count on 2026-11-18 (CS-12 retired, CS-22 registered): 5 of 5. Count on 2026-11-18 (CS-21 refuted at part 1): 4 of 5. Count on 2026-11-19 (CS-22 refuted at part 1): 3 of 5. Count on 2026-11-20 (CS-22b registered): 4 of 5. **Count on 2026-11-22 (CS-22b supported): 3 of 5.**
+Count on 2026-11-07 (after the parking of CS-14b): 3 of 5. Count on 2026-11-12 (CS-18 registered): 4 of 5. Count on 2026-11-13 (CS-18 refuted at T-S0): 3 of 5. Count on 2026-11-14 (CS-18b registered): 4 of 5. Count on 2026-11-14 (CS-18b refuted at T-S1): 3 of 5. Count on 2026-11-18 (CS-20 and CS-21 registered): 5 of 5. Count on 2026-11-18 (CS-12 retired, CS-22 registered): 5 of 5. Count on 2026-11-18 (CS-21 refuted at part 1): 4 of 5. Count on 2026-11-19 (CS-22 refuted at part 1): 3 of 5. Count on 2026-11-20 (CS-22b registered): 4 of 5. Count on 2026-11-22 (CS-22b supported): 3 of 5. **Count on 2026-11-22 (CS-23 registered): 4 of 5.**
 
 | Hunch | Why it is open and untested |
 |---|---|
 | CS-10 | no blind paper so far reported particle strength |
 | CS-17 | no unseen substrate series known |
 | CS-20 | no unseen ring-map source with r_in at two velocities or two materials; [coldspray-hunch-cs20.md](coldspray-hunch-cs20.md) |
+| CS-23 | frozen 2026-11-22, not yet run (WSL A task 2026-11-22-d): CS-22b's set-up with sticking bonds, engine `38639859c`; [coldspray-hunch-cs23.md](coldspray-hunch-cs23.md) |
 
 Not counted:
 - retired: CS-12 (2026-11-18, Peter): its decisive test T3 has no data source since the request was dropped on 2026-11-17, and its in-solver form bonds the pole first (opencourant-verification.md §26);

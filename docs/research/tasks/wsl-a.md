@@ -24,6 +24,34 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
+## Task 2026-11-22-d: CS-23 (forked bond response with sticking bonds) (open)
+
+**Basis:** Peter, chat 2026-11-22 ("Freeze"). **Judge, frozen:** [../coldspray-hunch-cs23.md](../coldspray-hunch-cs23.md),
+frozen in the commit that adds this task. Cite it in every row. Run jobs one at a time, each under the watchdog. If
+anything beyond the hunch file is needed (a code change, another deck, another δ_c, another key), stop and report.
+Abort handling as task 2026-11-20-a (externally killed runs are rerun from t = 0 and reported as rows with
+`reached_t_end = 0`; defer Windows updates before the R/32 runs).
+
+1. **Engine** `38639859c` (binary `~/oc_runs/ocroot_38639859c`). Deck: the CS-22b deck script (`hvi/decks/al_cs22b.py`),
+   byte for byte except `bond.stick = on` and `out.pairs` on. State the deck diff against CS-22b's in the write-up.
+2. **First run: R/8 at δ_c = 0.09375 µm.** Before reading anything else from it, apply the hunch's **W_s validity
+   check** (per-pair W_s summed over `out.pairs` = global W_s in the interface file to 1e-10 relative at every
+   record). If it fails: stop and report; no dR is read.
+3. **Stage 1:** on runs at δ_c = 0.09375, 0.3125, 0.9375 µm, each at R/8 and R/16 (6 runs). No off runs: the off
+   branch is §30's AL08off, AL16off, AL32off.
+4. **Lost-bond check at pair level** on every run, as the hunch defines it (lost = leaves "bonded" by neither tearing
+   nor a sweep; a lost pair makes the run invalid for that δ_c). Report swept pairs (count, δ/δ_c at the sweep);
+   they do not invalidate. Say how a swept pair appears in the per-pair file (from the source) before the first
+   verdict.
+5. **Gate:** R/32 for a δ_c only if its R/8 and R/16 runs are valid, reach t_end (or the CS-22 stuck exception
+   applies) and |dR16| ≥ 0.01. At most 3 R/32 runs. Check memory before each (estimate 14.8 GiB, §38; VM 23.5 GiB).
+6. **Report per δ_c and mesh:** e(on), dR, bonded pairs and bonded area at t_end, maximum bonded area, W_b, W_s,
+   W_proj, s_pl (total and gained at re-compression), the energy balance including W_s, lost and swept pairs,
+   per-pair δ_t at tearing against δ_c; for a stuck particle, the target-surface velocity at t_end. Rows
+   `results/tl_cs23_*.csv`.
+7. Write up as §39 of opencourant-verification.md on `coldspray/opencourant-sph`, with a verdict line per δ_c and
+   overall against the frozen rule, and the hunch's predictions against the outcome. Then stop and report.
+
 ## Task 2026-11-22-c: stick law, energy-consistent cap shrink (closed: §38; merged)
 
 **Basis:** §37 limitations (settle before CS-23); modeller's decision 2026-11-22 (approved by Peter). Fork branch
