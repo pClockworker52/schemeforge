@@ -24,7 +24,27 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
-## Task 2026-11-23-a: cs12 option "bonded pairs stick" and per-pair output (open; no impact runs)
+## Task 2026-11-22-c: stick law, energy-consistent cap shrink (open; no impact runs)
+
+**Basis:** §37 limitations (settle before CS-23); modeller's decision 2026-11-22 (approved by Peter). Fork branch
+`cs12`, on top of `0153cae04`; earlier binaries stay unchanged. Design note first (SPEC-TL-b, own subsection). If
+anything beyond the items below is needed, stop and report.
+
+1. When δ_cap = τ_B s²/k drops below |δ_t,el| without new tangential motion (σ_B softening with σ_flow(T), or
+   re-compression), scale δ_t,el down to δ_cap (direction kept) and book the released elastic energy
+   ½(1 − D)k(|δ_t,el|² − δ_cap²) as dissipation in W_s, not force × slip; s_pl is unchanged by this step.
+2. Book the energy lost in the tangent-plane projection of δ_t,el the same way (into W_s, with a separate per-pair
+   counter so its size can be reported).
+3. Weight ghost records ½ in the per-pair W_s, as in the global.
+4. Checks (calibration):
+   - a bonded shear deck where σ_B is ramped down (e.g. a prescribed temperature rise) while the pair is held at the
+     cap: the energy balance W_in = E_c + W_d + E_b + W_b + W_s must close to 1 %;
+   - §37's shear checks S0 and S1 unchanged in their force-law results;
+   - T-A0 55/55; stick off unchanged against `0153cae04`;
+   - a memory estimate for the §30 R/32 deck with stick on and `out.pairs` (16-slot records), against the 23.5 GiB VM.
+5. Next free section with rows; then stop. **No impact runs**: CS-23 waits for its freeze.
+
+## Task 2026-11-23-a: cs12 option "bonded pairs stick" and per-pair output (closed: §37; merged)
 
 **Basis:** DECISIONS 2026-11-22, "Bonded pairs stick under compression". Fork branch `cs12` (new commits on top of
 `27e53d5f0`; CS-22b's binary stays available unchanged). If anything beyond the items below is needed, stop and

@@ -26,7 +26,7 @@ Two bodies, particle Ω_p and substrate Ω_s, Lagrangian (reference coordinates 
 | 9 | Initial conditions: particle velocity −V e_z, T = T_r everywhere, substrate at rest; quarter symmetry | verified (§25, §26 decks) |
 | 10 | Contact on Γ_c(t): g ≥ 0, t_n ≤ 0, g t_n = 0, as a penalty: f_n = max(0, k(−g) − c v_n), g = r − d_c s_ij, k = stfac s_ij B_ij, c = 2ζ√(k m*), ζ 0.05; **B = ρ₀C₀² = 76.0 GPa** (from the EOS card) | **verified** §35 (`hvi_contact.F90:55–95`) |
 | 11 | Bond off: t_t = 0 (frictionless) | **verified** §35 |
-| 12 | Bond on (cs12). Active where g < 0, t ≥ t_on, Y_ij > Y′, p_n,ij > p_E and σ_flow,ij > 0 (pair minima; Y per particle area-weighted over its skin facets; p_n from the previous pass); f_B = (Y − Y′)/(1 − Y′) running maximum; σ_B = f_B σ_flow(T) refreshed while D = 0, frozen from damage onset, and frozen at its last positive value once σ_flow = 0 (T ≥ T_m). Bilinear, one damage variable: δ = √(g² + \|δ_t\|²), d₀ = σ_B s²/k, G_c = ½ σ_B δ_c per area s² (exact if δ_c > d₀). **Cohesive traction only while g > 0: a bonded pair in compression carries no shear; δ_t accumulates while bonded and counts once it reopens.** A bonded pair leaving the candidate list counts as broken | **verified** §35 (`hvi_bond.F90:97–206`, `hvi_contact.F90:269–280`) |
+| 12 | Bond on (cs12). Active where g < 0, t ≥ t_on, Y_ij > Y′, p_n,ij > p_E and σ_flow,ij > 0 (pair minima; Y per particle area-weighted over its skin facets; p_n from the previous pass); f_B = (Y − Y′)/(1 − Y′) running maximum; σ_B = f_B σ_flow(T) refreshed while D = 0, frozen from damage onset, and frozen at its last positive value once σ_flow = 0 (T ≥ T_m). Bilinear, one damage variable: δ = √(g² + \|δ_t\|²), d₀ = σ_B s²/k, G_c = ½ σ_B δ_c per area s² (exact if δ_c > d₀). **Cohesive traction only while g > 0: a bonded pair in compression carries no shear; δ_t accumulates while bonded and counts once it reopens.** A bonded pair leaving the candidate list counts as broken. **Option `bond.stick`** (§37, engine `0153cae04`): while g ≤ 0 a bonded pair carries (1 − D)k δ_t,el capped at τ_B s², τ_B = σ_B/√3; slip beyond the cap is plastic (s_pl, W_s), not opening | **verified** §35, §37 (`hvi_bond.F90:97–206`, `hvi_contact.F90:269–280`) |
 | 13 | Outputs: e = v_z,cm(t_end)/V; v_cr = inf{V : the particle stays bonded} | verified (CS-22 definition; vcr_lipit.csv) |
 | 14 | Discretisation: M ẍ = f_int(x; s) + f_hg + f_visc + f_c + f_b, with corrected gradients (K⁻¹∇W), F from displacements, L at mid-step; f_hg the penalty hourglass force (α 5, Young's modulus), f_visc the LAMMPS pair viscosity (∝ h, vanishes as s → 0). Consistency as s → 0 is not shown by the source; only linear completeness is checked | **verified** §35 (`tl_mod.F90:264–925`) |
 
@@ -87,7 +87,9 @@ while compressed, so a bond formed in compression may reopen with δ ≫ δ_c an
 slip. **Modeller's reading, not tested:** this may explain §30's "every bond fails on rebound" better than the
 brittle placeholder alone, and it may cap CS-22b's larger δ_c values. **Evidence (§36, slip check, mixed):**
 pure opening is rare at tearing (3 %); slip ≥ δ_c before tearing for 57 % of torn particles (82 % at 3×); at 30× R/16
-bonds tear at slip ≈ δ_c and held bonds slide less (per-particle proxy, includes pre-activation slip). A real bonded interface sticks; this is a second
+bonds tear at slip ≈ δ_c and held bonds slide less (per-particle proxy, includes pre-activation slip). **Energy side (§37):** under the old law a
+reopening pair books its full G_c·A without work input, because the free slip enters δ; with `bond.stick` the
+balance closes. A real bonded interface sticks; this is a second
 modelling choice in cs12 to question, next to (f).
 
 *Not the same as adiabatic shear instability* (added 2026-11-22 after Peter's question; modeller's reading):

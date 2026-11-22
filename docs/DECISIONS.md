@@ -1462,6 +1462,10 @@ Predictions: supported 0.15 (happened); "if one passes, most likely 10×" (wrong
    bond tore). The rows confirm only the order of the estimates at 3× and 10×.
 5. **The reopening and slip check** (problem-formalism.md §2(g)) is not done; the interface files hold `slip`.
 
+*Addendum (2026-11-22, after §37):* the old law (stick off) books a bond's full G_c·A at reopening without work
+input when slip accumulated while compressed enters δ. So W_b in CS-22b's runs, and §31's effective G_c, can include
+energy no force supplied (biased upward). The verdict is unaffected.
+
 *Consequences:* hunch count **3 of 5** (CS-10, CS-17, CS-20); CS-22b moves to tested. Label: none (referee); never
 "novel". Track B stays open for the forked bond response. The next step is Peter's (HANDOFF "Open for Peter").
 

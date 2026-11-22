@@ -11,9 +11,10 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. **WSL A task 2026-11-23-a** (cs12 option "bonded pairs stick" plus per-pair
-output; design note, code, checks; no impact runs). When pushed: merge, check the design against DECISIONS
-2026-11-22, update solver-facts §4, then draft **CS-23** (the CS-22b set-up with `bond.stick = on`) for Peter's freeze.
+Fetch `coldspray/opencourant-sph`. §37 (bonded stick built, checks pass; engine `0153cae04`) is merged. **WSL A
+task 2026-11-22-c**: energy-consistent cap shrink for the stick law, ghost weighting, R/32 memory estimate; no impact
+runs. When pushed: merge, update solver-facts §4, then put **CS-23** (draft: coldspray-hunch-cs23.md) to Peter for the
+freeze.
 R1 is at its end point (DECISIONS 2026-11-23).
 
 If nothing is pushed: the open items for Peter below.
@@ -37,7 +38,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-23-a** (bonded stick + per-pair output, no impact runs); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-22-c** (stick-law cap fix, no impact runs); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
@@ -79,7 +80,7 @@ If nothing is pushed: the open items for Peter below.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§36 (§37 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§37 (§38 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); recent: cs20, cs21, cs22, cs22b (supported) |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md, slip-check-2026-11-22.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
