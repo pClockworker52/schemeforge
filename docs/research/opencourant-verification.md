@@ -3479,7 +3479,7 @@ off: estimate memory before any R/32 run.
 Basis: §37 limitations; task 2026-11-22-c (modeller's decision 2026-11-22, approved by Peter). `kind = calibration`
 (checks, not rungs). No impact run with stick on; CS-23 waits for its freeze.
 - Fork `cs12`: design note SPEC-TL-b §20.1–20.3 `047588f6e` (before any code; two corrections before any run,
-  `2b948ac22`, `3ef149e4a`), engine `38639859c` on top of `0153cae04`, results §20.5 `3a312fb51`. Binary
+  `2b948ac22`, `3ef149e4a`), engine `38639859c` on top of `0153cae04`, results §20.5 `3a312fb51`, `027331c09`. Binary
   `~/oc_runs/ocroot_38639859c`; the binaries of §37 (`0153cae04`) and CS-22b (`27e53d5f0`) are unchanged.
 - Script `hvi/decks/stick2_cs12.py` (S2, S3); S0/S1 rerun with `stick_cs12.py` unchanged. Rows
   `opencourant/results/stick2_{cs12,s01,s01_oldbin,d3,neutral,neutral_fields,a0}.csv`.
@@ -3527,8 +3527,8 @@ Further changes:
   γ₀ = 0). After the shear, both blocks get the same isochoric in-plane strain (5 % in 2 ns, prescribed). Facing pairs
   therefore keep their relative position, while plastic heating softens σ_flow and hence σ_B. W_in comes from the
   per-particle contact forces and the prescribed velocities.
-- **After the first reading** (disclosed in §20.5): five evaluation columns were added (the s_pl/s_c ratio and four
-  residual and W_in columns behind the S3 readings above). S2 and S3 were run once more on the new binary to fill
+- **After the first reading** (disclosed in §20.5): eight evaluation columns were added (four s_pl columns, three
+  residual columns and the W_in minimum, behind the S3 readings above). S2 and S3 were run once more on the new binary to fill
   them (seconds). The pass/fail columns were not changed.
 - **One run beyond the plan:** S0 on `0153cae04` (seconds). §37's S0 run and the new one differ in the T01
   hourglass energy at 10⁻²⁴ J; the old binary's own rerun differs at the same level and is byte-identical to the new
