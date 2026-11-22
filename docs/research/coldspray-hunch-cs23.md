@@ -63,7 +63,7 @@ not an error.
   author: claude (draft), Peter (decision to make bonds stick)
 ```
 
-## Author's prediction (judgment, recorded 2026-11-22 with the draft)
+## Author's prediction (judgment, recorded 2026-11-22 with the draft; superseded by the reassessment below)
 
 - **Supported: 0.45.** For: sticking removes the slip that tore most 3× and 10× bonds, so more δ_c values may hold
   on R/16 and R/32. Against: a stuck particle's e(on) is target motion, so dR leans on the same near-cancellation as
@@ -78,3 +78,53 @@ not an error.
   the global W_s in the interface file to 1e-10 relative at every record. If not, stop and report before any dR is
   read (covers not-covered item (ii)).
 - **Reported, not judged (addition):** W_proj total against W_s, and s_pl gained at re-compression (§38 S3).
+
+## Odds reassessed 2026-11-22 before the freeze (Peter: "Assess our probabilities first")
+
+Judgment, not a judge result. Written after §38, before any CS-23 run. No blind review (Peter's choice).
+
+**Track record.** 17 recorded binary predictions on this track:
+- Sources: §31 "Against the predictions" (author and fork), CS-22 (a)/(b), the slip check, the TLSPH temperature
+  check (b)/(c), the softening check (two), and the switch-radius check.
+- Brier score 0.30; always 0.5 would score 0.25.
+- The confident misses (0.6–0.85) were all about engine or output behaviour: CS-22 bit identity, softening, lost
+  bonds. §38's design note also missed two S3 predictions.
+- The low-odds hits were rule outcomes: CS-22b 0.15, slip "mixed" 0.35, switch check 0.35.
+- Consequence: hunch-level odds stay near 0.5, and the "never used before" items are where we are most often wrong.
+
+**Energy argument (new; from §31 and §37).**
+- Rebound kinetic energy per quarter model is e(off)² · ½ m V², with m = 2.83·10⁻¹² kg and ½ m V² = 5.09·10⁻⁷ J.
+  That gives **4.5 / 2.1 / 1.7 nJ** at R/8 / R/16 / R/32.
+- G_c·A from §31 (W_b ≈ G_c,eff · A_b,max) is **1.4–2.0 nJ at 3×**, **4.8–6.5 nJ at 10×**, and more at 30×.
+- CS-22b's 10× bonds took 4.8–6.5 nJ while e fell by only 0.004. That fits §37: the old law booked G_c·A without work.
+- With stick on, tearing has to be paid from the recoverable elastic energy, of which the final rebound energy is a
+  lower bound. G_c,eff is biased upward (§31).
+- Reading:
+  - 10× and 30× probably stick;
+  - 3× is marginal (G_c·A ≈ the rebound energy);
+  - |dR16| ≥ 0.01 becomes likely for every δ_c, so the gate stops filtering, and up to 3 R/32 runs (the full budget)
+    may be needed.
+- A pass then rests on the convergence of a stuck dR, which 10× and 30× share; they are not independent chances.
+  - In CS-22b the margin was 2× (|dR32 − dR16| 0.0014 against 0.0026).
+  - e(on) drifted −0.0091 between R/16 and R/32, of which only −0.002 was target-surface motion. The rest is particle
+    residual motion, which sticking shear can change.
+
+| Item | Draft | Reassessed | Basis |
+|---|---|---|---|
+| CS-23 supported | 0.45 | **0.45** | ≈ 0.85 (some δ_c stuck and valid on R/16 and R/32) × 0.55 (stuck dR converges) + ≈ 0.05 (3×), × 0.9 (validity) |
+| More δ_c hold than in CS-22b (3× or 10× holds on R/16) | 0.6 | **0.7** | energy argument at 10× |
+| 30× passes again | 0.5 | **0.45** | a fresh draw on a near-cancellation with a 2× margin last time |
+| 10× passes (new) | — | **0.35** | likely stuck; convergence shared with 30× |
+| \|dR16\| ≥ 0.01 for all three δ_c (new) | — | **0.6** | 3× pays G_c from the rebound |
+| Remaining tears opening-driven (δ_t at tearing mostly < 0.2 δ_c) | 0.6 | **0.55** | δ_t,el ≤ δ_cap (a few nm) at reopening, but tangential opening after reopening is unresisted in mixed mode |
+| A run invalid or stopped by a "never used before" item (new) | — | **0.15** | track record on engine items |
+
+**Open question for the freeze: the lost-bond wording at pair level.**
+- The draft says a pair is lost if it "leaves bonded with D < 1 and is not swept as described in §31". The sweep sets
+  D = 1, so a swept pair counts as torn.
+- At 30× R/32, δ_c / g_L ≈ 2 (§31 item 1). A pair that opens past about 1.5 s is swept at about ½ δ_c, and the rest
+  of G_c is booked without work: the §37 artefact in another form.
+- This is rare for a stuck particle (CS-22b 30× R/32: 0 transitions), but the rule should say what out.pairs records
+  for a swept pair.
+- Proposed: a pair swept with D < 1 just before the sweep is reported (count, δ/δ_c at the sweep) and does not
+  invalidate a run. A pair that leaves "bonded" by neither tearing nor a sweep is lost. Peter decides at the freeze.

@@ -46,7 +46,8 @@ first). If he edited it: apply the edits, recheck the facts line, ask again.
 
 ## Open for Peter
 
-1. Freeze CS-23 (or edit it); the cap fix is merged (§38). Includes the proposed ghost-weighting validity check.
+1. Freeze CS-23 (or edit it); the cap fix is merged (§38). Includes the proposed ghost-weighting validity check, the
+   pair-level lost-bond wording (swept pairs) and the reassessed odds (supported 0.45; draft section "Odds reassessed").
 2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
 3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
 4. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
