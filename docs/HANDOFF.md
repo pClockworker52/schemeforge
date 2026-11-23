@@ -1,4 +1,4 @@
-# Handoff — 2026-11-22: CS-23 frozen (sticking bonds, engine `38639859c`); WSL A runs it (task 2026-11-22-d) (cold-spray track; current state only)
+# Handoff — 2026-11-23: CS-23 refuted (sticking bonds; dR does not converge at any δ_c); Track B direction open (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -11,14 +11,8 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. **CS-23 is frozen** (coldspray-hunch-cs23.md; Peter 2026-11-22) and runs as **WSL A
-task 2026-11-22-d** (§39). When pushed: check that the W_s validity check on the first R/8 run passed (else WSL A has
-stopped; nothing is judged), check that the deck diff against CS-22b is only `bond.stick` and `out.pairs`, recompute
-dR and the convergence clauses per δ_c from the rows, then judge by the frozen rule and compare with the reassessed
-odds (supported 0.45; 30× 0.45; 10× 0.35). Record the outcome in the hunch index, the DECISIONS entry, solver-facts
-(how a swept pair appears in out.pairs) and STATUS.
-
-If nothing is pushed: the open items for Peter below.
+§39 (CS-23 refuted) is merged and recorded (DECISIONS 2026-11-23). WSL A has no open task. **Peter decides** whether
+Track B (forked bond response) closes again or what comes next (Open for Peter, item 1). Draft nothing before that.
 
 ## State in brief
 
@@ -32,8 +26,9 @@ If nothing is pushed: the open items for Peter below.
     the old law books G_c·A at reopening without work input.
   - §38: energy-consistent cap shrink on engine `38639859c` (S2 ≤ 0.30 %, release 2.7·10⁻⁴; two S3 predictions
     missed, read post hoc; R/32 with stick on + `out.pairs` ≈ 14.8 GiB; no run yet with bonded ghost pairs).
-  - **CS-23 frozen 2026-11-22** (coldspray-hunch-cs23.md: the CS-22b set-up with sticking bonds; W_s validity check;
-    pair-level lost-bond rule; odds reassessed before the freeze, Brier 0.30 on the track record).
+  - **CS-23 refuted** (§39, DECISIONS 2026-11-23): sticking bonds on the CS-22b set-up; all 9 runs valid; dR moves
+    toward 0 from R/16 to R/32 at every δ_c (3× also |dR32| < 0.01). Sticking changed tear/hold as predicted (3× tears,
+    10× mostly holds, 30× holds); tears mixed mode. Caveat: CS-22b's 30× pass depends on the free-slip law.
 - **Length-scale idea (not a hunch):** length-scale-note-2026-11-20.md. Softening is active from the first judged
   frame on quads (§33); TLSPH heats and softens without q heating (§34). Step 0 ("a missing length causes the edge
   failure") is still unjustified; the softening-off test is on hold.
@@ -45,21 +40,22 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-22-d** (CS-23 runs, §39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none; 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
 
-1. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
-2. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
-3. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
+1. **Track B after CS-23:** close the forked bond-response route again, or first diagnose why a bonded particle's e(on) drifts with the mesh (pair level, existing §39 files; no new hunch), or turn to R1–R3.
+2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
+3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
+4. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
    Schuh, Liu et al.) in the originals; a grain size for an Al powder like P-HG-Al; a hunch only after that.
-4. CS-20: no unseen ring-map source; candidate for parking.
-5. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
+5. CS-20: no unseen ring-map source; candidate for parking.
+6. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
 
 ## Hunch budget
 
-**4 of 5:** CS-10, CS-17, CS-20, CS-23 (frozen 2026-11-22, running). Supported: CS-22b (§31). Retired: CS-12. Refuted: CS-22 part 1 (§30), CS-21 part 1
+**3 of 5:** CS-10, CS-17, CS-20. Supported: CS-22b (§31; caveat DECISIONS 2026-11-23). Retired: CS-12. Refuted: CS-23 (§39), CS-22 part 1 (§30), CS-21 part 1
 (§28), CS-18b (§20). Index: docs/research/coldspray-hunches.md.
 
 ## Rules that must not be broken
@@ -80,8 +76,8 @@ If nothing is pushed: the open items for Peter below.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§38 (§39 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
-| Hunches | coldspray-hunches.md (index); recent: cs20, cs21, cs22, cs22b (supported) |
+| Solver log §1–§39 (§40 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Hunches | coldspray-hunches.md (index); recent: cs22b (supported), cs23 (refuted) |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md, slip-check-2026-11-22.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
 | Multi-particle brainstorm | multi-particle-spec.md, multi-particle-tried.md, multi-particle-brainstorm-2026-11-18.md |

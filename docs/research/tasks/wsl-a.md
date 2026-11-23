@@ -24,7 +24,7 @@ of §32). **Spec, rule and prediction, frozen:** [../softening-check-2026-11-20.
    spec's rule. Also compare with §32's reconstruction (reported, not judged). Rows
    `results/softening_check2_*.csv`; section §33 with a verdict line. Then stop and report.
 
-## Task 2026-11-22-d: CS-23 (forked bond response with sticking bonds) (open)
+## Task 2026-11-22-d: CS-23 (forked bond response with sticking bonds) (closed: §39 CS-23 refuted; merged)
 
 **Basis:** Peter, chat 2026-11-22 ("Freeze"). **Judge, frozen:** [../coldspray-hunch-cs23.md](../coldspray-hunch-cs23.md),
 frozen in the commit that adds this task. Cite it in every row. Run jobs one at a time, each under the watchdog. If
