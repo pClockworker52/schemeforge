@@ -3548,3 +3548,107 @@ Further changes:
   R/32. The design note's disk estimate (0.5–1 GB) was too high.
 
 **Not done:** no impact run with stick on; no deck with bonded ghost pairs.
+
+## 39. CS-23 (sticking bonds on the CS-22b set-up): refuted; all three δ_c valid, dR does not converge at any (task 2026-11-22-d)
+
+Judge: [coldspray-hunch-cs23.md](coldspray-hunch-cs23.md), frozen in 5c3f258; every row cites it. Fork branch `cs12`:
+- script `f9da2c7f3`, plan SPEC-TL-b §21.1 `dbfd67bb2`, pre-run review fixes `223ce267f` (all before any run);
+- rows: first run `5ad890058`, stage 1 `88af4c127`, R/32 3× `d081cd965`, R/32 10× `30cc3a3e7`, R/32 30× `9adc32800`;
+  results §21.2 `f8b4eb323`.
+
+Deck script `hvi/decks/al_cs23.py`: the CS-22b decks byte for byte except two lines appended to the sidecar,
+`bond.stick = on` and `out.pairs = hvi_pairs.bin` (dry build of all nine decks, `tl_cs23_deckdiff.csv`; the dry CS-22b
+builds are byte-identical to the seven CS-22b run decks, checked with `cmp` at the dry build, not a row column). Engine `38639859c` (binary `ocroot_38639859c`, §38). Off
+branch: the §30 off rows (e(off) 0.0936 / 0.0649 / 0.0571 at R/8 / R/16 / R/32). Rows
+`opencourant/results/tl_cs23_{runs,conv,pairs,deckdiff}.csv`.
+
+**Before the first verdict (fork §21.1, from the source).**
+- A bonded pair (state 1) leaves "bonded" in two places only. **Torn:** `bond_owner` sets state 2 when D reaches 1
+  under the law, so the first state-2 record has D = 1 and κ ≥ δ_c. **Swept:** `bond_sweep` sets D = 1 and state 2
+  when the pair leaves the candidate list, without changing κ, so the first state-2 record has D = 1 and κ < δ_c.
+- No code path sets state 1 → 0, frees a state-1 or state-2 record, or sets state 2 with D < 1. Any of these in the
+  file makes the pair **lost**, and a lost pair makes the run invalid.
+- δ_t is updated in state 1 only, so δ_t at tearing is read from the first state-2 record.
+
+**W_s validity check (hunch; run on every on-run, read first).** The per-pair W_s summed over `out.pairs` equals the
+interface file's global W_s on all 9 runs: at most 4.6·10⁻¹⁴ relative (limit 10⁻¹⁰), 82–83 of 100–101 records
+with W_s > 0, exactly 0 where W_s = 0. First R/8 (3×): 1.3·10⁻¹⁵, read before anything else. **No symmetry-ghost pair
+carried W_s on any run**, so the ½ ghost weight (not-covered item (ii)) is still not exercised by an impact run.
+
+**Runs.** All 9 on-runs reach t_end (1.99 D/V), engine rc 0, no rerun needed. 8 threads at R/8 and R/16
+(1.5 min and 29 min each), 24 at R/32 (engine time 9.9 h each, wall clock 9.95–10.15 h; peak RSS 14.82 GiB against the
+  memory rule's estimate of 14.93 GiB). Windows updates
+paused for the R/32 runs (Peter).
+
+| δ_c | mesh | e(on) | dR | pairs ever bonded | torn | swept | lost | bonded, end | A_b end / max (µm²) | W_b (nJ) | W_s (nJ) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 3× (93.75 nm) | R/8 | 0.0699 | −0.0238 | 49 | 49 | 0 | 0 | 0 | 0 / 65.8 | 1.21 | 2.34 |
+| | R/16 | 0.0466 | −0.0184 | 222 | 222 | 0 | 0 | 0 | 0 / 67.9 | 1.26 | 1.93 |
+| | R/32 | 0.0509 | −0.0062 | 1065 | 1065 | 0 | 0 | 0 | 0 / 69.4 | 1.32 | 1.41 |
+| 10× (312.5 nm) | R/8 | 0.0059 | −0.0878 | 49 | 48 | 0 | 0 | 1 | 1.4 / 65.8 | 4.02 | 1.87 |
+| | R/16 | −0.0156 | −0.0805 | 216 | 18 | 0 | 0 | 198 | 69.3 / 73.5 | 1.74 | 1.65 |
+| | R/32 | −0.0023 | −0.0595 | 995 | 102 | 0 | 0 | 893 | 78.1 / 84.1 | 2.24 | 1.13 |
+| 30× (937.5 nm) | R/8 | −0.0375 | −0.1311 | 47 | 0 | 0 | 0 | 47 | 65.8 / 65.8 | 1.80 | 1.75 |
+| | R/16 | −0.0205 | −0.0854 | 214 | 0 | 0 | 0 | 214 | 74.9 / 74.9 | 1.08 | 1.56 |
+| | R/32 | −0.0160 | −0.0731 | 975 | 0 | 0 | 0 | 975 | 85.3 / 85.3 | 1.32 | 1.08 |
+
+Areas, energies and pair counts per quarter model (ghost pairs ½ in the weighted columns of the rows; the counts here
+are unweighted). e(on) < 0: the particle's centre of mass still moves into the target at t_end, with the target
+surface (v_target/V at t_end −0.004 to −0.007 on every run). No run meets the formal "stuck" test of §31 (last 0.2 D/V
+with |v_p − v_target| ≤ 0.01 V); none needs it, since every run reaches t_end.
+
+**Reported, not judged:**
+- **Energy balance with the bond terms,** B_full = (KE + E_int + E_c − W_hg − W_visc − W_wall + W_d + E_b + W_b +
+  W_s)/KE₀: 1.0000–1.0139 over all records of all runs; at t_end 1.013–1.014 (R/8), 1.006 (R/16), 1.002 (R/32). Without the bond terms (tl_diag) 0.994–1.011 over all records, 0.994–1.007
+  at t_end.
+- **W_proj** 10⁻¹⁷–10⁻¹⁵ J on every run, below 3·10⁻⁶ of W_s (largest at 30× R/8, 2.5·10⁻⁶; the others below 10⁻⁶): the
+  projection loss is negligible.
+- **s_pl** (Σ over pairs) 7–9 µm at R/8, 26–30 µm at R/16, 87–100 µm at R/32; gained at re-compression
+  (interval estimate) 0.08–0.37 µm at R/8 and R/16, 0.31 / 1.91 / 1.33 µm at R/32 3× / 10× / 30×. s_pl > 0 at
+  re-compression was expected (§38 S3).
+- **δ_t at tearing** (first state-2 record; all torn pairs, none swept): median |δ_t|/δ_c 0.60–0.83, maximum 0.84–0.99,
+  fraction below 0.2 δ_c 0–11 %; median g/δ_c at the tear 0.56–0.80. The tears are mixed mode, not opening-driven.
+- **Swept pairs:** none on any run (at 30× no pair left "bonded" at all, on any mesh).
+- **Facet-level check (CS-22b's, beside the pair-level one):** 0 lost facets on every run.
+
+**Verdict lines (frozen rule):**
+- **3×: refuted.** Gate passed (both runs valid, reach t_end, |dR16| = 0.0184). |dR32| = 0.0062 < 0.01. The
+  convergence clauses fail as well (|dR32 − dR16| = 0.0121 against 3.5 % |dR32| = 0.0002).
+- **10×: refuted.** Gate passed (|dR16| = 0.0805); |dR32| = 0.0595 ≥ 0.01, but |dR32 − dR16| = 0.0210 > 3.5 % |dR32| =
+  0.0021 (and > 0.8 |dR16 − dR8| = 0.0058).
+- **30×: refuted.** Gate passed (|dR16| = 0.0854); |dR32| = 0.0731 ≥ 0.01, but |dR32 − dR16| = 0.0123 > 3.5 % |dR32| =
+  0.0026 (the ratio clause holds: 0.0123 ≤ 0.8 |dR16 − dR8| = 0.0366).
+- **Overall: CS-23 refuted** (every δ_c refuted). All 9 runs valid (0 lost, 0 swept pairs), all reach t_end, W_s
+  check passes on every run; nothing is inconclusive.
+
+**Reading (observation, not a rule change):**
+- With sticking bonds the on-branch rebounds much less than in CS-22b on R/8 and R/16: |dR16| ≥ 0.018 for all three
+  δ_c (CS-22b: 0.0001 / 0.0046 / 0.074). At 30× R/32, the only R/32 comparison, it rebounds slightly more (dR32
+  −0.0731 against −0.0750). The hunch's energy argument was right in kind: 3× tears on every mesh, 10× mostly holds
+  from R/16 on (18 of 216 and 102 of 995 pairs tore), 30× holds everywhere.
+- But at 3× and 10× |dR| shrinks with refinement (3×: 0.024, 0.018, 0.006; 10×: 0.088, 0.080, 0.059). At 10× the
+  R/16 → R/32 step is e(on) +0.013 against e(off) −0.008, so the two drifts do not cancel as in CS-22b's 30×; more
+  pairs tear on R/32 (102 of 995) than on R/16 (18 of 216).
+- The tears are mixed mode on every mesh. This is consistent with sticking removing the slip that tore CS-22b's bonds
+  at reopening (CS-22b R/8 3× with this reading, one run: |δ_t|/δ_c median 4.3, g ≈ 0), while tangential opening after
+  reopening still carries most of δ_c.
+- At 30× every bond holds on every mesh, and dR still moves by 0.012 from R/16 to R/32: e(on) −0.0205 → −0.0160
+  (+0.0045) against e(off) −0.0078. In CS-22b's 30× pass the two drifts had the same sign (e(on) −0.0092) and
+  cancelled to 0.0014. With sticking bonds the bonded particle's residual motion changes with the mesh the other way.
+- At every δ_c dR moves towards 0 from R/16 to R/32 (+0.012, +0.021, +0.012). dR32 at 30× (−0.0731) is close to
+  CS-22b's (−0.0750), while dR16 is not (−0.0854 against −0.0736): sticking changes the coarse meshes more.
+- For a stuck particle e(on) is the residual motion of particle and target (v_target/V −0.007 at t_end), so dR at 30×
+  partly measures that residual, as in §31; the R/32 step is the binding clause, as there.
+
+**Against the predictions.**
+- Hunch (reassessed 2026-11-22): supported 0.45 (refuted); more δ_c hold than in CS-22b 0.7 (yes: 10× holds on R/16
+  and R/32); 30× passes 0.45 (no); 10× passes 0.35 (no); |dR16| ≥ 0.01 for all three 0.6 (yes); remaining tears
+  opening-driven 0.55 (no: |δ_t| at tearing median 0.60–0.83 δ_c); a run invalid or stopped by a "never used before"
+  item 0.15 (no).
+- Fork §21.1: W_s check passes 0.85 (yes); no lost pair 0.85 (yes); a swept pair at 30× on R/16 or R/32 0.35
+  (no); 3× R/8 ends with no bonded pair 0.55 (yes); 10× R/16 ends bonded and stuck 0.65 (bonded yes, 198 pairs;
+  the formal stuck test is not met, so no); R/16 wall time within 1.5× of 32 min 0.7 (yes, 29 min); R/32 RSS ≤ 15.0 GiB
+  0.8 (yes, 14.82 GiB).
+
+**Not covered by this test:** stick on with bonded symmetry-ghost pairs (none carried W_s); the ghost weight stays
+checked by code reading only (§38).
