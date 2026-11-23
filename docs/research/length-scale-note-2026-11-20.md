@@ -128,3 +128,28 @@ Open before a softening-off test is drafted (its own first unjustified steps):
 - with softening off the deck may run longer, so the judged windows of the twins differ;
 - part of what is switched off is numerical (q) heating;
 - the melt cut-off (strength zero at T ≥ T_m) goes with it.
+
+## 10. 2026-11-23: focus moves here (Peter); first step is solver reading
+
+After CS-23 was refuted (§39), Peter moved the focus to the physical length scale and paused Track B (DECISIONS
+2026-11-23).
+
+**Found in an old copy of the fork** (`main` `e9432e6e`; to be confirmed on `cs12` by WSL A task 2026-11-23-c):
+- The OpenRadioss base has `/NONLOCAL/MAT`, with an internal length LENGTH or a target element size LE_MAX.
+- It is solved only in 3D solid and shell routines.
+- It touches LAW2 (Johnson–Cook) among about 20 laws, but not LAW4 (our JC + Grüneisen card).
+- In the base code it appears to serve damage regularisation, so it may not smooth the thermal softening that
+  localises the edge.
+- If so, it gives no zero-code ℓ test on our hosts: 2D quads for the §25 deck, TLSPH for the §30 deck.
+
+**First step (Peter's choice):** WSL A reads the source:
+- what `/NONLOCAL/MAT` regularises;
+- whether it feeds σ_y and T;
+- what a Ge-type nonlocal ε_p and T would cost on quads and on TLSPH.
+
+The literature steps of §8 wait: the grain sizes in the originals, an Al feedstock grain size, and Chakrabarty &
+Song 2020 (Peter's download).
+
+**Still unjustified:** step 0 ("the edge fails to converge because of a missing length"). A test of it at fixed ℓ needs
+a host that carries ℓ; the reading decides whether one exists without new code.
+

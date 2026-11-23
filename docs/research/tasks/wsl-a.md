@@ -5,6 +5,39 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-23-c: what `/NONLOCAL/MAT` regularises, and what a length for our decks would cost (open; reading only)
+
+**Basis:** Peter, chat 2026-11-23 (DECISIONS 2026-11-23, "Focus on the physical length scale; Track B paused").
+Note: [../length-scale-note-2026-11-20.md](../length-scale-note-2026-11-20.md) §10. **No build, no run.** Read the
+`cs12` source at `38639859c`; give file and line references for every answer. If anything beyond reading is needed,
+stop and report.
+
+Modeller's reading from an old copy of the fork (`main` `e9432e6e`, unconfirmed): the OpenRadioss base has
+`/NONLOCAL/MAT` (keys LENGTH, LE_MAX; `hm_read_nonlocal.F`); the regularisation is solved only in 3D solid and shell
+routines (`*fint_reg*`); quads (`qforc2.F`) and SPH (`spstres.F`) only pass `NLOC_DMG` through; laws touched include
+mat002 (LAW2) but not mat004 (LAW4). Confirm or correct each point on `cs12`.
+
+1. **The equation and the variable.** Which equation is solved (implicit gradient f̄ − ℓ²∇²f̄ = f, or another form),
+   with which time integration and damping (`DENS`, `DAMP`, `SSPNL`), and which variable is regularised.
+2. **Where it enters LAW2.** Does the nonlocal variable enter LAW2's yield stress (hardening, rate or temperature
+   term), or only a failure or damage model? Is the temperature that softens LAW2 local?
+3. **Element and law coverage.** Which element formulations solve the regularisation. What happens when a deck sets
+   `/NONLOCAL/MAT` on 2D quads (Isolid 17), on native SPH or TLSPH particles, or with LAW4: an error, or silently
+   ignored?
+4. **LAW2 against LAW4 for the §25 / §30 decks:**
+   - Can LAW2 take `/EOS/GRUNEISEN` in this version?
+   - How does LAW2 heat (adiabatic from internal energy?), and what does it do at T ≥ T_m?
+   - Any differences from LAW4 that would change the §25 quad deck or the §30 TLSPH deck.
+5. **Cost estimate, design only.** What would a Ge-type nonlocal model (ε_p and T regularised, over-nonlocal factor m;
+   data/ge2026_reading.md §4) need in (a) 2D axisymmetric quads (the §25 deck) and (b) TLSPH (the §30 deck):
+   - files touched (Siemens-licensed files must stay byte-identical);
+   - the solve and its time-step effect;
+   - a calibration check with a closed form: a softening bar whose band width scales with ℓ.
+
+   Give a rough effort estimate.
+6. Write up as §40 of opencourant-verification.md (the next free number) on `coldspray/opencourant-sph`. Then stop
+   and report.
+
 ## Task 2026-11-21-a: softening check with a quad temperature output (closed: §33 informative; merged)
 
 **Basis:** DECISIONS 2026-11-21, "Softening check stopped; quad temperature output to be fixed" (Peter: option (b)

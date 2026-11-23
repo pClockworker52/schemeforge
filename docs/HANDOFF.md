@@ -1,4 +1,4 @@
-# Handoff — 2026-11-23: CS-23 refuted (sticking bonds; dR does not converge at any δ_c); Track B direction open (cold-spray track; current state only)
+# Handoff — 2026-11-23: focus on the physical length scale; Track B paused; WSL A reads the nonlocal source (task 2026-11-23-c) (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -11,14 +11,19 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-§39 (CS-23 refuted) is merged and recorded (DECISIONS 2026-11-23). WSL A has no open task. **Peter decides** whether
-Track B (forked bond response) closes again or what comes next (Open for Peter, item 1). Draft nothing before that.
+Fetch `coldspray/opencourant-sph`. **WSL A task 2026-11-23-c** (reading only, §40): what `/NONLOCAL/MAT` regularises
+on `cs12`, whether it feeds σ_y and T, element and law coverage (quads, TLSPH, LAW2, LAW4), and the cost of a
+Ge-type nonlocal ε_p and T on quads and TLSPH. When pushed: merge, and put the facts in solver-facts (new rows).
+Then rewrite the length-scale chain (note §10) with its first unjustified step. Put the options to Peter: a
+zero-code host if one exists; a fork build if not; or the literature steps. Draft no hunch before that.
+
+If nothing is pushed: the open items for Peter below.
 
 ## State in brief
 
 - **Track A (single-impact data):** R1 is at its end point (DECISIONS 2026-11-23): blind list 1 used up, no blind
   list 2 (stop rule), synthesis §4b; further R1 progress needs new measurements. R2 and R3 stay open.
-- **Track B (SPH host for a bond law), forked bond response only:**
+- **Track B (SPH host for a bond law), forked bond response only — PAUSED 2026-11-23 (Peter):**
   - CS-22b supported at δ_c 30× (§31), with caveats: two meshes in one regime, a pass by near-cancellation of two
     drifts, post hoc ladder; addendum: §31's G_c,eff biased upward (§37).
   - Slip check mixed (§36): whether bonds tear or hold depends largely on slip accumulated while compressed.
@@ -29,7 +34,8 @@ Track B (forked bond response) closes again or what comes next (Open for Peter, 
   - **CS-23 refuted** (§39, DECISIONS 2026-11-23): sticking bonds on the CS-22b set-up; all 9 runs valid; dR moves
     toward 0 from R/16 to R/32 at every δ_c (3× also |dR32| < 0.01). Sticking changed tear/hold as predicted (3× tears,
     10× mostly holds, 30× holds); tears mixed mode. Caveat: CS-22b's 30× pass depends on the free-slip law.
-- **Length-scale idea (not a hunch):** length-scale-note-2026-11-20.md. Softening is active from the first judged
+- **Length-scale idea (not a hunch), the current focus (Peter 2026-11-23):** length-scale-note-2026-11-20.md (§10:
+  `/NONLOCAL/MAT` found, coverage unconfirmed; WSL A reads the source). Softening is active from the first judged
   frame on quads (§33); TLSPH heats and softens without q heating (§34). Step 0 ("a missing length causes the edge
   failure") is still unjustified; the softening-off test is on hold.
 - **Problem as equations:** problem-formalism.md, every equation checked against the fork source (§35); points
@@ -40,16 +46,17 @@ Track B (forked bond response) closes again or what comes next (Open for Peter, 
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none; 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-23-c** (nonlocal source reading, §40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
 
-1. **Track B after CS-23:** close the forked bond-response route again, or first diagnose why a bonded particle's e(on) drifts with the mesh (pair level, existing §39 files; no new hunch), or turn to R1–R3.
+1. **Track B is paused** (DECISIONS 2026-11-23); it resumes only by your decision.
 2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
 3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
-4. Physical length scale: Chakrabarty & Song 2020 (needs Peter's download); check the grain-size numbers (Panova &
-   Schuh, Liu et al.) in the originals; a grain size for an Al powder like P-HG-Al; a hunch only after that.
+4. Physical length scale (the focus): after §40, choose the host for an ℓ test. Literature steps waiting:
+   Chakrabarty & Song 2020 (needs your download), the grain sizes in the originals (Panova & Schuh, Liu et al.), and
+   an Al feedstock grain size.
 5. CS-20: no unseen ring-map source; candidate for parking.
 6. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
 
@@ -76,7 +83,7 @@ Track B (forked bond response) closes again or what comes next (Open for Peter, 
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§39 (§40 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§39 (§40 reserved for task 2026-11-23-c) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); recent: cs22b (supported), cs23 (refuted) |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md, slip-check-2026-11-22.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
