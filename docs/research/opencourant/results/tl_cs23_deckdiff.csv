@@ -1,0 +1,10 @@
+case,files,diff
+AL08on_dc3_stick,4,"AL08_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL08on_dc10_stick,4,"AL08_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL08on_dc30_stick,4,"AL08_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL16on_dc3_stick,4,"AL16_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL16on_dc10_stick,4,"AL16_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL16on_dc30_stick,4,"AL16_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL32on_dc3_stick,4,"AL32_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL32on_dc10_stick,4,"AL32_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
+AL32on_dc30_stick,4,"AL32_hvi.inp: appended ['bond.stick = on', 'out.pairs = hvi_pairs.bin']"
