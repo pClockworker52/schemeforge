@@ -73,6 +73,9 @@ The one candidate found that fits a question is Mohanty 2022 (J. Therm. Spray Te
 varying oxide thicknesses; possibly partly simulated). Pre-registering it alone would be a decision made after the
 count, so it would be labelled post hoc (DECISIONS 2026-11-23).
 
+*Footnote (2026-11-24, Peter):* Mohanty 2022 stays a footnote to R1. It is post hoc, and one series cannot move
+R1, so it is not pre-registered (DECISIONS 2026-11-24 "Cold-spray scope review").
+
 ## 5. Next (Peter)
 
 The reduced-route plan is adopted (docs/research/reduced-route-plan.md). Which option leads — R1 closed-form v_cr law,

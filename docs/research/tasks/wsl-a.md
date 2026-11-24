@@ -5,6 +5,16 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-24-b: delete the band-check arrays (housekeeping; open)
+
+**Basis:** Peter, chat 2026-11-24 (DECISIONS 2026-11-24 "Cold-spray scope review"). No run, no build, no result
+section.
+1. Check that every number in §41 and its rows is already committed on `coldspray/opencourant-sph` (the per-frame
+   arrays are inputs only).
+2. Delete `~/oc_runs/hvi_band` (about 5.5 GB). Leave the §30 and CS-23 run files untouched.
+3. Report in one line on your branch (commit message is enough): the path deleted, the space freed, and the sha that
+   holds §41.
+
 ## Task 2026-11-24-a: band check (closed: §41 intermediate; merged)
 
 **Basis:** Peter, chat 2026-11-24 ("Freeze"). **Spec, rule and prediction, frozen:**
