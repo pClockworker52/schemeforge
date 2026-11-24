@@ -1,28 +1,26 @@
-# Handoff — 2026-11-24: orientation written; one question for Peter (pause cold spray / reduced level / review) (current state only)
+# Handoff — 2026-11-24: scope review done (both STOP); Peter decides (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md and the orientation, then ask me the question." Then read, in
-order:
-1. **docs/research/coldspray-orientation-2026-11-24.md** (one page: where the track sits, what holds, what local means
-   cannot answer, what is open, the one question);
-2. the top of docs/STATUS.md;
-3. the DECISIONS index (`python scripts/decisions_index.py`).
-
-Read solver-facts.md only if the answer is option 2 or 3.
+**Read first:** docs/research/scope-review-2026-11-24/summary.md, then the orientation
+(docs/research/coldspray-orientation-2026-11-24.md), the top of docs/STATUS.md and the DECISIONS index
+(`python scripts/decisions_index.py`).
 
 Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-procedure.md.
 
 ## First action
 
-Put the orientation's one question to Peter. Record his answer in DECISIONS, and only then act.
-1. **Pause the cold-spray track** and resume schemeforge Phase 6 at step 6 (docs/plans/2026-10-30-phase6.md: blind
-   audit, Target D, tag `contact-v1.0`; about one session to Gate 6).
-2. **Continue cold spray at the reduced level** (R2 or R3, finite quantities only).
-3. **A review session whose allowed answers include "stop"** (fresh reviewers, the orientation only).
+Peter chose option 3 (DECISIONS 2026-11-24 "Cold-spray scope review"). The review is done:
+- both reviewers say **STOP**, with medium confidence;
+- the fact both name as the one that would switch them to an R2 QUESTION is unseen stacks in hand, and per the
+  record there are none.
 
-Modeller's recommendation: 1, with 3 kept as the way back; 3 first if Peter is unsure whether a local path is left.
-Also confirm the housekeeping defaults (orientation, "Housekeeping").
+Get Peter's decision on the summary and record it in DECISIONS:
+- **Accept STOP:** pause cold spray, with the orientation as its closing state, and resume Phase 6 at step 6
+  (docs/plans/2026-10-30-phase6.md: blind audit, Target D, tag `contact-v1.0`).
+- **Not accept it:** Peter names what is missing.
+
+Housekeeping is done in the record. WSL A task 2026-11-24-b (delete the band-check arrays) is open.
 
 Lesson to carry: point values at the contact edge and the bond boundary may be singular (problem-formalism §2(c)), so
 any new criterion should be built from finite quantities (energies, averages over a fixed area).
@@ -56,22 +54,18 @@ any new criterion should be built from finite quantities (energies, averages ove
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none; 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | 2026-11-24-b (delete band-check arrays; housekeeping); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
 
-1. **The one question** (First action).
-2. **Housekeeping defaults to confirm** (orientation):
-   - CS-20 parked;
-   - Mohanty 2022 a footnote to R1;
-   - WSL A's band-check arrays (`~/oc_runs/hvi_band`, 5.5 GB) may be deleted;
-   - friction for unbonded contact and the hot-edge choice filed under Track B (paused) as its design questions.
+1. **Decision on the scope review** (First action).
 
 ## Hunch budget
 
-**3 of 5:** CS-10, CS-17, CS-20. Supported: CS-22b (§31; caveat DECISIONS 2026-11-23). Retired: CS-12. Refuted: CS-23 (§39), CS-22 part 1 (§30), CS-21 part 1
-(§28), CS-18b (§20). Index: docs/research/coldspray-hunches.md.
+**2 of 5:** CS-10, CS-17. Parked: CS-20 (2026-11-24), CS-14/14b. Supported: CS-22b (§31; caveat DECISIONS 2026-11-23).
+Retired: CS-12. Refuted: CS-23 (§39), CS-22 part 1 (§30), CS-21 part 1 (§28), CS-18b (§20). Index:
+docs/research/coldspray-hunches.md.
 
 ## Rules that must not be broken
 
