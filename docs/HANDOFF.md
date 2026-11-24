@@ -1,29 +1,38 @@
-# Handoff — 2026-11-24: scope review done (both STOP); Peter decides (current state only)
+# Handoff — 2026-11-24: cold spray paused (scope review STOP, Peter accepted); Phase 6 resumes at step 6 (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
-**Read first:** docs/research/scope-review-2026-11-24/summary.md, then the orientation
-(docs/research/coldspray-orientation-2026-11-24.md), the top of docs/STATUS.md and the DECISIONS index
-(`python scripts/decisions_index.py`).
+**Start the next session with:** "Read docs/HANDOFF.md and start Phase 6 step 6." Then read, in order:
+1. docs/STATUS.md (top) and docs/plans/2026-10-30-phase6.md, §1 (Gate 6) and §3, Steps 5 and 6;
+2. DECISIONS 2026-11-03 "Arena 2 paused" (the checkpoint) and the index (`python scripts/decisions_index.py`);
+3. docs/judge/contact_baseline.md (the zoo front Target D is built from).
 
-Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-procedure.md.
+Branch: `claude/exciting-fermi-qy077p`.
 
-## First action
+## First action: Phase 6 step 6 (about one session)
 
-Peter chose option 3 (DECISIONS 2026-11-24 "Cold-spray scope review"). The review is done:
-- both reviewers say **STOP**, with medium confidence;
-- the fact both name as the one that would switch them to an R2 QUESTION is unseen stacks in hand, and per the
-  record there are none.
+From docs/plans/2026-10-30-phase6.md:
+- **Blind audit:** a `judge-auditor` re-implements C0a, C0b, C1 and C2 from `docs/judge/contact_spec.md` without
+  reading the judge code, and the results are compared.
+- **Target D:** pre-registered in `docs/targets/D.md` from the front, in its own commit. Thresholds sit outside the
+  measured error floor, with held-out checks and bootstrap references.
+- `sforge zoo eval --arena contact` on dev and promo, then tag `contact-v1.0`.
+- **Gate 6 report for Peter, then stop** (CLAUDE.md: stop at every phase gate).
 
-Get Peter's decision on the summary and record it in DECISIONS:
-- **Accept STOP:** pause cold spray, with the orientation as its closing state, and resume Phase 6 at step 6
-  (docs/plans/2026-10-30-phase6.md: blind audit, Target D, tag `contact-v1.0`).
-- **Not accept it:** Peter names what is missing.
+Judge state at the pause: contact-v0.8.dev, with C0a, C0b, C1, C2, hard constraints and held-out families. The first
+real promo run was clean (r-20261103-123550-7e5a). The four-medium zoo front exists (DECISIONS 2026-11-03).
 
-Housekeeping is done in the record. WSL A task 2026-11-24-b (delete the band-check arrays) is open.
+## Cold-spray track: PAUSED (DECISIONS 2026-11-24)
 
-Lesson to carry: point values at the contact edge and the bond boundary may be singular (problem-formalism §2(c)), so
-any new criterion should be built from finite quantities (energies, averages over a fixed area).
+- **Closing state:** docs/research/coldspray-orientation-2026-11-24.md.
+- **Review:** docs/research/scope-review-2026-11-24/summary.md. Both reviewers said STOP, and Peter accepted.
+- **Resume only if** one of these appears: unseen multi-particle stacks, an unseen ring-map source, or new
+  single-impact v_cr data.
+- **Still open:** WSL A task 2026-11-24-b (delete the band-check arrays; housekeeping).
+- **Lesson to carry:** point values at the contact edge and the bond boundary may be singular (problem-formalism
+  §2(c)), so any new criterion should be built from finite quantities.
+
+The rest of this file is the track's state at the pause, kept for a resumption.
 
 ## State in brief
 
@@ -59,7 +68,7 @@ any new criterion should be built from finite quantities (energies, averages ove
 
 ## Open for Peter
 
-1. **Decision on the scope review** (First action).
+- Nothing on cold spray. Gate 6 comes after step 6.
 
 ## Hunch budget
 
