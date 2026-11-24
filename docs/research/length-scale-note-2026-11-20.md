@@ -215,3 +215,47 @@ w = 2ℓ√(m − 1)(π − arctan(1/√(m − 1))), so w = 1.5πℓ ≈ 4.7ℓ 
 Modeller's recommendation: (ii) together with the design note of (i). The design note can be written for a general ℓ,
 and the ℓ reading decides the mesh the build has to reach.
 
+### 11a. Correction, 2026-11-24 (after Peter's questions; two statements of §11 were too strong)
+
+**Host: no preference yet (withdraws "it points to quads as the host").**
+- The quad argument was resolution only. It holds only under "band width = grain size" (ℓ ≈ 0.4 µm, h ≤ 0.1 µm).
+- §11 left out three things about quads:
+  - the mesh fails at the jet root: R/256 stops at about 0.8 ns ≈ 0.034 t_p (solver-facts §1, §25);
+  - quads carry no bond law;
+  - quads have no conduction.
+- So quads can only be a **testbed for step 0**, not the host the model has to work on.
+- TLSPH is that host: it runs to 2 D/V and carries cs12. Its limits:
+  - under "ℓ = grain size" (2 µm), ℓ/s = 1.6, 3.2 and 6.4 at R/8, R/16 and R/32, so only two meshes resolve ℓ (R/64
+    is out of reach);
+  - §40's cheap TLSPH form smooths over reference neighbours. That is a material (convected) length, arguably right
+    for a grain size, but a modelling choice;
+  - TLSPH's documented non-convergence (skin Y, e(off)) has not been tied to shear localisation.
+- The ℓ reading decides the host: grain size points to TLSPH, band width to a quad testbed.
+
+**Ge: weak evidence for our hosts (withdraws "the evidence leans necessary, not sufficient").**
+- Ge is finite elements. Its residual 7–9 % drift with the nonlocal model has two candidate causes: the formulation
+  itself, or the element-kinematic effect Ge names (interface elements cannot bend). The second does not exist in
+  SPH, which has errors of its own (surface kernel truncation, hourglass modes).
+- The figure comes from colour-bar limits.
+- What remains of it: in one FE code a length more than halved the drift but did not remove it.
+
+**Objections, ranked:**
+1. Step 0 is unproven on our own data. On quads the readings never separated localisation from jet-root mesh failure.
+   On TLSPH the non-convergence is skin reconstruction and rebound drift, with causes not separated.
+2. Scale separation is weak. The band is ≈ 4.7ℓ, so a large ℓ smears the jet and the pressure that feed the bond law,
+   and a small ℓ brings back the resolution problem. The ℓ-plateau test decides this, but it can fail for structural
+   reasons.
+3. Cost: about 4–5 sessions (quads) or 7–8 (TLSPH) before step 0 can be tested.
+
+**For continuing:**
+- edge non-convergence has stopped every host;
+- a bond law cannot converge on inputs that do not;
+- a fixed-ℓ step-0 test is a clean, freezable yes/no.
+
+**Cheaper first look at objection 1 (option, not yet a spec):**
+- From existing §30 off-run files (R/8, R/16, R/32), measure the edge shear band's width in particle spacings, and
+  check whether the drifting quantities sit in it.
+- If the band is always 1–2 spacings and narrows with refinement, that is direct evidence for step 0 on TLSPH. If not,
+  the path loses its premise.
+- Before any spec: check against solver-facts that ε_p is in the written output.
+
