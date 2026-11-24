@@ -13,5 +13,8 @@ code is unchanged. Check: the zoo dev runs before and after, compared on every m
 **Result:**
 - **Scores:** all eight runs are `ok`, with no violations. **192 of 192 metric values are bitwise identical**
   (wall time excluded).
-- **Dev budget:** within 60 s for every member (Gate 6 item 6). Memory was not measured in this check.
+- **Dev budget:** within 60 s for every member (Gate 6 item 6).
+- **Memory:** wriggers2013, the slowest member, peaked at 588 MB in one dev run (r-20261124-101514-b2e4), within
+  the 1 GB budget. This is the largest child process's peak RSS (`getrusage(RUSAGE_CHILDREN)`), a single
+  measurement.
 - **Self-check:** `sforge judge verify --arena contact` passes 12 of 12.
