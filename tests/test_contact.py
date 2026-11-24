@@ -205,3 +205,17 @@ def test_promo_report_aggregates_families_and_hides_nothing_it_should_not() -> N
     assert r["status"] == "ok" and set(r["families"]) == {"GF", "SF"}
     assert r["families"]["GF"]["n"] == 2 and "median" in r["families"]["GF"]["gap_res"]
     assert len(r["instances"]) == 4 and len(r["seed_fingerprint"]) == 16  # the parent strips and stores instances
+
+
+def test_judge_exact_reports_agree_with_the_spec() -> None:
+    """verify.exact_report: FE with the audit medium matches the exact homogeneous solution; C0b gives gamma."""
+    from schemeforge.arenas.contact import verify
+
+    r = verify.exact_report(GapClosureCase("a", gap=0.07, height=0.8, width=0.3, push=0.1, steps=5, E=3.0, nu=0.2,
+                                           gamma=1e-4, distort=0.2, nx=2, seed=4))
+    assert abs(r["fe_force"][-1] / r["exact_force"] - 1.0) < 1e-9
+    assert abs(r["fe_thickness"] / r["exact_thickness"] - 1.0) < 1e-9
+    assert abs(r["classical_force"][-1] / r["ideal_force"] - 1.0) < 1e-9
+    s = verify.exact_report(SimpleShearCase("s", shear=1.3, gamma=3e-5))
+    assert abs(s["shear_parasitic"] - 3e-5) < 1e-17
+    assert all(c.ok for c in verify.check_edge_traction())

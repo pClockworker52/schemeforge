@@ -130,3 +130,36 @@ mesh_sens_a_err 0.0014.
 - The unconfined C0a (free sides) with an unregularized γ = 1e-6 medium fails Newton: the medium bulges sideways.
   The dev cases are confined; the unconfined case belongs with the regularization slot.
 - C0b measures the material law only; shear in contact geometry follows with C4 (steady sliding, no friction).
+
+## Audit (step 6): `sforge judge exact --arena contact`
+
+`uv run sforge judge exact --arena contact --case <yaml> --json` answers one case, or a YAML list of cases with a JSON
+list. The case format is in docs/judge/contact_cases.md. The **audit medium** is the zoo neo-Hooke,
+ψ_m(C) = γ ψ_b(C) with the body's μ and λ (ψ_b as in §Slot). All forces are per unit thickness and compressive
+positive. Reported per kind:
+
+- `gap_closure` (C0a, and C1 when `distort` > 0):
+  - `ideal_force`: the ideal contact force at full push (§C0a).
+  - `exact_force`, `exact_thickness`: the exact homogeneous solution with the audit medium at full push.
+  - `exact_force_half`, `exact_thickness_half`: the same at push = g/2.
+  - `exact_leak_pre`, `exact_gap_res`, `exact_force_err`: the metrics of §C0a, computed from the exact solution.
+  - `fe_push`, `fe_force`: the judge's FE solve with the audit medium (load steps, including 0). Also `fe_thickness`
+    (at the symmetry line, x = 0), `fe_wall_pressure` (wall nodes sorted by x) and the judge's metrics `fe_leak_pre`,
+    `fe_gap_res`, `fe_force_err`, `fe_pressure_spread` and `fe_min_J_medium`.
+  - `classical_push`, `classical_force`: the classical reference extrapolated to infinite penalty, per load step.
+- `simple_shear` (C0b): `mu`, `lmbda`, `P_xy`, `P_yy`, `shear_parasitic` and `normal_parasitic` for the audit medium.
+- `hertz` (C2): the classical reference (no medium; penalty 1e3):
+  - `x`, `f`: the reference x of the contact nodes on the flat, sorted, and their consistent nodal forces (half model);
+  - `p`: the recovered pressure (§C0a, consistent mass matrix);
+  - `load` P of the full model, `E_star`, `a_hertz`, `p0_hertz`;
+  - the judge's metrics `a_err`, `p0_err`, `p_l2` and `leak_out` computed on this solution.
+
+  Classical vs Hertz is the judge error floor of §C2, not round-off.
+
+`sforge judge verify --arena contact` runs the judge's self-checks:
+- quadratic edge tractions come back exactly;
+- on the dev C0a and C1 cases, FE vs exact to 1e-9, classical vs ideal to 1e-9, zero force before contact, and
+  pressure spread ≤ 1e-7;
+- C0b with the neo-Hooke medium gives P_xy/(μ s) = γ;
+- classical Hertz on the dev mesh: |a_err| ≤ 1.5 % and |p0_err| ≤ 1 %;
+- every zoo member passes the hard constraints.
