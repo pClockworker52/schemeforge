@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-24-a: band check (open; post-processing only)
+## Task 2026-11-24-a: band check (closed: §41 intermediate; merged)
 
 **Basis:** Peter, chat 2026-11-24 ("Freeze"). **Spec, rule and prediction, frozen:**
 [../band-check-2026-11-24.md](../band-check-2026-11-24.md), frozen in the commit that adds this task. Cite it in

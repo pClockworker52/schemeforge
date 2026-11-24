@@ -259,3 +259,42 @@ and the ℓ reading decides the mesh the build has to reach.
   the path loses its premise.
 - Before any spec: check against solver-facts that ε_p is in the written output.
 
+## 12. After §41 (2026-11-24): band check intermediate; the edge drift sits in the surface layer
+
+**Verdict (band-check-2026-11-24.md, frozen 5a96524): intermediate.**
+- Two stations qualify (substrate r₀ = 0.5 R and 0.75 R): one is unclear (q 1.62, q′ 1.17) and one resolved (q 1.39,
+  q′ 1.11). None is mesh-scale.
+- The cloud recomputation from the rows gives the same result.
+- S075's "resolved" depends on the surface-end convention; with layer 1 extended to the surface, both stations are
+  unclear and the verdict is unchanged.
+- The bonded CS-23 30× runs give the same classes.
+- Prediction: necessary condition met 0.65 (no); intermediate 0.20 (yes).
+
+**Modeller's reading (not a rule change):**
+1. **No band narrowing with the mesh at the resolved scale.**
+   - From R/16 to R/32 the width in µm is nearly stable (0.74 → 0.63 and 0.98 → 0.88 µm; q′ 1.1–1.2, where a mesh-set
+     band would give 2). It grows from 1 to 2–3 spacings. R/8 cannot resolve it.
+   - What keeps changing is the **ε_p peak in the outermost particle layer**: 0.76–0.87 → 2.1.
+   - The non-converging object is therefore a surface-layer spike. That may be TLSPH's face-layer weakness (solver-facts
+     §3) or the frictionless contact; this check cannot separate them.
+2. **Energy.** The main mesh drift is numerical dissipation falling with refinement:
+   - substrate |W_hg| 29.7 → 11.9 nJ, particle |W_visc| 20.2 → 9.1 nJ;
+   - it reappears as substrate internal energy (+31 nJ) and as near-interface plastic work (+33 nJ, mostly on the
+     substrate side);
+   - the rebound change, −2.7 nJ, is small next to these.
+3. **For the length path on TLSPH.** The screen did not find the mesh-set band a nonlocal length is meant to cure.
+   - A length ℓ ≳ 1 µm would still smear the layer-1 spike and might make the peak converge. But that would regularise
+     a surface-layer effect, not supply a missing material length.
+   - The evidence leans against step 0 on TLSPH. It is not a refutation: the rule says intermediate, and the R/32
+     widths sit near the detection limit.
+
+**Chain:** step 0 "leans against on TLSPH, not refuted". Steps 1–4 are unchanged.
+
+**Options for Peter:**
+- (a) Stop the length path on TLSPH and return to the open items.
+- (b) Look at the surface-layer spike: face layer or contact? A new spec, e.g. the same profile on an existing
+  rigid-wall or frictionless flat deck.
+- (c) Build anyway, knowing it would mainly smooth the layer-1 spike.
+
+Modeller: (b) if the edge is to be pursued at all, else (a).
+

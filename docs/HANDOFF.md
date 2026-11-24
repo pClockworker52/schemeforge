@@ -1,4 +1,4 @@
-# Handoff — 2026-11-24: focus on the physical length scale; band check frozen, WSL A runs it (task 2026-11-24-a) (cold-spray track; current state only)
+# Handoff — 2026-11-24: band check intermediate (§41); Peter decides the length path (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -11,16 +11,15 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. The **band check** (band-check-2026-11-24.md) is frozen and runs as **WSL A task
-2026-11-24-a**, post-processing only, written up in §41. It asks whether the TLSPH edge strain is localised at the mesh
-scale, a necessary condition for step 0. When pushed:
-1. Check Q1, and that the script with its definitions was committed before the data were read.
-2. Recompute q and q′ per station from the rows.
-3. Judge by the frozen rule and compare with the prediction (necessary condition met 0.65, fails 0.10).
-4. Put the sink table to Peter with the verdict.
+§41 (band check) is merged: **intermediate** by the frozen rule, recomputed in the cloud. There is no mesh-scale band;
+the edge drift sits in a surface-layer ε_p spike, and numerical dissipation is the largest mesh drift (note §12). WSL A
+has no open task. **Peter decides** (note §12):
+- (a) stop the length path on TLSPH;
+- (b) a spec on the surface-layer spike (face layer or contact?);
+- (c) build anyway.
 
-"Necessary condition met" does not by itself justify the nonlocal build (spec, What follows). Before choosing, the note
-§11a options (build on quads or TLSPH, literature, softening-off test) go to Peter again.
+He also decides whether WSL A keeps its 5.5 GB per-frame arrays (`~/oc_runs/hvi_band`). Record his choice in
+DECISIONS. Draft nothing before that.
 
 ## State in brief
 
@@ -39,9 +38,10 @@ scale, a necessary condition for step 0. When pushed:
     10× mostly holds, 30× holds); tears mixed mode. Caveat: CS-22b's 30× pass depends on the free-slip law.
 - **Length-scale idea (not a hunch), the current focus (Peter 2026-11-23):** length-scale-note-2026-11-20.md (§11:
   no host carries ℓ in σ_y and T (§40); a gradient band is about 4.7ℓ wide, so "ℓ = grain size" and "band = grain
-  size" are different models; §11a: host preference withdrawn, Ge downgraded, objections ranked; band check frozen 2026-11-24). Softening is active from the first judged
-  frame on quads (§33); TLSPH heats and softens without q heating (§34). Step 0 ("a missing length causes the edge
-  failure") is still unjustified; the softening-off test is on hold.
+  size" are different models; §11a: host preference withdrawn, Ge downgraded, objections ranked; §12: band check intermediate, no mesh-scale band,
+  the drift is a surface-layer spike). Softening is active from the first judged frame on quads (§33); TLSPH heats and
+  softens without q heating (§34). Step 0 ("a missing length causes the edge failure") leans against on TLSPH, not
+  refuted; the softening-off test is on hold.
 - **Problem as equations:** problem-formalism.md, every equation checked against the fork source (§35); points
   (c) crack-tip bond boundary, (e) identifiability, (f) bonds weakest at the hot edge, (g) slip vs ASI.
 
@@ -50,7 +50,7 @@ scale, a necessary condition for step 0. When pushed:
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-24-a** (band check, post-processing, §41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none; 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
@@ -58,8 +58,8 @@ scale, a necessary condition for step 0. When pushed:
 1. **Track B is paused** (DECISIONS 2026-11-23); it resumes only by your decision.
 2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
 3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
-4. Physical length scale (the focus): options (i)–(iii) of the note §11 (see First action). Chakrabarty & Song 2020
-   needs your download.
+4. Physical length scale (the focus): after the band check, options (a)–(c) of the note §12 (see First action).
+   Chakrabarty & Song 2020 needs your download if the path continues.
 5. CS-20: no unseen ring-map source; candidate for parking.
 6. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
 
@@ -86,7 +86,7 @@ scale, a necessary condition for step 0. When pushed:
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§40 (§41 reserved for task 2026-11-24-a) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§41 (§42 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); recent: cs22b (supported), cs23 (refuted) |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md, slip-check-2026-11-22.md, band-check-2026-11-24.md (frozen) |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
