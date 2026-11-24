@@ -153,3 +153,65 @@ Song 2020 (Peter's download).
 **Still unjustified:** step 0 ("the edge fails to converge because of a missing length"). A test of it at fixed ℓ needs
 a host that carries ℓ; the reading decides whether one exists without new code.
 
+## 11. After §40 (2026-11-24): no host carries ℓ; which length is physical
+
+**§40 (reading, `cs12` `38639859c`).**
+- `/NONLOCAL/MAT` is a damage regulariser. For LAW2 and LAW4 the smoothed plastic strain reaches only `/FAIL` models,
+  never σ_y or T.
+- It is solved on 3D solids and shells only, and is silently ignored on quads, SPH and TLSPH.
+- **There is no zero-code ℓ test.** A Ge-type model (ε̄_p standard, T̂ = 2T̄ − T, both in LAW4's σ_y; keys from the
+  sidecar, no protected file touched) costs about 4–5 task sessions on 2D quads, and about 3 more on TLSPH.
+- LAW2 is no shortcut: it has no melt branch and no length.
+
+**New point: the band a gradient model produces is several ℓ wide.** In the 1D softening bar of §40,
+w = 2ℓ√(m − 1)(π − arctan(1/√(m − 1))), so w = 1.5πℓ ≈ 4.7ℓ at m = 2 (re-derived in the cloud).
+- The Ge form, with hardening in ε̄_p and thermal softening through T̂, has its own factor (§40 item 5, still to be
+  worked out and source-checked), presumably of the same order. Only the bar above is closed.
+- So "ℓ = grain size" (§4b) and "band width = grain size" are different models:
+
+| Reading | ℓ for Al (feedstock grains ≈ 2 µm; Liu band ≈ 0.5 µm) | Band (≈ 4.7ℓ) | Mesh h ≤ ℓ/4 | Host |
+|---|---|---|---|---|
+| ℓ = grain size (JC validity limit, §2) | ≈ 2 µm | ≈ 9 µm, about the particle radius R = 10 µm | 0.5 µm (R/20) | quads or TLSPH |
+| band width = grain size | ≈ 0.4 µm | ≈ 2 µm | 0.1 µm (R/100) | quads (§25 ran R/256); TLSPH cannot (R/32 has s = 0.31 µm) |
+| band width = measured band (Liu, Al) | ≈ 0.1 µm | ≈ 0.5 µm | 0.025 µm (R/400) | beyond R/256 even on quads |
+
+- Ge's ℓ = 4 µm on 10 µm Cu sits in the first row: its band is the size of the particle. That may be why morphology
+  matched after calibration.
+- The y+ reading of §2 ("JC is invalid below a representative volume of several grains") fits the second row better:
+  the smeared band should be about one representative volume wide, not several.
+- This is a modelling choice that has to be fixed before any hunch. It decides the host (quads) and the mesh the build
+  must reach.
+
+**Evidence on step 0 since §9:**
+- Ge's nonlocal runs still show the peak edge strain rising 7–9 % from d/50 to d/100 (ge2026_reading.md §6). That is
+  better than local (+25–56 %), but not converged by our 3.5 % rule.
+- Ge also names a second, kinematic cause, present without thermal softening: interface elements cannot bend, so the
+  deformation goes into the next element row (§3, Fig. 7).
+- So a length is at most part of the cause. Step 0 stays unjustified, and the evidence leans "necessary, not
+  sufficient".
+
+**Chain now** (first unjustified step in bold):
+
+| Step | Status |
+|---|---|
+| **0. The edge fails to converge because a length is missing** | **unjustified**; Ge: a length helps but leaves 7–9 % drift and a kinematic cause |
+| 1. A physical length exists for the particle (grain size or band width) | second-hand numbers (§4b); which reading (table above) not chosen |
+| 2. A host carries ℓ in σ_y and T | false today (§40); a build of about 4–5 sessions on quads |
+| 3. At fixed ℓ the edge quantities converge under refinement | untested |
+| 4. Outputs plateau over ℓ around the physical value (§5) | untested |
+
+**Options for Peter** (no hunch drafted):
+- (i) **Build on quads:** the §40 5(a) design note first, then module, 1D band check, neutrality. Then a frozen step-0
+  test on the §25 deck: at fixed ℓ, do the edge quantities converge? This tests steps 2–3 directly, and step 0 with
+  them.
+- (ii) **Literature first:** choose the reading in the table above, and source the numbers:
+  - Liu et al. band and grain sizes in the original;
+  - an Al feedstock grain size;
+  - Chakrabarty & Song 2020 (Peter's download);
+  - a primary source for the band-width factor (Peerlings et al. 1996 or similar).
+- (iii) **The softening-off test** (§9, on hold). It is zero-code but probes only the thermal half of step 0, and Ge
+  Fig. 7 already shows edge drift without softening.
+
+Modeller's recommendation: (ii) together with the design note of (i). The design note can be written for a general ℓ,
+and the ℓ reading decides the mesh the build has to reach.
+

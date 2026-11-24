@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-23-c: what `/NONLOCAL/MAT` regularises, and what a length for our decks would cost (open; reading only)
+## Task 2026-11-23-c: what `/NONLOCAL/MAT` regularises, and what a length for our decks would cost (closed: §40 damage-only, no zero-code length; merged)
 
 **Basis:** Peter, chat 2026-11-23 (DECISIONS 2026-11-23, "Focus on the physical length scale; Track B paused").
 Note: [../length-scale-note-2026-11-20.md](../length-scale-note-2026-11-20.md) §10. **No build, no run.** Read the

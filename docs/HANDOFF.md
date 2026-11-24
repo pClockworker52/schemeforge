@@ -1,4 +1,4 @@
-# Handoff — 2026-11-23: focus on the physical length scale; Track B paused; WSL A reads the nonlocal source (task 2026-11-23-c) (cold-spray track; current state only)
+# Handoff — 2026-11-24: focus on the physical length scale; no zero-code length (§40); Peter chooses the next step (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -11,13 +11,17 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-Fetch `coldspray/opencourant-sph`. **WSL A task 2026-11-23-c** (reading only, §40): what `/NONLOCAL/MAT` regularises
-on `cs12`, whether it feeds σ_y and T, element and law coverage (quads, TLSPH, LAW2, LAW4), and the cost of a
-Ge-type nonlocal ε_p and T on quads and TLSPH. When pushed: merge, and put the facts in solver-facts (new rows).
-Then rewrite the length-scale chain (note §10) with its first unjustified step. Put the options to Peter: a
-zero-code host if one exists; a fork build if not; or the literature steps. Draft no hunch before that.
+§40 (WSL A task 2026-11-23-c) is merged: `/NONLOCAL/MAT` is damage-only and silently ignored on quads and TLSPH, so
+no zero-code length exists. The length-scale note §11 holds the chain, the ℓ-against-band-width table and three
+options. **Peter chooses:**
+- (i) a Ge-type nonlocal build on quads (design note first, about 4–5 sessions), then a frozen step-0 test on the
+  §25 deck;
+- (ii) literature first (choose the ℓ reading; Liu band and grain sizes, an Al feedstock grain size, Chakrabarty & Song
+  2020, a primary source for the band-width factor);
+- (iii) the softening-off test.
 
-If nothing is pushed: the open items for Peter below.
+The modeller recommends (ii) with the design note of (i). Then write the WSL A or WSL B task. Draft no hunch before
+that.
 
 ## State in brief
 
@@ -34,8 +38,9 @@ If nothing is pushed: the open items for Peter below.
   - **CS-23 refuted** (§39, DECISIONS 2026-11-23): sticking bonds on the CS-22b set-up; all 9 runs valid; dR moves
     toward 0 from R/16 to R/32 at every δ_c (3× also |dR32| < 0.01). Sticking changed tear/hold as predicted (3× tears,
     10× mostly holds, 30× holds); tears mixed mode. Caveat: CS-22b's 30× pass depends on the free-slip law.
-- **Length-scale idea (not a hunch), the current focus (Peter 2026-11-23):** length-scale-note-2026-11-20.md (§10:
-  `/NONLOCAL/MAT` found, coverage unconfirmed; WSL A reads the source). Softening is active from the first judged
+- **Length-scale idea (not a hunch), the current focus (Peter 2026-11-23):** length-scale-note-2026-11-20.md (§11:
+  no host carries ℓ in σ_y and T (§40); a gradient band is about 4.7ℓ wide, so "ℓ = grain size" and "band = grain
+  size" are different models; Ge's nonlocal runs still drift 7–9 % at the edge). Softening is active from the first judged
   frame on quads (§33); TLSPH heats and softens without q heating (§34). Step 0 ("a missing length causes the edge
   failure") is still unjustified; the softening-off test is on hold.
 - **Problem as equations:** problem-formalism.md, every equation checked against the fork source (§35); points
@@ -46,7 +51,7 @@ If nothing is pushed: the open items for Peter below.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | **2026-11-23-c** (nonlocal source reading, §40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none; 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter
@@ -54,9 +59,8 @@ If nothing is pushed: the open items for Peter below.
 1. **Track B is paused** (DECISIONS 2026-11-23); it resumes only by your decision.
 2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
 3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
-4. Physical length scale (the focus): after §40, choose the host for an ℓ test. Literature steps waiting:
-   Chakrabarty & Song 2020 (needs your download), the grain sizes in the originals (Panova & Schuh, Liu et al.), and
-   an Al feedstock grain size.
+4. Physical length scale (the focus): options (i)–(iii) of the note §11 (see First action). Chakrabarty & Song 2020
+   needs your download.
 5. CS-20: no unseen ring-map source; candidate for parking.
 6. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
 
@@ -83,7 +87,7 @@ If nothing is pushed: the open items for Peter below.
 |---|---|
 | Solver facts (read first) | docs/research/solver-facts.md |
 | Decisions | docs/DECISIONS.md (index: `python scripts/decisions_index.py`) |
-| Solver log §1–§39 (§40 reserved for task 2026-11-23-c) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
+| Solver log §1–§40 (§41 next) | docs/research/opencourant-verification.md; rows in docs/research/opencourant/results/ |
 | Hunches | coldspray-hunches.md (index); recent: cs22b (supported), cs23 (refuted) |
 | Checks | driver-check-2026-11-17.md, switch-check-2026-11-18.md, softening-check-2026-11-20.md, tlsph-temperature-check-2026-11-21.md, slip-check-2026-11-22.md |
 | Ladders (frozen) | sph-contact-ladder.md, sph-tlsph-ladder.md, sph-tlsph-b-ladder.md |
