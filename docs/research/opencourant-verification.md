@@ -3652,3 +3652,169 @@ with |v_p − v_target| ≤ 0.01 V); none needs it, since every run reaches t_en
 
 **Not covered by this test:** stick on with bonded symmetry-ghost pairs (none carried W_s); the ghost weight stays
 checked by code reading only (§38).
+
+## 40. `/NONLOCAL/MAT`: for LAW2 and LAW4 it regularises only the plastic strain fed to failure models, on 3D solids and shells; no zero-code length on our hosts (task 2026-11-23-c)
+
+Basis: DECISIONS 2026-11-23 ("Focus on the physical length scale; Track B paused"); length-scale note §10. **Reading
+only: no build, no run.** Source: fork `cs12` at `38639859c` (the CS-23 engine; later commits touch no source).
+References are `file:line` in that tree. "Derived" marks a result worked out here from the code's formulas, not read
+from it. Nothing here was tested by a run.
+
+**The modeller's reading (old copy `e9432e6e`), point by point on `cs12`:**
+
+| Point | On `cs12` |
+|---|---|
+| `/NONLOCAL/MAT` exists, keys LENGTH, LE_MAX, read in `hm_read_nonlocal.F` | **confirmed**: `hm_read_nonlocal.F:85, 152–153`; CFG `hm_cfg_files/config/CFG/radioss2022/MAT/mat_NONLOCAL.cfg:22–23, 48–50` |
+| Solved only in 3D solid and shell routines (`*fint_reg*`) | **confirmed**, and more precisely: the starter sets the element-group flag `IPARG(78)` only for bricks, 4-node shells and 3-node shells (`sgrtails.F:1595`, `cgrtails.F:1029`, `c3grtails.F:882`) |
+| Quads (`qforc2.F`) and SPH (`spstres.F`) only pass `NLOC_DMG` through | **confirmed**, also for `q4forc2.F` (Isolid 17 goes there, `forint.F:1266–1268`): `VARNL` is a local array that is declared and passed to `MMAIN` but never set (`qforc2.F:224, 444`; `q4forc2.F:284, 580`; `spstres.F:178, 276`) |
+| Laws touched include LAW2, not LAW4 | **corrected**: for laws with `mtn` < 28 (LAW2 and LAW4 among them) the nonlocal plastic strain enters only the failure-model block of `mmain`, which serves both alike. Laws on the `mulaw` path get `varnl` in their own routines (`mmain.F90:1666, 1712`); LAW104, for example, heats from it (`mat104_nodam_newton.F:457–470`). In `mat002` only the shell routine `sigeps02c.F` reads it, for the thickness update. `m4law.F` has no nonlocal argument, and nor does `m2law.F` (solid LAW2) |
+
+**1. The equation and the variable.**
+- **Variable:** the element's cumulated local plastic strain ε_p. After the material call, `mmain` sets
+  `varnl = defp` (`mmain.F90:2604–2612`), and `sfint_reg` uses it as the source term (`sfint_reg.F:111`, comment
+  "local cumulated plastic strain"). One nodal degree of freedom per node (several through a shell's thickness) carries the nonlocal value ū
+  (`nlocal_reg_mod.F:163–172`: mass, force, velocity, increment, cumulated value).
+- **Equation (solids, `sfint_reg.F:238–296`):** the element force on the nonlocal degree of freedom is
+  ∫ Nᵀ N (ū + ξ u̇) dV + ℓ² ∫ ∇Nᵀ ∇N ū dV − ∫ Nᵀ ε_p dV, with ℓ² = LENGTH² (`:125`). The nodal mass is ζ·V
+  (`nloc_dmg_init.F:1016–1032`). This is the implicit-gradient equation ū − ℓ² ∇²ū = ε_p, solved as a damped
+  pseudo-dynamic system ζ ü + ξ u̇ + ū − ℓ² ∇²ū = ε_p, which relaxes to it.
+- **Time integration:** explicit, as the mechanics, in the same step:
+  - acceleration = force / mass (`nlocal_acc.F:62`);
+  - velocity += Δt · acceleration (`nlocal_vel.F:69`);
+  - increment = Δt · velocity, cumulated value += increment (`nlocal_incr.F:67–68`).
+- **Element averages:** the element's nonlocal increment is the mean of its 8 nodal increments (`sforc3.F:870–887`).
+  `mmain` adds it to `PLANL` and divides it by Δt for `EPSDNL`, the nonlocal strain rate (`mmain.F90:2055–2069`).
+- **Parameters,** all set automatically in the starter (`nloc_dmg_init.F:885–917`) from LENGTH, LE_MAX and the
+  material's sound speed c:
+  - `DENS` = ζ = 40 ((ℓ/LE_MAX)² + 1/12) · Δt_min², where Δt_min = max(LE_MAX/c, `/DT` minimum)
+    (`CSTA` = 40, `nlocal_reg_mod.F:135`);
+  - `DAMP` = ξ = (2η/LE_MAX) √(ζ (π² ℓ² + LE_MAX²)), with η = 0.2 (`nloc_dmg_init.F:110, 909`). Derived: η is the
+    damping ratio of the shortest mesh mode only; longer modes are more damped (the uniform mode about 1.1,
+    overdamped);
+  - `SSPNL` = √((ℓ² + LE_MAX²/π²)/ζ), the speed of the nonlocal wave (`:915`). It is used for the absorbing force on
+    broken elements (`sfint_reg.F:336–345`).
+  - LENGTH and LE_MAX are tied: LE_MAX = √π ℓ/3 ≈ 0.59 ℓ (`nlocal_reg_mod.F:200–220`). **If LE_MAX > 0 is given,
+    the input LENGTH is ignored** and ℓ = 3 LE_MAX/√π (`hm_read_nonlocal.F:157–167`). LE_MAX is the target element
+    size; a larger element only sets a warning flag (`nloc_dmg_init.F:901–905`).
+- **Time step:** Δt_nl = 2 h √(3ζ) / √(12 ℓ² + h²), with h = min(V^(1/3), LE_MAX), scaled by `CDAMP` = 0.7
+  (`sfint_reg.F:465–476`, `nlocal_reg_mod.F:138`).
+  - Derived: with the ζ above, Δt_nl / (h/c) ≥ 2√10 for every h ≤ LE_MAX, and ≥ 4.4 after `CDAMP`. **The nonlocal
+    solve never limits the step**, because ζ is chosen for that.
+  - The price is a lag. Derived: the slow modes are overdamped, and the field follows its source with a relaxation
+    time of about ξ/(1 + ℓ²k²) ≤ ξ ≈ 23 Δt_min at ℓ/LE_MAX = 1.69 (the code's pairing). That is order 10 steps, small
+    against a shear band that forms within 10³–10⁴ steps of an impact run, but to be measured.
+
+**2. Where it enters LAW2.**
+- **Not in the yield stress.** The solid LAW2 call has no nonlocal argument (`mmain.F90:901–922`). Its yield is
+  σ_y = (a + b ε_p^n)(1 + c ln ε̇*)(1 − T*^m), with the local ε_p, ε̇_p and T (`m2law.F:243–295`).
+- **Only in the failure models.** The nonlocal values are used only inside the block
+  `if (nfail > 0 .and. (mtn < 28 .or. mtn == 49))` (`mmain.F90:2032–2615`):
+  - `PLANL` replaces the plastic strain passed to the failure criteria (`:2055–2069`);
+  - `EPSDNL` replaces the strain rate (`:2095–2099`);
+  - `LE_MAX` replaces the element length used for scaling the failure parameters (`:2058`).
+  - The source term `varnl = defp` is also set inside this block (`:2604–2612`). So **without a `/FAIL` card the
+    regularisation is not fed at all.**
+- **LAW2 shells** (`sigeps02c.F:204–207`): the nonlocal increment enters only the thickness strain update.
+- **Temperature: local.** LAW2's temperature is the Gauss-point buffer `LBUF%TEMP` (adiabatic, `mmain.F90:748–752`).
+  T* = max(0, (T − T_r)/(T_m − T_r)) is computed from it (`:794`). Nothing nonlocal touches T.
+
+**3. Element and law coverage.**
+- **The regularisation is solved for:**
+  - 8-node bricks (`sfint_reg`) and other solid and thick-shell formulations (`s4/s6/s8z/s8c/scfint_reg`);
+  - 3- and 4-node shells (`cfint_reg`, `cbafint_reg`, `c3fint_reg`, `cdkfint_reg`, `cdk6fint_reg`).
+  - The starter accepts brick (element type 1, `nloc_dmg_init.F:431`) and the two shell types (3 and 7,
+    `:581, 632`). Any other element group with the flag set is an error, message 1658 (`:684`).
+- **2D quads (Isolid 17), native SPH, TLSPH:** the flag `IPARG(78)` is never set for them (`qgrtails.F` and
+  `spgrtails.F` contain no `IPARG(78)`), so the 1658 error is never reached.
+  - From the reading, `/NONLOCAL/MAT` on these hosts is accepted and **silently ignored**. The reader does allocate
+    the `PLANL`/`EPSDNL` buffers (`hm_read_nonlocal.F:173–176`), but no regularisation is solved for these elements.
+  - TLSPH calls the same `SPSTRES` → `MMAIN` path unchanged (`tl_mod.F90:24`; `spstres.F:250`), so it behaves as
+    native SPH.
+- **With LAW4:** the reader has no law check (`hm_read_nonlocal.F:118–176` sets `NLOC = 1` for any material). On
+  bricks or shells the solve runs, and its result reaches LAW4 only through a `/FAIL` model (LAW4 has `mtn` = 4 < 28).
+  It never reaches LAW4's yield stress (`m4law.F` has no nonlocal argument). Without `/FAIL` it is solved and unused.
+- **Not checked:** whether the reader accepts `/NONLOCAL/MAT` in our decks' input version. The only CFG files are
+  `radioss2022` and `Keyword971_R15.0`.
+
+**4. LAW2 against LAW4 for the §25 and §30 decks** (both use LAW4 + `/EOS/GRUNEISEN`: §25 on Isolid 17 quads, §30 on
+TLSPH `/PROP/TYPE34`).
+
+| Item | LAW2 (Johnson–Cook) | LAW4 (our card) |
+|---|---|---|
+| `/EOS/GRUNEISEN` | **accepted**: the reader sets the EOS-compatibility keyword (`hm_read_mat02_jc.F90:385`; check in `check_mat_elem_prop_compatibility.F:280–283`). `mmain` calls the EOS for any law with an EOS except 12 and 105 (`mmain.F90:801–812`) | accepted (our decks) |
+| Heating, plastic work | T += σ_y Δε_p / ρc_p when ρc_p > 0 (`m2law.F:543–557`); to `FHEAT` instead only if `JTHE` < 0 (`:545`) | the same form; to `FHEAT` for any `JTHE` ≠ 0 (`m4law.F:224–238`). Same for our adiabatic decks (`JTHE` = 0) |
+| Heating, EOS compression | the same EOS routine for both laws: for Grüneisen (the default case), `DTEMP` = −T · (∂p/∂e) · DF · ΔV/V, added only while compressed (μ > 0, solids; `eosmain.F:470–488`), into the same temperature buffer (`el_temp`, `mmain.F90:808`) | the same |
+| At T ≥ T_m | **no melt branch.** T* is not capped (`mmain.F90:794`); `T_MELT` is read but not used further (`m2law.F:155`). Above T_m, 1 − T*^m < 0, so the yield stress becomes negative and the return factor `SCALE = MIN(1, AK/J2)` turns negative (`m2law.F:285–295, 334–346`): the deviator is reversed, not zeroed, and the plastic-work heating σ_y Δε_p turns negative (the element cools). Reading only, not tested | deviatoric stress set to 0 at T ≥ T_m (`m4law.F:127–132`) |
+| T_max (switch to m = 1) | read (`hm_read_mat02_jc.F90:138`) and stored in `uparam(11)`, which `m2law` reads only as Zerilli's Z4 (`m2law.F:164–165`): **unused for Johnson–Cook** | used (`m4law.F:134`) |
+| TLSPH hourglass modulus | the yield stress once ε_p > 0 (`tl_mod.F90:615–629`, `mtn == 2` only) | Young's modulus throughout |
+
+- **Changes a switch to LAW2 would make:**
+  - The §30 TLSPH hourglass control changes, from E to σ_y once plastic (fork code; SPEC-TL 3.5).
+  - The §25 quad jet reaches T_m (§33: T_max 1.03–1.08 T_m). LAW2 has no melt cut-off and would need a guard there.
+- **None of this gives LAW2 a length:** item 2 applies to it as to LAW4.
+
+**5. Cost of a Ge-type nonlocal model (design only; estimates are judgment).** Target, from `data/ge2026_reading.md`
+§4:
+- ε̄_p and its rate, standard nonlocal (m = 1);
+- T̂ = m T̄ + (1 − m) T with m = 2;
+- all three in LAW4's yield stress σ_y(ε̄_p, ε̄̇_p, T̂).
+
+- **Constraint:** the protected set of `hvi/scripts/check_untouched.sh` (starter, reader, CFG, H3D) must stay
+  byte-identical.
+  - This rules out the `/NONLOCAL/MAT` route on quads and SPH: setting `IPARG(78)` needs `qgrtails.F`/`spgrtails.F`,
+    and the solve set-up is `nloc_dmg_init.F`, all in the starter.
+  - So ℓ and m come from the engine sidecar (`*_hvi.inp`), as the bond keys do. The solve lives in a new fork module
+    (`hvi_nloc.F90`, say), with call hooks in base engine files, as earlier fork work did (engine files are not in the
+    protected set).
+- **(a) 2D axisymmetric quads (§25 deck, `q4forc2.F`):**
+  - Two nodal fields (ε̄_p, T̄). Galerkin form as `sfint_reg` with the axisymmetric volume weight (r dA), using the
+    Gauss-point gradients `q4forc2` already has. The symmetry axis and free surfaces get the natural zero-flux
+    condition.
+  - Solve: either the base pseudo-dynamic relaxation (no step penalty, but the lag of item 1), or a few Jacobi sweeps
+    per step on the static equation (no lag, cost proportional to the sweeps).
+  - Hooks:
+    - `q4forc2.F`: gather the nodal values to the Gauss points before `MMAIN`, scatter the source after it;
+    - `mmain.F90` → `m4law.F`: three optional arrays, used in place of ε_p, ε̇_p and T in CH, CE and CT only. The
+      local plastic increment and the heating stay local.
+  - Also touched: the engine sidecar reader (the file that parses `*_hvi.inp`) for the keys, and the time-step tie-in
+    (`DT2T`) if the relaxation is used.
+  - Neutral when off: T-A0 55/55 as before.
+- **(b) TLSPH (§30 deck):**
+  - The reference kernel data exist (`tl_mod.F90:50–51`, `gw`, `wk`, with the reference neighbour lists). A
+    particle Laplacian on these (Brookshaw form) gives the same relaxation with no new neighbour search.
+  - An integral (kernel-average) form with radius about 2ℓ would need a second reference list. Derived: with ℓ = 1 µm
+    and s = 0.31 µm (R/32), that is about 1 100 neighbours per particle, 1.4·10⁹ entries for 1.24 M particles, at
+    least 17 GB at 12 B per entry. It does not fit the 23.5 GiB VM next to the 14.8 GiB run (in 2D it would be about
+    130 per node).
+  - Hooks: as (a) on the `SPSTRES` → `MMAIN` → `m4law` path, shared with (a).
+  - Memory: about 8 doubles per particle (two fields: value, rate, force, mass), about 80 MB at R/32.
+- **Time-step effect:**
+  - Relaxation with the base ζ: none (item 1). Lag of order 10 steps (item 1), to be measured.
+  - Jacobi sweeps: no step change, run time +10–30 % per sweep set (judgment).
+  - Ge reports run times within 1 % of local in Abaqus (heat-equation analogy, `ge2026_reading.md` §4).
+- **Calibration check with a closed form (derived; to verify against a primary source before it is used, e.g.
+  Vermeer & Brinkgreve 1994 or Peerlings et al. 1996):**
+  - Generic form: a 1D bar in tension with linear softening σ_y = σ₀ + H ε̂_p, H < 0, ε̂_p = m ε̄_p + (1 − m) ε_p,
+    ε̄_p − ℓ² ε̄_p'' = ε_p.
+  - In the band, equilibrium keeps σ_y uniform, so ε̄_p + (m − 1) ℓ² ε̄_p'' = const: for m > 1 a cosine with
+    k = 1/(ℓ √(m − 1)). Outside, ε_p = 0 and ε̄_p = B e^(−|x|/ℓ).
+  - Matching ε̄_p and ε̄_p' at the band edge, with ε_p = 0 there, gives tan(k w/2) = −1/√(m − 1), so
+    **w = 2 ℓ √(m − 1) (π − arctan(1/√(m − 1)))**: 1.5 π ℓ for m = 2, independent of h. (A first draft gave 2π ℓ, the
+    full wavelength; the review corrected it.) For m = 1 there is no finite band (w → 0).
+  - **This bar does not test the Ge-type model:** Ge keeps ε̄_p standard (m = 1) and puts m = 2 on T only, and with
+    m = 1 on ε_p the isothermal bar has no band. The check must use the Ge form instead: hardening in ε̄_p, adiabatic
+    thermal softening through T̂ = 2T̄ − T, with the heating linearised (T ∝ ε_p at constant stress).
+    - In that linearisation the band equation is again a cosine: with hardening slope H_h > 0 and thermal softening
+      slope H_T > H_h, k² = (H_T − H_h)/(H_T ℓ²) (derived).
+    - Its edge matching and w have to be worked out, and checked against the source, before the check is frozen.
+  - Check: w within a few % of the closed form on three meshes with h ≤ ℓ/4, for two values of ℓ.
+  - Hosts: a quad strip (a), and a TLSPH bar (b) with the same law and a prescribed velocity.
+- **Rough effort** (task sessions of the size of 22-c):
+  - (a) design note 0.5, module and hooks 2–3, bar check 1, neutrality (T-A0, 2.5 h) 0.5: **about 4–5 sessions**;
+  - (b) on top of (a): Laplacian and hooks 2, TLSPH bar check 1: **about 3 sessions**.
+  - Not included: choosing ℓ. Ge's ℓ = 0.4 d was fitted to morphology (`ge2026_reading.md` §5); for our d = 20 µm
+    that would be 8 µm, 26 particle spacings at R/32.
+
+**Reading:** for LAW2 and LAW4, `/NONLOCAL/MAT` is a damage regulariser: it smooths the plastic strain fed to failure
+models, on 3D solids and shells only. It does not touch their σ_y or T, and it is silently inactive on our two hosts. **So there is no zero-code
+ℓ test** on the §25 or §30 deck. A test of step 0 at fixed ℓ needs new engine code, sized above.
