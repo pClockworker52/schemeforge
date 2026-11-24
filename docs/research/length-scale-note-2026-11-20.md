@@ -298,3 +298,47 @@ and the ℓ reading decides the mesh the build has to reach.
 
 Modeller: (b) if the edge is to be pursued at all, else (a).
 
+## 13. Why step 0 was proposed, and what it was never tested against (2026-11-24, Peter's question)
+
+**The chain as used:**
+1. **Symptom:** on every host, local edge quantities drift with refinement while integrals converge.
+   - On quads: Y − 1 at every disc, v_edge, ring Y, and p_n at 0.75 a drift; a(t), and p_n at 0.25 a and 0.5 a,
+     converge (§25, §27, driver check).
+   - On TLSPH: e(off) drifts (§30).
+2. **Dimensional argument** (problem-formalism §2(a), verified): without conduction the only lengths are R and s, so
+   any feature smaller than R must take its size from s.
+3. **Mechanism** (§2(b), textbook strain-softening localisation): adiabatic JC stops hardening from ε_p ≈ 0.37, the
+   rate problem loses ellipticity, and shear collapses into a band of width s. C = 0.001 cannot set a width.
+4. **Outside support:**
+   - the route-review expert ("edge quantities do not converge without a length scale", checked in direction only);
+   - Li 2006 (mesh-dependent shear-instability onset, with no cause given);
+   - Ge 2026 (nonlocal FE built for this).
+5. **Conclusion:** supply ℓ.
+
+**The untested jump: from 1 to 3.** At least four causes give the same symptom (points drift, integrals converge):
+- (A) **localisation with no length:** an ill-posed problem, mesh-set band. This is step 0.
+- (B) **a singular but well-posed edge field:**
+  - the contact edge and the bond boundary are singular points (§2(c): crack-tip field, ε ∼ r^−0.845);
+  - point values grow under refinement in the exact solution itself, while integrals converge (§2(d));
+  - the remedy is to judge finite quantities, not to add a length.
+  - §2(c) was written in this project and step 0 was still carried forward; this is the main error.
+- (C) **a surface-layer discretisation error:**
+  - the TLSPH face layer carries 0.66–0.85 of the stress;
+  - skin Y is 13 % low at R/64.
+- (D) **numerical dissipation drifting with the mesh:** hourglass and viscous work, the largest drifts in §41's sink
+  table.
+- On quads, also a plain element failure: the jet root collapses at 0.034 t_p.
+
+**What §41 says about A–D:**
+- **Against (A):** no band narrows with the mesh (q′ 1.1–1.2).
+- **Compatible with (B) or (C):** the peak sits in the outermost layer and grows as that layer moves closer to the
+  surface (depth s/2 from 0.63 to 0.16 µm). But a pure power law would make the half-maximum width scale with s, which
+  is not seen, so (B) and (C) are not separated.
+- **(D):** real and large, but not tied to the edge by this check.
+
+**Net:**
+- The "missing length" was a plausible textbook mechanism plus a dimensional argument, never tested against (B)–(D).
+  The one direct test does not support it.
+- If (B) dominates, the question becomes "stop judging point values at a singular edge": criteria built from finite
+  quantities, as §2(c) already says for the bond law's pointwise thresholds Y > Y′ and p_n > p_E.
+
