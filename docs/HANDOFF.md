@@ -1,4 +1,4 @@
-# Handoff — 2026-11-24: band check intermediate (§41); Peter decides the length path (cold-spray track; current state only)
+# Handoff — 2026-11-24: length path stopped (Peter); Track B paused; next direction open (cold-spray track; current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -11,15 +11,13 @@ Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-proce
 
 ## First action
 
-§41 (band check) is merged: **intermediate** by the frozen rule, recomputed in the cloud. There is no mesh-scale band;
-the edge drift sits in a surface-layer ε_p spike, and numerical dissipation is the largest mesh drift (note §12). WSL A
-has no open task. **Peter decides** (note §12):
-- (a) stop the length path on TLSPH;
-- (b) a spec on the surface-layer spike (face layer or contact?);
-- (c) build anyway.
+**The length path is stopped** (Peter, DECISIONS 2026-11-24), after §40 (no zero-code length), §41 (band check
+intermediate, no band narrowing with the mesh) and note §13 (the premise was never tested against a singular edge
+field, a surface-layer error or numerical dissipation). No WSL task is open. **Peter chooses the next direction** from
+"Open for Peter" below. Draft nothing before that.
 
-He also decides whether WSL A keeps its 5.5 GB per-frame arrays (`~/oc_runs/hvi_band`). Record his choice in
-DECISIONS. Draft nothing before that.
+Lesson to carry: point values at the contact edge and the bond boundary may be singular (problem-formalism §2(c)), so
+any new criterion should be built from finite quantities (energies, averages over a fixed area).
 
 ## State in brief
 
@@ -36,12 +34,12 @@ DECISIONS. Draft nothing before that.
   - **CS-23 refuted** (§39, DECISIONS 2026-11-23): sticking bonds on the CS-22b set-up; all 9 runs valid; dR moves
     toward 0 from R/16 to R/32 at every δ_c (3× also |dR32| < 0.01). Sticking changed tear/hold as predicted (3× tears,
     10× mostly holds, 30× holds); tears mixed mode. Caveat: CS-22b's 30× pass depends on the free-slip law.
-- **Length-scale idea (not a hunch), the current focus (Peter 2026-11-23):** length-scale-note-2026-11-20.md (§11:
-  no host carries ℓ in σ_y and T (§40); a gradient band is about 4.7ℓ wide, so "ℓ = grain size" and "band = grain
-  size" are different models; §11a: host preference withdrawn, Ge downgraded, objections ranked; §12: band check intermediate, no mesh-scale band,
-  the drift is a surface-layer spike). Softening is active from the first judged frame on quads (§33); TLSPH heats and
-  softens without q heating (§34). Step 0 ("a missing length causes the edge failure") leans against on TLSPH, not
-  refuted; the softening-off test is on hold.
+- **Length-scale path: STOPPED 2026-11-24 (Peter; DECISIONS 2026-11-24).** length-scale-note-2026-11-20.md §11–§14:
+  - no host carries ℓ in σ_y and T (§40);
+  - the band check was intermediate, with no band narrowing with the mesh; the edge drift is a surface-layer ε_p
+    spike, and numerical dissipation is the largest drift (§41);
+  - the premise was never tested against a singular edge field, a surface-layer error or numerical dissipation (§13);
+  - step 0 leans against on TLSPH, not refuted; the softening-off test is shelved.
 - **Problem as equations:** problem-formalism.md, every equation checked against the fork source (§35); points
   (c) crack-tip bond boundary, (e) identifiability, (f) bonds weakest at the hot edge, (g) slip vs ASI.
 
@@ -58,10 +56,9 @@ DECISIONS. Draft nothing before that.
 1. **Track B is paused** (DECISIONS 2026-11-23); it resumes only by your decision.
 2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
 3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
-4. Physical length scale (the focus): after the band check, options (a)–(c) of the note §12 (see First action).
-   Chakrabarty & Song 2020 needs your download if the path continues.
-5. CS-20: no unseen ring-map source; candidate for parking.
-6. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
+4. CS-20: no unseen ring-map source; candidate for parking.
+5. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
+6. WSL A's band-check per-frame arrays (`~/oc_runs/hvi_band`, 5.5 GB): keep or delete.
 
 ## Hunch budget
 

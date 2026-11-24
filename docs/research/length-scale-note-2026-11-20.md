@@ -1,6 +1,7 @@
 # A physically chosen length for the contact edge (note, 2026-11-20)
 
-Status: **note, not a hunch, not counted.** Written from a chat with Peter on 2026-11-20, while CS-22b runs on
+Status: **stopped 2026-11-24 (Peter; DECISIONS 2026-11-24, "Length path stopped"); see §14.** Note, not a hunch, not
+counted. Written from a chat with Peter on 2026-11-20, while CS-22b runs on
 WSL A. Labels: variant of nonlocal and strain-gradient plasticity; never "novel".
 
 **Corrected 2026-11-20 (Peter): one fixed ℓ; no nm resolution.** The evolving ℓ and the "two-zone reading" of an
@@ -341,4 +342,9 @@ Modeller: (b) if the edge is to be pursued at all, else (a).
   The one direct test does not support it.
 - If (B) dominates, the question becomes "stop judging point values at a singular edge": criteria built from finite
   quantities, as §2(c) already says for the bond law's pointwise thresholds Y > Y′ and p_n > p_E.
+
+## 14. Stopped (2026-11-24)
+
+Peter chose option (a) after §41 and §13: the length path is stopped (DECISIONS 2026-11-24). Step 0 leans against on
+TLSPH and is not refuted. The sections above stay as written.
 
