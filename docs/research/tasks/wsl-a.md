@@ -5,6 +5,48 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-24-a: band check (open; post-processing only)
+
+**Basis:** Peter, chat 2026-11-24 ("Freeze"). **Spec, rule and prediction, frozen:**
+[../band-check-2026-11-24.md](../band-check-2026-11-24.md), frozen in the commit that adds this task. Cite it in
+every row. `kind = check`.
+
+**No run, no build:** read and post-process existing files only. Which files:
+- the §30 off runs AL08off, AL16off, AL32off (engine `27e53d5f0`);
+- for the reported bonded item, the CS-23 30× runs (engine `38639859c`, §39).
+
+If anything more is needed (a rerun, a new output, another deck), stop and report.
+
+1. **Q1 first**, before any profile is computed (spec §Q1): ε_p and positions per particle in every frame with
+   stable ids on all three meshes; the frame times and the frame nearest t = t_p; per-particle volume; the same for
+   the CS-23 30× runs.
+   - If Q1 fails for an off run: stop and report "not determinable from existing files".
+   - If it fails only for the CS-23 runs: drop their reported item and continue.
+2. **Fix the definitions in the script's docstring before any profile number is read:**
+   - the station membership (0.75 s of the reference line, azimuth 45°);
+   - depth d in the reference configuration;
+   - ε_bg (median at 3 ≤ d ≤ 5 µm);
+   - ε_peak;
+   - w_½ with linear interpolation;
+   - the qualifying test;
+   - q and q′.
+
+   Commit the script before running it on the data.
+3. **Judged item:** per station and mesh, at the frame nearest t_p: ε_bg, ε_peak, w_½ (µm and in spacings), the
+   qualifying test, q and q′, and the station class (mesh-scale / resolved / unclear). Then the verdict line against
+   the spec's rule.
+4. **Reported items, as the spec lists them:**
+   - the sink table at t_end from `tl_diag.csv` and the interface file (KE of particle and substrate, E_int, W_hg,
+     W_visc, W_d, E_c, each with its R/8 → R/32 change against ΔKE);
+   - zone and rest plastic work, trapezoid and left-point;
+   - last-frame widths;
+   - current-configuration widths;
+   - non-qualifying stations;
+   - the peak's layer index;
+   - the CS-23 30× widths.
+5. Rows `results/band_check_*.csv`; the next free section of opencourant-verification.md (§41), with the verdict
+   line and the prediction against the outcome. Then stop and report.
+
 ## Task 2026-11-23-c: what `/NONLOCAL/MAT` regularises, and what a length for our decks would cost (closed: §40 damage-only, no zero-code length; merged)
 
 **Basis:** Peter, chat 2026-11-23 (DECISIONS 2026-11-23, "Focus on the physical length scale; Track B paused").

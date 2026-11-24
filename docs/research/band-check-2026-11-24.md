@@ -1,4 +1,7 @@
-# Band check: is the TLSPH edge strain localised at the mesh scale? (spec and prediction, DRAFT — not frozen)
+# Band check: is the TLSPH edge strain localised at the mesh scale? (spec and prediction, frozen)
+
+Frozen 2026-11-24, approved by Peter ("Freeze"), as drafted in c7e7b58, before any band number was read. WSL A task
+2026-11-24-a.
 
 Drafted 2026-11-24 (cloud, modeller) at Peter's request (chat 2026-11-24; length-scale-note-2026-11-20.md §11a,
 "cheaper first look"). `kind = check`; no hunch, no budget. Existing files only: **no run, no build.**
