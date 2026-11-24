@@ -1,20 +1,28 @@
-# Handoff — 2026-11-24: length path stopped (Peter); Track B paused; next direction open (cold-spray track; current state only)
+# Handoff — 2026-11-24: orientation written; one question for Peter (pause cold spray / reduced level / review) (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md and continue the cold-spray track." Then read, in order:
-1. the top of docs/STATUS.md (entries since 2026-11-18; older ones in docs/status-archive.md);
-2. **docs/research/solver-facts.md** (what the tools can and cannot do; check every spec against it);
+**Start the next session with:** "Read docs/HANDOFF.md and the orientation, then ask me the question." Then read, in
+order:
+1. **docs/research/coldspray-orientation-2026-11-24.md** (one page: where the track sits, what holds, what local means
+   cannot answer, what is open, the one question);
+2. the top of docs/STATUS.md;
 3. the DECISIONS index (`python scripts/decisions_index.py`).
+
+Read solver-facts.md only if the answer is option 2 or 3.
 
 Branch: `claude/exciting-fermi-qy077p`. Procedure: docs/research/coldspray-procedure.md.
 
 ## First action
 
-**The length path is stopped** (Peter, DECISIONS 2026-11-24), after §40 (no zero-code length), §41 (band check
-intermediate, no band narrowing with the mesh) and note §13 (the premise was never tested against a singular edge
-field, a surface-layer error or numerical dissipation). No WSL task is open. **Peter chooses the next direction** from
-"Open for Peter" below. Draft nothing before that.
+Put the orientation's one question to Peter. Record his answer in DECISIONS, and only then act.
+1. **Pause the cold-spray track** and resume schemeforge Phase 6 at step 6 (docs/plans/2026-10-30-phase6.md: blind
+   audit, Target D, tag `contact-v1.0`; about one session to Gate 6).
+2. **Continue cold spray at the reduced level** (R2 or R3, finite quantities only).
+3. **A review session whose allowed answers include "stop"** (fresh reviewers, the orientation only).
+
+Modeller's recommendation: 1, with 3 kept as the way back; 3 first if Peter is unsure whether a local path is left.
+Also confirm the housekeeping defaults (orientation, "Housekeeping").
 
 Lesson to carry: point values at the contact edge and the bond boundary may be singular (problem-formalism §2(c)), so
 any new criterion should be built from finite quantities (energies, averages over a fixed area).
@@ -53,12 +61,12 @@ any new criterion should be built from finite quantities (energies, averages ove
 
 ## Open for Peter
 
-1. **Track B is paused** (DECISIONS 2026-11-23); it resumes only by your decision.
-2. Friction for unbonded contact (the off branch is frictionless; physics leans toward sticking friction at GPa).
-3. Mohanty 2022 alone (oxide-thickness series in Al, pre-registered post hoc) or not; R2 and R3.
-4. CS-20: no unseen ring-map source; candidate for parking.
-5. The hot-edge choice in cs12: σ_B ∝ σ_y(T) makes bonds weakest where they form (problem-formalism.md §2(f)).
-6. WSL A's band-check per-frame arrays (`~/oc_runs/hvi_band`, 5.5 GB): keep or delete.
+1. **The one question** (First action).
+2. **Housekeeping defaults to confirm** (orientation):
+   - CS-20 parked;
+   - Mohanty 2022 a footnote to R1;
+   - WSL A's band-check arrays (`~/oc_runs/hvi_band`, 5.5 GB) may be deleted;
+   - friction for unbonded contact and the hot-edge choice filed under Track B (paused) as its design questions.
 
 ## Hunch budget
 
