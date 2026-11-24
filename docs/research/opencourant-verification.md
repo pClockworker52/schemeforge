@@ -3818,3 +3818,142 @@ TLSPH `/PROP/TYPE34`).
 **Reading:** for LAW2 and LAW4, `/NONLOCAL/MAT` is a damage regulariser: it smooths the plastic strain fed to failure
 models, on 3D solids and shells only. It does not touch their σ_y or T, and it is silently inactive on our two hosts. **So there is no zero-code
 ℓ test** on the §25 or §30 deck. A test of step 0 at fixed ℓ needs new engine code, sized above.
+
+## 41. Band check: intermediate; two stations qualify, one resolved, one unclear, none mesh-scale (task 2026-11-24-a)
+
+Spec, rule and prediction: [band-check-2026-11-24.md](band-check-2026-11-24.md), frozen in 5a96524; every row cites
+it; `kind = check`. **Post-processing of existing files only: no run, no build.**
+- Runs: the §30 off runs AL08off, AL16off and AL32off (engine `27e53d5f0`); for the reported bonded item, the CS-23 30×
+  runs (engine `38639859c`, §39).
+- Fork branch `cs12`, script `hvi/scripts/band_check.py`:
+  - Q1 part `d5d72ff30`;
+  - definitions fixed in the docstring, and the profile, sink and zone code, `c462cdb62`; both before any profile
+    number was read;
+  - rows `5fb540171`.
+- Rows `opencourant/results/band_check_{q1,geometry,profiles,ratios,verdict,sinks,zone}.csv`.
+
+**Q1: passes on all six runs** (`band_check_q1.csv`).
+- Every animation frame was converted (anim_to_vtk of the run's engine root) and read: 50 / 51 / 51 frames at R/8 /
+  R/16 / R/32.
+- Each frame holds positions, `SPHELEM_Plastic_Strain`, `ELEMENT_ID` and `PART_ID`. The cells are one vertex per point,
+  in point order. Ids and order are identical to frame 0 in every frame.
+- Frames are 1.333 ns apart, from t = 0 to 2.77–2.83 t_p.
+- **Judged frame A019, t = 24.0 ns = 1.02 t_p,** on every run.
+- Per-particle volume: the lattice value s³. The quarter sphere π R³/3 holds 534 / 4 269 particles at R/8 / R/16
+  (0.4 % / 0.5 % below π R³/3 / s³). `SPHELEM_Diameter` is a constant 1.1225 s and is not used.
+- Contact-list uids equal `ELEMENT_ID`.
+- Geometry check (`band_check_geometry.csv`):
+  - The outer shell fits R − s/2 to ≤ 1.2·10⁻⁵ µm rms.
+  - Layer 1 sits at depth s/2 on both bodies.
+  - The reference surfaces touch (gap ≤ 0.04 µm).
+  - Every station has particles at 3–5 µm depth (2–24 of them).
+
+**Judged item (off runs, frame nearest t_p).** Only S050 and S075 qualify: ε_peak − ε_bg ≥ 0.3 on all three meshes.
+The other four stations fail the contrast test on R/8 (0.11–0.25); P30 and P70 also fail on R/16 (0.29997, 0.275).
+
+| Station | mesh | ε_bg | ε_peak | w_½ (µm) | w_½ (spacings) | class |
+|---|---|---|---|---|---|---|
+| S050 (r₀ = 0.5 R) | R/8 | 0.387 | 0.762 | 1.022 | 0.82 | |
+| | R/16 | 0.402 | 1.326 | 0.737 | 1.18 | |
+| | R/32 | 0.394 | 2.126 | 0.632 | 2.02 | q = 1.62, q′ = 1.17: **unclear** |
+| S075 (r₀ = 0.75 R) | R/8 | 0.403 | 0.874 | 1.216 | 0.97 | |
+| | R/16 | 0.388 | 1.504 | 0.977 | 1.56 | |
+| | R/32 | 0.383 | 2.120 | 0.877 | 2.81 | q = 1.39, q′ = 1.11: **resolved** |
+
+**Verdict line (frozen rule): intermediate.** Two stations qualify: one resolved, one unclear, none mesh-scale. Neither
+class holds a majority. S050 misses "resolved" only on q (1.62 against ≤ 1.5); its q′ = 1.17 meets the resolved bound.
+
+**Reading (observation, not a rule change):**
+- At both qualifying stations the half-maximum width in µm shrinks only mildly, 1.0 → 0.6 µm and 1.2 → 0.9 µm. It
+  grows from about 1 to 2–3 spacings. Over the same refinement the peak strain rises from 0.76–0.87 to 2.1 and ε_bg
+  stays at 0.38–0.40. The peak grows much more than the width shrinks (S050 is still "unclear" by the rule).
+- At R/8 the width is below one spacing at both stations: only layer 1 is above half-maximum, and the width is the
+  interpolation distance to layer 2. So R/8 cannot resolve a sub-micron band, and q leans on that mesh.
+- The width at R/32 (0.63–0.88 µm) is close to the spec's detection limit of about 2 spacings (0.6 µm). A narrower
+  physical band would not be seen.
+- The peak is the outermost reference layer (depth s/2) on every station and mesh. The spec does not judge this: with
+  frictionless contact it does not separate a surface band from TLSPH's face-layer deficit.
+- **Surface-end convention (fixed before the data, in the script's docstring):** w_½ is measured between particles
+  only, so the strip from the surface to layer 1 (s/2: 0.63 / 0.31 / 0.16 µm) is never counted. This lowers w_½ most
+  on R/8. Sensitivity (review, not a rule change): with layer 1 extended to d = 0, S050 gets q = 2.09, q′ = 1.33 and
+  S075 q = 1.78, q′ = 1.25. Both are then unclear, and the verdict stays intermediate. **S075's "resolved" depends on
+  this convention.**
+- **Ties:** a station can hold several particles at one depth (S050 at R/8: 3 per layer; S075 at R/32: 4). The
+  interpolant then follows input order. With a per-depth mean, S050 at R/8 gives 1.066 µm instead of 1.022 (q = 1.69);
+  no class changes.
+
+**Reported, not judged:**
+- **Last frame (2.8 t_p):** the same classes.
+  - S050: w_½ 1.041 / 0.754 / 0.651 µm, ε_peak 0.78 / 1.34 / 2.16; q = 1.60, q′ = 1.16, unclear.
+  - S075: w_½ 1.188 / 0.990 / 0.886 µm, ε_peak 0.89 / 1.51 / 2.14; q = 1.34, q′ = 1.12, resolved.
+- **Current-configuration widths** (d_cur = distance to the nearest current layer-1 particle centre of the body, so
+  layer 1 is at d_cur = 0, not s/2 as in the reference depth):
+  - S050: 0.75 / 0.52 / 0.41 µm, so q = 1.81, q′ = 1.26;
+  - S075: 1.11 / 0.76 / 0.54 µm, so q = 2.06, q′ = 1.40;
+  - both "unclear" by the judged thresholds. The current widths shrink more with refinement than the reference ones;
+    the cause (for example compression of the surface layers) was not checked.
+- **Non-qualifying stations** (judged frame; contrast below 0.3 on R/8):
+
+  | Station | w_½ R/8 / R/16 / R/32 (µm) | q | q′ | lowest contrast |
+  |---|---|---|---|---|
+  | P30 | 2.00 / 0.76 / 0.53 | 3.79 | 1.44 | 0.11 |
+  | P50 | 0.73 / 1.41 / 0.86 | 0.85 | 1.64 | 0.20 |
+  | P70 | 0.82 / 1.72 / 1.00 | 0.82 | 1.72 | 0.25 |
+  | S025 | 1.24 / 1.42 / 0.87 | 1.42 | 1.63 | 0.24 |
+
+  Only P30 would pass the mesh-scale bound on q; none would on both ratios.
+- **ε_bg** per station: particle 0.62–0.80, substrate 0.38–0.40 (`band_check_profiles.csv`).
+- **Peak layer.** The spec defines layer 1 as the particles in the interface file's contact list. The script also
+  gives a depth index, 1 + round((d − s/2)/s), a deviation stated in its docstring. Both readings:
+  - by depth index, the peak is in layer 1 on every station and mesh (judged and last frame);
+  - by the spec's definition, the peak particle is in the contact list at the judged frame only for P30 and P50 on R/8
+    (2 of 18 rows). At the last frame, none is (the particle has rebounded).
+- **Bonded runs (CS-23 30×):** the same two stations qualify.
+  - S050: w_½ 1.069 / 0.765 / 0.597 µm; q = 1.79, q′ = 1.28, unclear.
+  - S075: w_½ 1.205 / 1.009 / 0.882 µm; q = 1.37, q′ = 1.14, resolved.
+  - At these two stations a sticking interface does not localise differently. At the non-qualifying particle stations
+    it does: P50 has q = 2.15 bonded against 0.85 off (w_½ at R/8 1.64 against 0.73 µm).
+- **Sink table at t_end** (`band_check_sinks.csv`; quarter model, nJ; signs as `tl_diag.csv` writes them):
+
+  | Term | R/8 | R/16 | R/32 | change R/8 → R/32 | change / ΔKE |
+  |---|---|---|---|---|---|
+  | KE particle | 4.56 | 2.34 | 1.90 | −2.66 (ΔKE) | 1 |
+  | KE substrate | 2.94 | 2.96 | 2.68 | −0.26 | 0.10 |
+  | E_int particle | 215.4 | 214.9 | 218.5 | +3.0 | −1.13 |
+  | E_int substrate | 224.6 | 240.9 | 255.5 | +31.0 | −11.7 |
+  | W_hg particle | −2.74 | −6.11 | −4.19 | −1.45 | 0.55 |
+  | W_hg substrate | −29.7 | −18.5 | −11.9 | +17.8 | −6.7 |
+  | W_visc particle | −20.2 | −13.7 | −9.06 | +11.2 | −4.2 |
+  | W_visc substrate | −13.3 | −10.8 | −8.26 | +5.1 | −1.9 |
+  | W_d | 4.54 | 3.57 | 2.67 | −1.87 | 0.70 |
+  | E_c | 0 | 0 | 0 | 0 | 0 |
+
+  - The R/8 tl_diag ends at 66.33 ns, the others at 66.67 ns.
+  - ΔKE = KE(R/32) − KE(R/8) = −2.66 nJ; the ratio column divides by this signed value (the spec's 2.8 nJ came from
+    e(off)²).
+  - The R/8 interface file ends at 66.0 ns; its E_c and W_d there equal tl_diag's at 66.33 ns.
+  - Several terms change by 2–12 × ΔKE, so the totals cannot attribute the rebound change to one region, as the spec
+    says. The largest are the substrate's internal energy and hourglass work.
+- **Zone plastic work** (`band_check_zone.csv`; upper bounds, σ_y at T_lb; trapezoid, left-point in brackets):
+  - W_zone = 110.4 (108.4) / 125.3 (123.0) / 143.7 (141.5) nJ;
+  - W_rest = 334.2 (328.7) / 331.5 (326.6) / 327.6 (323.2) nJ;
+  - change R/8 → R/32: zone +33.3 nJ, rest −6.6 nJ.
+  - The zone's growth is 12.5 × ΔKE. The particle part changes little (71.1 → 76.6 nJ); the substrate part grows
+    (39.3 → 67.2 nJ).
+  - No step of ε_p between frames is negative. No attribution is claimed.
+
+**Against the prediction (spec):**
+- necessary condition met 0.65: **no**;
+- intermediate 0.20: **yes**;
+- step 0 fails on TLSPH 0.10: no;
+- not determinable 0.05: no.
+- The outcome had the second-highest odds. The Brier-type miss is on the 0.65.
+
+**What follows (the spec's line for "intermediate"): report and decide** (Peter). For the decision:
+- no qualifying station is mesh-scale;
+- the width is 0.6–0.9 µm at R/32, close to that mesh's detection limit, while the peak keeps rising; S050 still
+  shrinks (0.74 → 0.63 µm), and S075's class depends on the surface-end convention;
+- the rebound change is far smaller than the drift of the substrate sinks.
+
+**Disk:** the per-frame arrays (`~/oc_runs/hvi_band`, 5.5 GB) are kept until Peter decides. They can be deleted from
+the listed directories.

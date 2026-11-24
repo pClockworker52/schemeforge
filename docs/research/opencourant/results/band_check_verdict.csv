@@ -1,0 +1,5 @@
+kind,spec,case,at,qualifying,n_mesh-scale,n_resolved,n_unclear,verdict
+check,schemeforge docs/research/band-check-2026-11-24.md @ 5a96524,off,judged,2,0,1,1,intermediate
+check,schemeforge docs/research/band-check-2026-11-24.md @ 5a96524,off,last,2,0,1,1,reported: intermediate
+check,schemeforge docs/research/band-check-2026-11-24.md @ 5a96524,cs23,judged,2,0,1,1,reported: intermediate
+check,schemeforge docs/research/band-check-2026-11-24.md @ 5a96524,cs23,last,2,0,1,1,reported: intermediate
