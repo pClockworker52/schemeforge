@@ -16,13 +16,13 @@ Peter decided (DECISIONS 2026-11-25), and the cloud has done its part:
 - **γ-sweep tooling:** scripts/contact_gamma_sweep.py, validated on dev (r-20261125-073846-e9f0).
 - **Target D draft** updated with D3 on HF max_step and D8 for C4 (docs/plans/2026-11-24-target-d-draft.md).
 
-Waiting on Peter's WSL runs:
-1. **promo of the plain zoo and the 16-run sweep.** With them, fill the ⟨…⟩ references in the draft and check:
-   - that no zoo point meets D1–D8 together;
-   - that no threshold sits inside the error floor.
-   Then docs/targets/D.md in its own commit, after Peter accepts the numbers.
-2. **the breaker run on the zoo.** Review its quarantine ids. Peter accepts cases with `sforge case accept`, which
-   bumps the judge, so a zoo check follows.
+Done since:
+- the promo zoo and the 16-run sweep (none of 20 zoo points meets D1–D8; table in the Target D draft);
+- Peter accepted D1–D8 (DECISIONS 2026-11-25 "Target D thresholds accepted").
+
+Waiting on Peter: **the breaker run on the zoo** (WSL, contact_promo_wsl.md §3). Review its quarantine ids;
+Peter accepts cases with `sforge case accept`, which bumps the judge, so the promo and sweep are rerun.
+Then write docs/targets/D.md from the draft, in its own commit, on the final judge version.
 
 Then the tag contact-v1.0 (Gate 6, Peter), then step 7. Gate 6 report: docs/reports/2026-11-25-gate6.md.
 
