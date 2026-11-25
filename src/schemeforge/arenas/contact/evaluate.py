@@ -35,7 +35,8 @@ ZOO_COLUMNS = {"dev": [("C0a-g3", "leak_pre"), ("C0a-g3", "gap_res"), ("C0a-g5",
                "smoke": [("smoke-C0a", "leak_pre"), ("smoke-C0a", "gap_res"), ("smoke-C0a", "force_err")],
                # promo: family medians
                "promo": [("GF", "leak_pre"), ("GF", "gap_res"), ("SF", "shear_parasitic"), ("HF", "a_err"),
-                         ("HF", "p0_err"), ("HF", "converged"), ("HX", "max_step"), ("HX", "mesh_sens_a_err"),
+                         ("HF", "p0_err"), ("HF", "converged"), ("HF", "max_step"), ("HX", "max_step"),
+                         ("HX", "mesh_sens_a_err"),
                          ("SL", "shear_parasitic"), ("SL", "converged")]}
 HIGHER_IS_BETTER = {"converged", "max_step"}
 MAX_STEP_TRIALS = (1, 2, 3, 4, 6, 8, 12)  # load steps tried, fewest first
@@ -184,9 +185,9 @@ def aggregate(instances: dict[str, dict]) -> dict[str, dict]:
 
 def evaluate_promo(fn: Callable, report: dict[str, Any], t_start: float, seed: str | None = None,
                    sizes: dict[str, int] | None = None) -> dict[str, Any]:
-    """The held-out suite: every instance of GF, SF, HF; for the HX instance the promo-only metrics mesh_sens and
-    max_step. Instances (with their parameters) go into report["instances"], which the parent process strips and
-    stores outside the repo; the report keeps family aggregates only."""
+    """The held-out suite: every instance of GF, SF, HF, HX and SL; max_step on every HF and HX instance, and
+    mesh_sens on the HX instance. Instances (with their parameters) go into report["instances"], which the parent
+    process strips and stores outside the repo; the report keeps family aggregates only."""
     from dataclasses import asdict
 
     from .families import promo_suite, read_seed, seed_fingerprint
@@ -199,6 +200,9 @@ def evaluate_promo(fn: Callable, report: dict[str, Any], t_start: float, seed: s
             m, v = run_case(case, fn)
             if m.get("converged") == 1.0:
                 m = {**m, **hertz_mesh_sensitivity(fn, case), "max_step": max_step(fn, case)}
+        elif fam == "HF":  # robustness on every HF instance, not only on HX (DECISIONS 2026-11-25)
+            m, v = run_case(case, fn)
+            m = {**m, "max_step": max_step(fn, case) if m.get("converged") == 1.0 else 0.0}
         else:
             m, v = run_case(case, fn)
         instances[case.id] = {"family": fam, "metrics": {**m, "seconds": time.perf_counter() - t0},

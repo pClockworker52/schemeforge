@@ -171,7 +171,13 @@ construction: felupe.constitution.jax maps ψ over cells and quadrature points, 
 | GF gap closure | 10 | gap 0.03–0.2, height 0.6–1.5, width 0.1–0.4, push = gap + 2–8 % of height, 8 steps, 2–4 medium rows, E 0.1–10 (log), ν 0.15–0.45, γ 1e-6–1e-3 (log), distortion 0–0.35 |
 | SF simple shear | 10 | shear 0.1–3, E, ν, γ as GF |
 | HF Hertz | 6 | R 0.5–2 (log), W = H = R, gap 0.15–0.3 % of R, indentation 0.3–0.5 % of R beyond the gap, 12 steps, 28–36 columns, E, ν as GF, γ 1e-6–1e-5 (log) |
-| HX Hertz | 1 | as HF; adds mesh_sens_* (three meshes) and `max_step` = 1 / fewest of 1, 2, 3, 4, 6, 8, 12 equal steps that converge |
+| HX Hertz | 1 | as HF; adds mesh_sens_* (three meshes) |
+| SL sliding | 4 | C4 (§C4): HF geometry ranges, slide 0.2–0.9 % of R, 14–18 columns per half (contact-v0.11) |
+
+`max_step` = 1 / the fewest of 1, 2, 3, 4, 6, 8, 12 equal load steps in which the instance converges (0 if none
+does). It is measured on every HF instance and on HX (since contact-v0.12; before, on HX only; DECISIONS
+2026-11-25). A medium that converges in one step costs one extra run per instance; one that needs 12 steps costs up
+to seven.
 
 Promo report: family aggregates (n, pass rate; per metric median, mean, p90, worst; `converged` and `max_step` are
 higher-is-better), seed fingerprint; instances are stripped by the parent and stored outside the repo. A test-seed

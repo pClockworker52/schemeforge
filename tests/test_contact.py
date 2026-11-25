@@ -254,3 +254,14 @@ def test_classical_sliding_is_frictionless_and_the_medium_is_not() -> None:
     assert r["converged"] == 1 and abs(r["shear_parasitic"]) < 1e-8 and abs(r["fn_rise"]) < 1e-6
     m, v = ev.run_case(SlidingCase("f", gamma=1e-6), zoo.load("medium", "faltus2026"))
     assert not v and m["converged"] == 1.0 and m["shear_parasitic"] > 0.01 and m["fn_rise"] > 0.0
+
+
+def test_promo_measures_max_step_on_every_hertz_instance() -> None:
+    """DECISIONS 2026-11-25: robustness (max_step) on every HF instance, not only on the single HX instance."""
+    import time
+
+    report = {"slot": "medium", "suite": "promo", "violations": [], "cases": {}, "metamorphic": {}}
+    r = ev.evaluate_promo(zoo.load("medium", "faltus2026"), report, time.perf_counter(),
+                          seed="test-seed-not-the-real-one-0123456789", sizes={"HF": 1})
+    assert r["status"] == "ok" and r["families"]["HF"]["max_step"]["n"] == 1
+    assert 0.0 < r["families"]["HF"]["max_step"]["median"] <= 1.0
