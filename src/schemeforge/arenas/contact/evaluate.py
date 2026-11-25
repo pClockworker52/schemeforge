@@ -5,8 +5,9 @@ evaluate(fn, slot, suite, extra_cases) -> report (JSON-serializable dict), the s
     violations   hard-constraint violations (any -> rejected)
     cases        {case_id: {metric: value, "seconds": wall time}}
     metamorphic  {} (none yet)
-Suites: smoke (one C0a), dev (C0a at three medium stiffnesses, C0b at two shears, C2 Hertz at two, C1 patch test),
-promo (held-out families GF, SF, HF and HX from families.py; instances stored outside the repo by the parent)
+Suites: smoke (one C0a), dev (C0a at three medium stiffnesses, C0b at two shears, C2 Hertz at two, C1 patch test,
+C4 sliding), promo (held-out families GF, SF, HF, HX and SL from families.py; instances stored outside the repo by the
+parent)
 (docs/plans/2026-10-30-phase6.md).
 """
 
@@ -19,7 +20,7 @@ from typing import Any
 import numpy as np
 
 from . import constraints, reference
-from .cases import Case, GapClosureCase, HertzCase, SimpleShearCase, dev_suite, smoke_suite
+from .cases import Case, GapClosureCase, HertzCase, SimpleShearCase, SlidingCase, dev_suite, smoke_suite
 from .metrics import edge_traction
 
 # slot -> hard-constraint checker. The solver wraps the candidate itself (solve.medium_material).
@@ -30,11 +31,12 @@ SUITES = ("smoke", "dev", "promo")
 ZOO_COLUMNS = {"dev": [("C0a-g3", "leak_pre"), ("C0a-g3", "gap_res"), ("C0a-g5", "leak_pre"), ("C0a-g5", "gap_res"),
                        ("C0a-g6", "gap_res"), ("C0b-s2", "shear_parasitic"), ("C2-g5", "a_err"),
                        ("C2-g5", "p0_err"), ("C2-g6", "a_err"), ("C2-g6", "leak_out"), ("C2-g6", "newton_iters"),
-                       ("C1", "pressure_spread")],
+                       ("C1", "pressure_spread"), ("C4-g6", "shear_parasitic")],
                "smoke": [("smoke-C0a", "leak_pre"), ("smoke-C0a", "gap_res"), ("smoke-C0a", "force_err")],
                # promo: family medians
                "promo": [("GF", "leak_pre"), ("GF", "gap_res"), ("SF", "shear_parasitic"), ("HF", "a_err"),
-                         ("HF", "p0_err"), ("HF", "converged"), ("HX", "max_step"), ("HX", "mesh_sens_a_err")]}
+                         ("HF", "p0_err"), ("HF", "converged"), ("HX", "max_step"), ("HX", "mesh_sens_a_err"),
+                         ("SL", "shear_parasitic"), ("SL", "converged")]}
 HIGHER_IS_BETTER = {"converged", "max_step"}
 MAX_STEP_TRIALS = (1, 2, 3, 4, 6, 8, 12)  # load steps tried, fewest first
 
@@ -97,6 +99,19 @@ def hertz_metrics(case: HertzCase, res) -> tuple[dict[str, float], list[str]]:
     return m, v
 
 
+def sliding_metrics(case: SlidingCase, res) -> tuple[dict[str, float], list[str]]:
+    """C4 against ideal frictionless contact (Ft = 0). shear_parasitic: the tangential force needed to slide, in the
+    slide direction, over the normal force, at the end of the slide (positive: the medium resists sliding; PLAN §14.4).
+    fn_rise: normal force at the end of the slide over the normal force before it, minus 1 (ploughing of the medium
+    ahead of the contact; 0 for classical frictionless contact on a flat)."""
+    fn_press = float(res.fn[res.n_press - 1])
+    m = {"converged": 1.0, "shear_parasitic": float(res.ft[-1]) / float(res.fn[-1]),
+         "fn_rise": float(res.fn[-1]) / fn_press - 1.0, "load": float(res.fn[-1]),
+         "newton_iters": float(sum(res.newton_iters)), "min_J_medium": res.min_j_medium}
+    v = [] if res.min_j_medium > 0.0 else ["medium inverted (min J <= 0)"]
+    return m, v
+
+
 MESH_SENS_SIZES = ((24, 12), (32, 16), (48, 20))  # (nx, ny) coarse, dev, fine; spec §mesh_sens
 MESH_SENS_METRICS = ("a_err", "p0_err", "p_l2", "leak_out")
 
@@ -128,6 +143,8 @@ def run_case(case: Case, psi: Callable) -> tuple[dict[str, float], list[str]]:
             return simple_shear_metrics(case, psi)
         if isinstance(case, HertzCase):
             return hertz_metrics(case, solve.hertz(psi, case))
+        if isinstance(case, SlidingCase):
+            return sliding_metrics(case, solve.sliding(psi, case))
         raise TypeError(type(case).__name__)
     except fem.tools.NewtonConvergenceError:
         return {"converged": 0.0}, []

@@ -15,7 +15,7 @@ import felupe.constitution.jax as fjax  # noqa: E402
 import numpy as np  # noqa: E402
 from felupe.tools._newton import check as _felupe_check  # noqa: E402  (felupe 11.3 pinned)
 
-from .cases import GapClosureCase, HertzCase  # noqa: E402
+from .cases import GapClosureCase, HertzCase, SlidingCase  # noqa: E402
 from .metrics import edge_traction  # noqa: E402
 from .reference import lame  # noqa: E402
 
@@ -189,7 +189,7 @@ class HertzResult:
     min_j_medium: float
 
 
-def _curved_block(case: HertzCase, y0: Callable, y1: Callable, ny: int, grade: bool) -> fem.Mesh:
+def _curved_block(case: HertzCase | SlidingCase, y0: Callable, y1: Callable, ny: int, grade: bool) -> fem.Mesh:
     """Q2 mesh between curves y0(x) and y1(x) over x in [0, W]: mid-nodes are added in reference space before mapping,
     so edge mid-nodes lie on the curves and stay centred in x (columns: corners W s^2, mids their averages); rows are
     graded towards y0 if `grade`."""
@@ -233,7 +233,7 @@ def _regularization(field, kr: float) -> fem.FormItem:
     return fem.FormItem(bilinearform=bilinearform, linearform=linearform, kwargs={"kr": kr})
 
 
-def _surface(case: HertzCase) -> Callable:
+def _surface(case: HertzCase | SlidingCase) -> Callable:
     return lambda x: case.gap + x**2 / (2.0 * case.R)
 
 
@@ -312,3 +312,104 @@ def hertz_classical(case: HertzCase, multiplier: float = 1e3) -> HertzResult:
     return HertzResult(x=pts[surface, 0][order], f=vec[surface, 1][order],
                        load=-2.0 * float(last["r"][bounds["top"].points, 1].sum()), newton_iters=iters,
                        min_j_medium=1.0)
+
+
+# --- C4 frictionless sliding ---------------------------------------------------------------------------------------
+@dataclass
+class SlidingResult:
+    ft: np.ndarray  # (n,) tangential force applied on the top edge, in the slide direction, per load step [F/L]
+    fn: np.ndarray  # (n,) normal (compressive) force on the top edge per load step [F/L]
+    n_press: int  # number of entries recorded in the press phase (steps + 1, from zero load); the slide steps follow
+    newton_iters: list[int]
+    min_j_medium: float
+
+
+def _full_model(m: fem.Mesh) -> fem.Mesh:
+    """Mirror a half-model quad9 mesh at x = 0 and merge both halves (felupe's Mesh.mirror has no quad9). Node order of
+    the mirrored cells is permuted so that the cells keep a positive orientation."""
+    pts = m.points.copy()
+    pts[:, 0] *= -1.0
+    mirrored = fem.Mesh(pts, m.cells[:, [1, 0, 3, 2, 4, 7, 6, 5, 8]], m.cell_type)
+    return fem.MeshContainer([m, mirrored], merge=True, decimals=10).stack()
+
+
+def _sliding_ramps(case: SlidingCase, top_x: fem.Boundary, top_y: fem.Boundary, items, bounds) -> list[fem.Step]:
+    press = fem.math.linsteps([0.0, 1.0], num=case.steps) * case.push
+    slide = fem.math.linsteps([0.0, 1.0], num=case.slide_steps)[1:] * case.slide
+    return [fem.Step(items=items, ramp={top_y: -press, top_x: 0.0 * press}, boundaries=bounds),
+            fem.Step(items=items, ramp={top_y: -case.push + 0.0 * slide, top_x: slide}, boundaries=bounds)]
+
+
+def sliding(psi: Callable, case: SlidingCase) -> SlidingResult:
+    """Run C4 with the candidate medium: the C2 set-up as a full model (both halves, medium and the judge's fixed
+    regularization as in C2), pressed and then slid. Forces are the reactions on the top edge."""
+    mu, lmbda = lame(case.E, case.nu)
+    surf = _surface(case)
+    body = _full_model(_curved_block(case, surf, lambda x: case.H + 0.0 * x, case.ny, grade=True))
+    medium = _full_model(_curved_block(case, lambda x: 0.0 * x, surf, case.ny_medium, grade=False))
+    container = fem.MeshContainer([body, medium], merge=True, decimals=10)
+    regions = [fem.RegionBiQuadraticQuad(m, hess=True) for m in container.meshes]
+    sub = [fem.FieldPlaneStrain(r, dim=2).as_container() for r in regions]
+    umats = [fem.NeoHookeCompressible(mu=mu, lmbda=lmbda), medium_material(psi, mu, lmbda, case.gamma)]
+    items = [*(fem.SolidBody(u, f) for u, f in zip(umats, sub, strict=True)),
+             _regularization(sub[1], case.kr * lmbda * case.W**2)]
+    region = fem.RegionBiQuadraticQuad(container.stack())
+    field = fem.FieldPlaneStrain(region, dim=2).as_container()
+    pts = region.mesh.points
+    top = np.isclose(pts[:, 1], case.H)
+    bounds = fem.BoundaryDict(
+        flat=fem.Boundary(field[0], fy=0.0),
+        top_x=fem.Boundary(field[0], mask=top, skip=(0, 1)),
+        top_y=fem.Boundary(field[0], mask=top, skip=(1, 0)),
+    )
+    ft, fn, iters = [], [], []
+
+    def record(context, state):
+        iters.append(int(context.substep.iterations or 0))
+        r = np.asarray(context.substep.fun).ravel()[: field[0].values.size].reshape(-1, 2)
+        ft.append(float(r[top, 0].sum()))
+        fn.append(-float(r[top, 1].sum()))
+
+    steps = _sliding_ramps(case, bounds["top_x"], bounds["top_y"], items, bounds)
+    fem.Job(steps, plugins=[record, fem.LinesearchPlugin()]).evaluate(x0=field, **newton_options(case.E, case.H))
+    F = sub[1][0].extract(grad=True, sym=False, add_identity=True)
+    j = np.linalg.det(np.moveaxis(F[:2, :2], (0, 1), (-2, -1)))
+    return SlidingResult(ft=np.asarray(ft), fn=np.asarray(fn), n_press=case.steps + 1, newton_iters=iters,
+                         min_j_medium=float(j.min()))
+
+
+def sliding_classical(case: SlidingCase, multiplier: float = 1e3) -> SlidingResult:
+    """C4 with classical frictionless contact (felupe.ContactRigidPlane on both halves of the cylinder surface), no
+    medium: the reference, Ft = 0 up to the solver tolerance."""
+    mu, lmbda = lame(case.E, case.nu)
+    surf = _surface(case)
+    mesh = _full_model(_curved_block(case, surf, lambda x: case.H + 0.0 * x, case.ny, grade=True))
+    mesh.update(points=np.vstack([mesh.points, [0.0, 0.0]]))  # the plane's centre point, held fixed
+    region = fem.RegionBiQuadraticQuad(mesh)
+    field = fem.FieldPlaneStrain(region, dim=2).as_container()
+    solid = fem.SolidBody(fem.NeoHookeCompressible(mu=mu, lmbda=lmbda), field)
+    pts = mesh.points
+    n = len(pts)
+    surface = np.arange(n - 1)[np.isclose(pts[:-1, 1], surf(pts[:-1, 0]))]
+    contact = fem.ContactRigidPlane(field, points=surface, centerpoint=n - 1, normal=[0.0, 1.0],
+                                    multiplier=multiplier, items=[solid])
+    centre = np.zeros(n, bool)
+    centre[-1] = True
+    top = np.isclose(pts[:, 1], case.H)
+    bounds = fem.BoundaryDict(
+        centre=fem.Boundary(field[0], mask=centre),
+        top_x=fem.Boundary(field[0], mask=top, skip=(0, 1)),
+        top_y=fem.Boundary(field[0], mask=top, skip=(1, 0)),
+    )
+    ft, fn, iters = [], [], []
+
+    def record(context, state):
+        iters.append(int(context.substep.iterations or 0))
+        r = np.asarray(context.substep.fun).ravel()[: field[0].values.size].reshape(-1, 2)
+        ft.append(float(r[top, 0].sum()))
+        fn.append(-float(r[top, 1].sum()))
+
+    steps = _sliding_ramps(case, bounds["top_x"], bounds["top_y"], [solid, contact], bounds)
+    fem.Job(steps, plugins=[record]).evaluate(x0=field, **newton_options(case.E, case.H))
+    return SlidingResult(ft=np.asarray(ft), fn=np.asarray(fn), n_press=case.steps + 1, newton_iters=iters,
+                         min_j_medium=1.0)

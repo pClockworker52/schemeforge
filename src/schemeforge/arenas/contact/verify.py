@@ -14,7 +14,7 @@ from typing import Any
 import numpy as np
 
 from . import constraints, reference, zoo
-from .cases import Case, GapClosureCase, HertzCase, SimpleShearCase, dev_suite
+from .cases import Case, GapClosureCase, HertzCase, SimpleShearCase, SlidingCase, dev_suite
 from .metrics import edge_traction
 
 AUDIT_MEDIUM = "neo_hooke"
@@ -84,6 +84,17 @@ def _hertz_report(case: HertzCase) -> dict[str, Any]:
             **{k: m[k] for k in ("a_err", "p0_err", "p_l2", "leak_out")}}
 
 
+def _sliding_report(case: SlidingCase) -> dict[str, Any]:
+    """The classical frictionless reference of C4 (no medium): per load step the tangential and normal force on the
+    top edge, and the judge's C4 metrics on it (ideal: shear_parasitic = 0, fn_rise = 0)."""
+    from . import evaluate, solve
+
+    res = solve.sliding_classical(case)
+    m, _ = evaluate.sliding_metrics(case, res)
+    return {"kind": "sliding", "id": case.id, "reference": "classical", "ft": res.ft.tolist(), "fn": res.fn.tolist(),
+            "n_press": res.n_press, "shear_parasitic": m["shear_parasitic"], "fn_rise": m["fn_rise"]}
+
+
 def exact_report(case: Case) -> dict[str, Any]:
     """The judge's exact and reference values for one case (spec §Audit). If a Newton solve fails, the report is
     {"kind", "id", "converged": 0} instead of an error (the evaluator also records a failure as a result)."""
@@ -96,8 +107,10 @@ def exact_report(case: Case) -> dict[str, Any]:
             return {**_gap_closure_report(case), "converged": 1}
         if isinstance(case, HertzCase):
             return {**_hertz_report(case), "converged": 1}
+        if isinstance(case, SlidingCase):
+            return {**_sliding_report(case), "converged": 1}
     except fem.tools.NewtonConvergenceError:
-        kind = "gap_closure" if isinstance(case, GapClosureCase) else "hertz"
+        kind = {GapClosureCase: "gap_closure", HertzCase: "hertz", SlidingCase: "sliding"}[type(case)]
         return {"kind": kind, "id": case.id, "converged": 0}
     raise ValueError(f"no exact solution for case {type(case).__name__}")
 
@@ -130,6 +143,16 @@ def check_hertz_floor() -> list[Check]:
     return [Check("C2 classical vs Hertz (dev mesh)", ok, f"a_err {r['a_err']:+.4f}, p0_err {r['p0_err']:+.4f}")]
 
 
+def check_sliding_classical() -> list[Check]:
+    """C4 with classical frictionless contact: no tangential force and no ploughing (spec §C4)."""
+    r = exact_report(SlidingCase("C4-classical"))
+    if r["converged"] != 1:
+        return [Check("C4 classical frictionless", False, "Newton failed")]
+    ok = abs(r["shear_parasitic"]) <= 1e-8 and abs(r["fn_rise"]) <= 1e-6
+    return [Check("C4 classical frictionless", ok,
+                  f"shear_parasitic {r['shear_parasitic']:.1e}, fn_rise {r['fn_rise']:+.1e}")]
+
+
 def check_edge_traction() -> list[Check]:
     """A traction quadratic per element comes back exactly from its consistent nodal forces."""
     x = np.array([0.0, 0.1, 0.2, 0.35, 0.5, 0.6, 0.7])
@@ -152,4 +175,5 @@ def check_zoo_constraints() -> list[Check]:
 
 
 def verify() -> list[Check]:
-    return [*check_edge_traction(), *check_exact_cases(), *check_hertz_floor(), *check_zoo_constraints()]
+    return [*check_edge_traction(), *check_exact_cases(), *check_hertz_floor(), *check_sliding_classical(),
+            *check_zoo_constraints()]

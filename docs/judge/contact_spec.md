@@ -102,6 +102,41 @@ contact, 4 medium rows; mid-nodes are placed on the curves (a chord placement mi
   γ = 1e-6 a_err −3.9 %, p0_err +0.9 %, 87 Newton iterations; γ = 1e-4 a_err +104 % (load carried through the open
   gap); γ = 1e-7 does not converge.
 
+## C4, frictionless sliding (step 6, contact-v0.11)
+
+PLAN §14.2: steady sliding of a body on a flat; frictionless, Ft = 0. The C2 cylinder (same profile, medium, fixed
+regularization kr) as a **full model**: the half mesh is mirrored at x = 0, with nx columns per half. The top edge
+is pushed down by `push` in `steps` equal steps, starting from zero. It is then moved tangentially by `slide` in
++x, in `slide_steps` equal steps, while its vertical displacement is held at −push. The top edge's x and y
+displacements are both prescribed throughout, and the medium's bottom is fixed to the flat. Defaults: R = W = H = 1,
+g = 0.002, push = 0.006, 12 + 5 steps, slide = 0.0045 (about 0.1 a at the default load), 16 columns per half,
+10 body rows, 4 medium rows, E = 1, ν = 0.3.
+
+- **Forces** are the reactions on the top edge, per unit thickness. Ft is the tangential force in the slide
+  direction. Fn is the normal compressive force. Fn_press is Fn at the end of the press, the last of its `steps` + 1
+  recorded states.
+- **Metrics:**
+  - `shear_parasitic` = Ft / Fn at the end of the slide: 0 ideal, and positive when the medium resists sliding.
+    This is a different case from C0b, whose metric of the same name measures the material law alone.
+  - `fn_rise` = Fn(end) / Fn_press − 1: ploughing of the medium ahead of the contact (0 ideal).
+  - `load` = Fn(end), `newton_iters`, `min_J_medium` and `converged`.
+- **Classical reference** (`solve.sliding_classical`): the cylinder alone, both halves, on felupe's frictionless
+  `ContactRigidPlane` (penalty 1e3). Self-check: |shear_parasitic| ≤ 1e-8 and |fn_rise| ≤ 1e-6. Measured: 9e-15 and
+  1.7e-10.
+- **Zoo prototype** (γ = 1e-6, slide 0.1 a, 24 columns per half unless stated). These are scratch measurements, not
+  registered runs; the registered values are in the zoo check of this judge version.
+  - faltus2026: shear_parasitic 6.2 %, fn_rise 1.9 %. 16, 24 and 32 columns per half give 6.217, 6.221 and 6.221 %,
+    so the metric is mesh-stable.
+  - wriggers2013: 4.0 %.
+  - neo_hooke_iv: 1.0 % at slide 0.05 a, and Newton fails at 0.1 a.
+  - neo_hooke: Newton fails at slides of 0.01 a and above, but converges at 0.001 a.
+- **Held-out family SL** (4 instances): the HF geometry ranges, slide 0.2–0.9 % of R (about 0.05–0.2 a),
+  slide_steps 5, 14–18 columns per half, 10 body rows, E, ν and γ as HF.
+- **Limits:**
+  - This is small sliding (a fraction of a). Large sliding (ironing) is C5, not in this phase.
+  - A thin residual layer sheared by the slide is the mechanism. The metric therefore depends on the slide
+    distance, so compare candidates at equal slide only.
+
 ## mesh_sens (step 3)
 
 PLAN §14.4 asks for the spread of the metrics over three mesh densities and over Q1/Q2. **Q1 does not apply with a
@@ -147,7 +182,7 @@ mesh_sens_a_err 0.0014.
 
 - The unconfined C0a (free sides) with an unregularized γ = 1e-6 medium fails Newton: the medium bulges sideways.
   The dev cases are confined; the unconfined case belongs with the regularization slot.
-- C0b measures the material law only; shear in contact geometry follows with C4 (steady sliding, no friction).
+- C0b measures the material law only; C4 measures shear in contact geometry (small frictionless sliding).
 
 ## Audit (step 6): `sforge judge exact --arena contact`
 
@@ -168,6 +203,8 @@ positive. Reported per kind:
 - `simple_shear` (C0b): `mu`, `lmbda`, `P_xy`, `P_yy`, `shear_parasitic` and `normal_parasitic` for the audit medium.
 - A gap closure or Hertz case whose Newton solve fails is answered with {kind, id, converged: 0}. Every other
   report carries converged: 1.
+- `sliding` (C4): the classical reference (no medium): `ft` and `fn` per recorded state (press from zero load,
+  then slide), `n_press` = steps + 1, and `shear_parasitic` and `fn_rise` computed on it (ideal 0).
 - `hertz` (C2): the classical reference (no medium; penalty 1e3):
   - `x`, `f`: the reference x of the contact nodes on the flat, sorted, and their consistent nodal forces (half model);
   - `p`: the recovered pressure (§C0a, consistent mass matrix);

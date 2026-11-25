@@ -13,6 +13,7 @@ from schemeforge.arenas.contact import evaluate as ev  # noqa: E402
 from schemeforge.arenas.contact.cases import (  # noqa: E402
     GapClosureCase,
     SimpleShearCase,
+    SlidingCase,
     case_from_dict,
     dev_suite,
     validate_case,
@@ -98,7 +99,7 @@ def test_simple_shear_is_exact_for_neo_hooke() -> None:
 
 def test_dev_suite_shows_the_stiffness_trade_off() -> None:
     ids = [c.id for c in dev_suite()]
-    assert ids == ["C0a-g3", "C0a-g5", "C0a-g6", "C0b-s05", "C0b-s2", "C2-g5", "C2-g6", "C1"]
+    assert ids == ["C0a-g3", "C0a-g5", "C0a-g6", "C0b-s05", "C0b-s2", "C2-g5", "C2-g6", "C1", "C4-g6"]
     r = ev.evaluate(NEO, "medium", "dev")
     assert r["status"] == "ok", r["violations"]
     c = r["cases"]
@@ -190,6 +191,7 @@ def test_held_out_families_are_valid_seeded_and_independent_of_arena_1() -> None
     seed = "test-seed-not-the-real-one-0123456789"
     suite = families.promo_suite(seed)  # validates every case
     assert [f for f, _ in suite].count("GF") == 10 and [f for f, _ in suite].count("HF") == 6
+    assert [f for f, _ in suite].count("SL") == 4
     assert families.promo_suite(seed) == suite  # deterministic
     assert families.promo_suite(seed + "x") != suite
     hertz = [c for f, c in suite if f == "HF"]
@@ -241,3 +243,14 @@ def test_newton_convergence_does_not_depend_on_the_force_unit() -> None:
     assert all(r["converged"] == 1.0 for r in runs)
     for k in ("leak_pre", "gap_res", "force_err"):
         assert max(abs(r[k] - runs[1][k]) for r in runs) <= 1e-7 * max(abs(runs[1][k]), 1e-12) + 1e-12
+
+
+def test_classical_sliding_is_frictionless_and_the_medium_is_not() -> None:
+    """C4: classical frictionless contact needs no tangential force and does not plough; a third medium resists
+    sliding (the parasitic shear of PLAN §14.4)."""
+    from schemeforge.arenas.contact import verify
+
+    r = verify.exact_report(SlidingCase("cl"))
+    assert r["converged"] == 1 and abs(r["shear_parasitic"]) < 1e-8 and abs(r["fn_rise"]) < 1e-6
+    m, v = ev.run_case(SlidingCase("f", gamma=1e-6), zoo.load("medium", "faltus2026"))
+    assert not v and m["converged"] == 1.0 and m["shear_parasitic"] > 0.01 and m["fn_rise"] > 0.0

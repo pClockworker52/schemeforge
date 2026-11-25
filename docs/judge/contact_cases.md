@@ -49,3 +49,15 @@ Admissible: R, W, H, gap, E, γ and kr > 0; 0 ≤ ν < 0.5; gap < push < H/10; s
 as follows (spec §Step 4): R 0.5–2 with W = H = R; gap 0.15–0.3 % of R; indentation beyond the gap 0.3–0.5 % of R;
 28–36 columns. Before contact-v0.10, Newton failed on some of these instances with E ≥ 2 (blind audit 2026-11-24,
 units-dependent tolerance, fixed).
+
+## `kind: sliding` (C4)
+
+The fields and defaults of `hertz`, except nx = 16 and ny = 10 (columns per half and body rows of the full model),
+plus:
+
+| Field | Default | Meaning |
+|---|---|---|
+| slide | 0.0045 | tangential displacement of the top edge after the press |
+| slide_steps | 5 | equal slide steps |
+
+Admissible: as `hertz`, plus slide > 0, slide < W/10 and slide_steps ≥ 1.

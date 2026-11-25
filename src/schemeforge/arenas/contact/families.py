@@ -10,6 +10,7 @@ Families:
     SF  simple shear (C0b): random shear, E, nu, medium stiffness
     HF  Hertz (C2): random R, E, nu, initial gap, indentation, medium stiffness, mesh offsets
     HX  one Hertz instance for the promo-only metrics mesh_sens and max_step (evaluate.py)
+    SL  frictionless sliding (C4): HF geometry ranges, random slide, E, nu, medium stiffness, mesh
 """
 
 from __future__ import annotations
@@ -19,10 +20,10 @@ from pathlib import Path
 
 import numpy as np
 
-from .cases import Case, GapClosureCase, HertzCase, SimpleShearCase, validate_case
+from .cases import Case, GapClosureCase, HertzCase, SimpleShearCase, SlidingCase, validate_case
 
 SEED_FILE = Path.home() / ".schemeforge" / "heldout_seed"
-FAMILY_SIZES = {"GF": 10, "SF": 10, "HF": 6, "HX": 1}
+FAMILY_SIZES = {"GF": 10, "SF": 10, "HF": 6, "HX": 1, "SL": 4}
 
 
 def read_seed(path: Path | None = None) -> str:
@@ -73,8 +74,19 @@ def hertz_family(seed: str, i: int, family: str = "HF") -> HertzCase:
                      nu=float(rng.uniform(0.15, 0.45)), gamma=_log_uniform(rng, 1e-6, 1e-5))
 
 
+def sliding_family(seed: str, i: int) -> SlidingCase:
+    """C4 with the HF geometry ranges (full model, coarser mesh) and a slide of 0.2-0.9 % of R, about 0.05-0.2 a."""
+    rng = _rng(seed, "SL", i)
+    R = _log_uniform(rng, 0.5, 2.0)
+    gap = float(rng.uniform(0.0015, 0.003)) * R
+    return SlidingCase(f"SL-{i:03d}", R=R, W=R, H=R, gap=gap, push=gap + float(rng.uniform(0.003, 0.005)) * R,
+                       steps=12, slide=float(rng.uniform(0.002, 0.009)) * R, slide_steps=5,
+                       nx=int(rng.integers(14, 19)), ny=10, ny_medium=4, E=_log_uniform(rng, 0.1, 10.0),
+                       nu=float(rng.uniform(0.15, 0.45)), gamma=_log_uniform(rng, 1e-6, 1e-5))
+
+
 GENERATORS = {"GF": gap_family, "SF": shear_family, "HF": hertz_family,
-              "HX": lambda seed, i: hertz_family(seed, i, "HX")}
+              "HX": lambda seed, i: hertz_family(seed, i, "HX"), "SL": sliding_family}
 
 
 def promo_suite(seed: str, sizes: dict[str, int] | None = None) -> list[tuple[str, Case]]:

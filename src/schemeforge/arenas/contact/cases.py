@@ -70,8 +70,34 @@ class HertzCase:
     kr: float = 5e-7
 
 
-Case = GapClosureCase | SimpleShearCase | HertzCase
-KINDS = {"gap_closure": GapClosureCase, "simple_shear": SimpleShearCase, "hertz": HertzCase}
+@dataclass(frozen=True)
+class SlidingCase:
+    """C4: frictionless sliding (PLAN §14.2). The C2 cylinder as a full model (mirrored at x = 0; nx columns per
+    half) is pressed onto the medium-covered flat by `push` in `steps` steps, then its top is moved tangentially by
+    `slide` (+x) in `slide_steps` steps while the vertical displacement is held. Ideal frictionless contact needs no
+    tangential force (Ft = 0); classical frictionless contact gives Ft = 0. The default slide is 0.0045 R, about
+    0.1 a at the default load."""
+
+    id: str
+    R: float = 1.0
+    W: float = 1.0
+    H: float = 1.0
+    gap: float = 0.002
+    push: float = 0.006
+    steps: int = 12
+    slide: float = 0.0045
+    slide_steps: int = 5
+    nx: int = 16
+    ny: int = 10
+    ny_medium: int = 4
+    E: float = 1.0
+    nu: float = 0.3
+    gamma: float = 1e-6
+    kr: float = 5e-7
+
+
+Case = GapClosureCase | SimpleShearCase | HertzCase | SlidingCase
+KINDS = {"gap_closure": GapClosureCase, "simple_shear": SimpleShearCase, "hertz": HertzCase, "sliding": SlidingCase}
 
 
 def smoke_suite() -> list[Case]:
@@ -80,11 +106,12 @@ def smoke_suite() -> list[Case]:
 
 def dev_suite() -> list[Case]:
     """C0a over three decades of medium stiffness (the trade-off of PLAN §14.7), C0b at a small and a large shear,
-    C2 Hertz at two medium stiffnesses, C1 patch test (C0a on distorted meshes)."""
+    C2 Hertz at two medium stiffnesses, C1 patch test (C0a on distorted meshes), C4 frictionless sliding."""
     return [GapClosureCase("C0a-g3", gamma=1e-3), GapClosureCase("C0a-g5", gamma=1e-5),
             GapClosureCase("C0a-g6", gamma=1e-6), SimpleShearCase("C0b-s05", shear=0.5),
             SimpleShearCase("C0b-s2", shear=2.0), HertzCase("C2-g5", gamma=1e-5), HertzCase("C2-g6", gamma=1e-6),
-            GapClosureCase("C1", gamma=1e-5, nx=3, ny_body=3, ny_medium=3, distort=0.3, seed=11)]
+            GapClosureCase("C1", gamma=1e-5, nx=3, ny_body=3, ny_medium=3, distort=0.3, seed=11),
+            SlidingCase("C4-g6", gamma=1e-6)]
 
 
 def case_from_dict(d: dict[str, Any]) -> Case:
@@ -118,6 +145,16 @@ def validate_case(case: Case) -> None:
             raise ValueError(f"{case.id}: sizes, E, gamma and kr must be positive and 0 <= nu < 0.5")
         if not case.gap < case.push < 0.1 * case.H or case.steps < 2:
             raise ValueError(f"{case.id}: push must close the gap and stay small against H; at least 2 steps")
+        return
+    if isinstance(case, SlidingCase):
+        sizes = (case.R, case.W, case.H, case.gap, case.E, case.gamma, case.kr, case.slide)
+        if min(sizes) <= 0 or not 0.0 <= case.nu < 0.5:
+            raise ValueError(f"{case.id}: sizes, E, gamma, kr and slide must be positive and 0 <= nu < 0.5")
+        if not case.gap < case.push < 0.1 * case.H or min(case.steps, case.slide_steps) < 1 or case.steps < 2:
+            raise ValueError(f"{case.id}: push must close the gap and stay small against H; steps >= 2, "
+                             "slide_steps >= 1")
+        if not case.slide < 0.1 * case.W:
+            raise ValueError(f"{case.id}: slide must stay small against W")
         return
     if isinstance(case, SimpleShearCase):
         if case.shear <= 0 or case.E <= 0 or case.gamma <= 0 or not 0.0 <= case.nu < 0.5:
