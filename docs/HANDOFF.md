@@ -1,26 +1,37 @@
-# Handoff — 2026-11-24: cold spray paused (scope review STOP, Peter accepted); Phase 6 resumes at step 6 (current state only)
+# Handoff — 2026-11-25: Phase 6 step 6 at Gate 6 (audit done, judge contact-v0.10.dev); Peter decides (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md and start Phase 6 step 6." Then read, in order:
-1. docs/STATUS.md (top) and docs/plans/2026-10-30-phase6.md, §1 (Gate 6) and §3, Steps 5 and 6;
-2. DECISIONS 2026-11-03 "Arena 2 paused" (the checkpoint) and the index (`python scripts/decisions_index.py`);
-3. docs/judge/contact_baseline.md (the zoo front Target D is built from).
+**Start the next session with:** "Read docs/HANDOFF.md and docs/reports/2026-11-25-gate6.md." Then read
+docs/STATUS.md (top), docs/plans/2026-10-30-phase6.md §1 and §3, docs/plans/2026-11-24-target-d-draft.md, and
+docs/judge/contact_audit.md "Result".
 
 Branch: `claude/exciting-fermi-qy077p`.
 
-## First action: Phase 6 step 6 (about one session)
+## First action: Peter's Gate 6 decisions (docs/reports/2026-11-25-gate6.md)
 
-From docs/plans/2026-10-30-phase6.md:
-- **Blind audit:** a `judge-auditor` re-implements C0a, C0b, C1 and C2 from `docs/judge/contact_spec.md` without
-  reading the judge code, and the results are compared.
-- **Target D:** pre-registered in `docs/targets/D.md` from the front, in its own commit. Thresholds sit outside the
-  measured error floor, with held-out checks and bootstrap references.
-- `sforge zoo eval --arena contact` on dev and promo, then tag `contact-v1.0`.
-- **Gate 6 report for Peter, then stop** (CLAUDE.md: stop at every phase gate).
+Step 6 status (judge **contact-v0.10.dev**, 910ecdd):
+- **Blind audit:** done, and it agrees after two judge fixes: leak_pre is solved at g/2; the Newton test is
+  scale-aware with ε = 1e-3·E·L. Record: audit/contact/REPORT.md and docs/judge/contact_audit.md "Result".
+- **Zoo dev:** 192/192 identical v0.9 → v0.10 (docs/judge/2026-11-24-contact-v010-check.md). Dev time 34–43 s;
+  memory 588 MB peak.
+- **Target D:** a draft only (docs/plans/2026-11-24-target-d-draft.md); not pre-registered.
+- **Open:**
+  - **C4** (frictionless sliding, parasitic shear) is in Gate 6 item 1 and was never built;
+  - no promo run on v0.10 (needs WSL: docs/judge/contact_promo_wsl.md);
+  - breakers on the zoo not run;
+  - tag contact-v1.0;
+  - step 7.
 
-Judge state at the pause: contact-v0.8.dev, with C0a, C0b, C1, C2, hard constraints and held-out families. The first
-real promo run was clean (r-20261103-123550-7e5a). The four-medium zoo front exists (DECISIONS 2026-11-03).
+Peter decides (Gate 6 report, "Decisions for Peter"):
+1. C4 now, or out of Gate 6;
+2. the γ-sweep for Target D, or fixed thresholds;
+3. robustness instances: max_step on all HF, or HX × 6;
+4. breakers before the tag;
+5. the WSL promo run.
+
+Record his answers in DECISIONS, then act. Each judge change is its own commit with a version bump and a zoo check
+(CLAUDE.md iron rule 2).
 
 ## Cold-spray track: PAUSED (DECISIONS 2026-11-24)
 
@@ -68,7 +79,7 @@ The rest of this file is the track's state at the pause, kept for a resumption.
 
 ## Open for Peter
 
-- Nothing on cold spray. Gate 6 comes after step 6.
+- The five Gate 6 decisions (above). Nothing on cold spray.
 
 ## Hunch budget
 
