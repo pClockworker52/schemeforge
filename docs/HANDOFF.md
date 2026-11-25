@@ -1,4 +1,4 @@
-# Handoff — 2026-11-25: Phase 6 step 6 at Gate 6 (audit done, judge contact-v0.10.dev); Peter decides (current state only)
+# Handoff — 2026-11-25: Phase 6 at Gate 6; Peter's decisions done in the cloud (judge contact-v0.12.dev); waiting on WSL runs (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
@@ -8,30 +8,23 @@ docs/judge/contact_audit.md "Result".
 
 Branch: `claude/exciting-fermi-qy077p`.
 
-## First action: Peter's Gate 6 decisions (docs/reports/2026-11-25-gate6.md)
+## First action: merge Peter's WSL results (docs/judge/contact_promo_wsl.md)
 
-Step 6 status (judge **contact-v0.10.dev**, 910ecdd):
-- **Blind audit:** done, and it agrees after two judge fixes: leak_pre is solved at g/2; the Newton test is
-  scale-aware with ε = 1e-3·E·L. Record: audit/contact/REPORT.md and docs/judge/contact_audit.md "Result".
-- **Zoo dev:** 192/192 identical v0.9 → v0.10 (docs/judge/2026-11-24-contact-v010-check.md). Dev time 34–43 s;
-  memory 588 MB peak.
-- **Target D:** a draft only (docs/plans/2026-11-24-target-d-draft.md); not pre-registered.
-- **Open:**
-  - **C4** (frictionless sliding, parasitic shear) is in Gate 6 item 1 and was never built;
-  - no promo run on v0.10 (needs WSL: docs/judge/contact_promo_wsl.md);
-  - breakers on the zoo not run;
-  - tag contact-v1.0;
-  - step 7.
+Peter decided (DECISIONS 2026-11-25), and the cloud has done its part:
+- **C4** (frictionless sliding): judge contact-v0.11.dev (9086db7), check record 2026-11-25-contact-v011-check.md.
+- **max_step on every HF instance:** judge contact-v0.12.dev (735b69e), check 2026-11-25-contact-v012-check.md.
+- **γ-sweep tooling:** scripts/contact_gamma_sweep.py, validated on dev (r-20261125-073846-e9f0).
+- **Target D draft** updated with D3 on HF max_step and D8 for C4 (docs/plans/2026-11-24-target-d-draft.md).
 
-Peter decides (Gate 6 report, "Decisions for Peter"):
-1. C4 now, or out of Gate 6;
-2. the γ-sweep for Target D, or fixed thresholds;
-3. robustness instances: max_step on all HF, or HX × 6;
-4. breakers before the tag;
-5. the WSL promo run.
+Waiting on Peter's WSL runs:
+1. **promo of the plain zoo and the 16-run sweep.** With them, fill the ⟨…⟩ references in the draft and check:
+   - that no zoo point meets D1–D8 together;
+   - that no threshold sits inside the error floor.
+   Then docs/targets/D.md in its own commit, after Peter accepts the numbers.
+2. **the breaker run on the zoo.** Review its quarantine ids. Peter accepts cases with `sforge case accept`, which
+   bumps the judge, so a zoo check follows.
 
-Record his answers in DECISIONS, then act. Each judge change is its own commit with a version bump and a zoo check
-(CLAUDE.md iron rule 2).
+Then the tag contact-v1.0 (Gate 6, Peter), then step 7. Gate 6 report: docs/reports/2026-11-25-gate6.md.
 
 ## Cold-spray track: PAUSED (DECISIONS 2026-11-24)
 
@@ -79,7 +72,7 @@ The rest of this file is the track's state at the pause, kept for a resumption.
 
 ## Open for Peter
 
-- The five Gate 6 decisions (above). Nothing on cold spray.
+- The WSL runs (above). Nothing on cold spray.
 
 ## Hunch budget
 

@@ -20,17 +20,18 @@ once:
 - Classical contact is the ideal corner (no medium). The target is a medium that comes closer to that corner than
   the zoo's front.
 
-## Draft thresholds (promo suite; numbers marked ⟨…⟩ come from the promo zoo run in item 3)
+## Draft thresholds (promo suite; numbers marked ⟨…⟩ come from the WSL promo runs, "Still needed" below)
 
 | # | Metric (family, statistic) | Draft threshold | Why |
 |---|---|---|---|
 | D1 | GF gap_res, median | ≤ 0.1 × faltus2026 ⟨…⟩ | tight: a factor 10 beyond the robust member, of the order of the neo-Hookean media |
 | D2 | HF converged, mean | = 1.00 | robust: every held-out Hertz instance converges |
-| D3 | HX max_step | = 1 | robust: one load step, as faltus2026 at γ = 1e-6 |
+| D3 | HF max_step, median; HX max_step | = 1; = 1 | robust: one load step, as faltus2026 at γ = 1e-6 (max_step on every HF instance since contact-v0.12) |
 | D4 | HF a_err, median of abs | ≤ 0.02 | accurate: about 2× the dev-mesh floor of a (+0.9 %); mesh-stable (spec §mesh_sens) |
 | D5 | HF p0_err, median of abs | ≤ 0.02 | about 4× the p0 floor (−0.5 %); mesh-stable |
 | D6 | GF leak_pre, median | ≤ faltus2026 ⟨…⟩ | no worse than the robust member before contact |
 | D7 | SF shear_parasitic, median | ≤ faltus2026 ⟨…⟩ | guard: no shear stiffness bought for tightness |
+| D8 | SL converged, mean; SL shear_parasitic, median | = 1.00; ≤ faltus2026 ⟨…⟩ | C4 (contact-v0.11): it slides where the neo-Hookean media fail, and it resists no more than the robust member (dev C4-g6: faltus2026 6.2 %, wriggers2013 4.0 %, neo-Hookean fail) |
 
 D4 and D5 sit above the error floor. p_l2 and leak_out are mesh-sensitive (spec §mesh_sens), so they are reported
 only, not thresholds. Guards: hard constraints, all dev cases converge, and the dev suite stays within 60 s and 1 GB.
@@ -38,25 +39,25 @@ only, not thresholds. Guards: hard constraints, all dev cases converge, and the 
 **Promotion (bootstrap references), as for Target A:** a paired bootstrap of log(candidate / reference) on the
 held-out instances, with 10,000 resamples, where the 95 % interval must lie below 0:
 - **B1:** GF gap_res against faltus2026 (the robust member's weakness);
-- **B2:** HF newton_iters against neo_hooke (the tight member's weakness). There are only 6 instances; see item 2.
+- **B2:** HF newton_iters against neo_hooke (the tight member's weakness), paired over the 6 HF instances. A
+  bootstrap over 6 pairs is coarse; D3 (max_step on every HF instance) carries the robustness threshold.
 
 **Kill criterion (draft):** 4 rounds or about 2,000 evaluated candidates without a promotion. Then write
 docs/results/arena2-negative.md, as for Arena 1.
 
-## Decisions for Peter before the D commit
+## Decided (DECISIONS 2026-11-25, Peter)
 
-1. **Rescaling (the cheater lens).** A candidate may rescale γ internally (ψ = c γ ψ_nh passes every constraint,
-   unit scaling included). That moves it along a zoo member's own front. Against the zoo at the same γ, a
-   rescaled zoo member could look like progress. Draft rule: a candidate counts only if no zoo member with γ scaled
-   by any of 10⁻², 10⁻¹, 1, 10, 10² meets D1–D7 together. The zoo references then come from a promo sweep over
-   these scale factors (4 media × 5 factors), not from the plain zoo. *Alternative:* fixed thresholds only (as
-   above) and rely on D1 + D3 jointly. Modeller's judgment: the sweep is the safer choice, and it is also the check
-   that "no zoo member meets D" (as Target A states for its zoo).
-2. **Robustness is measured on 7 instances (HF 6, HX 1).** D3 rests on one held-out instance. *Option:* measure
-   max_step on all HF instances in promo. This is a judge change, and the cost is about 1–7 min per candidate
-   promo (robust media need one trial). *Or:* raise HX from 1 to 6 instances. Either is its own judge commit with
-   a zoo check.
-3. **The promo zoo run needs the held-out seed, which lives only on Peter's machine** (WSL).
-   - Steps: `sforge zoo eval --arena contact --suite promo`, plus the γ-sweep from item 1 if chosen.
-   - The run fills the ⟨…⟩ references and checks that no zoo member (or sweep point) meets D1–D7.
-   - Only then: commit docs/targets/D.md and tag `contact-v1.0`.
+1. **Rescaling:** a candidate counts only if no zoo member with γ scaled by any of 10⁻², 10⁻¹, 1, 10, 10² meets
+   D1–D8 together. The zoo references (⟨…⟩) are the plain zoo (factor 1). The sweep points are
+   `scripts/contact_gamma_sweep.py`, registered as zoo-medium-<member>-g<factor>. On dev the mechanism reproduces
+   the plain zoo to round-off (r-20261125-073846-e9f0: faltus2026 × 0.1 on C0a-g5 equals faltus2026 on C0a-g6).
+2. **Robustness:** max_step on every HF instance (contact-v0.12, 735b69e).
+3. **C4 built** (contact-v0.11, 9086db7). It adds D8.
+
+## Still needed before the D commit
+
+- **Peter's WSL promo runs:** the plain zoo plus the sweep (docs/judge/contact_promo_wsl.md). They fill ⟨…⟩ and
+  check that no zoo point meets D1–D8.
+- **Breakers on the zoo** before the tag (plan §4). They run in WSL, where the sforge MCP server connects.
+- Then docs/targets/D.md in its own commit, with thresholds as here unless the promo numbers show that one sits
+  inside the error floor or that a zoo point meets all of D1–D8. Either finding goes to Peter first.
