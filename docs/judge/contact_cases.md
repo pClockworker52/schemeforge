@@ -46,5 +46,6 @@ Admissible: s, E and γ > 0; 0 ≤ ν < 0.5.
 
 Admissible: R, W, H, gap, E, γ and kr > 0; 0 ≤ ν < 0.5; gap < push < H/10; steps ≥ 2. The spec's Hertz conditions
 (a/R ≤ 0.1, a flat at least 20 a wide) hold for the defaults. The held-out Hertz family stays within these ranges,
-and every instance there converged (spec §Step 4): R 0.5–2 with W = H = R; gap 0.15–0.3 % of R; indentation
-beyond the gap 0.3–0.5 % of R; 28–36 columns.
+as follows (spec §Step 4): R 0.5–2 with W = H = R; gap 0.15–0.3 % of R; indentation beyond the gap 0.3–0.5 % of R;
+28–36 columns. Before contact-v0.10, Newton failed on some of these instances with E ≥ 2 (blind audit 2026-11-24,
+units-dependent tolerance, fixed).

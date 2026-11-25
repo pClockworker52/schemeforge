@@ -24,18 +24,28 @@ s_m in the medium. The top is pushed down by d ∈ [0, push] in `steps` equal st
 
 - Body stress: P_b(s) = μ (s − 1/s) + λ ln(s)/s. Medium stress: P_m(s) = d/ds ψ(diag(1, s², 1), p).
 - Exact solution for a given medium: P_b(s_b) = P_m(s_m) with h s_b + g s_m = h + g − d; force F = −w P_m(s_m),
-  medium thickness g s_m. Bi-quadratic elements represent it exactly; the FE result agrees to 1e-9 or better
-  (measured 1e-12 … 1e-16 except where the force is below 1e-6, where Newton's absolute tolerance 1e-10 dominates).
+  medium thickness g s_m. Bi-quadratic elements represent it exactly. When the body and medium meshes are merged,
+  node coordinates are rounded to 10 decimals. On the dev cases the FE result agrees to 1e-9 or better (measured
+  1e-12 … 1e-16, except where the force is below 1e-6 and Newton's tolerance dominates). On random geometry, the
+  1e-10 rounding of the layer boundaries limits it to about 1e-8 (blind audit 2026-11-24: force ≤ 1.0e-8,
+  thickness ≤ 1.2e-8, wall pressure ≤ 2.5e-8).
 - Ideal contact: F = 0 for d ≤ g; F = −w P_b((h − (d − g))/h) for d > g.
-- Metrics: `leak_pre` = F(g/2) / F_ideal(push); `gap_res` = medium thickness at full push / g; `force_err` =
+- Metrics: `leak_pre` = F(g/2) / F_ideal(push). F(g/2) is solved at push = g/2, which is added to the load steps
+  when it is not already one (since contact-v0.10; before, it was interpolated linearly between steps); `gap_res` = medium thickness at full push / g; `force_err` =
   F(push) / F_ideal(push) − 1 (positive: the remaining layer takes up height, so the body is compressed more);
-  `newton_iters` (sum over steps); `min_J_medium`; `converged` (0 if Newton fails: a result, not a violation).
+  `newton_iters` (sum over steps, including the g/2 step); `min_J_medium`; `converged` (0 if Newton fails: a
+  result, not a violation).
+- Newton, every FE solve of the judge: felupe's test |residual of the free dofs| / (ε + |reactions|) < 1e-10, with
+  ε = 1e-3 · E · L and L the case's height (C0a, C1: h; C2: H). The test is invariant under a change of force or
+  length units, and identical to felupe's default (ε = 1e-3) for E = L = 1. Since contact-v0.10: before, the
+  absolute ε made convergence depend on E (blind audit 2026-11-24).
 - Run-level violation: min J of the medium ≤ 0.
 - Contact pressure on the wall: nodal reactions solved against the consistent mass matrix of the quadratic edge
   elements (`metrics.edge_traction`), so a uniform pressure comes back exactly (F / w here).
 - Classical reference: the body alone over a rigid plane with felupe's frictionless `ContactRigidPlane`; the penalty
   error (∝ 1/k) is removed by Richardson extrapolation over k = 1e2, 1e3, 1e4. Reproduces the ideal force to 2e-10
-  and gives exactly zero force before contact.
+  on the dev cases and to 1.1e-9 on random instances (blind audit: always slightly below ideal; the leftover
+  extrapolation term). Gives zero force before contact (≤ 4e-12).
 
 Dev cases: C0a-g3, C0a-g5, C0a-g6 with γ = 1e-3, 1e-5, 1e-6; h = 1, w = 0.2, g = 0.1, push = 0.15, 6 steps, E = 1,
 ν = 0.3, one cell across, 2 cells in the body and 2 in the medium. Smoke: the γ = 1e-3 case.
@@ -72,14 +82,22 @@ contact, 4 medium rows; mid-nodes are placed on the curves (a chord placement mi
   and at γ = 1e-7; kr = 0 fails Newton. 5e-7 with 12 steps converges at 32 and 64 columns for γ ≥ 1e-6.
 - Hertz for the measured load P (rigid flat, 1/E* = (1 − ν²)/E): a = √(4PR/(πE*)), p0 = 2P/(πa),
   p(x) = p0 √(1 − x²/a²).
-- Metrics: `a_err` (width from the second moment of the nodal contact forces, ∫p x² = P a²/4, exact for consistent
-  forces on quadratic edges; includes traction outside the contact); `p0_err` (peak of the recovered pressure);
-  `p_l2` (relative L2 error of p over |x| < 1.5 a); `leak_out` (|force| beyond 1.2 a over P); `load`;
-  `newton_iters`; `min_J_medium`; `converged`.
+- The load P is 2 × the reaction on the top edge (full model). It equals 2 Σ f of the flat's nodal forces up to
+  the Newton residual (≤ 6e-13 absolute in the audit). Every Hertz quantity below uses this P, with a = a_hertz and
+  p0 = p0_hertz from it; x is the reference x of the flat's nodes.
+- Metrics:
+  - `a_err` = √(8 Σ f x² / P) / a − 1: the width from the second moment of the nodal contact forces
+    (∫p x² = P a²/4, exact for consistent forces on quadratic edges). It includes traction outside the contact.
+  - `p0_err` = max p / p0 − 1, with p the nodal pressure recovered as in §C0a.
+  - `p_l2` = √(∫(p − p_H)² / ∫p_H²), both integrals by the trapezoidal rule over the nodes with x < 1.5 a.
+  - `leak_out` = 2 Σ |f| over the nodes with x > 1.2 a, over P (pressure or tension through the open gap).
+  - `load`, `newton_iters`, `min_J_medium`, `converged`.
 - Classical reference (`solve.hertz_classical`): the cylinder alone with felupe's `ContactRigidPlane` (penalty 1e3;
   1e2 changes p0 by 3e-4, 1e4 does not converge). **Judge error floor**, classical vs Hertz: dev mesh a +0.9 %,
   p0 −0.5 %, p_l2 1.6 %; 64 columns a +0.4 %, p0 −0.35 %; 128 columns a +0.3 %, p0 −0.34 % (the plateau is the
-  finite body, not the mesh). Differences between media below about 1 % (dev) are not resolved.
+  finite body, not the mesh). Differences between media below about 1 % (dev) are not resolved. On 90 random
+  instances in the held-out ranges (blind audit 2026-11-24), the floor is wider: a −1.25 … +1.33 % (median
+  +0.30 %), p0 −0.57 … +0.19 % (median −0.32 %), p_l2 1.1 … 9.7 % (median 3.5 %).
 - Dev cases C2-g5, C2-g6 (γ = 1e-5, 1e-6), 7–10 s each. Zoo neo-Hooke: γ = 1e-5 a_err +12 %, p0_err +0.1 %;
   γ = 1e-6 a_err −3.9 %, p0_err +0.9 %, 87 Newton iterations; γ = 1e-4 a_err +104 % (load carried through the open
   gap); γ = 1e-7 does not converge.
@@ -148,6 +166,8 @@ positive. Reported per kind:
     `fe_gap_res`, `fe_force_err`, `fe_pressure_spread` and `fe_min_J_medium`.
   - `classical_push`, `classical_force`: the classical reference extrapolated to infinite penalty, per load step.
 - `simple_shear` (C0b): `mu`, `lmbda`, `P_xy`, `P_yy`, `shear_parasitic` and `normal_parasitic` for the audit medium.
+- A gap closure or Hertz case whose Newton solve fails is answered with {kind, id, converged: 0}. Every other
+  report carries converged: 1.
 - `hertz` (C2): the classical reference (no medium; penalty 1e3):
   - `x`, `f`: the reference x of the contact nodes on the flat, sorted, and their consistent nodal forces (half model);
   - `p`: the recovered pressure (§C0a, consistent mass matrix);

@@ -219,3 +219,25 @@ def test_judge_exact_reports_agree_with_the_spec() -> None:
     s = verify.exact_report(SimpleShearCase("s", shear=1.3, gamma=3e-5))
     assert abs(s["shear_parasitic"] - 3e-5) < 1e-17
     assert all(c.ok for c in verify.check_edge_traction())
+
+
+def test_leak_pre_is_solved_at_half_the_gap() -> None:
+    """Blind audit 2026-11-24, cause 1: g/2 is a load step, so leak_pre is the exact force there."""
+    case = GapClosureCase("half", gap=0.07, height=0.8, width=0.3, push=0.1, steps=5, E=3.0, nu=0.2, gamma=1e-4)
+    assert np.any(np.isclose(solve.gap_ramp(case), 0.035, rtol=1e-12))
+    assert solve.gap_ramp(GapClosureCase("dev")).size == 7  # dev: g/2 is already step 2 of 6, nothing added
+    m, _ = ev.run_case(case, NEO)
+    f_half, _ = reference.exact_gap_closure(NEO, case, 0.5 * case.gap)
+    f_ideal = float(reference.ideal_gap_force(case, case.push))
+    assert abs(m["leak_pre"] / (f_half / f_ideal) - 1.0) < 1e-6
+
+
+def test_newton_convergence_does_not_depend_on_the_force_unit() -> None:
+    """Blind audit 2026-11-24, cause 7: the same case in different force units converges alike, with equal metrics."""
+    from dataclasses import replace
+
+    base = GapClosureCase("u", gap=0.1, height=1.0, width=0.2, push=0.13, steps=4, E=1.0, nu=0.3, gamma=1e-5)
+    runs = [ev.run_case(replace(base, E=E), NEO)[0] for E in (1e-3, 1.0, 1e3)]
+    assert all(r["converged"] == 1.0 for r in runs)
+    for k in ("leak_pre", "gap_res", "force_err"):
+        assert max(abs(r[k] - runs[1][k]) for r in runs) <= 1e-7 * max(abs(runs[1][k]), 1e-12) + 1e-12

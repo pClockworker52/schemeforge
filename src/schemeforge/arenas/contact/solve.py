@@ -13,10 +13,37 @@ jax.config.update("jax_enable_x64", True)
 import felupe as fem  # noqa: E402
 import felupe.constitution.jax as fjax  # noqa: E402
 import numpy as np  # noqa: E402
+from felupe.tools._newton import check as _felupe_check  # noqa: E402  (felupe 11.3 pinned)
 
 from .cases import GapClosureCase, HertzCase  # noqa: E402
 from .metrics import edge_traction  # noqa: E402
 from .reference import lame  # noqa: E402
+
+NEWTON_TOL = 1e-10
+
+
+def newton_options(E: float, length: float) -> dict:
+    """Newton options with a scale-aware convergence test. felupe's check accepts when
+    |residual of free dofs| / (eps + |reactions|) < tol with an absolute eps = 1e-3, so the test tightened with the
+    force scale and the judge's convergence depended on the units (blind audit 2026-11-24, cause 7). Here eps is the
+    same 1e-3 times the case's characteristic force E * length (per unit thickness), so the test is invariant under a
+    change of force or length units and identical to felupe's default for E = length = 1 (the dev cases)."""
+    eps = 1e-3 * E * length
+
+    def check(dx, x, f, xtol, ftol, dof1=None, dof0=None, items=None):
+        return _felupe_check(dx, x, f, xtol, ftol, dof1=dof1, dof0=dof0, items=items, eps=eps)
+
+    return {"verbose": 0, "tol": NEWTON_TOL, "check": check}
+
+
+def gap_ramp(case: GapClosureCase) -> np.ndarray:
+    """Load steps of C0a: `steps` equal steps to the full push, plus push = g/2 when it is not already a step, so that
+    leak_pre reads the force at g/2 instead of interpolating between steps (blind audit 2026-11-24, cause 1)."""
+    ramp = fem.math.linsteps([0.0, 1.0], num=case.steps) * case.push
+    half = 0.5 * case.gap
+    if not np.any(np.isclose(ramp, half, rtol=1e-12, atol=0.0)):
+        ramp = np.sort(np.append(ramp, half))
+    return ramp
 
 
 def medium_material(psi: Callable, mu: float, lmbda: float, gamma: float):
@@ -80,7 +107,7 @@ def gap_closure(psi: Callable, case: GapClosureCase) -> GapClosureResult:
         wall=fem.Boundary(field[0], fy=0.0),
         top=fem.Boundary(field[0], mask=top, skip=(1, 0)),
     )
-    ramp = fem.math.linsteps([0.0, 1.0], num=case.steps) * case.push
+    ramp = gap_ramp(case)
     step = fem.Step(items=solids, ramp={bounds["top"]: -ramp}, boundaries=bounds)
 
     force, iters, last = [], [], {}
@@ -91,7 +118,7 @@ def gap_closure(psi: Callable, case: GapClosureCase) -> GapClosureResult:
         force.append(-float(r[bounds["top"].points, 1].sum()))
         last["r"] = r
 
-    fem.Job([step], plugins=[record, fem.LinesearchPlugin()]).evaluate(x0=field, verbose=0, tol=1e-10)
+    fem.Job([step], plugins=[record, fem.LinesearchPlugin()]).evaluate(x0=field, **newton_options(case.E, h))
 
     u = field[0].values
     axis = np.isclose(pts[:, 0], 0.0)
@@ -138,7 +165,7 @@ def gap_closure_classical(case: GapClosureCase, multiplier: float) -> tuple[np.n
         force.append(-float(r[bounds["top"].points, 1].sum()))
 
     step = fem.Step(items=[solid, contact], ramp={bounds["top"]: -ramp}, boundaries=bounds)
-    fem.Job([step], plugins=[record]).evaluate(x0=field, verbose=0, tol=1e-10)
+    fem.Job([step], plugins=[record]).evaluate(x0=field, **newton_options(case.E, h))
     return ramp, np.asarray(force)
 
 
@@ -238,7 +265,7 @@ def hertz(psi: Callable, case: HertzCase) -> HertzResult:
         last["r"] = np.asarray(context.substep.fun).ravel()[: field[0].values.size].reshape(-1, 2)
 
     step = fem.Step(items=items, ramp={bounds["top"]: -ramp}, boundaries=bounds)
-    fem.Job([step], plugins=[record, fem.LinesearchPlugin()]).evaluate(x0=field, verbose=0, tol=1e-10)
+    fem.Job([step], plugins=[record, fem.LinesearchPlugin()]).evaluate(x0=field, **newton_options(case.E, case.H))
     r = last["r"]
     flat = np.arange(len(pts))[np.isclose(pts[:, 1], 0.0)]
     order = np.argsort(pts[flat, 0])
@@ -278,7 +305,7 @@ def hertz_classical(case: HertzCase, multiplier: float = 1e3) -> HertzResult:
         last["r"] = np.asarray(context.substep.fun).ravel()[: field[0].values.size].reshape(-1, 2)
 
     step = fem.Step(items=[solid, contact], ramp={bounds["top"]: -ramp}, boundaries=bounds)
-    fem.Job([step], plugins=[record]).evaluate(x0=field, verbose=0, tol=1e-10)
+    fem.Job([step], plugins=[record]).evaluate(x0=field, **newton_options(case.E, case.H))
     vec = solid.assemble.vector()
     vec = np.asarray(vec.toarray() if hasattr(vec, "toarray") else vec).ravel()[: field[0].values.size].reshape(-1, 2)
     order = np.argsort(pts[surface, 0])

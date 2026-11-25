@@ -85,13 +85,20 @@ def _hertz_report(case: HertzCase) -> dict[str, Any]:
 
 
 def exact_report(case: Case) -> dict[str, Any]:
-    """The judge's exact and reference values for one case (spec §Audit)."""
-    if isinstance(case, GapClosureCase):
-        return _gap_closure_report(case)
+    """The judge's exact and reference values for one case (spec §Audit). If a Newton solve fails, the report is
+    {"kind", "id", "converged": 0} instead of an error (the evaluator also records a failure as a result)."""
+    import felupe as fem
+
     if isinstance(case, SimpleShearCase):
         return _simple_shear_report(case)
-    if isinstance(case, HertzCase):
-        return _hertz_report(case)
+    try:
+        if isinstance(case, GapClosureCase):
+            return {**_gap_closure_report(case), "converged": 1}
+        if isinstance(case, HertzCase):
+            return {**_hertz_report(case), "converged": 1}
+    except fem.tools.NewtonConvergenceError:
+        kind = "gap_closure" if isinstance(case, GapClosureCase) else "hertz"
+        return {"kind": kind, "id": case.id, "converged": 0}
     raise ValueError(f"no exact solution for case {type(case).__name__}")
 
 

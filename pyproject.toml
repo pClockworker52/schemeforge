@@ -47,7 +47,8 @@ extend-exclude = ["candidates", "runs"]
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B"]
 # candidate files kept as round records are registered by code hash and must stay byte-identical
-per-file-ignores = { "docs/**" = ["E501"], "scripts/spikes/**" = ["E", "F", "I", "B", "UP", "SIM"] }
+# audit/contact: the blind auditor's code is kept as written (audit record, 2026-11-24)
+per-file-ignores = { "docs/**" = ["E501"], "scripts/spikes/**" = ["E", "F", "I", "B", "UP", "SIM"], "audit/contact/**" = ["E", "F", "I", "B", "UP"] }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
