@@ -1,0 +1,182 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+instances answered: {'gap_closure': 209, 'gap_closure_C1': 176, 'simple_shear': 450, 'hertz': 100}  judge errors: 65  non-converged FE: 0
+ERROR C0a-0000 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0001 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0005 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0010 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0018 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0022 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0030 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0033 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0039 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0041 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0048 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0049 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0055 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0065 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0071 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0076 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0079 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0084 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0088 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0115 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0123 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0143 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0153 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0158 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0164 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0171 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0178 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0190 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0198 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0200 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0201 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0202 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0205 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0216 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0218 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0228 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0240 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0241 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0244 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0248 NewtonConvergenceError (converged 0, v0.10)
+ERROR C0a-0249 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0260 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0261 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0271 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0288 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0297 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0305 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0309 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0313 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0328 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0332 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0334 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0336 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0338 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0346 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0352 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0353 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0364 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0379 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0406 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0408 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0413 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0439 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0442 NewtonConvergenceError (converged 0, v0.10)
+ERROR C1-0447 NewtonConvergenceError (converged 0, v0.10)
+
+## gap_closure: judge exact vs audit exact
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| ideal_force | rel | 385 | 1.15e-14 | C0a-0212 | 0 |
+| exact_force | rel | 385 | 3.47e-11 | C0a-0027 | 0 |
+| exact_thickness | rel | 385 | 3.26e-11 | C0a-0027 | 0 |
+| exact_force_half | rel | 385 | 6.05e-14 | C0a-0127 | 0 |
+| exact_thickness_half | rel | 385 | 3.17e-14 | C0a-0127 | 0 |
+| exact_leak_pre | rel | 385 | 5.71e-14 | C1-0290 | 0 |
+| exact_gap_res | rel | 385 | 3.26e-11 | C0a-0027 | 0 |
+| exact_force_err | rel | 385 | 1.98e-04 | C1-0290 | 75 |
+| exact_force_err (abs) | abs | 385 | 3.47e-11 | C0a-0027 | 0 |
+
+## gap_closure: judge FE vs audit exact
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| fe_push (abs) | abs | 385 | 4.14e-01 | C1-0250 | 385 |
+| fe_force (full push) | rel | 385 | 1.03e-08 | C1-0429 | 313 |
+| fe_force (full push, abs) | abs | 385 | 5.81e-09 | C1-0383 | 88 |
+| fe_force (every step, |F| < 1e-6, rel) | rel | 557 | 5.20e-07 | C0a-0220 | 530 |
+| fe_force (every step, |F| < 1e-6, abs) | abs | 557 | 2.35e-13 | C0a-0220 | 0 |
+| fe_force (every step, |F| >= 1e-6) | rel | 2519 | 3.29e-07 | C1-0286 | 2183 |
+| fe_thickness | rel | 385 | 1.22e-08 | C1-0349 | 352 |
+| fe_thickness (abs) | abs | 385 | 2.14e-11 | C0a-0154 | 0 |
+| fe_wall_pressure vs F/w (worst node) | rel | 385 | 2.52e-08 | C1-0298 | 368 |
+| fe_leak_pre | rel | 385 | 2.99e-07 | C1-0264 | 350 |
+| fe_gap_res | rel | 385 | 1.22e-08 | C1-0349 | 352 |
+| fe_force_err | rel | 385 | 1.45e-03 | C0a-0089 | 382 |
+| fe_force_err (abs) | abs | 385 | 1.26e-08 | C0a-0085 | 314 |
+| fe_pressure_spread (abs, exact 0) | abs | 385 | 4.02e-08 | C1-0298 | 288 |
+| fe_min_J_medium vs s_m | rel | 385 | 9.38e-09 | C1-0429 | 301 |
+
+## gap_closure DIAGNOSTIC: judge FE vs audit exact on layer boundaries rounded to 1e-10
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| fe_force (every step, |F| < 1e-6, abs) | abs | 557 | 2.36e-13 | C0a-0220 | 0 |
+| fe_force (every step, |F| >= 1e-6) | rel | 2519 | 3.29e-07 | C1-0286 | 1147 |
+| fe_force (full push) | rel | 385 | 7.98e-10 | C0a-0117 | 155 |
+| fe_force (full push, abs) | abs | 385 | 3.30e-09 | C1-0361 | 42 |
+| fe_thickness | rel | 385 | 1.49e-09 | C0a-0220 | 26 |
+| fe_thickness (abs) | abs | 385 | 2.27e-12 | C0a-0243 | 0 |
+| fe_wall_pressure vs F/w (worst node) | rel | 385 | 2.03e-08 | C1-0331 | 297 |
+| fe_min_J_medium vs s_m | rel | 385 | 1.50e-09 | C0a-0220 | 48 |
+
+## gap_closure: fe_leak_pre
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| fe_leak_pre vs exact F(g/2)/F_ideal [g/2 on a load step] | rel | 385 | 2.99e-07 | C1-0264 | 350 |
+| fe_leak_pre vs lin. interp. of judge fe_force at g/2 | rel | 385 | 1.15e-14 | C0a-0212 | 0 |
+
+## gap_closure: judge classical vs audit ideal (every load step)
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| classical_force, before contact (abs / F_ideal(push)) | abs | 1727 | 2.01e-12 | C1-0407 | 0 |
+| classical_force, in contact | rel | 1349 | 1.10e-09 | C1-0445 | 219 |
+| classical_force, in contact (abs / F_ideal(push)) | abs | 1349 | 1.10e-09 | C1-0445 | 137 |
+
+## gap_closure DIAGNOSTIC: classical vs ideal on rounded geometry
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| classical_force, in contact | rel | 1349 | 7.84e-07 | C1-0349 | 1112 |
+
+## simple_shear: judge vs audit
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| mu | rel | 450 | 0.00e+00 | C0b-0000 | 0 |
+| lmbda | rel | 450 | 0.00e+00 | C0b-0000 | 0 |
+| P_xy | rel | 450 | 4.14e-16 | C0b-0103 | 0 |
+| P_xy vs closed form gamma mu s | rel | 450 | 2.18e-16 | C0b-0346 | 0 |
+| P_yy (abs, exact 0) | abs | 450 | 5.55e-17 | C0b-0440 | 0 |
+| P_yy (abs / (mu s)) | abs | 450 | 1.63e-16 | C0b-0262 | 0 |
+| shear_parasitic | rel | 450 | 4.33e-16 | C0b-0305 | 0 |
+| shear_parasitic vs gamma | rel | 450 | 3.84e-16 | C0b-0022 | 0 |
+| normal_parasitic (abs, exact 0) | abs | 450 | 1.63e-16 | C0b-0262 | 0 |
+| audit numeric P_yy/(mu s) (abs; audit round-off) | abs | 450 | 2.05e-16 | C0b-0262 | 0 |
+
+## hertz: judge vs audit recomputation from judge x, f (audit load P = 2 sum f)
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| load: judge vs 2 sum f | rel | 100 | 1.69e-10 | C2-0038 | 3 |
+| load: 2 int p dx vs 2 sum f (audit self-check) | rel | 100 | 5.72e-16 | C2-0095 | 0 |
+| p (max abs / max p) | abs | 100 | 2.75e-15 | C2-0040 | 0 |
+| E_star | rel | 100 | 0.00e+00 | C2-0000 | 0 |
+| a_hertz | rel | 100 | 8.44e-11 | C2-0038 | 0 |
+| p0_hertz | rel | 100 | 8.44e-11 | C2-0038 | 0 |
+| a_err | rel | 100 | 5.59e-08 | C2-0038 | 54 |
+| p0_err | rel | 100 | 6.24e-07 | C2-0054 | 54 |
+| p_l2 | rel | 100 | 3.72e-09 | C2-0015 | 11 |
+| leak_out (abs) | abs | 100 | 8.24e-22 | C2-0038 | 0 |
+| a_err (abs) | abs | 100 | 1.69e-10 | C2-0038 | 3 |
+| p0_err (abs) | abs | 100 | 8.40e-11 | C2-0038 | 0 |
+| x mid-nodes centred (abs / W) | abs | 100 | 0.00e+00 | C2-0000 | 0 |
+
+## hertz: same, audit uses the judge's load
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| E_star | rel | 100 | 0.00e+00 | C2-0000 | 0 |
+| a_hertz | rel | 100 | 0.00e+00 | C2-0000 | 0 |
+| p0_hertz | rel | 100 | 0.00e+00 | C2-0000 | 0 |
+| a_err | rel | 100 | 0.00e+00 | C2-0000 | 0 |
+| p0_err | rel | 100 | 2.90e-11 | C2-0043 | 0 |
+| p_l2 | rel | 100 | 3.23e-14 | C2-0074 | 0 |
+| leak_out (abs) | abs | 100 | 0.00e+00 | C2-0000 | 0 |
+
+## hertz: classical vs Hertz (judge error floor)
+a_err: min -1.2470e-02 median +2.9446e-03 max +1.3276e-02
+p0_err: min -5.7193e-03 median -3.1363e-03 max +1.9370e-03
+p_l2: min +1.0865e-02 median +3.5617e-02 max +9.6572e-02
+leak_out: min +1.6217e-12 median +2.7252e-12 max +5.7431e-12
+p_l2_nodal: min +7.7930e-03 median +2.3193e-02 max +6.1397e-02
+p_l2_int: min +1.9722e-02 median +4.1506e-02 max +6.9631e-02
+p0_err_at0: min -5.7193e-03 median -3.1363e-03 max +1.9370e-03
+leak_out_abs_sum: min +1.1249e-14 median +5.6440e-13 max +2.1653e-12
+argmax p index values: [0]

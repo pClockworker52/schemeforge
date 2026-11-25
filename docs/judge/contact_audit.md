@@ -56,3 +56,36 @@ Final message: the table of maximum differences, and the cause of every disagree
 2. Record the result in STATUS and in the Gate 6 report.
 3. A spec ambiguity is fixed in the spec. A judge bug is fixed in its own judge commit, with a version bump and a
    zoo check.
+
+## Result (2026-11-24/25)
+
+Audit of contact-v0.9.dev (eaf87f1): 1000 instances with the auditor's seed 20261124. Report verbatim:
+audit/contact/REPORT.md. Its output is audit/contact/compare_output.txt, with the judge answers in `judge_v09/`.
+
+The judge's exact solutions agree with the auditor's to ≤ 3.5e-11, simple shear to round-off, and the Hertz metrics
+recomputed from the judge's nodal forces to ≤ 2.9e-11. One disagreement was known to the modeller before the audit
+(leak_pre interpolation, recorded in the eaf87f1 commit message), and the auditor found it blind.
+
+| # | Finding | Traced to | Action |
+|---|---|---|---|
+| 1 | fe_leak_pre up to 9.2e4× off | F(g/2) interpolated between load steps (`evaluate.gap_closure_metrics`, np.interp) | **judge bug, fixed in contact-v0.10** (910ecdd): g/2 is a load step. Re-run: 3.0e-7 against exact |
+| 2 | FE about 1e-8 from exact | `solve.gap_closure` merges meshes with `MeshContainer(..., decimals=10)`, rounding coordinates to 1e-10 | spec clarified; no effect above 1e-7 on any metric |
+| 3 | wall pressure, spread up to 4e-8 | same rounding | spec clarified |
+| 4 | remainder at Newton level | tolerance, as stated | spec: the Newton test written out |
+| 5 | classical up to 1.1e-9, spec said 2e-10 | leftover Richardson term | spec: dev 2e-10, random 1.1e-9; the self-check runs on dev only |
+| 6 | exact s_m cancellation ≤ 3.5e-11 | informational | none |
+| 7 | Newton convergence depends on E | felupe's check: absolute ε = 1e-3 in \|r_free\| / (ε + \|reactions\|) | **judge bug, fixed in contact-v0.10**: ε = 1e-3 · E · L. Re-run: audit Hertz 100/100 converge, were 90; C2-0054 gives equal metrics at E × 0.1 … × 10 |
+| 8 | load ≠ 2 Σ f by ≤ 6e-13 | Newton residual | spec: P is the top-edge reaction |
+| — | spec silent: p_l2 rule, which a and P, leak_out Σ\|f\|, p0 = max p | | spec written out (§C2) |
+
+**Re-run on contact-v0.10.dev:**
+- The same 1000 cases, judge answers in `judge/`. Scored with the auditor's unmodified compare.py; its output is
+  compare_output_v010.txt. converged-0 answers were passed to it as errors, in a scratch copy.
+- **65 of 450 gap closures still do not converge.** They no longer depend on E (15–17 % per E decade). They cluster
+  on slender columns (w/h < 0.11: 38/113), small ν (< 0.1: 36/113), large gap/h and nx = 4. Those ranges are
+  outside the held-out GF family (w/h ≥ 0.067, ν 0.15–0.45, nx = 3). Recorded as a limit, not fixed.
+- **In the family ranges** (a test seed, NOT the held-out seed): GF 40/40 and HF 12/12 converge for all four zoo
+  media, on both v0.9 and v0.10.
+- **What the units fix does:** it restores unit invariance. On this sample it did not rescue a failing in-range
+  instance. Promo values change for GF leak_pre (now exact at g/2) and GF newton_iters (one more step), and for any
+  instance whose Newton path the scaled test changes.

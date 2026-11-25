@@ -1,0 +1,254 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+instances answered: {'gap_closure': 213, 'gap_closure_C1': 173, 'simple_shear': 450, 'hertz': 90}  judge errors: 74  non-converged FE: 0
+ERROR C0a-0000 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0001 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0010 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0018 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0025 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0026 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0033 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0037 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0039 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 10 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0041 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0048 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0065 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0079 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0084 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0088 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0115 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 11 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0119 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0126 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0143 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 11 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0150 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0153 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0158 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0164 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 6 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0174 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0178 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0198 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 7 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0200 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0201 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0202 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 7 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0205 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0216 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 6 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0228 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 12 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C0a-0230 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0241 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0244 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0248 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C0a-0249 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0251 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0260 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0261 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 8 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C1-0263 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0271 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0274 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0284 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0291 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0297 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0302 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0309 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0323 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0328 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0332 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0334 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0336 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0338 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0346 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0352 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0370 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 9 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C1-0379 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0384 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0406 NewtonConvergenceError: Line search failed: no acceptable step length found after 10 halvings in Newton iteration 10 (smallest step length 9.766e-04, last trial rejected by `check_residual`).
+ERROR C1-0413 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0422 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0439 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C1-0447 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0001 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0011 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0019 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0033 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0042 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0061 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0064 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0068 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0069 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+ERROR C2-0086 NewtonConvergenceError: Maximum number of iterations reached (not converged).
+
+
+## gap_closure: judge exact vs audit exact
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| ideal_force | rel | 386 | 1.15e-14 | C0a-0212 | 0 |
+| exact_force | rel | 386 | 3.47e-11 | C0a-0027 | 0 |
+| exact_thickness | rel | 386 | 3.26e-11 | C0a-0027 | 0 |
+| exact_force_half | rel | 386 | 6.05e-14 | C0a-0127 | 0 |
+| exact_thickness_half | rel | 386 | 3.17e-14 | C0a-0127 | 0 |
+| exact_leak_pre | rel | 386 | 5.71e-14 | C1-0290 | 0 |
+| exact_gap_res | rel | 386 | 3.26e-11 | C0a-0027 | 0 |
+| exact_force_err | rel | 386 | 1.98e-04 | C1-0290 | 73 |
+| exact_force_err (abs) | abs | 386 | 3.47e-11 | C0a-0027 | 0 |
+
+## gap_closure: judge FE vs audit exact
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| fe_push (abs) | abs | 386 | 2.22e-16 | C0a-0061 | 0 |
+| fe_force (full push) | rel | 386 | 1.03e-08 | C1-0429 | 317 |
+| fe_force (full push, abs) | abs | 386 | 5.81e-09 | C1-0383 | 84 |
+| fe_force (every step, |F| >= 1e-6) | rel | 2221 | 2.50e-07 | C1-0349 | 1910 |
+| fe_thickness | rel | 386 | 1.22e-08 | C1-0349 | 353 |
+| fe_thickness (abs) | abs | 386 | 2.14e-11 | C0a-0154 | 0 |
+| fe_wall_pressure vs F/w (worst node) | rel | 386 | 2.52e-08 | C1-0298 | 369 |
+| fe_leak_pre | rel | 386 | 9.23e+04 | C0a-0089 | 386 |
+| fe_gap_res | rel | 386 | 1.22e-08 | C1-0349 | 353 |
+| fe_force_err | rel | 386 | 1.45e-03 | C0a-0089 | 382 |
+| fe_force_err (abs) | abs | 386 | 1.26e-08 | C0a-0085 | 318 |
+| fe_pressure_spread (abs, exact 0) | abs | 386 | 4.24e-08 | C0a-0218 | 291 |
+| fe_min_J_medium vs s_m | rel | 386 | 9.38e-09 | C1-0429 | 301 |
+| fe_force (every step, |F| < 1e-6, rel) | rel | 486 | 2.24e-06 | C0a-0183 | 475 |
+| fe_force (every step, |F| < 1e-6, abs) | abs | 486 | 2.35e-13 | C0a-0220 | 0 |
+
+## gap_closure DIAGNOSTIC: judge FE vs audit exact on layer boundaries rounded to 1e-10
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| fe_force (every step, |F| >= 1e-6) | rel | 2221 | 1.45e-07 | C1-0340 | 1019 |
+| fe_force (full push) | rel | 386 | 7.98e-10 | C0a-0117 | 165 |
+| fe_force (full push, abs) | abs | 386 | 3.30e-09 | C1-0361 | 40 |
+| fe_thickness | rel | 386 | 1.49e-09 | C0a-0220 | 27 |
+| fe_thickness (abs) | abs | 386 | 3.25e-12 | C0a-0020 | 0 |
+| fe_wall_pressure vs F/w (worst node) | rel | 386 | 2.12e-08 | C0a-0218 | 299 |
+| fe_min_J_medium vs s_m | rel | 386 | 1.50e-09 | C0a-0220 | 55 |
+| fe_force (every step, |F| < 1e-6, abs) | abs | 486 | 2.36e-13 | C0a-0220 | 0 |
+
+## gap_closure: fe_leak_pre
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| fe_leak_pre vs exact F(g/2)/F_ideal [g/2 between steps] | rel | 386 | 9.23e+04 | C0a-0089 | 386 |
+| fe_leak_pre vs lin. interp. of judge fe_force at g/2 | rel | 386 | 1.15e-14 | C0a-0212 | 0 |
+
+## gap_closure: judge classical vs audit ideal (every load step)
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| classical_force, before contact (abs / F_ideal(push)) | abs | 1756 | 3.87e-12 | C0a-0123 | 0 |
+| classical_force, in contact | rel | 1337 | 1.10e-09 | C1-0445 | 216 |
+| classical_force, in contact (abs / F_ideal(push)) | abs | 1337 | 1.10e-09 | C1-0445 | 135 |
+
+## gap_closure DIAGNOSTIC: classical vs ideal on rounded geometry
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| classical_force, in contact | rel | 1337 | 7.84e-07 | C1-0349 | 1104 |
+
+## simple_shear: judge vs audit
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| mu | rel | 450 | 0.00e+00 | C0b-0000 | 0 |
+| lmbda | rel | 450 | 0.00e+00 | C0b-0000 | 0 |
+| P_xy | rel | 450 | 4.14e-16 | C0b-0103 | 0 |
+| P_xy vs closed form gamma mu s | rel | 450 | 2.18e-16 | C0b-0346 | 0 |
+| P_yy (abs, exact 0) | abs | 450 | 5.55e-17 | C0b-0440 | 0 |
+| P_yy (abs / (mu s)) | abs | 450 | 1.63e-16 | C0b-0262 | 0 |
+| shear_parasitic | rel | 450 | 4.33e-16 | C0b-0305 | 0 |
+| shear_parasitic vs gamma | rel | 450 | 3.84e-16 | C0b-0022 | 0 |
+| normal_parasitic (abs, exact 0) | abs | 450 | 1.63e-16 | C0b-0262 | 0 |
+| audit numeric P_yy/(mu s) (abs; audit round-off) | abs | 450 | 2.05e-16 | C0b-0262 | 0 |
+
+## hertz: judge vs audit recomputation from judge x, f (audit load P = 2 sum f)
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| load: judge vs 2 sum f | rel | 90 | 3.96e-10 | C2-0025 | 2 |
+| load: 2 int p dx vs 2 sum f (audit self-check) | rel | 90 | 6.20e-16 | C2-0015 | 0 |
+| p (max abs / max p) | abs | 90 | 2.62e-15 | C2-0018 | 0 |
+| E_star | rel | 90 | 0.00e+00 | C2-0000 | 0 |
+| a_hertz | rel | 90 | 1.98e-10 | C2-0025 | 1 |
+| p0_hertz | rel | 90 | 1.98e-10 | C2-0025 | 1 |
+| a_err | rel | 90 | 1.51e-07 | C2-0025 | 48 |
+| p0_err | rel | 90 | 6.24e-07 | C2-0054 | 46 |
+| p_l2 | rel | 90 | 9.80e-09 | C2-0025 | 10 |
+| leak_out (abs) | abs | 90 | 1.98e-21 | C2-0025 | 0 |
+| a_err (abs) | abs | 90 | 3.97e-10 | C2-0025 | 2 |
+| p0_err (abs) | abs | 90 | 1.97e-10 | C2-0025 | 1 |
+| x mid-nodes centred (abs / W) | abs | 90 | 0.00e+00 | C2-0000 | 0 |
+
+## hertz: same, audit uses the judge's load
+| quantity | measure | n | max diff | worst case | n > 1e-10 |
+|---|---|---|---|---|---|
+| E_star | rel | 90 | 0.00e+00 | C2-0000 | 0 |
+| a_hertz | rel | 90 | 0.00e+00 | C2-0000 | 0 |
+| p0_hertz | rel | 90 | 0.00e+00 | C2-0000 | 0 |
+| a_err | rel | 90 | 0.00e+00 | C2-0000 | 0 |
+| p0_err | rel | 90 | 2.90e-11 | C2-0043 | 0 |
+| p_l2 | rel | 90 | 3.23e-14 | C2-0074 | 0 |
+| leak_out (abs) | abs | 90 | 0.00e+00 | C2-0000 | 0 |
+
+## hertz: classical vs Hertz (judge error floor)
+a_err: min -1.2470e-02 median +2.9742e-03 max +1.3276e-02
+p0_err: min -5.7193e-03 median -3.1962e-03 max +1.9370e-03
+p_l2: min +1.0865e-02 median +3.4565e-02 max +9.6572e-02
+leak_out: min +1.6139e-12 median +2.7252e-12 max +5.5979e-12
+p_l2_nodal: min +7.7930e-03 median +2.2292e-02 max +6.1397e-02
+p_l2_int: min +1.9722e-02 median +4.1190e-02 max +6.9631e-02
+p0_err_at0: min -5.7193e-03 median -3.1962e-03 max +1.9370e-03
+leak_out_abs_sum: min +1.1249e-14 median +5.0707e-13 max +1.8301e-12
+argmax p index values: [0]

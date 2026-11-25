@@ -21,3 +21,4 @@ dist/
 
 # blind-audit judge answers (regenerable: see audit/<arena>/REPORT.md "Reproduce")
 audit/*/judge_out*/
+audit/contact/results.json
