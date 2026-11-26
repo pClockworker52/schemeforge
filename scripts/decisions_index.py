@@ -49,6 +49,7 @@ COLD_SPRAY_KEYS = (
     "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
     "odds review", "Track B continues", "cs12 illustration",
     "Driver check", "Track B interface-state", "T3 measurement", "Proposal B",
+    "Softening check", "Solver facts", "Bonded pairs", "blind list", "length scale", "Length path",
 )
 
 
@@ -62,7 +63,7 @@ def track(h: str) -> str:
         return TRACKS[h]
     if any(k in h for k in COLD_SPRAY_KEYS):
         return "cold spray"
-    if any(k in h for k in ("Arena 2", "Phase 6", "Each arena")):
+    if any(k in h for k in ("Arena 2", "Phase 6", "Each arena", "Gate 6", "Target D")):
         return "Arena 2 / all arenas"
     if any(k in h for k in ("WSL", "Venv", "Licence", "Benchmark release", "Plan v1.1", "Appendices")):
         return "repository"
