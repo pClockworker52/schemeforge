@@ -31,6 +31,10 @@ CHANGED = {  # entry heading -> (what changed, later heading) or a list of such 
         ("D4 clause 2 floor",
          "2026-11-16 — After the odds review: bounded trigger run, P3 probe, reduced route (Peter)"),
     ],
+    "2026-11-24 — Cold-spray track paused after the scope review; Phase 6 resumes at step 6 (Peter)": (
+        "diagnostic exception (proposal B)",
+        "2026-11-26 — Cold-spray diagnostic exception: proposal B (edge resultants) approved, interleaved with Gate 6; "
+        "hot-spot dropped (Peter)"),
 }
 TRACKS = {
     "2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)": "repository",
