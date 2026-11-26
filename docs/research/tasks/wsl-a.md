@@ -13,6 +13,9 @@ pass. G2, G3 and step 6 are not run or read. No revision. **What is left, step 7
 `coldspray/opencourant-sph`, with the negative stated as such, the G0 and G1 tables, the predictions against outcome, the
 two listed changes, the binary note, and the disclosure of what was read. SPEC-TL-b §22.2 is already the fork record.
 Keep `~/oc_runs/hvi_seclin/g1` until §42 is merged, then report its size; do not delete it without the modeller's OK.
+§42 also carries the Richardson extrapolation of G1 ℓ_out (fork `2d8c756f6`, rows `tl_cal10_seclin_g1_rich.csv`) as a
+**reported item only** (Peter, 2026-11-26): not frozen, not judged, no bearing on the G1 verdict or the close, with
+WSL A's caveats (continuum not Gauss-sampled reference, quasi-static a_F, three meshes, smooth case, nothing about §25).
 
 **Basis:** Peter, chat 2026-11-26 (DECISIONS 2026-11-26 "Cold-spray diagnostic exception: proposal B ... approved").
 It is a diagnostic exception to the cold-spray pause. The track stays paused; there is no route verdict, no hunch and
