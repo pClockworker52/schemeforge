@@ -32,12 +32,10 @@ Then the tag contact-v1.0 (Gate 6, Peter), then step 7. Gate 6 report: docs/repo
 - **Review:** docs/research/scope-review-2026-11-24/summary.md. Both reviewers said STOP, and Peter accepted.
 - **Resume only if** one of these appears: unseen multi-particle stacks, an unseen ring-map source, or new
   single-impact v_cr data.
-- **Open:** WSL A task 2026-11-26-a (proposal B, equilibrium resultants around the contact edge; a diagnostic
-  exception to the pause, DECISIONS 2026-11-26; interleaved with the Gate 6 WSL runs). Task 2026-11-24-b is done
-  (14d15aa). The hot-spot proposal is dropped. Step 1 plan (fork `c4b34b2c5`) reviewed 2026-11-26: accepted with
-  one change (G1 time-history cadence 20.8 ps, as §25). G0 passed; **G1 failed** (ℓ_out at f = 0.5, 28/61 frames,
-  fork `4b4cc0719`). Peter closed B as a negative result (DECISIONS 2026-11-26 "Proposal B closed"); only the
-  verification §42 write-up is left.
+- **No open cold-spray task.** Proposal B (WSL A task 2026-11-26-a, a diagnostic exception) is closed negative: G1
+  failed (ℓ_out at f = 0.5, 28/61 frames, fork `4b4cc0719`), verification §42 at `87a1d4e`. The follow-on
+  contact-edge proposal (fork `3d658fd82`) was not approved. The hot-spot proposal is dropped. All DECISIONS
+  2026-11-26. Kept: G1 raw files in `~/oc_runs/hvi_seclin/g1` until §42 is merged to main.
 - **Lesson to carry:** point values at the contact edge and the bond boundary may be singular (problem-formalism
   §2(c)), so any new criterion should be built from finite quantities.
 
@@ -72,7 +70,7 @@ The rest of this file is the track's state at the pause, kept for a resumption.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | 2026-11-26-a (proposal B, edge resultants; closing: G1 failed, negative; §42 write-up open); 2026-11-24-b closed (14d15aa); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | no open task; 2026-11-26-a closed (§42, negative; contact-edge follow-on not approved); 2026-11-24-b closed (14d15aa); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter

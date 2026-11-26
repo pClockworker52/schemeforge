@@ -49,7 +49,7 @@ COLD_SPRAY_KEYS = (
     "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
     "odds review", "Track B continues", "cs12 illustration",
     "Driver check", "Track B interface-state", "T3 measurement", "Proposal B",
-    "Softening check", "Solver facts", "Bonded pairs", "blind list", "length scale", "Length path",
+    "Softening check", "Solver facts", "Bonded pairs", "blind list", "length scale", "Length path", "Contact-edge",
 )
 
 
