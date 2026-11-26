@@ -61,6 +61,25 @@ waiting, it goes first.
 the E1-F output card and the punch's `/IMPDISP` (or equivalent) and `/BCS` are new; check each on a small deck first.
 Delete `.vtk` cache after evaluation, from a checked file list (C: at 84 %).
 
+**Step 1 review (2026-11-26, desktop; Peter: "match the cadence first").** Plan `c4b34b2c5` (SPEC-TL-b §22.1)
+accepted with one change. Step 2 may start once the change is committed.
+- **Change: G1 time-history cadence = §25's.** The plan has G1 `/TFILE` at t_H/4000 = 9.5 ps. §25 writes its time
+  history at dt_anim/4 with dt_anim = (D/V)/400 (tl_cal6_p3.py): 20.8 ps at 600 m/s, 25.0 ps at 500 m/s. Set G1 to
+  20.8 ps (the finer of the two), so G1's F_mom check tests the estimator §25 uses (s = 1 window 41.7 ps, s = 2
+  83.3 ps), not a shorter, chattier one. Reason: with t_H/4000 a G1 failure from contact chatter would stop the task
+  although §25's longer window might not show it. No output had been read; this is not tuning. Record it in §22.1
+  and in the script docstring as a listed change, in its own commit, before any run. Predictions may be revised in
+  the same commit (say which).
+- **Flagged readings, all accepted:** F_mom from the time-history outputs (G3 stride 2 on that cadence); G1 F_tot
+  check at every frame 0.2–0.8 t_H on R/256, not 80 % (literal task reading; keep it); r-weighted Gauss-point mean
+  (verified: `q4forc2.F:612` calls `S8EFMOY3`); G0 against high-precision continuum at 1e-4, printed values to half
+  a unit of the last digit; surface edges from the deck node lists.
+- **Checked, no change:** G2 expected values (continuum F_out/F 0.96825 / 0.86603, ℓ_out 0.5557 / 0.3546 agree with
+  the review's recomputation); the punch kernel σ_zz/p_mean = −½ ∫ sin t (1 + ζt) e^{−ζt} J0(ρt) dt follows from the
+  Love/Boussinesq σ_zz kernel and the Hankel transform of p_mean/(2√(1 − ρ²)); G2 load linear (u0 = 0.064 h on
+  R/256), ramp quasi-static; cost and memory consistent with tl_cal4_quad.csv; prediction arithmetic adds up
+  (G1 0.3 above its sub-item product 0.19, read as correlated).
+
 ## Task 2026-11-24-b: delete the band-check arrays (housekeeping; closed: done, 14d15aa)
 
 **Basis:** Peter, chat 2026-11-24 (DECISIONS 2026-11-24 "Cold-spray scope review"). No run, no build, no result
