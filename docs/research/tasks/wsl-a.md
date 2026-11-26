@@ -80,6 +80,16 @@ accepted with one change. Step 2 may start once the change is committed.
   R/256), ramp quasi-static; cost and memory consistent with tl_cal4_quad.csv; prediction arithmetic adds up
   (G1 0.3 above its sub-item product 0.19, read as correlated).
 
+**After steps 2–3 (2026-11-26, desktop; Peter: "Confirm, evaluate G1").** Fork: listed change 1 `8b8ecae2d`
+(G1 TH 20.8 ps), G0 `35dddfa3a` (pass, worst 3.8·10⁻⁶), listed change 2 `3c1e161d4`, G1 runs `55ab7da2a`
+(R/64, R/128, R/256 rc = 0; R/256 7973 s, 0.66 GB RSS; not evaluated).
+- **Listed change 2 confirmed:** F_mom = +2π dZMOM/dt. The plan's code had −2π, against its own frozen definition
+  ("positive when the block pushes the particle up"); found in the required R/64 output check (−1.04 F_max at the
+  peak), before any judged quantity; post-processing only, the sign of tl_cal2_quad2body and tl_cal6_p3.
+- **Evaluate G1 now** (rows `..._g1.csv`, pass/fail per judged item); if it passes, step 4 (G2, R/64 checks first).
+- **Write-up note:** `fork_sha` in `tl_cal10_seclin_runs.csv` (`38639859c`) is the working tree's last solver commit,
+  not the binary's; the runs used `~/oc_runs/ocroot_d0500106d` (built 2026-11-16). State it, or add a binary column.
+
 ## Task 2026-11-24-b: delete the band-check arrays (housekeeping; closed: done, 14d15aa)
 
 **Basis:** Peter, chat 2026-11-24 (DECISIONS 2026-11-24 "Cold-spray scope review"). No run, no build, no result

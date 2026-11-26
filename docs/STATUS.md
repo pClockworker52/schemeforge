@@ -1,6 +1,10 @@
 # STATUS
 Phase: 6 at Gate 6 (2026-11-25; Target D, promo, breakers, tag wait on Peter's WSL runs) — cold-spray track PAUSED (DECISIONS 2026-11-24)  Judges: euler1d-v1.6 (2590e3e), contact-v0.12.dev (735b69e)  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
 Last session: 2026-11-26 (desktop) — Peter approved cold-spray diagnostic exception B (edge resultants), interleaved with the Gate 6 WSL runs; hot-spot dropped
+2026-11-26 (desktop, evening): task 2026-11-26-a: cadence change in (fork `8b8ecae2d`); G0 passes (`35dddfa3a`,
+worst 3.8e-6 vs 1e-4); G1 runs R/64, R/128, R/256 done (`55ab7da2a`, binary ocroot_d0500106d), not evaluated. Peter
+confirmed listed change 2 (F_mom sign +2pi dZMOM/dt, code brought in line with the frozen definition; found in the
+required R/64 check). Next: WSL A evaluates G1. Numbers: G0 only; no resultant judged yet.
 2026-11-26 (desktop, later): WSL A step 1 of task 2026-11-26-a done (fork `c4b34b2c5`, SPEC-TL-b §22.1: script,
 G2 punch deck, frozen G2 expected values, predictions; headline positive about 0.04). Reviewed: accepted with one
 change, Peter: G1 time-history cadence set to §25's 20.8 ps (plan had t_H/4000 = 9.5 ps), so G1 checks the same
