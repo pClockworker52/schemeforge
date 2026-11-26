@@ -35,6 +35,9 @@ CHANGED = {  # entry heading -> (what changed, later heading) or a list of such 
         "diagnostic exception (proposal B)",
         "2026-11-26 — Cold-spray diagnostic exception: proposal B (edge resultants) approved, interleaved with Gate 6; "
         "hot-spot dropped (Peter)"),
+    "2026-11-26 — Cold-spray diagnostic exception: proposal B (edge resultants) approved, interleaved with Gate 6; "
+    "hot-spot dropped (Peter)": (
+        "B closed (negative, G1)", "2026-11-26 — Proposal B closed as a negative result after G1 (Peter)"),
 }
 TRACKS = {
     "2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)": "repository",
@@ -45,7 +48,7 @@ COLD_SPRAY_KEYS = (
     "Cold-spray", "OpenCourant", "simulation route", "SPH", "Blind test", "Cold spray", "CS-1", "CS-2",
     "Campaign trigger", "Build-up", "Hunch budget", "BCT", "Route review", "D3 reopened", "After §23",
     "odds review", "Track B continues", "cs12 illustration",
-    "Driver check", "Track B interface-state", "T3 measurement",
+    "Driver check", "Track B interface-state", "T3 measurement", "Proposal B",
 )
 
 

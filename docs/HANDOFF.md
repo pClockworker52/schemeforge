@@ -35,8 +35,9 @@ Then the tag contact-v1.0 (Gate 6, Peter), then step 7. Gate 6 report: docs/repo
 - **Open:** WSL A task 2026-11-26-a (proposal B, equilibrium resultants around the contact edge; a diagnostic
   exception to the pause, DECISIONS 2026-11-26; interleaved with the Gate 6 WSL runs). Task 2026-11-24-b is done
   (14d15aa). The hot-spot proposal is dropped. Step 1 plan (fork `c4b34b2c5`) reviewed 2026-11-26: accepted with
-  one change (G1 time-history cadence 20.8 ps, as §25). G0 passed; G1 runs done (fork `55ab7da2a`); F_mom sign
-  fix (listed change 2) confirmed by Peter; G1 evaluation next.
+  one change (G1 time-history cadence 20.8 ps, as §25). G0 passed; **G1 failed** (ℓ_out at f = 0.5, 28/61 frames,
+  fork `4b4cc0719`). Peter closed B as a negative result (DECISIONS 2026-11-26 "Proposal B closed"); only the
+  verification §42 write-up is left.
 - **Lesson to carry:** point values at the contact edge and the bond boundary may be singular (problem-formalism
   §2(c)), so any new criterion should be built from finite quantities.
 
@@ -71,7 +72,7 @@ The rest of this file is the track's state at the pause, kept for a resumption.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | 2026-11-26-a (proposal B, edge resultants; G0 pass, G1 runs `55ab7da2a`, G1 evaluation next); 2026-11-24-b closed (14d15aa); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | 2026-11-26-a (proposal B, edge resultants; closing: G1 failed, negative; §42 write-up open); 2026-11-24-b closed (14d15aa); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter

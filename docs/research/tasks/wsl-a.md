@@ -5,7 +5,14 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-26-a: proposal B, equilibrium resultants around the contact edge (convergence check; open)
+## Task 2026-11-26-a: proposal B, equilibrium resultants around the contact edge (convergence check; closing: G1 failed, negative; step 7 write-up open)
+
+**Close (2026-11-26, Peter: "Close as negative"; DECISIONS 2026-11-26 "Proposal B closed as a negative result after
+G1").** G1 failed (fork `4b4cc0719`): ℓ_out at f = 0.5 converges at 28 of 61 frames, limit 0.8; all other G1 items
+pass. G2, G3 and step 6 are not run or read. No revision. **What is left, step 7 only:** verification §42 on
+`coldspray/opencourant-sph`, with the negative stated as such, the G0 and G1 tables, the predictions against outcome, the
+two listed changes, the binary note, and the disclosure of what was read. SPEC-TL-b §22.2 is already the fork record.
+Keep `~/oc_runs/hvi_seclin/g1` until §42 is merged, then report its size; do not delete it without the modeller's OK.
 
 **Basis:** Peter, chat 2026-11-26 (DECISIONS 2026-11-26 "Cold-spray diagnostic exception: proposal B ... approved").
 It is a diagnostic exception to the cold-spray pause. The track stays paused; there is no route verdict, no hunch and

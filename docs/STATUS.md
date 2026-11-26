@@ -1,6 +1,12 @@
 # STATUS
 Phase: 6 at Gate 6 (2026-11-25; Target D, promo, breakers, tag wait on Peter's WSL runs) — cold-spray track PAUSED (DECISIONS 2026-11-24)  Judges: euler1d-v1.6 (2590e3e), contact-v0.12.dev (735b69e)  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
-Last session: 2026-11-26 (desktop) — Peter approved cold-spray diagnostic exception B (edge resultants), interleaved with the Gate 6 WSL runs; hot-spot dropped
+Last session: 2026-11-26 (desktop) — proposal B (edge resultants) run to G1, which failed; Peter closed it as a negative result; §42 write-up left to WSL A
+2026-11-26 (desktop, night): **proposal B closed as a negative result** (Peter; DECISIONS 2026-11-26 "Proposal B
+closed"). G1 failed (fork `4b4cc0719`, SPEC-TL-b §22.2): ℓ_out convergence at f = 0.5 at 28 of 61 frames (limit 0.8;
+R/128 → R/256 change median 3.7 %, about first order); ℓ_out at f = 0.25 0.90, F_out/F_tot at f = 0.5 0.98 (+1.1 %
+vs sampled Hertz), F_tot from momentum rate within 0.05 % (all pass). Recounted here from the committed rows. G2, G3,
+§25 not run or read; no revision. Next: WSL A writes verification §42 (negative). Cold-spray pause unchanged. Open:
+solver-facts §1 line 26 register item.
 2026-11-26 (desktop, evening): task 2026-11-26-a: cadence change in (fork `8b8ecae2d`); G0 passes (`35dddfa3a`,
 worst 3.8e-6 vs 1e-4); G1 runs R/64, R/128, R/256 done (`55ab7da2a`, binary ocroot_d0500106d), not evaluated. Peter
 confirmed listed change 2 (F_mom sign +2pi dZMOM/dt, code brought in line with the frozen definition; found in the
