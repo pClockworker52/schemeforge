@@ -3957,3 +3957,135 @@ class holds a majority. S050 misses "resolved" only on q (1.62 against ≤ 1.5);
 
 **Disk:** the per-frame arrays (`~/oc_runs/hvi_band`, 5.5 GB) are kept until Peter decides. They can be deleted from
 the listed directories.
+
+## 42. Equilibrium resultants around the contact edge (proposal B): negative; G0 passes, G1 fails on ℓ_out at f = 0.5 (task 2026-11-26-a)
+
+**Negative result.** The equilibrium lever arm ℓ_out does not converge on the smooth two-body quad Hertz case at the
+cut f = 0.5 by the frozen reading rule (28 of 61 frames, limit 0.8 of them). G1 is a precondition gate, so the task
+stopped there (DECISIONS 2026-11-26 "Proposal B closed as a negative result after G1"). **G2, G3 and step 6 were not
+run or read; no resultant was computed from §25 output.** No revision. A diagnostic exception to the cold-spray pause:
+no route verdict, no hunch, no bonding claim; `kind = calibration`.
+
+- Spec: fork `cs12` `eab2e1c21`, `hvi/PROPOSAL-2026-11-26-section-linearization.md` revision 2; where the task differs,
+  the task holds. Plan, frozen before any run or output reading: SPEC-TL-b §22.1, `c4b34b2c5` (reviewed, e4de2c6).
+  Fork record of the results: SPEC-TL-b §22.2.
+- Script `hvi/scripts/tl_cal10_seclin.py` (all definitions in its docstring). Fork commits: listed change 1
+  `8b8ecae2d`; G0 rows `35dddfa3a`; listed change 2 `3c1e161d4`; G1 run rows `55ab7da2a`; G1 evaluation `4b4cc0719`;
+  reported Richardson item `2d8c756f6`.
+- Rows `opencourant/results/tl_cal10_seclin_{g0,runs,g1,g1_rich}.csv`; the frozen G2 expected values
+  `tl_cal10_seclin_g2_expected.csv` (analytic, from the plan; G2 was never run).
+
+**Quantities (spec E1).** On the contact-side surface, p_n = −n·σ·n of the owning element on each edge (for
+`Isolid = 17` the animation stress is the r-weighted mean of the 2 × 2 Gauss points, `s8efmoy3.F`). With the cut
+r_c = f a_ref and r_up = 1.2 a_ref: F_in = ∫₀^{r_c} p_n 2πr dr, F_out = F_tot − F_in (equilibrium form),
+M_out = ∫_{r_c}^{r_up} p_n (r − r_c) 2πr dr, ℓ_out = M_out / F_out / a_ref; judged ℓ_out at f = 0.25 and 0.5 and
+F_out/F_tot at f = 0.5, block side. Reading rule as §25 (|q256 − q128| ≤ 3.5 % |q256| and the ratio or small-change
+clause).
+
+**Listed changes after the plan freeze** (both before any judged quantity was computed):
+1. G1 `/TFILE` 20.8 ps (§25's time-history cadence at 600 m/s) instead of t_H/4000 = 9.5 ps; the step 1 review's one
+   change. Predictions unchanged.
+2. F_mom = +2π dZMOM/dt. The plan's code had −2π, against its own frozen definition ("positive when the block pushes
+   the particle up"); found in the required R/64 output check (−1.04 F_max at the peak); post-processing only, the
+   sign of `tl_cal2_quad2body` and `tl_cal6_p3`. Confirmed by the modeller. Predictions unchanged.
+
+**G0 (analytic, no run): passes** (`tl_cal10_seclin_g0.csv`). The I0/I1/E1 code on a synthetic surface of 4000 edges
+per a with exact r-weighted edge averages, against high-precision continuum values, limit 10⁻⁴:
+
+| field | f | F_out/F_tot (continuum) | ℓ_out (continuum) | worst rel. error of the code |
+|---|---|---|---|---|
+| Hertz | 0.25 | 0.9077305 | 0.3820378 | 0 / 0 |
+| Hertz | 0.5 | 0.6495191 | 0.2295998 | 0 / 1·10⁻⁷ |
+| punch | 0.25 | 0.9682458 | 0.5556722 | 0 / 2.1·10⁻⁶ |
+| punch | 0.5 | 0.8660254 | 0.3545998 | 0 / 3.8·10⁻⁶ |
+
+The spec's printed 4-digit values agree to half a unit of their last digit.
+
+**G1 runs** (two-body elastic quad Hertz, `tl_cal2_quad2body` deck with the full 3R × 2R block, TYPE5 both ways,
+default bulk viscosity, dt scale 0.4, `/ANIM` stress every t_H/100; `tl_cal10_seclin_runs.csv`). These are reruns
+(no tl_cal4 run directory survived).
+
+| mesh | elements (sphere / block) | wall time | peak RSS | peak F / F_H | approach | rebound |
+|---|---|---|---|---|---|---|
+| R/64 | 6 144 / 12 420 | 2 min | 0.19 GB | 1.040 | 0.991 | 0.9996 |
+| R/128 | 24 576 / 44 928 | 17 min | 0.29 GB | 1.046 | 0.976 | 0.9997 |
+| R/256 | 98 304 / 167 265 | 2 h 13 min | 0.66 GB | 1.051 | 0.969 | 0.9997 |
+
+**Binary note.** The runs used `~/oc_runs/ocroot_d0500106d` (the §25 binary, built 2026-11-16), set by the runner. The
+`fork_sha` column of `tl_cal10_seclin_runs.csv` (`38639859c`) is the working tree's last solver-source commit, not the
+binary's. `d0500106d` is an ancestor of `38639859c`; the later commits change six engine files (`hvi_bond.F90`,
+`hvi_contact.F90`, `hvi_mod.F90`, `hvi_out.F90`, `tl_mod.F90`, two lines of the `forintp.F` hook), all fork code for
+SPH/TLSPH bodies, bonds and output, which this quad TYPE5 deck without an hvi sidecar does not switch on (not checked
+by a rerun). The script now writes a `binary` column for later run rows.
+
+**R/64 output check (task step 3, a facts gap, spec §8).**
+- Surface edges, p_n and F_mom are read as intended once listed change 2 is applied: 10–14 block edges inside a, no
+  surface folds, p_max/p₀ 1.04–1.08, |F_int/F_mom − 1| 0.3–0.9 %, halved cadence ≤ 4·10⁻⁴.
+- **The §25 contact-radius rule** (largest rim r with gap < h/2) reads a_code / a_F = 1.35–1.46 on R/64, in steps of the
+  rim node spacing (1.705 → 2.185 µm); a_F = a_max (F/F_max)^⅓ from the measured force. On R/256 a_code,256 / a_F =
+  1.13–1.24 (a_code,256 = 1.40–1.88 µm over 0.2–0.8 t_H; a_max,Hertz = 1.60 µm). a_ref for G1 convergence is
+  a_code,256 on all three meshes.
+- Time-history spacing as written (first cycle past each 20.8 ps): median 21.95 ps on R/64; §25's R/256 600 m/s run
+  has 20.88 ps.
+
+**G1 evaluation** (`tl_cal10_seclin_g1.csv`; 61 animation frames 0.2–0.8 t_H; F_tot = F_mom):
+
+| item (judged) | result | limit | |
+|---|---|---|---|
+| ℓ_out convergence, block, f = 0.25 | 55 / 61 = 0.90 | ≥ 0.8 | pass |
+| **ℓ_out convergence, block, f = 0.5** | **28 / 61 = 0.46** | ≥ 0.8 | **fail** |
+| F_out/F_tot convergence, block, f = 0.5 | 60 / 61 = 0.98 | ≥ 0.8 | pass |
+| F_out/F_tot at f = 0.5, R/256 vs Gauss-sampled Hertz (r_c = f a_F): peak frame / mean 0.4–0.6 t_H | +1.14 % / +1.13 % | ≤ 2 % | pass |
+| \|F_mom / F_int − 1\| at every frame, R/256 | max 0.05 % | ≤ 2 % | pass |
+| \|F_mom(s = 2) / F_mom(s = 1) − 1\| at every frame, R/256 | max 2.4·10⁻⁴ | ≤ 1 % | pass |
+
+- Every failing frame of ℓ_out at f = 0.5 fails the size test, none the ratio test. The R/128 → R/256 change is
+  2.9–9.6 % (median 3.7 %); the ratio of successive changes is 0.46 median (≤ 0.63), an observed order of about 1.
+  ℓ_out is converging at about first order but is not within 3.5 % by R/256.
+- At f = 0.25 the change is 1.3–4.5 % (median 1.8 %); the six failing frames are at 0.74–0.80 t_H, where a shrinks.
+  The absolute change is about the same at both cuts (frame 50: 0.0052 and 0.0059 a_ref); ℓ_out at f = 0.5 is half
+  the size, so the same shift doubles in percent.
+- Reported (not judged): F_out/F_tot at f = 0.25 converges at 61 / 61 (block and particle); particle side ℓ_out 54 / 61
+  (f = 0.25) and 29 / 61 (f = 0.5), F_out/F_tot at f = 0.5 60 / 61; ℓ_out at R/256 against Gauss-sampled Hertz +1.3 %
+  (f = 0.25) and +1.8 % (f = 0.5), F_out/F_tot at f = 0.25 +0.3 %.
+
+**Reported item, added after the evaluation (Peter 2026-11-26): Richardson extrapolation of ℓ_out.** Not frozen, not
+judged, no bearing on the G1 verdict or the close (`tl_cal10_seclin_g1_rich.csv`, `tl_cal10_seclin.py g1rich`, from
+the committed G1 rows only, block side). Per frame, with p = 1 fixed (2 q256 − q128) and with the observed order
+(q256 + d₂ r/(1 − r), r = d₂/d₁, where 0 < r < 1; observed p median 1.16, 0.86–1.49 at f = 0.25), against the
+continuum Hertz ℓ_out at the same cut (r_c = f a_code,256, r_up = 1.2 a_code,256; profile radius a_F from that frame's
+F_mom on R/256):
+
+| f | R/256 as computed: median (range); 0.4–0.6 t_H mean | Richardson p = 1 | Richardson, observed p |
+|---|---|---|---|
+| 0.25 | +1.68 % (+1.49 … +2.59); +1.55 % | −0.15 % (−1.98 … +0.86); −0.22 % | +0.10 % (−1.92 … +1.68); +0.20 % |
+| 0.5 | +2.70 % (+2.22 … +4.90); +2.33 % | −1.27 % (−5.12 … +1.13); −1.30 % | −0.86 % (−5.11 … +2.97); −0.53 % |
+
+At f = 0.25 the R/256 bias is systematic (too high at every frame), and extrapolation removes it to about ±0.2 % in
+the median, with about ±2 % frame-to-frame scatter; the worst frames (−1 to −2 %) are at 0.75–0.80 t_H. At f = 0.5
+extrapolation overshoots. **Caveats:** the reference is the continuum field, not the Gauss-sampled one (they differ by
+0.2–0.4 % on the punch case); a_F assumes quasi-static Hertz; three meshes only; a smooth elastic case. It says
+nothing about §25.
+
+**Against the prediction** (SPEC-TL-b §22.1, committed with the plan):
+- G1 passes 0.3: **wrong** (fails).
+  - ℓ_out convergence at ≥ 80 % of the frames at both f, 0.6: **wrong** (fails at f = 0.5; passes at f = 0.25).
+  - F_out/F_tot at f = 0.5, rule and 2 %, 0.7: right.
+  - |F_mom/F_int − 1| ≤ 2 % at every frame, 0.5: right, by a wide margin (max 0.05 %; the low-force frames did not
+    limit it, as the reasoning expected).
+  - Halved cadence ≤ 1 %, 0.9: right.
+- G2 0.5, G3 0.6, §25 usable 0.35 / 0.3 / 0.4, headline about 0.04: not tested.
+- G0 was exercised before the plan commit (scratch, analytic) and was not predicted.
+
+**Disclosure of what was read.**
+- Before the plan commit: no G1, G2, G3 or §25 output; the §25 run directories listed by file name only.
+- R/64 output check (before R/128 and any evaluation): R/64 frames 20–80 and its time history (contact radius, edge
+  counts, folds, p_max/p₀, F_int/F_mom, halved cadence); no ℓ_out or F_out. For the cadence comparison, the **time column
+  only** of three §25 time-history files (P3V0600n032, P3V0600n128, P3V0500n128); no momentum, force or frame value.
+- G1 rows by `eval g1` after listed change 2 was confirmed; the Richardson item from the committed G1 rows.
+- G2: decks were written to a scratch directory as text only, while writing the plan; never run.
+- Nothing computed from §25 frames; the hot-spot H1/H2 was not computed.
+
+**Disk.** The G1 .vtk cache (7.2 GB, 483 files) was deleted after evaluation from a checked file list. The raw
+animation and time-history files are kept in `~/oc_runs/hvi_seclin/g1` (4.8 GB) until this section is merged; they are
+not deleted without the modeller's OK.
