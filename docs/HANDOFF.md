@@ -32,7 +32,9 @@ Then the tag contact-v1.0 (Gate 6, Peter), then step 7. Gate 6 report: docs/repo
 - **Review:** docs/research/scope-review-2026-11-24/summary.md. Both reviewers said STOP, and Peter accepted.
 - **Resume only if** one of these appears: unseen multi-particle stacks, an unseen ring-map source, or new
   single-impact v_cr data.
-- **Still open:** WSL A task 2026-11-24-b (delete the band-check arrays; housekeeping).
+- **Open:** WSL A task 2026-11-26-a (proposal B, equilibrium resultants around the contact edge; a diagnostic
+  exception to the pause, DECISIONS 2026-11-26; interleaved with the Gate 6 WSL runs). Task 2026-11-24-b is done
+  (14d15aa). The hot-spot proposal is dropped.
 - **Lesson to carry:** point values at the contact edge and the bond boundary may be singular (problem-formalism
   §2(c)), so any new criterion should be built from finite quantities.
 
@@ -67,7 +69,7 @@ The rest of this file is the track's state at the pause, kept for a resumption.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | 2026-11-24-b (delete band-check arrays; housekeeping); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | 2026-11-26-a (proposal B, edge resultants; step 1 plan commit first, then review); 2026-11-24-b closed (14d15aa); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
 | WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
 
 ## Open for Peter

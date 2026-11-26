@@ -5,7 +5,63 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-24-b: delete the band-check arrays (housekeeping; open)
+## Task 2026-11-26-a: proposal B, equilibrium resultants around the contact edge (convergence check; open)
+
+**Basis:** Peter, chat 2026-11-26 (DECISIONS 2026-11-26 "Cold-spray diagnostic exception: proposal B ... approved").
+It is a diagnostic exception to the cold-spray pause. The track stays paused; there is no route verdict, no hunch and
+no bonding claim. `kind = calibration`.
+
+**Spec:** fork `sph-hvi-contact`, branch `cs12`, commit `eab2e1c21`,
+`hvi/PROPOSAL-2026-11-26-section-linearization.md`, revision 2 (quantities E1, E1-F, E2, E3; gates G0–G3; judged
+set; outcomes). Where this task and the spec differ, this task holds. **The hot-spot proposal is dropped:** do not
+compute H1 or H2, not even as a by-product.
+
+**Scheduling:** in gaps between Peter's Gate 6 WSL runs, never alongside a big job. The promo zoo and γ-sweep are
+done (DECISIONS 2026-11-25 "Target D thresholds accepted"); the breaker run on the zoo is next
+(docs/judge/contact_promo_wsl.md §3), and a promo rerun follows if a breaker case is accepted into the judge. Every engine start goes through the watchdog. Estimate
+memory before each R/256 run. Check Windows Update before runs of several hours. Gate 6 runs take priority: if one is
+waiting, it goes first.
+
+**Values frozen by this task** (from the spec; Peter may change any of them before step 1 is committed, not after):
+
+| Item | Value |
+|---|---|
+| Reading rule, usable | driver-check-2026-11-17.md §3 unchanged; usable = ≥ 80 % of judged points, block side, both speeds (§25); G1, G2: ≥ 80 % of their frames |
+| Judged on §25 | primary ℓ_out at f = 0.25 and 0.5 (headline: usable at either f, each reported); secondary F_out/F_tot at f = 0.5; reported only: F_out/F_tot at f = 0.25, the particle side, E1-F, E2, E3 |
+| §25 judged outputs | 3–9 (600 m/s), 3–8 (500 m/s); folded frames flagged and evaluated |
+| Upper limit of M_out | r_up = 1.2 a_ref (a_256 on §25, a_code,256 in G1 convergence, a_F in G1 accuracy, a_p in G2); variant at each mesh's own a_m reported |
+| G0 tolerance | 1e-4 relative against the spec's continuum values |
+| G1 frames | convergence: every frame from 0.2 to 0.8 t_H; accuracy: frame nearest the force peak and the mean over 0.4–0.6 t_H |
+| G1 judged | ℓ_out convergence at both f; F_out/F_tot at f = 0.5 (convergence and \|q_FE,256 / q_samp,256 − 1\| ≤ 2 %); F_tot: \|F_mom / F_int − 1\| ≤ 2 % and the change with every second output ≤ 1 %, at every G1 frame on R/256 |
+| G2 | a_p = 2.5 µm; ramp over ≥ 20 depth transits, then hold; edge element p_n growth ≥ 1.25 per refinement; ℓ_out at both f and F_out/F_tot at f = 0.5: reading rule and \|q_FE,256 / q_samp,256 − 1\| ≤ 2 % |
+| G3 | §25 momentum-rate F_tot, every output against every second output: change ≤ 1 % at ≥ 80 % of the judged points, both speeds |
+| Binary | `d0500106d` (the §25 binary) for every gate and run |
+
+**Steps.** A failed gate stops the task. Report it and record the negative result; nothing after it is run or read.
+1. **Plan commit (fork), before any run or any reading of output.** It contains: script `hvi/scripts/tl_cal10_seclin.py`
+   with every definition in its docstring (cut, F_in by exact intersection lengths, F_tot by momentum-rate central
+   differences, M_out, ℓ_out, the G1/G2 sampled references, the reading rule); the G2 punch deck; the expected G2 values
+   from the closed-form Sneddon stresses at the actual Gauss points of each mesh; the recomputed ℓ_out orientation at
+   1.2 a_p; memory and time estimates for the R/256 runs; and **your predictions for revision 2's judged set** (the
+   spec's §7 numbers are revision 1's). Report the sha and stop: the modeller has the frozen plan reviewed before step 2.
+2. **G0** (no run). Rows `hvi/results/tl_cal10_seclin_g0.csv`.
+3. **G1:** two-body quad Hertz, `tl_cal4_quad.py`, full block (3R × 2R), R/64, R/128, R/256. These are reruns, since no
+   tl_cal4 run directories survive. Check the contact-radius rule and the station output on R/64 first; this is a
+   facts gap (spec §8). Rows `..._g1.csv`.
+4. **G2:** flat rigid punch, the same block and meshes. The prescribed-displacement deck has never been run on quads:
+   check the reactions, the free radial motion and the dynamic residual on R/64 before the finer meshes. Rows `..._g2.csv`.
+5. **G3** (no run): on the committed §25 frames in `~/oc_runs/hvi_p3`. Rows `..._g3.csv`.
+6. **§25 resultants:** the judged set and the reported items. E1-F needs one §25 rerun with contact-force output
+   (about 8 min). Check that output on a small 2D TYPE5 deck first. If it does not work, report it and leave E1-F out.
+   Rows `..._p3.csv`.
+7. **Write-up:** a new SPEC-TL-b section (fork) and verification §42 (on `coldspray/opencourant-sph`), with the
+   disclosure of what was read (the spec, §6). Negative results are stated as such.
+
+**Facts check before each step** (solver-facts.md): the spec's §8 list of facts not yet covered applies. Parser keys:
+the E1-F output card and the punch's `/IMPDISP` (or equivalent) and `/BCS` are new; check each on a small deck first.
+Delete `.vtk` cache after evaluation, from a checked file list (C: at 84 %).
+
+## Task 2026-11-24-b: delete the band-check arrays (housekeeping; closed: done, 14d15aa)
 
 **Basis:** Peter, chat 2026-11-24 (DECISIONS 2026-11-24 "Cold-spray scope review"). No run, no build, no result
 section.

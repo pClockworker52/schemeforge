@@ -1694,6 +1694,7 @@ D1–D8 against all 20 points (table in docs/plans/2026-11-24-target-d-draft.md)
     are rerun first.
   - If no case is accepted, D.md is committed on contact-v0.12.dev, and that version is tagged contact-v1.0.
 - Next: the breaker run on the zoo (WSL, docs/judge/contact_promo_wsl.md §3).
+
 ## 2026-11-26 — Cold-spray diagnostic exception: proposal B (edge resultants) approved, interleaved with Gate 6; hot-spot dropped (Peter)
 *Context:* Peter asked (2026-11-25) whether weld-fatigue conventions for singular notches have an untried analogue at the
 contact edge. WSL A drafted two proposals in the fork `sph-hvi-contact` (branch `cs12`), both convergence checks on the
