@@ -18,8 +18,8 @@ Branch: `claude/exciting-fermi-qy077p`. **Two sessions write to it** (this cloud
    - **schemeforge 607c851** ("contact-edge proposal not approved", cited by the fork's STATUS at 70d82d64): not on
      GitHub on 2026-11-27, probably still local in the desktop session. Ask Peter before re-creating anything.
    - Merge §42 only once it is clear the desktop session has not done it already.
-2. **Reassess.** Peter asked for it after reading the partner-aware note. Put the threads below side by side and ask
-   him one question about direction.
+2. **Reassessed 2026-11-27.** Peter (DECISIONS 2026-11-27): finish Gate 6, clean the repository, then unpause the
+   cold-spray track (own entry). No cold-spray task before that.
 
 ## Open threads (facts with sources)
 
@@ -93,7 +93,9 @@ The rest of this file is the track's state at the pause, kept for a resumption.
 
 ## Open for Peter
 
-- The breaker run (Phase 6). The direction question after the reassessment.
+- The breaker run (Phase 6): WSL (docs/judge/contact_promo_wsl.md §3) or a cloud session started inside the repo.
+- Clean-up scope (proposed in chat 2026-11-27), then the unpause entry.
+- §42 sync: is 607c851 and the 'Proposal B closed' DECISIONS entry unpushed in the desktop session?
 
 ## Hunch budget
 
