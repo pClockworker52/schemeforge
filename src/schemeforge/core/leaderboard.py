@@ -60,21 +60,29 @@ def build(conn: sqlite3.Connection, arena: str, slot: str, version: str | None =
         return rows
 
     keys = [f"{case}.{m}" for case, m, _ in objs]
-    signs = [1.0 if d == "min" else -1.0 for _, _, d in objs]
-    vectors = [[s * r.values.get(k, math.nan) for k, s in zip(keys, signs, strict=True)] for r in rows]
+    dirs = [d for _, _, d in objs]
+
+    def oriented(r: Row, k: str, d: str) -> float:
+        """The objective value in its own direction: |v| for "absmin" (signed errors such as a_err), else v."""
+        v = r.values.get(k, math.nan)
+        return abs(v) if d == "absmin" else v
+
+    vectors = [[(-1.0 if d == "max" else 1.0) * oriented(r, k, d) for k, d in zip(keys, dirs, strict=True)]
+               for r in rows]
     for r, rank in zip(rows, pareto_ranks(vectors), strict=True):
         r.rank = rank
 
     zoo = [r for r in rows if r.is_zoo]
-    for k, (_, _, d) in zip(keys, objs, strict=True):
-        zv = [r.values[k] for r in zoo if k in r.values and math.isfinite(r.values[k]) and r.values[k] > 0]
+    for k, d in zip(keys, dirs, strict=True):
+        zv = [oriented(r, k, d) for r in zoo if k in r.values]
+        zv = [v for v in zv if math.isfinite(v) and v > 0]
         if not zv:
             continue
-        best = min(zv) if d == "min" else max(zv)
+        best = max(zv) if d == "max" else min(zv)
         for r in rows:
-            v = r.values.get(k)
-            if v is not None and math.isfinite(v) and v > 0:
-                r.vs_zoo[k] = v / best if d == "min" else best / v
+            v = oriented(r, k, d)
+            if math.isfinite(v) and v > 0:
+                r.vs_zoo[k] = best / v if d == "max" else v / best
     for r in rows:
         ratios = [v for v in r.vs_zoo.values() if v > 0]
         r.score = math.exp(sum(math.log(v) for v in ratios) / len(ratios)) if ratios else math.inf

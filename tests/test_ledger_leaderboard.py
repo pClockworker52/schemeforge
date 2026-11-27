@@ -52,12 +52,12 @@ def test_pareto() -> None:
     assert pareto_ranks([[1, 2], [2, 1], [2, 2], [3, 3], [float("nan"), 0]]) == [0, 0, 1, 2, 0]
 
 
-def _fake_run(conn, cid, run_id, values, origin="eval", path="candidates/x.py"):
+def _fake_run(conn, cid, run_id, values, origin="eval", path="candidates/x.py", arena="euler1d", slot="limiter"):
     conn.execute("INSERT OR IGNORE INTO candidates (id, arena, slot, code_hash, path, origin, created_at) "
-                 "VALUES (?, 'euler1d', 'limiter', ?, ?, ?, 't')", (cid, cid, path, origin))
+                 "VALUES (?, ?, ?, ?, ?, ?, 't')", (cid, arena, slot, cid, path, origin))
     conn.execute("INSERT INTO runs (id, kind, candidate_id, arena, slot, suite, judge_version, judge_hash, status, "
-                 "started_at) VALUES (?, 'eval', ?, 'euler1d', 'limiter', 'dev', 'v-test', 'h', 'ok', ?)",
-                 (run_id, cid, run_id))
+                 "started_at) VALUES (?, 'eval', ?, ?, ?, 'dev', 'v-test', 'h', 'ok', ?)",
+                 (run_id, cid, arena, slot, run_id))
     for key, v in values.items():
         case, metric = key.split(".")
         conn.execute("INSERT INTO scores (run_id, candidate_id, case_id, metric, value, judge_version, judge_hash) "
@@ -114,3 +114,21 @@ def test_submit_attaches_hunch_and_lineage(tmp_ledger, tmp_path) -> None:
     assert row["hunch_id"] == hid and json.loads(row["parents"]) == [first] and row["origin"] == "proposer"
     with pytest.raises(KeyError):
         evaluation.submit_candidate(f2, hid, ["c-nope"], registry_path=reg)
+
+
+def test_leaderboard_absmin_ranks_signed_errors_by_magnitude(tmp_path) -> None:
+    # Arena 2: a_err and p0_err are signed; minimising the raw value would reward large negative errors
+    from schemeforge.engine.objectives import OBJECTIVES
+
+    conn = registry.connect(tmp_path / "reg.sqlite")
+    base = {f"{c}.{m}": 0.01 for c, m, _ in OBJECTIVES["contact"]["medium"]}
+    zoo = "src/schemeforge/arenas/contact/zoo/medium/z.py"
+    kw = {"arena": "contact", "slot": "medium"}
+    _fake_run(conn, "zoo-z", "r0", base, origin="zoo", path=zoo, **kw)
+    _fake_run(conn, "c-neg", "r1", {**base, "C2-g6.a_err": -0.5}, **kw)
+    _fake_run(conn, "c-small", "r2", {**base, "C2-g6.a_err": -0.005}, **kw)
+    rows = leaderboard.build(conn, "contact", "medium", version="v-test")
+    by_id = {r.candidate_id: r for r in rows}
+    assert by_id["c-neg"].vs_zoo["C2-g6.a_err"] == pytest.approx(50.0)
+    assert by_id["c-small"].vs_zoo["C2-g6.a_err"] == pytest.approx(0.5)
+    assert by_id["c-small"].rank == 0 and by_id["c-neg"].rank > 0

@@ -41,6 +41,14 @@ GRIDS: dict[tuple[str, str], dict[str, np.ndarray]] = {
     },
 }
 
+# Arena 2 (engine/probes.py _medium; scale-free, so a gamma-rescaled medium shares its parent's cell). Zoo, step 7
+# (2026-11-27): neo_hooke (2.05, -0.86), neo_hooke_iv (2.43, -0.73), faltus2026 (4.26, 0.45), wriggers2013
+# (5.85, -0.78): four cells. Edges are finer where the zoo lies; refit after the calibration run if it piles up.
+GRIDS[("contact", "medium")] = {
+    "compression_stiffening": np.array([-1.0, 1.5, 2.25, 2.75, 3.5, 4.0, 4.5, 5.0, 5.5, 6.25, 7.5]),
+    "shear_stiffening": np.array([-3.0, -1.5, -1.0, -0.8, -0.6, -0.3, 0.0, 0.3, 0.6, 1.0, 1.5]),
+}
+
 # a stateful slot is binned like its stateless twin (descriptors at the initial state)
 GRIDS[("euler1d", "limiter_stateful")] = GRIDS[("euler1d", "limiter")]
 GRIDS[("euler1d", "reconstruction_stateful")] = GRIDS[("euler1d", "reconstruction")]

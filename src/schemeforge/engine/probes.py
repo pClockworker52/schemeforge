@@ -6,6 +6,7 @@ probe(fn, arena, slot) -> {"descriptors": {...}, "fingerprint": [...]} (JSON-ser
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 import numpy as np
@@ -132,12 +133,57 @@ def _reconstruction_stateful(rec_s) -> dict[str, Any]:
     return out
 
 
+def _medium(psi) -> dict[str, Any]:
+    """Arena 2 `medium`: psi(C, p) at the hard-constraint probe moduli (E = 1, nu = 0.3, gamma = 1e-3). Scale-free, so
+    that c * psi lands in the same cell and fingerprint as psi (the gamma-rescaling trap, docs/judge/contact_traps.md).
+    The reference stiffness M is the secant uniaxial (confined, plane-strain) stress at half thickness,
+    M = sigma(0.5) / 0.5, with sigma(s) = -d psi / ds for F = diag(1, s, 1).
+    compression_stiffening: log10(sigma(0.01) / (0.99 M)), how fast the resistance grows as the gap closes
+    (neo_hooke 2.05, neo_hooke_iv 2.43, faltus2026 4.26, wriggers2013 5.85).
+    shear_stiffening: log10(tau(3) / (3 M)) with tau(g) = d psi(simple shear g) / dg, the secant parasitic shear at
+    s = 3 (neo_hooke -0.86, neo_hooke_iv -0.73, wriggers2013 -0.78, faltus2026 0.45).
+    fingerprint: asinh(psi / M) on the 40 deformation probes of the hard constraints."""
+    import jax
+    import jax.numpy as jnp
+
+    from schemeforge.arenas.contact.constraints import P_PROBE, deformation_probes
+
+    p = {k: jnp.asarray(v) for k, v in P_PROBE.items()}
+
+    def uni(s):
+        return psi(jnp.diag(jnp.stack([jnp.asarray(1.0), s**2, jnp.asarray(1.0)])), p)
+
+    def shear(g):
+        F = jnp.eye(3).at[0, 1].set(g)
+        return psi(F.T @ F, p)
+
+    def sigma(s: float) -> float:
+        return float(-jax.grad(uni)(jnp.asarray(s)))
+
+    M = sigma(0.5) / 0.5
+    if not (math.isfinite(M) and M > 0.0):
+        return {"descriptors": {"compression_stiffening": float("nan"), "shear_stiffening": float("nan")},
+                "fingerprint": []}
+    tau3 = float(jax.grad(shear)(jnp.asarray(3.0)))
+    cs = sigma(0.01) / (0.99 * M)
+    ss = tau3 / (3.0 * M)
+    fp = [float(np.arcsinh(float(psi(jnp.asarray(F.T @ F), p)) / M)) for F in deformation_probes()]
+    return {
+        "descriptors": {
+            "compression_stiffening": float(np.log10(cs)) if cs > 0 else float("nan"),
+            "shear_stiffening": float(np.log10(ss)) if ss > 0 else float("nan"),
+        },
+        "fingerprint": fp,
+    }
+
+
 PROBERS = {  # (arena, slot) -> probe of the candidate's slot function
     ("euler1d", "limiter"): _limiter,
     ("euler1d", "limiter_stateful"): _limiter_stateful,
     ("euler1d", "flux"): _flux,
     ("euler1d", "reconstruction"): lambda fn: _reconstruction(lambda W: fn(W, 1.4)),
     ("euler1d", "reconstruction_stateful"): _reconstruction_stateful,
+    ("contact", "medium"): _medium,
 }
 
 

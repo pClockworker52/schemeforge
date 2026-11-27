@@ -175,3 +175,42 @@ def test_unreached_requests_do_not_use_the_budget(sandbox_env, monkeypatch) -> N
         "status": "llm_error", "unreached": True, "error": "usage limit", "operator": op, "hunch": hunch["id"]})
     state = evolve.evolve(cfg, log=lambda *_: None)
     assert state.history[-1]["unreached"] == 3 and state.children_made == 0
+
+
+CONTACT_ZOO = ["neo_hooke", "neo_hooke_iv", "faltus2026", "wriggers2013"]
+
+
+def _contact_medium(name: str):
+    from schemeforge.arenas.contact import zoo as czoo
+
+    return czoo.load("medium", name)
+
+
+def test_contact_zoo_media_occupy_distinct_cells_and_fingerprints() -> None:
+    probes = {n: probe(_contact_medium(n), "contact", "medium") for n in CONTACT_ZOO}
+    cells = {arch.cell_of("contact", "medium", p["descriptors"]) for p in probes.values()}
+    assert len(cells) == len(CONTACT_ZOO) and all(-1 not in c for c in cells)
+    for i, a in enumerate(CONTACT_ZOO):
+        for b in CONTACT_ZOO[i + 1:]:
+            assert fingerprint_distance(probes[a]["fingerprint"], probes[b]["fingerprint"]) > 0.1
+    d = {n: p["descriptors"] for n, p in probes.items()}
+    assert d["neo_hooke"]["compression_stiffening"] < d["faltus2026"]["compression_stiffening"]
+    assert d["faltus2026"]["shear_stiffening"] > 0 > d["neo_hooke"]["shear_stiffening"]
+
+
+def test_contact_probe_is_scale_free() -> None:
+    # the gamma-rescaling trap: c * psi is the same method, so it must share the cell and the fingerprint
+    psi = _contact_medium("faltus2026")
+    a = probe(psi, "contact", "medium")
+    b = probe(lambda C, p: 7.0 * psi(C, p), "contact", "medium")
+    assert arch.cell_of("contact", "medium", a["descriptors"]) == arch.cell_of("contact", "medium", b["descriptors"])
+    assert fingerprint_distance(a["fingerprint"], b["fingerprint"]) < arch.DUPLICATE_DISTANCE
+
+
+def test_contact_screen_uses_absolute_errors() -> None:
+    from schemeforge.engine.objectives import SCREENS, screen_fails
+
+    passing = {f"{c}.{m}": (0.5 * t if op in ("<=", "abs<=") else t) for c, m, op, t in SCREENS["contact"]["medium"]}
+    assert screen_fails("contact", "medium", passing) == 0
+    assert screen_fails("contact", "medium", {**passing, "C2-g6.a_err": -0.5}) == 1  # a large negative error fails
+    assert screen_fails("contact", "medium", {**passing, "C2-g6.a_err": -0.01}) == 0
