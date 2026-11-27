@@ -15,8 +15,9 @@ You try to break candidates, not to fix them. The task gives you candidate ids a
 
 1. Read each candidate's code and dev report. Form hypotheses about failure modes. Arena 1: sub-cell shock
    positions, strong rarefactions near vacuum, slowly moving shocks, extreme pressure ratios, grid misalignment,
-   extreme gamma, sonic points. Arena 2: grazing contact, large sliding, thin medium, element distortion,
-   stiffness contrast.
+   extreme gamma, sonic points. Arena 2: the edges of the held-out ranges (ν 0.15 and 0.45, shear s = 3), thin medium,
+   element distortion, stiffness contrast. Grazing contact below one column and slides beyond about 0.2 a are hard
+   cases for every zoo member and lie outside the declared scope (docs/rounds/2026-11-27-contact-breakers.md).
 2. Write each case as YAML (format: docs/judge/<arena>_cases.md) into cases/quarantine/drafts/. Every case must be
    physically admissible and have an exact or reference solution the judge can compute.
 3. Test with the `eval` tool: file = the candidate's path, suite "dev", case = your draft. Run the zoo members
