@@ -25,9 +25,8 @@ force-push.
 
 ## Small open items from the desktop session (2026-11-26; HANDOFF lost them in the 765b44c merge)
 
-- **solver-facts §1 line 26** (modeller; DECISIONS 2026-11-26 B approval, register item): it says p_n converges at
-  0.25 a and 0.5 a. Under the driver-check usable rule, 0.5 a on the block side at 600 m/s (5 of 7) does not qualify.
-  Correct the line from §25's rows.
+- **solver-facts §1 line 26:** corrected 2026-11-27 (p_n usable only at 0.25 a; 0.5 a fails on the block at 600 m/s,
+  5/7).
 - **B4 exposure log:** one exposure not yet logged (a bond-strength pattern in a search snippet, PMC11544021 =
   Tang 2024, data/tang2024_reading.md). Details are with the desktop session.
 - **WSL A housekeeping:** the G1 raw files in `~/oc_runs/hvi_seclin/g1` were kept until §42 was merged (DECISIONS
