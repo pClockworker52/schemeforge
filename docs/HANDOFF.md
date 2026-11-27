@@ -29,8 +29,9 @@ force-push.
   5/7).
 - **B4 exposure log:** one exposure not yet logged (a bond-strength pattern in a search snippet, PMC11544021 =
   Tang 2024, data/tang2024_reading.md). Details are with the desktop session.
-- **WSL A housekeeping:** task 2026-11-27-a (tasks/wsl-a.md): delete `~/oc_runs/hvi_seclin/g1`, report on a recreated
-  `coldspray/opencourant-sph`.
+- **WSL A housekeeping:** task 2026-11-27-a (tasks/wsl-a.md): stopped at step 1 (the R/64 check bullets of §42 rest
+  only on g1); now step 1b (R/64-check rows from g1/Q2n032), then delete g1; report on a recreated
+  `coldspray/opencourant-sph`; merge the rows file here.
 - Noted, not decided: a G1 rerun with nodal contact-force output (B's E1-F), own proposal needed (DECISIONS 2026-11-26
   contact-edge entry). A candidate for the unpause list, with the kernel-completion probe.
 

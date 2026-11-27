@@ -7,6 +7,25 @@ files or this file. Blind-list papers stay closed.
 
 ## Task 2026-11-27-a: delete the G1 raw files of task 2026-11-26-a (housekeeping; open)
 
+**Step 1 result (WSL A, 2026-11-27): stopped, nothing deleted.** Everything judged in §42 rests on committed rows; peak
+RSS is in `~/oc_runs/hvi_seclin/run_g1_*.log` (outside g1, stays). Only in the raw files: the "R/64 output check"
+bullets of §42 / SPEC-TL-b §22.2 (hand-computed from `g1/Q2n032`): 10–14 block edges inside a; p_max/p₀ 1.04–1.08;
+|F_int/F_mom − 1| 0.3–0.9 % and halved cadence ≤ 4·10⁻⁴; a_code/a_F 1.35–1.46 and rim node spacing 1.705 → 2.185 µm;
+time-history spacing median 21.95 ps. g1: 516 files, 4 787 344 304 B (Q2n032, Q2n064, Q2n128); no .vtk left; six
+small files beside it (eval_g1.log, run.log, run_g1_{32,64,128}.log, run_seclin.sh).
+
+**Modeller's decision (2026-11-27): write the R/64-check rows first, then delete all of g1.**
+- **1b.** Add a subcommand to `hvi/scripts/tl_cal10_seclin.py` (or a small committed script beside it) that computes
+  exactly the five bullet items above from `g1/Q2n032`, with the definitions written in its docstring as §42 states
+  them. Reading existing files only; no run, no new quantity, no other mesh. Rows: fork
+  `hvi/results/tl_cal10_seclin_g1_r64check.csv` and here `opencourant/results/tl_cal10_seclin_g1_r64check.csv`
+  (`kind = calibration`; per item: quantity, frame or frame range, value, unit).
+- Compare each value with the §42 text at its stated precision. A difference is reported in the commit message
+  and to the modeller, not fixed: §42's text stays as merged. Add one dated line under §42's R/64 output-check bullets
+  naming the rows file (and any difference), on `coldspray/opencourant-sph`.
+- Then step 2 on the full checked list (all 516 files in g1; the six files beside it stay), and step 3, with the
+  rows commit sha in the message.
+
 **Basis:** DECISIONS 2026-11-26 "Proposal B closed" (G1 raw files kept until §42 is merged) and task 2026-11-26-a's
 closing note ("keep until §42 is merged to main; then report its size, and delete only with the modeller's OK").
 §42 is merged (5208b15) and on `main`. This is the modeller's OK, given at Peter's request (chat 2026-11-27). No run,
