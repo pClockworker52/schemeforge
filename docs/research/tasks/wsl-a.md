@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-27-a: delete the G1 raw files of task 2026-11-26-a (housekeeping; open)
+## Task 2026-11-27-a: delete the G1 raw files of task 2026-11-26-a (housekeeping; closed: done, f785d31, merged e67d639)
 
 **Step 1 result (WSL A, 2026-11-27): stopped, nothing deleted.** Everything judged in §42 rests on committed rows; peak
 RSS is in `~/oc_runs/hvi_seclin/run_g1_*.log` (outside g1, stays). Only in the raw files: the "R/64 output check"

@@ -11,8 +11,8 @@ force-push.
 
 ## Order (DECISIONS 2026-11-27, Peter)
 
-1. **Finish Gate 6.** Breakers on the zoo in WSL (Peter; docs/judge/contact_promo_wsl.md §3). Peter sends the
-   quarantine ids; the cloud session reviews them; Peter decides acceptance. Then docs/targets/D.md (own commit, on
+1. **Finish Gate 6.** Breakers done (WSL, e572add, B-0057…B-0066) and reviewed (docs/rounds/2026-11-27-contact-breakers.md;
+   recommendation: accept none). Peter decides acceptance. Then docs/targets/D.md (own commit, on
    the final judge version), tag contact-v1.0, step 7.
 2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
 3. **Unpause cold spray**: its own DECISIONS entry, naming what the track resumes with. No cold-spray task before.
@@ -29,9 +29,8 @@ force-push.
   5/7).
 - **B4 exposure log:** one exposure not yet logged (a bond-strength pattern in a search snippet, PMC11544021 =
   Tang 2024, data/tang2024_reading.md). Details are with the desktop session.
-- **WSL A housekeeping:** task 2026-11-27-a (tasks/wsl-a.md): stopped at step 1 (the R/64 check bullets of §42 rest
-  only on g1); now step 1b (R/64-check rows from g1/Q2n032), then delete g1; report on a recreated
-  `coldspray/opencourant-sph`; merge the rows file here.
+- **WSL A housekeeping:** task 2026-11-27-a done and merged (e67d639): R/64-check rows (two differences from §42's
+  text reported, text unchanged); g1 deleted.
 - Noted, not decided: a G1 rerun with nodal contact-force output (B's E1-F), own proposal needed (DECISIONS 2026-11-26
   contact-edge entry). A candidate for the unpause list, with the kernel-completion probe.
 
@@ -66,12 +65,12 @@ force-push.
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | breaker review after Peter's run; clean-up |
 | Desktop | schemeforge | — (pushed 765b44c) |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | 2026-11-27-a (delete the G1 raw files); 2026-11-26-a closed (§42); closed tasks: docs/research/tasks/wsl-a.md |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | none (2026-11-27-a closed, e67d639); 2026-11-26-a closed (§42); closed tasks: docs/research/tasks/wsl-a.md |
 | WSL B | none (`coldspray/bonding-methods-reading` merged cbe2d88, deleted) | b9: only Dai 2025 left (closed access) |
 
 ## Open for Peter
 
-- The breaker run in WSL (docs/judge/contact_promo_wsl.md §3); then the quarantine ids to the cloud session.
+- Breaker acceptance (review: docs/rounds/2026-11-27-contact-breakers.md).
 
 ## Hunch budget
 
