@@ -39,6 +39,22 @@ solver output read.**
 Do not start Stage B, and do not edit the spec. If a definition turns out ambiguous while coding, stop and ask the
 modeller before computing K2–K5.
 
+**Step 2 done (fork `8863ccf4`):** both model checks pass, reproduced in the cloud from the committed script (L0 on K1
+0.65151 / 0.83971; KC-full on K1 max |p − 1| 2e-13, T = 1 + 1e-14).
+
+**Modeller's answers to the readings in the script's docstring (2026-11-27, before K2–K5; clarifications, not spec
+changes):**
+1. **K5 lateral alignment:** confirmed. B's lateral lattice contains A's columns (B at (i, j) s_B, i, j = 0, 1). This
+   is "layer planes aligned" plus the same alignment as K1 and K4.
+2. **K5 B-side layer value:** confirmed. p_k is the volume-weighted layer mean, as §17/§22 report layer averages;
+   e_face is judged on the means. Report min and max beside them; they are not judged.
+3. **Hourglass over own pairs only:** confirmed. The spec puts cross pairs into the force sum (and into K and F for
+   KC-full) only. The hvi contact has no hourglass term either.
+4. **L0 point force = t × the particle's lateral area:** confirmed. It is the spec's "+t / −t on every particle", with
+   the area explicit so the two sides balance in K5.
+
+Proceed with step 3.
+
 ## Task 2026-11-27-a: delete the G1 raw files of task 2026-11-26-a (housekeeping; closed: done, f785d31, merged e67d639)
 
 **Step 1 result (WSL A, 2026-11-27): stopped, nothing deleted.** Everything judged in §42 rests on committed rows; peak
