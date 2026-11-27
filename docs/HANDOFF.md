@@ -19,9 +19,8 @@ force-push.
 
 ## Sync items
 
-- **§42** (proposal B, task 2026-11-26-a, closed negative) is on `coldspray/opencourant-sph` at 87a1d4e. It cites
-  DECISIONS 2026-11-26 "Proposal B closed as a negative result after G1", which is not on this branch. Peter
-  (2026-11-27): the desktop session pushes it (with 607c851). Merge §42 after that push, then delete the branch.
+- Done 2026-11-27: the desktop commits 9fe91e1..607c851 are pushed (765b44c); §42 is merged (5208b15), so
+  `coldspray/opencourant-sph` is fully merged and can be deleted with the others.
 
 ## Open threads (facts with sources)
 
@@ -53,7 +52,7 @@ force-push.
 | Session | Where | Open task |
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | breaker review after Peter's run; clean-up |
-| Desktop | schemeforge | push 607c851 and the "Proposal B closed" DECISIONS entry |
+| Desktop | schemeforge | — (pushed 765b44c) |
 | WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-26-a closed, §42); closed tasks: docs/research/tasks/wsl-a.md |
 | WSL B | `coldspray/bonding-methods-reading` (merged 2026-11-27, cbe2d88) | b9: only Dai 2025 left (closed access) |
 

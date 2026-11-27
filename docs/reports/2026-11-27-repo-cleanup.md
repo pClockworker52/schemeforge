@@ -65,5 +65,5 @@ git push origin --delete \
   coldspray/profizi2016-reading
 ```
 
-Kept: `coldspray/opencourant-sph` (holds §42, 87a1d4e, not merged yet; delete after the merge), `main`, and the
-working branch.
+Kept: `main` and the working branch. `coldspray/opencourant-sph` (tip 87a1d4e) was kept for §42; §42 is merged since
+5208b15, so it can be deleted too: `git push origin --delete coldspray/opencourant-sph`.
