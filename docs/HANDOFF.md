@@ -1,30 +1,48 @@
-# Handoff — 2026-11-25: Phase 6 at Gate 6; Peter's decisions done in the cloud (judge contact-v0.12.dev); waiting on WSL runs (current state only)
+# Handoff — 2026-11-27: reassessment after /clear (Phase 6 waits on breakers; cold-spray ideas resurfacing) (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md and docs/reports/2026-11-25-gate6.md." Then read
-docs/STATUS.md (top), docs/plans/2026-10-30-phase6.md §1 and §3, docs/plans/2026-11-24-target-d-draft.md, and
-docs/judge/contact_audit.md "Result".
+**Start the next session with:** "Read docs/HANDOFF.md and reassess." Then read docs/STATUS.md (top), the DECISIONS
+index (`python scripts/decisions_index.py`) and the last three entries, docs/reports/2026-11-25-gate6.md, and the
+fork note listed below.
 
-Branch: `claude/exciting-fermi-qy077p`.
+Branch: `claude/exciting-fermi-qy077p`. **Two sessions write to it** (this cloud session and a desktop session):
+`git fetch` and fast-forward before every commit, and never force-push.
 
-## First action: merge Peter's WSL results (docs/judge/contact_promo_wsl.md)
+## First action: sync, then reassess with Peter
 
-Peter decided (DECISIONS 2026-11-25), and the cloud has done its part:
-- **C4** (frictionless sliding): judge contact-v0.11.dev (9086db7), check record 2026-11-25-contact-v011-check.md.
-- **max_step on every HF instance:** judge contact-v0.12.dev (735b69e), check 2026-11-25-contact-v012-check.md.
-- **γ-sweep tooling:** scripts/contact_gamma_sweep.py, validated on dev (r-20261125-073846-e9f0).
-- **Target D draft** updated with D3 on HF max_step and D8 for C4 (docs/plans/2026-11-24-target-d-draft.md).
+1. **Sync.** Things that may still be missing from this branch:
+   - **§42** (proposal B, task 2026-11-26-a, closed negative): written by WSL A on `coldspray/opencourant-sph` at
+     87a1d4e, not merged here. G0 passes; G1 fails (ℓ_out at f = 0.5 converges at 28 of 61 frames, limit 0.8);
+     G2, G3 and step 6 were not run.
+   - **schemeforge 607c851** ("contact-edge proposal not approved", cited by the fork's STATUS at 70d82d64): not on
+     GitHub on 2026-11-27, probably still local in the desktop session. Ask Peter before re-creating anything.
+   - Merge §42 only once it is clear the desktop session has not done it already.
+2. **Reassess.** Peter asked for it after reading the partner-aware note. Put the threads below side by side and ask
+   him one question about direction.
 
-Done since:
-- the promo zoo and the 16-run sweep (none of 20 zoo points meets D1–D8; table in the Target D draft);
-- Peter accepted D1–D8 (DECISIONS 2026-11-25 "Target D thresholds accepted").
+## Open threads (facts with sources)
 
-Waiting on Peter: **the breaker run on the zoo** (WSL, contact_promo_wsl.md §3). Review its quarantine ids;
-Peter accepts cases with `sforge case accept`, which bumps the judge, so the promo and sweep are rerun.
-Then write docs/targets/D.md from the draft, in its own commit, on the final judge version.
-
-Then the tag contact-v1.0 (Gate 6, Peter), then step 7. Gate 6 report: docs/reports/2026-11-25-gate6.md.
+- **Phase 6 (main line), at Gate 6.** Judge contact-v0.12.dev (735b69e).
+  - Done: C4 built; max_step on every HF instance; the promo zoo and γ-sweep (none of 20 zoo points meets D1–D8);
+    Target D thresholds accepted (DECISIONS 2026-11-25).
+  - Waiting on Peter: the breaker run on the zoo in WSL (docs/judge/contact_promo_wsl.md §3).
+  - Then: docs/targets/D.md (own commit, on the final judge version), tag contact-v1.0, step 7.
+- **Cold spray (paused since 2026-11-24, scope review STOP).**
+  - Diagnostic exception B (approved 2026-11-26) closed negative (§42, above).
+  - A contact-edge test proposal (fork `hvi/PROPOSAL…contact-edge…`, 3d658fd8) was not approved (607c851).
+- **Peter's partner-aware contact idea.** Fork `cs12` 210d98d4, `hvi/NOTE-2026-11-26-partner-aware-contact.md`.
+  It is an idea note, not a proposal.
+  - Three toys: none found information only a partner model has. The tested readings are known methods:
+    kinematic contact, Riemann/Godunov interface, impedance-set penalty.
+  - The modeller's comment (chat, 2026-11-26/27): the one untested reading tied to a measured defect is TLSPH
+    kernel completion across the contact, in compression only. It targets the face-layer deficit (0.655/0.845 §17,
+    0.62/0.86 §22; note §13 cause C). A cheap known-answer probe: two TLSPH blocks in uniform compression, face
+    stress ratio with and without completion.
+  - It cannot fix a singular edge field (problem-formalism §2(c)). It would be a new diagnostic exception, Peter's
+    call.
+- **The fork is reachable from the cloud:** `pclockworker52/sph-hvi-contact`, attached to the session at
+  /home/user/sph-hvi-contact, shallow. `git fetch --depth=5 origin cs12` gives the newest notes.
 
 ## Cold-spray track: PAUSED (DECISIONS 2026-11-24)
 
@@ -75,7 +93,7 @@ The rest of this file is the track's state at the pause, kept for a resumption.
 
 ## Open for Peter
 
-- The WSL runs (above). Nothing on cold spray.
+- The breaker run (Phase 6). The direction question after the reassessment.
 
 ## Hunch budget
 

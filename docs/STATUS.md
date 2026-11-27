@@ -1,6 +1,7 @@
 # STATUS
 Phase: 6 at Gate 6 (2026-11-25; Target D, promo, breakers, tag wait on Peter's WSL runs) — cold-spray track PAUSED (DECISIONS 2026-11-24)  Judges: euler1d-v1.6 (2590e3e), contact-v0.12.dev (735b69e)  Plan: v1.2 + docs/plans/2026-10-30-phase6.md
-Last session: 2026-11-26 (desktop) — Peter approved cold-spray diagnostic exception B (edge resultants), interleaved with the Gate 6 WSL runs; hot-spot dropped
+Last session: 2026-11-27 (cloud) — HANDOFF rewritten for /clear and a reassessment (Phase 6 waits on breakers; §42 not merged here; partner-aware idea note read)
+2026-11-27 (cloud): read the fork note hvi/NOTE-2026-11-26-partner-aware-contact.md (cs12 210d98d4; idea note, three toys, none finds partner-only information; tested readings are known methods). Modeller's comment in chat: TLSPH kernel completion across the contact (compression only) is the one reading tied to a measured defect (face-layer deficit §17/§22); cheap known-answer probe possible; it cannot fix a singular edge field. Found: §42 (B negative) is on coldspray/opencourant-sph 87a1d4e, not merged here; schemeforge 607c851 cited by the fork is not on GitHub. Two sessions write this branch: fetch before commit. HANDOFF rewritten for /clear and a reassessment. Blockers: Peter (breakers; direction). Numbers: no contact candidates; hunch count 2 of 5.
 2026-11-26 (desktop, later): WSL A step 1 of task 2026-11-26-a done (fork `c4b34b2c5`, SPEC-TL-b §22.1: script,
 G2 punch deck, frozen G2 expected values, predictions; headline positive about 0.04). Reviewed: accepted with one
 change, Peter: G1 time-history cadence set to §25's 20.8 ps (plan had t_H/4000 = 9.5 ps), so G1 checks the same
