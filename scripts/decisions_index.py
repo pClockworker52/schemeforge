@@ -42,6 +42,8 @@ CHANGED = {  # entry heading -> (what changed, later heading) or a list of such 
 TRACKS = {
     "2026-10-20 — Engine: build our own (OpenEvolve and ShinkaEvolve reviewed)": "repository",
     "2026-11-03 — Arena 2 paused; cold-spray question opened (Peter)": "Arena 2 / cold spray",
+    "2026-11-27 — Order: finish Gate 6, clean the repository, then unpause the cold-spray track (Peter)":
+        "Arena 2 / cold spray",
 }
 
 COLD_SPRAY_KEYS = (

@@ -339,6 +339,8 @@ modeller leak-scans and merges.
 
 ## Task 2026-11-13-b9: interface-bonding methods in cold spray, reading at F level (open)
 
+**Status 2026-11-27:** the completion (2a8ad14, all but Dai 2025) is merged (cbe2d88, repository clean-up).
+
 **Status 2026-11-13:** the partial note is merged (51f1e6d): Dai 2026, Ren & Song 2022/2024, the Khoei 2023 abstract,
 and the comparison table. **Open:**
 - Tang 2021 and Ge 2026: Peter downloads them in a browser into `coldspray-papers/` (Tang 2021 moved to task b11,

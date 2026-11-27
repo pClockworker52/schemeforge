@@ -1,81 +1,66 @@
-# Handoff — 2026-11-25: Phase 6 at Gate 6; Peter's decisions done in the cloud (judge contact-v0.12.dev); waiting on WSL runs (current state only)
+# Handoff — 2026-11-27: Gate 6 first, then repository clean-up, then cold spray unpaused (current state only)
 
-Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21) and git history.
+Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md and docs/reports/2026-11-25-gate6.md." Then read
-docs/STATUS.md (top), docs/plans/2026-10-30-phase6.md §1 and §3, docs/plans/2026-11-24-target-d-draft.md, and
-docs/judge/contact_audit.md "Result".
+**Start the next session with:** "Read docs/HANDOFF.md and continue." Then read docs/STATUS.md (top), the DECISIONS
+index (`python scripts/decisions_index.py`) and the last entry (2026-11-27), and docs/reports/2026-11-25-gate6.md.
 
-Branch: `claude/exciting-fermi-qy077p`.
+Branch: `claude/exciting-fermi-qy077p`; `main` is fast-forwarded to it (2026-11-27). **Two sessions write to the
+branch** (this cloud session and a desktop session): `git fetch` and fast-forward before every commit, and never
+force-push.
 
-## First action: merge Peter's WSL results (docs/judge/contact_promo_wsl.md)
+## Order (DECISIONS 2026-11-27, Peter)
 
-Peter decided (DECISIONS 2026-11-25), and the cloud has done its part:
-- **C4** (frictionless sliding): judge contact-v0.11.dev (9086db7), check record 2026-11-25-contact-v011-check.md.
-- **max_step on every HF instance:** judge contact-v0.12.dev (735b69e), check 2026-11-25-contact-v012-check.md.
-- **γ-sweep tooling:** scripts/contact_gamma_sweep.py, validated on dev (r-20261125-073846-e9f0).
-- **Target D draft** updated with D3 on HF max_step and D8 for C4 (docs/plans/2026-11-24-target-d-draft.md).
+1. **Finish Gate 6.** Breakers on the zoo in WSL (Peter; docs/judge/contact_promo_wsl.md §3). Peter sends the
+   quarantine ids; the cloud session reviews them; Peter decides acceptance. Then docs/targets/D.md (own commit, on
+   the final judge version), tag contact-v1.0, step 7.
+2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
+3. **Unpause cold spray**: its own DECISIONS entry, naming what the track resumes with. No cold-spray task before.
 
-Done since:
-- the promo zoo and the 16-run sweep (none of 20 zoo points meets D1–D8; table in the Target D draft);
-- Peter accepted D1–D8 (DECISIONS 2026-11-25 "Target D thresholds accepted").
+## Sync items
 
-Waiting on Peter: **the breaker run on the zoo** (WSL, contact_promo_wsl.md §3). Review its quarantine ids;
-Peter accepts cases with `sforge case accept`, which bumps the judge, so the promo and sweep are rerun.
-Then write docs/targets/D.md from the draft, in its own commit, on the final judge version.
+- **§42** (proposal B, task 2026-11-26-a, closed negative) is on `coldspray/opencourant-sph` at 87a1d4e. It cites
+  DECISIONS 2026-11-26 "Proposal B closed as a negative result after G1", which is not on this branch. Peter
+  (2026-11-27): the desktop session pushes it (with 607c851). Merge §42 after that push, then delete the branch.
 
-Then the tag contact-v1.0 (Gate 6, Peter), then step 7. Gate 6 report: docs/reports/2026-11-25-gate6.md.
+## Open threads (facts with sources)
 
-## Cold-spray track: PAUSED (DECISIONS 2026-11-24)
+- **Phase 6 (main line), at Gate 6.** Judge contact-v0.12.dev (735b69e). Done: C4; max_step on every HF instance;
+  promo zoo and γ-sweep (none of 20 zoo points meets D1–D8); Target D thresholds accepted (DECISIONS 2026-11-25).
+- **Cold spray (paused since 2026-11-24).** Diagnostic exception B closed negative (§42). The contact-edge proposal
+  (fork `hvi/PROPOSAL…contact-edge…`, 3d658fd8) was not approved (607c851).
+- **Peter's partner-aware contact idea** (fork `cs12` 210d98d4, `hvi/NOTE-2026-11-26-partner-aware-contact.md`), an
+  idea note. Three toys found no information only a partner model has; the tested readings are known methods. The
+  one untested reading tied to a measured defect: TLSPH kernel completion across the contact, compression only,
+  against the face-layer deficit (0.655/0.845 §17, 0.62/0.86 §22; note §13 cause C). Cheap known-answer probe: two
+  TLSPH blocks in uniform compression, face stress ratio with and without completion. It cannot fix a singular edge
+  field (problem-formalism §2(c)). Candidate for the unpause entry, not before.
+- **The fork is reachable from the cloud:** `pclockworker52/sph-hvi-contact` at /home/user/sph-hvi-contact
+  (shallow; `git fetch --depth=5 origin cs12`).
 
-- **Closing state:** docs/research/coldspray-orientation-2026-11-24.md.
-- **Review:** docs/research/scope-review-2026-11-24/summary.md. Both reviewers said STOP, and Peter accepted.
-- **Resume only if** one of these appears: unseen multi-particle stacks, an unseen ring-map source, or new
-  single-impact v_cr data.
-- **No open cold-spray task.** Proposal B (WSL A task 2026-11-26-a, a diagnostic exception) is closed negative: G1
-  failed (ℓ_out at f = 0.5, 28/61 frames, fork `4b4cc0719`), verification §42 at `87a1d4e`. The follow-on
-  contact-edge proposal (fork `3d658fd82`) was not approved. The hot-spot proposal is dropped. All DECISIONS
-  2026-11-26. Kept: G1 raw files in `~/oc_runs/hvi_seclin/g1` until §42 is merged to main.
+## Cold-spray track at the pause (for the unpause)
+
+- **Closing state:** docs/research/coldspray-orientation-2026-11-24.md. **Review:** docs/research/scope-review-2026-11-24/summary.md (both STOP; Peter accepted).
+- **Resume conditions of 2026-11-24** (unseen multi-particle stacks, an unseen ring-map source, new single-impact
+  v_cr data): none has appeared. The unpause rests on Peter's decision (DECISIONS 2026-11-27).
 - **Lesson to carry:** point values at the contact edge and the bond boundary may be singular (problem-formalism
   §2(c)), so any new criterion should be built from finite quantities.
-
-The rest of this file is the track's state at the pause, kept for a resumption.
-
-## State in brief
-
-- **Track A (single-impact data):** R1 is at its end point (DECISIONS 2026-11-23): blind list 1 used up, no blind
-  list 2 (stop rule), synthesis §4b; further R1 progress needs new measurements. R2 and R3 stay open.
-- **Track B (SPH host for a bond law), forked bond response only — PAUSED 2026-11-23 (Peter):**
-  - CS-22b supported at δ_c 30× (§31), with caveats: two meshes in one regime, a pass by near-cancellation of two
-    drifts, post hoc ladder; addendum: §31's G_c,eff biased upward (§37).
-  - Slip check mixed (§36): whether bonds tear or hold depends largely on slip accumulated while compressed.
-  - §37: `bond.stick` (bonded pairs stick, shear capped at σ_B/√3) and `out.pairs` built on engine `0153cae04`;
-    the old law books G_c·A at reopening without work input.
-  - §38: energy-consistent cap shrink on engine `38639859c` (S2 ≤ 0.30 %, release 2.7·10⁻⁴; two S3 predictions
-    missed, read post hoc; R/32 with stick on + `out.pairs` ≈ 14.8 GiB; no run yet with bonded ghost pairs).
-  - **CS-23 refuted** (§39, DECISIONS 2026-11-23): sticking bonds on the CS-22b set-up; all 9 runs valid; dR moves
-    toward 0 from R/16 to R/32 at every δ_c (3× also |dR32| < 0.01). Sticking changed tear/hold as predicted (3× tears,
-    10× mostly holds, 30× holds); tears mixed mode. Caveat: CS-22b's 30× pass depends on the free-slip law.
-- **Length-scale path: STOPPED 2026-11-24 (Peter; DECISIONS 2026-11-24).** length-scale-note-2026-11-20.md §11–§14:
-  - no host carries ℓ in σ_y and T (§40);
-  - the band check was intermediate, with no band narrowing with the mesh; the edge drift is a surface-layer ε_p
-    spike, and numerical dissipation is the largest drift (§41);
-  - the premise was never tested against a singular edge field, a surface-layer error or numerical dissipation (§13);
-  - step 0 leans against on TLSPH, not refuted; the softening-off test is shelved.
-- **Problem as equations:** problem-formalism.md, every equation checked against the fork source (§35); points
-  (c) crack-tip bond boundary, (e) identifiability, (f) bonds weakest at the hot edge, (g) slip vs ASI.
+- **Track state in brief** (tracks A and B, length-scale path, formalism): moved verbatim to docs/handoff-archive.md,
+  section "2026-11-27".
 
 ## Sessions and open tasks
 
 | Session | Where | Open task |
 |---|---|---|
-| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | — |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | no open task; 2026-11-26-a closed (§42, negative; contact-edge follow-on not approved); 2026-11-24-b closed (14d15aa); 2026-11-24-a closed (§41); 2026-11-23-c closed (§40); 2026-11-22-d closed (§39); 2026-11-22-c closed (§38); 2026-11-23-a closed (§37); 2026-11-22-b closed (§36); 2026-11-20-a closed (§31); 2026-11-21-a/b, 2026-11-22-a closed (§33–§35) |
-| WSL B | `coldspray/bonding-methods-reading` | b9: only Dai 2025 left (closed access); b13 closed (merged) |
+| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | breaker review after Peter's run; clean-up |
+| Desktop | schemeforge | push 607c851 and the "Proposal B closed" DECISIONS entry |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-26-a closed, §42); closed tasks: docs/research/tasks/wsl-a.md |
+| WSL B | `coldspray/bonding-methods-reading` (merged 2026-11-27, cbe2d88) | b9: only Dai 2025 left (closed access) |
 
 ## Open for Peter
 
-- The WSL runs (above). Nothing on cold spray.
+- The breaker run in WSL (docs/judge/contact_promo_wsl.md §3); then the quarantine ids to the cloud session.
+- Remote branch deletion: blocked in the cloud by the permission classifier (see the clean-up record).
 
 ## Hunch budget
 
