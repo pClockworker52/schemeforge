@@ -31,10 +31,13 @@ CHANGED = {  # entry heading -> (what changed, later heading) or a list of such 
         ("D4 clause 2 floor",
          "2026-11-16 — After the odds review: bounded trigger run, P3 probe, reduced route (Peter)"),
     ],
-    "2026-11-24 — Cold-spray track paused after the scope review; Phase 6 resumes at step 6 (Peter)": (
-        "diagnostic exception (proposal B)",
-        "2026-11-26 — Cold-spray diagnostic exception: proposal B (edge resultants) approved, interleaved with Gate 6; "
-        "hot-spot dropped (Peter)"),
+    "2026-11-24 — Cold-spray track paused after the scope review; Phase 6 resumes at step 6 (Peter)": [
+        ("diagnostic exception (proposal B)",
+         "2026-11-26 — Cold-spray diagnostic exception: proposal B (edge resultants) approved, interleaved with Gate 6; "
+         "hot-spot dropped (Peter)"),
+        ("pause ended",
+         "2026-11-27 — Cold-spray track unpaused; it resumes with the TLSPH kernel-completion probe (Peter)"),
+    ],
     "2026-11-26 — Cold-spray diagnostic exception: proposal B (edge resultants) approved, interleaved with Gate 6; "
     "hot-spot dropped (Peter)": (
         "B closed (negative, G1)", "2026-11-26 — Proposal B closed as a negative result after G1 (Peter)"),

@@ -1,4 +1,4 @@
-# Handoff — 2026-11-27: Gate 6 passed, clean-up done; next the cold-spray unpause (current state only)
+# Handoff — 2026-11-27: Gate 6 passed, clean-up done, cold spray unpaused; kernel-completion spec drafted (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
@@ -16,7 +16,8 @@ force-push.
    0 of 2 required rediscoveries; six hunch drafts ledger/drafts/d7_*). **Gate 6 PASSED** (Peter, 2026-11-27; shortfall
    recorded, DECISIONS 2026-11-27). WSL needs `git fetch --tags` before a contact eval.
 2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
-3. **Unpause cold spray**: its own DECISIONS entry, naming what the track resumes with. No cold-spray task before.
+3. **Unpause cold spray: done** (DECISIONS 2026-11-27): resumes with the kernel-completion probe. Spec Stage A drafted,
+   not frozen: docs/research/kernel-completion-2026-11-27.md. Next: Peter's review and freeze, then a WSL A task.
 
 ## Sync items
 
@@ -71,8 +72,7 @@ force-push.
 
 ## Open for Peter
 
-- The cold-spray unpause: what the track resumes with (candidates in 'Open threads': the kernel-completion probe, the
-  E1-F G1 rerun; resume conditions of 2026-11-24 not met).
+- Review and freeze of the kernel-completion spec (Stage A).
 
 ## Hunch budget
 
