@@ -79,3 +79,6 @@ promo.
 
 Whether step 7's acceptance can be counted as met on this evidence, or how the run is repeated, is Peter's decision
 at Gate 6. The counting rule and the grid are not changed after the run.
+
+**Decided (Peter, 2026-11-27; DECISIONS 2026-11-27 "Gate 6 passed"):** Gate 6 passes. The rediscovery half is
+recorded as not met, and the rule is unchanged.

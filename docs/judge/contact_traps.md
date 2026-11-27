@@ -39,3 +39,7 @@ Each trap is something that makes a number look better or worse than the numeric
 - The unconfined C0a with a soft unregularized medium fails Newton. The dev C0a is confined (spec §Known limits).
 - On random geometry, FE vs exact is about 1e-8, not round-off: node coordinates are rounded to 10 decimals when the
   meshes are merged (spec §C0a).
+- **Exact rediscovery is rare.** In calibration K1, 50 children from neo_hooke matched no other zoo medium's
+  fingerprint. The closest distances were 0.07–0.28, against a match below 1e-3
+  (docs/rounds/2026-11-27-contact-calibration.md). A near miss is a variant, not a rediscovery: say which constant
+  differs.

@@ -1,4 +1,4 @@
-# Handoff — 2026-11-27: Gate 6 first, then repository clean-up, then cold spray unpaused (current state only)
+# Handoff — 2026-11-27: Gate 6 passed, clean-up done; next the cold-spray unpause (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
@@ -13,8 +13,8 @@ force-push.
 
 1. **Finish Gate 6.** Breakers done and reviewed; none accepted (DECISIONS 2026-11-27). Target D committed (a722ef0).
    Judge tagged contact-v1.0 (6eef4c9; docs/judge/2026-11-27-contact-v10-check.md). Step 7 done (calibration K1: 19 cells,
-   0 of 2 required rediscoveries; six hunch drafts ledger/drafts/d7_*). **Gate 6 is with Peter**
-   (docs/reports/2026-11-25-gate6.md). WSL needs `git fetch --tags` before a contact eval.
+   0 of 2 required rediscoveries; six hunch drafts ledger/drafts/d7_*). **Gate 6 PASSED** (Peter, 2026-11-27; shortfall
+   recorded, DECISIONS 2026-11-27). WSL needs `git fetch --tags` before a contact eval.
 2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
 3. **Unpause cold spray**: its own DECISIONS entry, naming what the track resumes with. No cold-spray task before.
 
@@ -71,7 +71,8 @@ force-push.
 
 ## Open for Peter
 
-- Gate 6: pass with item 7's rediscovery shortfall recorded, or repeat the calibration first.
+- The cold-spray unpause: what the track resumes with (candidates in 'Open threads': the kernel-completion probe, the
+  E1-F G1 rerun; resume conditions of 2026-11-24 not met).
 
 ## Hunch budget
 
