@@ -313,3 +313,31 @@ Older items (state of 2026-11-15; items 1–3 lapsed with the 2026-11-17 closure
 | Plan of the fork | sph-hvi-contact-plan.md (milestone 1) |
 | Tasks | docs/research/tasks/wsl-a.md, wsl-b.md |
 | Route review 2026-11-15 | docs/research/route-review-2026-11-15/ |
+
+---
+
+# 2026-11-27: cold-spray track state at the pause (moved verbatim from docs/HANDOFF.md; repository clean-up, DECISIONS 2026-11-27)
+
+## State in brief
+
+- **Track A (single-impact data):** R1 is at its end point (DECISIONS 2026-11-23): blind list 1 used up, no blind
+  list 2 (stop rule), synthesis §4b; further R1 progress needs new measurements. R2 and R3 stay open.
+- **Track B (SPH host for a bond law), forked bond response only — PAUSED 2026-11-23 (Peter):**
+  - CS-22b supported at δ_c 30× (§31), with caveats: two meshes in one regime, a pass by near-cancellation of two
+    drifts, post hoc ladder; addendum: §31's G_c,eff biased upward (§37).
+  - Slip check mixed (§36): whether bonds tear or hold depends largely on slip accumulated while compressed.
+  - §37: `bond.stick` (bonded pairs stick, shear capped at σ_B/√3) and `out.pairs` built on engine `0153cae04`;
+    the old law books G_c·A at reopening without work input.
+  - §38: energy-consistent cap shrink on engine `38639859c` (S2 ≤ 0.30 %, release 2.7·10⁻⁴; two S3 predictions
+    missed, read post hoc; R/32 with stick on + `out.pairs` ≈ 14.8 GiB; no run yet with bonded ghost pairs).
+  - **CS-23 refuted** (§39, DECISIONS 2026-11-23): sticking bonds on the CS-22b set-up; all 9 runs valid; dR moves
+    toward 0 from R/16 to R/32 at every δ_c (3× also |dR32| < 0.01). Sticking changed tear/hold as predicted (3× tears,
+    10× mostly holds, 30× holds); tears mixed mode. Caveat: CS-22b's 30× pass depends on the free-slip law.
+- **Length-scale path: STOPPED 2026-11-24 (Peter; DECISIONS 2026-11-24).** length-scale-note-2026-11-20.md §11–§14:
+  - no host carries ℓ in σ_y and T (§40);
+  - the band check was intermediate, with no band narrowing with the mesh; the edge drift is a surface-layer ε_p
+    spike, and numerical dissipation is the largest drift (§41);
+  - the premise was never tested against a singular edge field, a surface-layer error or numerical dissipation (§13);
+  - step 0 leans against on TLSPH, not refuted; the softening-off test is shelved.
+- **Problem as equations:** problem-formalism.md, every equation checked against the fork source (§35); points
+  (c) crack-tip bond boundary, (e) identifiability, (f) bonds weakest at the hot edge, (g) slip vs ASI.
