@@ -12,8 +12,9 @@ force-push.
 ## Order (DECISIONS 2026-11-27, Peter)
 
 1. **Finish Gate 6.** Breakers done and reviewed; none accepted (DECISIONS 2026-11-27). Target D committed (a722ef0).
-   Judge tagged contact-v1.0 (6eef4c9; docs/judge/2026-11-27-contact-v10-check.md). **Next: step 7** (search readiness,
-   docs/plans/2026-10-30-phase6.md), then the Gate 6 report to Peter. WSL needs `git fetch --tags` before a contact eval.
+   Judge tagged contact-v1.0 (6eef4c9; docs/judge/2026-11-27-contact-v10-check.md). Step 7 done (calibration K1: 19 cells,
+   0 of 2 required rediscoveries; six hunch drafts ledger/drafts/d7_*). **Gate 6 is with Peter**
+   (docs/reports/2026-11-25-gate6.md). WSL needs `git fetch --tags` before a contact eval.
 2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
 3. **Unpause cold spray**: its own DECISIONS entry, naming what the track resumes with. No cold-spray task before.
 
@@ -70,7 +71,7 @@ force-push.
 
 ## Open for Peter
 
-- Gate 6, after step 7.
+- Gate 6: pass with item 7's rediscovery shortfall recorded, or repeat the calibration first.
 
 ## Hunch budget
 
