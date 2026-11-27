@@ -1,0 +1,6 @@
+kind: simple_shear
+id: B-0060
+shear: 10.0
+E: 1.0
+nu: 0.45
+gamma: 0.001

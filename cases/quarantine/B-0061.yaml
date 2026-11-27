@@ -1,0 +1,6 @@
+kind: gap_closure
+id: B-0061
+gap: 0.1
+push: 0.1001
+steps: 6
+gamma: 1.0e-06

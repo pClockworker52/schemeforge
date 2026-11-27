@@ -1,0 +1,5 @@
+kind: sliding
+id: B-0059
+slide: 0.099
+slide_steps: 5
+gamma: 1.0e-06
