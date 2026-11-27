@@ -4027,6 +4027,10 @@ by a rerun). The script now writes a `binary` column for later run rows.
   a_code,256 on all three meshes.
 - Time-history spacing as written (first cycle past each 20.8 ps): median 21.95 ps on R/64; §25's R/256 600 m/s run
   has 20.88 ps.
+- 2026-11-27 (task 2026-11-27-a, step 1b): these R/64 items are now rows, `tl_cal10_seclin_g1_r64check.csv` (fork
+  script `66db7e97d`, rows `b56c8139c`; frames 20–80, from g1/Q2n032 before its deletion). Agree at the stated
+  precision except two, text above left as merged: |F_int/F_mom − 1| 0.29–0.66 % (text 0.3–0.9 %); a_code / a_F
+  1.30–1.59 (text 1.35–1.46).
 
 **G1 evaluation** (`tl_cal10_seclin_g1.csv`; 61 animation frames 0.2–0.8 t_H; F_tot = F_mom):
 
