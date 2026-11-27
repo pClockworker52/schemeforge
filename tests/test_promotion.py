@@ -94,3 +94,52 @@ def test_target_ac_contact_sharpening_without_regression(tmp_path) -> None:
     c = {c.id: c.ok for c in promotion.check_target("Ac", "smeared", zoo, {"S1.order_smooth": 1.95},
                                                      heldout_dir=tmp_path)}
     assert c["C1"] and not c["C2"]
+
+
+def _contact_instances(rng, gap=0.002, leak=3e-4, shear=1e-3, a=0.01, p0=0.01, conv=1.0, step=1.0, iters=40.0,
+                       sl_conv=1.0, sl_shear=0.05):
+    """Synthetic Arena 2 held-out rows (family sizes as families.py: GF 10, SF 10, HF 6, HX 1, SL 4)."""
+    rows = {}
+    for i in range(10):
+        rows[f"GF-{i:03d}"] = {"family": "GF", "violations": [], "metrics": {
+            "gap_res": gap * (1 + 0.1 * rng.standard_normal()), "leak_pre": leak}}
+        rows[f"SF-{i:03d}"] = {"family": "SF", "violations": [], "metrics": {"shear_parasitic": shear}}
+    for i in range(6):
+        sign = -1.0 if i % 2 else 1.0  # signed errors: D4/D5 use the median of |value|
+        rows[f"HF-{i:03d}"] = {"family": "HF", "violations": [], "metrics": {
+            "converged": conv, "max_step": step, "a_err": sign * a, "p0_err": sign * p0,
+            "newton_iters": iters * (1 + 0.05 * i)}}
+    rows["HX-000"] = {"family": "HX", "violations": [], "metrics": {"max_step": step}}
+    for i in range(4):
+        rows[f"SL-{i:03d}"] = {"family": "SL", "violations": [], "metrics": {
+            "converged": sl_conv, "shear_parasitic": sl_shear}}
+    return rows
+
+
+DEV_D = {f"{c}.converged": 1.0 for c in ("C0a-g3", "C0a-g5", "C0a-g6", "C1", "C2-g5", "C2-g6", "C4-g6")}
+
+
+def test_target_d_pass_and_fail(tmp_path) -> None:
+    rng = np.random.default_rng(4)
+    zoo = {"faltus2026": "zoo-f", "neo_hooke": "zoo-n"}
+    _write(tmp_path, "zoo-f", _contact_instances(rng, gap=0.034, leak=5.59e-4, a=0.076))
+    _write(tmp_path, "zoo-n", _contact_instances(rng, gap=0.001, step=0.375, iters=80.0, sl_conv=0.0))
+    _write(tmp_path, "good", _contact_instances(rng))
+    c = {x.id: x for x in promotion.check_target("D", "good", zoo, DEV_D, heldout_dir=tmp_path)}
+    assert all(x.ok for x in c.values()), [x for x in c.values() if not x.ok]
+    assert {"D1", "D2", "D3", "D3x", "D4", "D5", "D6", "D7", "D8", "D8s", "B1", "B2", "G-C4-g6"} <= set(c)
+    # signed errors: a median of -0.03 would pass a raw "<= 0.02"; the median of |a_err| fails it
+    _write(tmp_path, "negative", _contact_instances(rng, a=0.03))
+    c = {x.id: x.ok for x in promotion.check_target("D", "negative", zoo, DEV_D, heldout_dir=tmp_path)}
+    assert not c["D4"] and c["D5"]
+    # tight but fragile (the neo-Hookean corner of the front): D3 and B2 fail
+    _write(tmp_path, "fragile", _contact_instances(rng, step=0.5, iters=90.0))
+    c = {x.id: x.ok for x in promotion.check_target("D", "fragile", zoo, {**DEV_D, "C4-g6.converged": 0.0},
+                                                     heldout_dir=tmp_path)}
+    assert c["D1"] and not c["D3"] and not c["D3x"] and not c["B2"] and not c["G-C4-g6"]
+
+
+def test_target_d_references_are_the_zoo_media() -> None:
+    spec = promotion.TARGETS["D"]
+    assert spec["reference_slot"] == "medium"
+    assert {m for *_, m in spec["bootstrap"]} == {"faltus2026", "neo_hooke"}

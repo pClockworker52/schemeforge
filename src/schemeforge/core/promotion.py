@@ -69,7 +69,33 @@ TARGET_AC: dict[str, Any] = {
     "dev": TARGET_A["dev"],
     "reference_slot": "limiter",
 }
-TARGETS = {"A": TARGET_A, "Ac": TARGET_AC}
+# Target D (docs/targets/D.md, pre-registered 2026-11-27, Arena 2). Thresholds as registered: the faltus2026-relative
+# ones are fixed at the values D.md states (promo, contact-v0.12.dev = v1.0). The rescaling rule (no gamma-scaled zoo
+# point meets D1-D8) concerns the zoo and was checked once (D.md, 20 points); it is not re-run per candidate.
+# Guards: every dev case with a converged flag converges.
+TARGET_D: dict[str, Any] = {
+    "thresholds": [
+        ("D1", "GF", "gap_res", "median", "<=", 0.0034),
+        ("D2", "HF", "converged", "mean", ">=", 1.0),
+        ("D3", "HF", "max_step", "median", ">=", 1.0),
+        ("D3x", "HX", "max_step", "median", ">=", 1.0),
+        ("D4", "HF", "a_err", "median_abs", "<=", 0.02),
+        ("D5", "HF", "p0_err", "median_abs", "<=", 0.02),
+        ("D6", "GF", "leak_pre", "median", "<=", 5.59e-4),
+        ("D7", "SF", "shear_parasitic", "median", "<=", 3.84e-3),
+        ("D8", "SL", "converged", "mean", ">=", 1.0),
+        ("D8s", "SL", "shear_parasitic", "median", "<=", 0.102),
+    ],
+    "relative": [],
+    "bootstrap": [
+        ("B1", "GF", "gap_res", "faltus2026"),
+        ("B2", "HF", "newton_iters", "neo_hooke"),
+    ],
+    "dev": [(f"G-{case}", case, "converged", ">=", 1.0)
+            for case in ("C0a-g3", "C0a-g5", "C0a-g6", "C1", "C2-g5", "C2-g6", "C4-g6")],
+    "reference_slot": "medium",
+}
+TARGETS = {"A": TARGET_A, "Ac": TARGET_AC, "D": TARGET_D}
 
 
 def load_instances(run_id: str, heldout_dir: Path = HELDOUT_DIR) -> dict[str, dict[str, Any]]:
@@ -84,6 +110,8 @@ def aggregate_stat(instances: dict[str, dict], family: str, metric: str, stat: s
         return math.nan
     if stat == "median":
         return float(np.median(vals))
+    if stat == "median_abs":  # signed errors (Target D's D4, D5)
+        return float(np.median(np.abs(vals)))
     if stat == "mean":
         return float(np.mean(vals))
     if stat == "p90":

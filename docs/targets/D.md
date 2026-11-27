@@ -56,6 +56,10 @@ resamples. The 95 % interval must lie entirely below 0.
 
 D1–D8 and the rescaling rule are checked as stated. The promotion check is not yet implemented in
 `src/schemeforge/core/promotion.py` (TARGETS holds A and A-c); it is part of step 7 (search readiness).
+*Added 2026-11-27 (step 7, no threshold changed):* implemented as `TARGET_D` in `src/schemeforge/core/promotion.py`;
+run `sforge promote <candidate> --arena contact --target D`. HF |a_err| and |p0_err| use the median of absolute values.
+The guards check `converged` on every dev case that has it. The rescaling rule concerns the zoo and is not re-run per
+candidate.
 
 ## Zoo references and the sweep check (promo, contact-v0.12.dev)
 
