@@ -1,5 +1,7 @@
 # Target D: draft for Peter (2026-11-24; NOT pre-registered)
 
+**Superseded 2026-11-27 by docs/targets/D.md (pre-registered, a722ef0).** Kept as the draft record.
+
 Plan step 6 requires that Target D is pre-registered from the zoo front, outside the judge's error floor, with
 held-out checks and bootstrap references, in its own commit. This file is the draft. It becomes `docs/targets/D.md`
 only after Peter accepts it and the promo zoo references (item 3 below) are filled in.

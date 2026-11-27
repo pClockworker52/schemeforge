@@ -11,9 +11,9 @@ force-push.
 
 ## Order (DECISIONS 2026-11-27, Peter)
 
-1. **Finish Gate 6.** Breakers done (WSL, e572add, B-0057…B-0066) and reviewed (docs/rounds/2026-11-27-contact-breakers.md;
-   recommendation: accept none). Peter decides acceptance. Then docs/targets/D.md (own commit, on
-   the final judge version), tag contact-v1.0, step 7.
+1. **Finish Gate 6.** Breakers done and reviewed; none accepted (DECISIONS 2026-11-27). Target D committed (a722ef0).
+   Judge tagged contact-v1.0 (6eef4c9; docs/judge/2026-11-27-contact-v10-check.md). **Next: step 7** (search readiness,
+   docs/plans/2026-10-30-phase6.md), then the Gate 6 report to Peter. WSL needs `git fetch --tags` before a contact eval.
 2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
 3. **Unpause cold spray**: its own DECISIONS entry, naming what the track resumes with. No cold-spray task before.
 
@@ -70,7 +70,7 @@ force-push.
 
 ## Open for Peter
 
-- Breaker acceptance (review: docs/rounds/2026-11-27-contact-breakers.md).
+- Gate 6, after step 7.
 
 ## Hunch budget
 
