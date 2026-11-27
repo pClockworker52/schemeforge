@@ -21,7 +21,7 @@ How the judge uses it:
   JAX (stress and tangent) and calls it once per quadrature point. Plane strain, bi-quadratic quads, felupe 11.3. The
   function only ever sees one C, so it cannot depend on the batch.
 - Bodies are compressible neo-Hookean, ψ_b = μ/2 (tr C − 3) − μ ln J + λ/2 ln² J. The medium sees the body's μ and λ
-  and the case's γ. Zoo media scale with γ μ or γ K; the scale is the candidate's choice.
+  and the case's γ. How ψ scales with γ is the candidate's choice.
 - The judge adds a fixed HuHu-LuLu Hessian regularization of the medium (kr · λ · W², kr = 5e-7) on the Hertz and
   sliding cases. It is not part of the slot.
 - ψ depends on C alone. It cannot see the contact normal, the gap thickness, the load step or any history.
@@ -40,10 +40,6 @@ p0_err, newton_iters, converged); C1 patch test (pressure_spread); C4 frictionle
 (shear_parasitic, fn_rise, converged). Objectives and the Target D dev screen: src/schemeforge/engine/objectives.py.
 
 **Target D** (docs/targets/D.md) is judged on the held-out families: tight (GF gap_res), robust (HF converged and
-max_step in one load step), accurate (HF |a_err|, |p0_err| ≤ 2 %), and no worse than faltus2026 on leak before contact,
-parasitic shear and sliding. The zoo's front over γ is the reference. A candidate that only rescales a zoo member is
+max_step in one load step), accurate (HF |a_err|, |p0_err| ≤ 2 %), and no worse than the robust zoo member on leak before
+contact, parasitic shear and sliding. The zoo's front over γ is the reference. A candidate that only rescales a zoo member is
 that zoo member at another γ.
-
-Zoo (src/schemeforge/arenas/contact/zoo/medium/): neo_hooke (Bluhm et al. 2021, isotropic part), neo_hooke_iv
-(felupe's isochoric-volumetric form), faltus2026 (Faltus, Amato and Horák 2026), wriggers2013 (Wriggers, Schröder and
-Schwarz 2013, as in felupe's ex20).

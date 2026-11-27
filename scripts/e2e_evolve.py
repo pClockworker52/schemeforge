@@ -14,16 +14,19 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 
-CALIBRATION = {
-    "limiter": ("C1", "find a good MUSCL slope limiter", "R1.shock_width", "all zoo limiters"),
-    "flux": ("C2", "reach HLLC-level contact resolution (R5) with Rusanov-level robustness", "R5.l1_smooth",
-             "HLL, HLLC, Roe, AUSM family"),
+CALIBRATION = {  # slot -> (arena, tag, goal, metric, relatives)
+    "limiter": ("euler1d", "C1", "find a good MUSCL slope limiter", "R1.shock_width", "all zoo limiters"),
+    "flux": ("euler1d", "C2", "reach HLLC-level contact resolution (R5) with Rusanov-level robustness",
+             "R5.l1_smooth", "HLL, HLLC, Roe, AUSM family"),
+    # Arena 2, step 7 (docs/rounds/2026-11-27-contact-calibration.md); K1, since C1-C4 are contact case names
+    "medium": ("contact", "K1", "find a third medium that is tight, robust and accurate in contact",
+               "C0a-g5.gap_res", "the published third-medium energies"),
 }
 
 
 def calibration_hunch(k: int, slot: str) -> dict:
-    tag, goal, metric, relatives = CALIBRATION[slot]
-    return {"arena": "euler1d", "slot": slot, "lens": "human",
+    arena, tag, goal, metric, relatives = CALIBRATION[slot]
+    return {"arena": arena, "slot": slot, "lens": "human",
             "statement": f"Calibration island {k + 1}: {goal} (engine calibration {tag}, not a research hunch).",
             "mechanism": "Engine calibration only: textbook methods are expected to reappear.",
             "predicted_effect": [{"metric": metric, "direction": "down", "size": "towards the zoo"}],
@@ -61,7 +64,7 @@ def main() -> int:
             for k in range(a.islands):
                 ledger.add(calibration_hunch(k, a.slot))
         ids = [h["id"] for h in ledger.load()]
-        cfg = evolve.Config("euler1d", a.slot, ids, gens=a.gens, children=a.children, backend=a.backend,
+        cfg = evolve.Config(CALIBRATION[a.slot][0], a.slot, ids, gens=a.gens, children=a.children, backend=a.backend,
                             model=a.model, budget=a.budget, seeds=seeds,
                             wild_model=a.wild_model)
         state = evolve.evolve(cfg, log=lambda m: print(m, flush=True))
