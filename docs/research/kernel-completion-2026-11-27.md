@@ -1,6 +1,7 @@
-# Kernel completion across a TLSPH contact: does it remove the face-layer deficit? (spec and prediction, DRAFT)
+# Kernel completion across a TLSPH contact: does it remove the face-layer deficit? (spec and prediction, frozen)
 
-**Draft 2026-11-27 (cloud, modeller), not frozen.** Peter asked for it (DECISIONS 2026-11-27, "Cold-spray track
+**Frozen 2026-11-27, approved by Peter ("Freeze it as drafted"), as drafted in eae3ed5, before any number was
+computed.** WSL A task 2026-11-27-b. Drafted 2026-11-27 (cloud, modeller). Peter asked for it (DECISIONS 2026-11-27, "Cold-spray track
 unpaused"). `kind = check`; no hunch, no budget. **Stage A only: a static model in Python, no solver run, no build, no
 existing solver output read.** A solver stage (B) is outlined at the end. It needs its own frozen spec, after Peter has
 reviewed Stage A.
