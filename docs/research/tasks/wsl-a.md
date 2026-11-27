@@ -5,6 +5,40 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-27-b: kernel completion across a TLSPH contact, Stage A (static model; open)
+
+**Basis:** DECISIONS 2026-11-27, "Cold-spray track unpaused" (Peter: option 1). Spec, frozen 9369e6c (as drafted in
+eae3ed5): [../kernel-completion-2026-11-27.md](../kernel-completion-2026-11-27.md). Where this task and the spec
+differ, the spec holds. `kind = check`; no hunch, no budget. **Python only: no solver run, no build, no existing
+solver output read.**
+
+1. **Set-up.**
+   - Pull `claude/exciting-fermi-qy077p`.
+   - Recreate `coldspray/opencourant-sph` from it (deleted in the clean-up of 2026-11-27).
+   - Fork: work on `cs12`.
+2. **Script and model checks, committed before any K2–K5 number.**
+   - Write `hvi/scripts/tl_kc_static.py`, built on `tl_endlayer.py`: periodic lateral cell with explicit particles
+     and images, the laws L0, KC-f, KC-full and BCT, and the cases K1–K5, all exactly as the spec defines them.
+     Write every definition in its docstring.
+   - Run only the two model checks:
+     - L0 on K1 against 0.6515 / 0.8397 to 0.002 on both sides;
+     - KC-full on K1 bulk to 1e-9, transmitted force to 1e-9, residual ≤ 1e-10.
+   - Commit the script and the check rows. If a check fails, stop and report; compute nothing else.
+3. **Cases.** Run L0, KC-f, KC-full and BCT on K1–K5.
+   - Rows `hvi/results/tl_kc_static.csv` in the fork and `docs/research/opencourant/results/tl_kc_static.csv` here,
+     `kind = check`.
+   - Per law and case: p_k for layers 1–3 on both sides, e_face, e_bulk, transmitted force / (t · area), residual.
+     Put the full layer profiles in a second file, `_profiles.csv`.
+4. **Verdict** by the spec's rule, separately for KC-f and KC-full: consistent, partial or fails. Name the case that
+   decides each. Report BCT; do not judge it. List any deviation from the spec (none expected) before the verdict.
+5. **Write-up:** verification §43 on `coldspray/opencourant-sph`.
+   - Include the verdicts, the model checks, the full table, the predictions against the outcome, and a disclosure of
+     what was read.
+   - No reading that goes beyond the rule; observations are labelled as such.
+
+Do not start Stage B, and do not edit the spec. If a definition turns out ambiguous while coding, stop and ask the
+modeller before computing K2–K5.
+
 ## Task 2026-11-27-a: delete the G1 raw files of task 2026-11-26-a (housekeeping; closed: done, f785d31, merged e67d639)
 
 **Step 1 result (WSL A, 2026-11-27): stopped, nothing deleted.** Everything judged in §42 rests on committed rows; peak

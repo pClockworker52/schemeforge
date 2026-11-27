@@ -16,8 +16,8 @@ force-push.
    0 of 2 required rediscoveries; six hunch drafts ledger/drafts/d7_*). **Gate 6 PASSED** (Peter, 2026-11-27; shortfall
    recorded, DECISIONS 2026-11-27). WSL needs `git fetch --tags` before a contact eval.
 2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
-3. **Unpause cold spray: done** (DECISIONS 2026-11-27): resumes with the kernel-completion probe. Spec Stage A drafted,
-   not frozen: docs/research/kernel-completion-2026-11-27.md. Next: Peter's review and freeze, then a WSL A task.
+3. **Unpause cold spray: done** (DECISIONS 2026-11-27): resumes with the kernel-completion probe. Stage A frozen
+   (9369e6c; docs/research/kernel-completion-2026-11-27.md). WSL A task 2026-11-27-b open; then merge §43.
 
 ## Sync items
 
@@ -67,12 +67,12 @@ force-push.
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | breaker review after Peter's run; clean-up |
 | Desktop | schemeforge | — (pushed 765b44c) |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | none (2026-11-27-a closed, e67d639); 2026-11-26-a closed (§42); closed tasks: docs/research/tasks/wsl-a.md |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | 2026-11-27-b (kernel completion, Stage A); 2026-11-27-a closed (e67d639); 2026-11-26-a closed (§42); closed tasks: docs/research/tasks/wsl-a.md |
 | WSL B | none (`coldspray/bonding-methods-reading` merged cbe2d88, deleted) | b9: only Dai 2025 left (closed access) |
 
 ## Open for Peter
 
-- Review and freeze of the kernel-completion spec (Stage A).
+- After §43: whether Stage B (solver build) follows, by the spec's 'What follows'.
 
 ## Hunch budget
 
