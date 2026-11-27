@@ -1,0 +1,89 @@
+arena: contact
+slot: medium
+lens: approximation theory
+statement: >-
+  Split the two error terms of the medium into two parameters. The far field stays the gamma-scaled neo_hooke. A
+  steep volumetric wall is added whose position does not depend on gamma:
+  psi = psi_neo(C; gamma) + mu J_w^6 phi_6(J), with phi_n(J) = (J^-n - 1)/n + J - 1, n = 6 and J_w = 4.3e-4.
+  With these constants the wall carries 0.05 mu at J = 2e-3. phi_n is convex, >= 0, and zero with zero slope at
+  J = 1. The wall is proportional to mu, so unit scaling is exact, and it is finite for every J > 0.
+  Claim: at the HF gammas (1e-6..1e-5) the residual layer is held near 2e-3 of the gap instead of neo's 1e-4..7e-4.
+  This bounds the layer's thinness and tangent independently of gamma, and HF and SL converge in one load step. Where
+  neo's own residual gap exceeds the wall, at gamma >= about 3e-5, the candidate is neo_hooke.
+  D4 is not addressed: neo HF |a_err| is 0.0474 (r-20261125-180441-78df).
+mechanism: >-
+  Approximation view. A third medium approximates the hard-contact law (zero stress while open, a wall at zero
+  thickness) with two error terms:
+  - the far-field error: leak and load carried through the open gap, set by the response at moderate compression and
+    O(gamma);
+  - the near-wall error: residual thickness s*, set where the wall stress reaches the body stress sigma.
+  Every zoo member is psi = gamma f(C), a one-parameter family with a fixed shape. Both errors therefore move together
+  along gamma, and that is the front:
+  - neo: s* ~ gamma ln(1/s*), dev C0a gap_res 6.53e-4 at 1e-5 and 8.23e-5 at 1e-6 (r-20261127-201108-122e);
+  - faltus2026: s* ~ gamma^(3/7), 0.029 and 0.0113 (r-20261127-201026-a6a1);
+  - wriggers2013: s* ~ gamma^(1/5), 0.0384 and 0.0244 (r-20261127-201235-b2b2).
+
+  A second, gamma-free parameter decouples the two. The wall's own residual thickness is
+  s_w ~ J_w^(6/7) (mu/sigma)^(1/7). The 1/7 power makes it insensitive to the load: about 1.3e-3 to 2e-3 of the gap
+  over the GF and HF stress ranges. Below s_w the tangent of the layer is bounded by about 7 sigma / (g s_w),
+  independent of gamma. The neo-Hookean media instead get thinner, and their tangent stiffer, without bound as gamma
+  falls; they fail at gamma = 1e-7 (contact_baseline.md). Above s_w the wall is negligible: P_wall(J = 0.5) is about
+  1e-18 mu. The far field, leak_pre and SF are therefore neo's at the same gamma.
+
+  Evidence against, stated before the test: thickness alone does not make a zoo medium robust.
+  - faltus2026 x0.1 has GF gap_res 0.0133 but HF max_step 0.5 (r-20261125-181302-4d4e).
+  - neo_hooke x10 has a thinner gap, 0.00745, and HF max_step 1 (r-20261125-181302-d6e0).
+  The hunch bets that, for the neo-Hookean shape specifically, the small-gamma failure is near-wall conditioning, not
+  missing moderate-strain stiffness. A refutation says the latter.
+
+  Trap check: J_w is chosen from D1's threshold (the floor sits below 0.0034). That is a design requirement, not a fit
+  to held-out ranges. The floor does not vary with gamma or with any case parameter.
+
+  Not a gamma rescaling: the candidate equals neo at large gamma and has a fixed-thickness wall at small gamma. To
+  reach a 2e-3 gap at gamma = 1e-6, neo would need roughly x25. At x10 its GF leak_pre is already 0.00284 and fails D6
+  (r-20261125-181302-d6e0). The candidate's leak equals neo's at gamma (GF 0.000285, r-20261125-180441-78df).
+predicted_effect:
+  - metric: C0a-g5.gap_res
+    direction: up
+    size: "from 6.53e-4 (neo, r-20261127-201108-122e) to about 1.8e-3, inside the dev D1 screen 0.0029"
+  - metric: C0a-g6.gap_res
+    direction: up
+    size: "from 8.23e-5 (neo, r-20261127-201108-122e) to about 1.7e-3"
+  - metric: C0a-g3.gap_res
+    direction: same
+    size: "0.0316 as neo (r-20261127-201108-122e); the wall is inactive at s = 0.03"
+  - metric: C0a-g5.leak_pre
+    direction: same
+    size: "1.95e-4 as neo (r-20261127-201108-122e); C0b-s2 shear_parasitic 1.0e-5 likewise (J = 1, wall exactly zero)"
+  - metric: C2-g6.newton_iters
+    direction: down
+    size: "from 87 (neo, r-20261127-201108-122e) to <= 70; C2-g6 a_err within 0.01 of neo's -0.039 (no D4 effect)"
+  - metric: C4-g6.converged
+    direction: up
+    size: "from not converged (neo, r-20261127-201108-122e) to converged, shear_parasitic <= 0.0622 (dev D8 screen)"
+  - metric: HF.max_step
+    direction: up
+    size: "promo median from 0.375 (neo, r-20261125-180441-78df) to 1; SL converged from 0 to 1"
+  - metric: GF.gap_res
+    direction: up
+    size: "promo median from 0.00104 (neo, r-20261125-180441-78df) to about 0.002, still <= 0.0034 (D1)"
+kill_criterion: >-
+  The dev runs are on contact-v1.0, the promo runs against Target D.
+  The hunch is refuted if any of the following holds:
+  (a) dev C2-g5 or C2-g6 does not converge, or C2-g6 newton_iters is >= 87 (neo, r-20261127-201108-122e);
+  (b) dev C4-g6 does not converge (neo does not, r-20261127-201108-122e);
+  (c) dev C0a-g5 gap_res is > 0.0029 (the dev D1 screen, from faltus2026 r-20261127-201026-a6a1);
+  (d) the promo HF max_step median is <= 0.375 (neo, r-20261125-180441-78df);
+  (e) the promo GF gap_res median is > 0.0034 (D1).
+  The test is invalid (implementation error) if C0a-g3 or C0b-s2 differs from neo (r-20261127-201108-122e) by more
+  than 1e-6 relative. The wall must be inactive there.
+known_relatives:
+  - "Closest: Li, Kaufman and Jiang (2021, Codimensional IPC, ACM TOG 40(4), arXiv 2012.04457): a distance offset that keeps mid-surfaces at least a thickness apart, enforced by a barrier (snippet). Differs by: there is no distance; the floor acts on the volume ratio J of a continuum medium as a smooth power wall that stays finite below J_w. Its position is fixed while the far field scales with gamma."
+  - "Wriggers, Schroeder and Schwarz (2013, Comput. Mech. 52:837) as in felupe ex20 (zoo wriggers2013): a steep (s^-5) near-wall term, but scaled by gamma, so its thickness moves as gamma^(1/5) (dev C0a-g5 0.0384, r-20261127-201235-b2b2)."
+  - "Polyak (1992, Math. Programming 54:177), modified (shifted) barrier functions: a barrier whose singularity is shifted away from the constraint boundary."
+  - "Prager (1957) ideal locking materials: rigid beyond a locking strain. Differs by: smooth power wall, no hard lock."
+  - "Faltus, Amato and Horak (2026, arXiv 2603.13063): a linear-elastic term enforcing constant medium stiffness, gamma-scaled and needing F. It is a stiffness add-on, not a floor."
+  - "Label at most 'variant of an offset or shifted barrier'. Not claimed novel; only the referee assigns 'plausibly new'."
+status: open
+verdict_note: ""
+author: hunch-generator/approximation theory

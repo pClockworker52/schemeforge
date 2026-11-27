@@ -1,0 +1,89 @@
+arena: contact
+slot: medium
+lens: structure preservation
+statement: >-
+  Add to neo_hooke_iv, at the same gamma, a term that is identically zero, with its stress and tangent, on every state
+  that a layer between two ideal frictionless surfaces passes through. The term acts only on in-plane biaxial
+  compression:
+  psi = psi_IV(C; gamma) + 100 gamma K <q>_+^3, with q = 2 - I1 + I3 = (1 - c1)(1 - c2), active only where I1 < 3.
+  Here I1 = tr C, I3 = det C, C33 = 1, c1 and c2 are the in-plane eigenvalues of C, and K = lmbda + 2 mu / 3. The term
+  needs no eigenvalues or square roots.
+  The I1 < 3 switch only separates biaxial compression from biaxial tension (both have q > 0). The two regions meet
+  only at rest, where q = 0, so the switch never acts on a nonzero term.
+  Claim: GF, SF and C1 are unchanged from IV, so D1, D6 and D7 cannot move, and sliding converges where IV fails.
+  This is a component, not a full Target D candidate. It does not address D4 (IV HF |a_err| 0.0488,
+  r-20261125-180441-89cc) and makes no claim on HF max_step.
+mechanism: >-
+  Structure: a medium layer between two frictionless surfaces deforms as F = R [[1 + e, k], [0, s]]. Here s is the
+  closure, k the tangential slip over the reference thickness and e the lateral strain of the body surface. For e = 0,
+  c1 c2 = s^2 and c1 + c2 = 1 + k^2 + s^2, so q = (1 - c1)(1 - c2) = -k^2 <= 0. Conversely, every pair (c1, c2) with
+  c1 c2 <= 1 and q <= 0 is reached by some (s, k). The ideal-contact kinematics therefore fill exactly the region
+  q <= 0. An isotropic term in C that vanishes to second order on q <= 0 is invisible to closure and slip. On that
+  region only biaxial compression (both stretches < 1) and biaxial tension remain, and this term takes the first.
+  It is the analogue of a well-balanced scheme: exact on the states the ideal solution passes through, active only off
+  them.
+
+  Consequences by construction:
+  - C0a, C1 and GF are confined uniaxial closure with c1 = 1 exactly, so q = 0 up to round-off.
+  - C0b and SF are simple shear, where q = -k^2 < 0.
+  - In all of these the term, its stress and its tangent vanish. The cube is chosen so that the tangent also vanishes
+    on q = 0, because C0a states lie exactly on that boundary.
+  - <q>_+ <= 1, so the term is bounded by 100 gamma K. It never acts as a barrier and cannot set the residual gap.
+  - At small strain it is O(eps^6), so the rest tangent and the leak are unchanged.
+
+  Where it acts: wherever the medium is pushed sideways while it closes. The clearest case is ahead of a sliding body
+  (ploughing, fn_rise in C4), where the neo-Hookean media resist with gamma mu only. IV does not converge on dev
+  C4-g6 (r-20261127-201150-ea67) and has SL converged 0.5 on promo (r-20261125-180441-89cc).
+
+  Caveat, stated before the test: in the Hertz residual layer the body's tangential surface displacement shears the
+  layer, so q is about -k^2 - 2e and is probably negative. The term may then be almost inert on C2/HF. That is why
+  HF max_step is not claimed.
+
+  Paired hunch: d7_tension_only_fibres adds stiffness only in the opposite mode (a tensile principal stretch) on the
+  same base. Together they discriminate which mode makes IV fail in sliding.
+
+  Not a gamma rescaling: GF and SF equal IV at the same gamma. IV converges on SL only at x10 (SL conv 1), where its
+  GF gap_res is 0.0109 and fails D1 (r-20261125-181303-cca0). A point with IV's GF gap_res 0.00279 and SL conv 1 is
+  therefore off IV's gamma line. The other members differ in GF already at gamma (Target D table).
+predicted_effect:
+  - metric: C0a-g5.gap_res
+    direction: same
+    size: "0.00216 as IV (dev r-20261127-201150-ea67), equal to 1e-8 relative; likewise C0a-g3 0.0332, C0a-g6 5.44e-4"
+  - metric: C0a-g5.leak_pre
+    direction: same
+    size: "1.45e-4 as IV (r-20261127-201150-ea67)"
+  - metric: C0b-s2.shear_parasitic
+    direction: same
+    size: "1.0e-5 as IV (r-20261127-201150-ea67)"
+  - metric: C4-g6.converged
+    direction: up
+    size: "from not converged (IV, r-20261127-201150-ea67) to converged; shear_parasitic <= 0.0622 (dev D8 screen, faltus2026 r-20261127-201026-a6a1)"
+  - metric: C2-g6.newton_iters
+    direction: same
+    size: "<= 76 (IV, r-20261127-201150-ea67); C2-g5 a_err within 0.01 of IV's 0.118 (no D4 effect expected)"
+  - metric: SL.converged
+    direction: up
+    size: "promo mean from 0.5 (IV, r-20261125-180441-89cc) to 1.0; SL shear_parasitic <= 0.102 (D8)"
+  - metric: GF.gap_res
+    direction: same
+    size: "promo median 0.00279 as IV (r-20261125-180441-89cc); SF shear_parasitic 0.000247 likewise"
+kill_criterion: >-
+  The dev runs are on contact-v1.0, the promo runs against Target D.
+  The hunch is refuted if any of the following holds:
+  (a) dev C4-g6 does not converge (IV does not either, r-20261127-201150-ea67);
+  (b) C4-g6 converges but its shear_parasitic is > 0.0622 (the dev D8 screen, from faltus2026 r-20261127-201026-a6a1);
+  (c) C2-g5 or C2-g6 stops converging (IV converges on both, r-20261127-201150-ea67);
+  (d) the promo SL converged mean is < 1.0 (IV 0.5, r-20261125-180441-89cc).
+  It is refuted as inert if every dev metric equals IV's (r-20261127-201150-ea67) to 1e-6 relative.
+  The test is invalid (an implementation error, not a verdict) if any C0a, C0b or C1 metric differs from IV's by more
+  than 1e-8 relative. The term must vanish there identically.
+known_relatives:
+  - "Closest: Wriggers, Schroeder and Schwarz (2013, Comput. Mech. 52:837-847, doi 10.1007/s00466-013-0848-5): anisotropic third-medium term along the eigenvector of the smallest principal stretch, activated near contact (zoo wriggers2013, as felupe ex20 implements it; paper read via abstract and secondary sources only). Differs by: Wriggers' term acts ON the closure mode (it stiffens the smallest stretch and so sets the residual gap); this term vanishes identically on closure and slip and acts only when both in-plane stretches are compressed."
+  - "Miehe, Welschinger and Hofacker (2010, IJNME 83:1273): spectral split of the energy by the sign of the principal strains, used with third-medium contact for phase-field fracture in arXiv 2603.15635 (snippet). Differs by: that split separates tensile from compressive principal strains; here the product of the two compressive parts is penalised, which is zero whenever one stretch is not compressed."
+  - "Faltus, Amato and Horak (2026, arXiv 2603.13063), Eq. (1)-(2) (zoo faltus2026): the squared isochoric term stiffens closure, shear and biaxial compression alike."
+  - "Bluhm, Sigmund and Poulios (2021, Comput. Mech. 67:1099, arXiv 2010.14277) HuHu, and Frederiksen et al. (2025) HuHu-LuLu (the judge's fixed kr): regularizations of gradients of the deformation, not a pointwise deformation mode."
+  - "Li, Kaufman and Jiang (2021, C-IPC, arXiv 2012.04457): C2 strain-limiting barriers on principal stretches (snippet). Differs by: no limit value; one-sided on joint compression; bounded."
+  - "The searches found no published third-medium term with this null-set property. Absence of a hit is not evidence of novelty. The label is at most 'variant of a principal-stretch medium term (Wriggers 2013 family)'; only the referee assigns 'plausibly new'."
+status: open
+verdict_note: ""
+author: hunch-generator/structure preservation

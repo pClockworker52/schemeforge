@@ -1,0 +1,83 @@
+arena: contact
+slot: medium
+lens: contrarian
+statement: >-
+  Broken on purpose: the textbook assumption that the medium's energy is (poly)convex, with stress monotone in
+  compression and a positive-definite tangent at every state (Ball 1977). Every medium in the zoo, and in Wriggers
+  2013, Bluhm 2021 and Faltus 2024/2026, satisfies it.
+
+  Proposal: a medium that is stiff at small strain and soft at finite strain. Add to neo_hooke at gamma a saturating
+  bump in ln J:
+  psi = psi_neo(C; gamma) + beta gamma M eps_p^2 / 2 [1 - exp(-(ln J)^2 / eps_p^2)],
+  with M = lmbda + 2 mu, beta = 99 and eps_p = 0.02.
+  - At rest, the uniaxial (P-wave) stiffness is 100 gamma M, the linearisation of neo_hooke x100.
+  - The bump's stress peaks at |ln J| about 0.014 and vanishes beyond about 5 % volume change.
+  - Beyond that, closure, the residual gap and leak_pre (at s = 0.5) are exactly neo_hooke's at gamma.
+  - In simple shear J = 1, so SF and C0b are unchanged.
+  Claim: HF and SL become robust like neo_hooke x100, while GF stays neo_hooke's.
+mechanism: >-
+  Hypothesis under test: one-step robustness is decided by what the medium does at small strain, where the first
+  Newton iterates of a large load step evaluate its tangent. Tightness and leak are decided at finite compression. If
+  so, a convex medium has to pay for robustness with stiffness along the whole closure path. That is the zoo's front:
+  - neo_hooke x100 converges in one step and slides (HF max_step 1, SL converged 1), but has GF gap_res 0.0456 and
+    leak_pre 0.027 (r-20261125-181302-bb9d);
+  - neo_hooke x1 has gap_res 0.00104 but max_step 0.375 and SL converged 0 (r-20261125-180441-78df).
+  A non-convex energy can be stiff where the iterates start and soft where the solution ends.
+
+  The bump is a Gaussian-type saturating energy, the shape of an exponential cohesive law, used in compression. Its
+  peak stress is about 0.43 beta eps_p gamma M, about 0.85 gamma M. That is of the order of neo's own stress at
+  s = 0.5, so the leak through the open gap in Hertz should stay of the same order as neo's.
+
+  Risk, stated before the test: past the peak, the medium's tangent is negative, about -44 gamma M at its minimum.
+  Globally the body dominates. In Hertz the medium's negative layer stiffness (about 44 gamma M / g) is about 0.2 M
+  per unit depth at gamma = 1e-5, against the body's about M, so the interface stays stable. Between two medium rows
+  in series, however, the internal node's stiffness is negative, and the band can localise: one row snaps through
+  while the other unloads. The final state at full push lies on the convex wall branch and is unique. The question is
+  whether Newton crosses the band. On GF at gamma = 1e-3 with thin gaps the risk is largest. This risk is the
+  contrarian part, and kill clause (a) catches it.
+
+  Not a gamma rescaling: at small strain it is neo_hooke x100; beyond about 5 % volume change it is neo_hooke x1.
+  No constant factor gives both. neo_hooke x100 fails D1 and D6, and x1 fails D3 and D8 (Target D table).
+predicted_effect:
+  - metric: C0a-g5.gap_res
+    direction: same
+    size: "6.53e-4 as neo_hooke (r-20261127-201108-122e) to Newton tolerance (the bump stress at s = 6.5e-4 is exp(-1e5), i.e. zero)"
+  - metric: C0a-g5.leak_pre
+    direction: same
+    size: "1.95e-4 as neo_hooke (r-20261127-201108-122e); C0b-s2 shear_parasitic 1.0e-5 likewise"
+  - metric: C2-g6.newton_iters
+    direction: down
+    size: "from 87 (neo_hooke, r-20261127-201108-122e) to <= 70"
+  - metric: C4-g6.converged
+    direction: up
+    size: "from not converged (neo_hooke, r-20261127-201108-122e) to converged, shear_parasitic <= 0.0622 (dev D8 screen)"
+  - metric: C2-g5.a_err
+    direction: up
+    size: "from +0.123 (neo_hooke, r-20261127-201108-122e) to +0.12 .. +0.20 (the far-field band near the contact edge carries the bump's peak)"
+  - metric: HF.max_step
+    direction: up
+    size: "promo median from 0.375 (neo_hooke, r-20261125-180441-78df) to 1; SL converged from 0 to 1"
+  - metric: GF.gap_res
+    direction: same
+    size: "promo median 0.00104 and leak_pre 0.000285 as neo_hooke (r-20261125-180441-78df); GF converged stays 1"
+kill_criterion: >-
+  The dev runs are on contact-v1.0, the promo runs against Target D.
+  The hunch is refuted if any of the following holds:
+  (a) any dev case that neo_hooke converges (C0a-g3/g5/g6, C1, C2-g5, C2-g6; r-20261127-201108-122e) does not converge.
+  This refutes the contrarian premise that the non-convex band is tolerated;
+  (b) C2-g6 newton_iters is >= 87 (neo_hooke, r-20261127-201108-122e);
+  (c) dev C4-g6 does not converge;
+  (d) on promo, the HF max_step median is <= 0.375 (neo_hooke, r-20261125-180441-78df), or GF converged or SL
+  converged is < 1.
+  (b), (c) or (d) without (a) refutes the small-strain-stiffness premise. The verdict note records which premise
+  failed.
+known_relatives:
+  - "Closest: the exponential cohesive law of Xu and Needleman (1993, Model. Simul. Mater. Sci. Eng.), built on the universal binding-energy relation of Rose, Smith and Ferrante: an energy that is stiff at small opening, softens, and saturates. Differs by: used in compression of a fictitious contact medium, in ln J, on top of a monotone barrier that carries the final state."
+  - "Non-convex foam energies: Gioia, Wang and Cuitino (2001, Proc. R. Soc. A) and Pampolini and Del Piero (2008, J. Mech. Mater. Struct. 3:969; snippet). Double-well energies give localisation and the plateau of open-cell foams. Differs by: here the softening sits at 1-5 % volume change to give a stiff linearisation, not to model a plateau."
+  - "Wang, Lazarov, Sigmund and Jensen (2014, CMAME), energy interpolation for fictitious-domain void elements: linear behaviour of low-stiffness regions to avoid excessive distortion. Differs by: needs F (linear strain); here C only, and the extra stiffness is switched off by saturation."
+  - "Faltus, Amato and Horak (2026, arXiv 2603.13063): a linear-elastic term for constant third-medium stiffness. It needs F and keeps its stiffness at all strains."
+  - "Zoo neo_hooke at x100 (r-20261125-181302-bb9d) is the small-strain reference point."
+  - "No third-medium paper with a non-convex medium energy was found. Label at most 'variant of an exponential cohesive energy used in compression'; only the referee assigns 'plausibly new'."
+status: open
+verdict_note: ""
+author: hunch-generator/contrarian

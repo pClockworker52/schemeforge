@@ -1,0 +1,82 @@
+arena: contact
+slot: medium
+lens: transfer
+statement: >-
+  Transfer from cartilage mechanics, where fibres bear tension only. Add to neo_hooke_iv at gamma a tension-only
+  ("fibre") term on the in-plane principal stretches:
+  psi = psi_IV(C; gamma) + 5 gamma mu sum_i <lambda_i - 1>_+^2, with lambda_i = sqrt(c_i) for the in-plane eigenvalues
+  of C. Use the closed form with the safe square root of wriggers2013, and jnp.where for the bracket.
+  The term is zero for every compressed or unstretched direction, so confined closure (C0a, C1, GF; stretches 1 and s)
+  is untouched. It acts wherever a direction of the medium is stretched: simple shear, slip of the thin layer, and
+  lateral squeeze-out at the contact edge.
+  Claim: HF and SL become robust at IV's tightness, with SF parasitic shear about 6 gamma, inside D7. D4 is not
+  addressed: IV HF |a_err| is 0.0488 (r-20261125-180441-89cc).
+mechanism: >-
+  Transfer.
+  - Cartilage resists tension far more than compression. Conewise linear elasticity (Curnier et al. 1995; Soltz and
+    Ateshian 2000) and continuous tension-only fibre distributions (Ateshian et al. 2009) make the stiffness switch
+    with the sign of the stretch along each direction. Reduced to principal directions, this is the term above.
+  - Medium version: closing a gap only compresses (the stretches are 1 and s). Every way the medium can be dragged out
+    of shape near a contact has a tensile principal stretch: a thin layer slipping by k has lambda1 about sqrt(1 + k^2),
+    and medium squeezed sideways out of a closing gap has a lateral stretch > 1. A tension-only term therefore resists
+    these modes at (1 + 5) gamma mu and leaves the closure law, and with it gap_res and leak_pre, exactly IV's.
+
+  The hypothesis is that IV fails C4-g6 (dev, not converged, r-20261127-201150-ea67) and is not robust in one load step
+  (HF max_step 0.5, SL converged 0.5, r-20261125-180441-89cc) because medium near the contact edge is dragged with only
+  gamma mu resistance. faltus2026 is robust (r-20261125-180442-ceee) and stiffens strongly in these modes.
+
+  Smoothness: the bracket is C1 at lambda = 1, the conewise-linear structure, so the tangent has a direction-dependent
+  jump at rest. On C0a the jump cannot act: the stretched direction there is x, whose dofs are fixed. Elsewhere it may
+  cost Newton iterations, which kill clause (b) measures.
+
+  D7 budget: in simple shear k, P_xy/(mu k) rises from gamma to about 7 gamma at k = 2 and 6.3 gamma at k = 1.5,
+  computed from the formula. The D7 threshold is about 15 x neo's SF median (0.00384 vs 0.000247,
+  r-20261125-180442-ceee and r-20261125-180441-78df). At B-0063 (s = 3) the term gives about 8 gamma, against
+  faltus2026's 170 gamma (r-20261127-194154-e410).
+
+  Paired with d7_contact_null_biaxial, which adds stiffness only in the opposite mode (both stretches compressed) on the
+  same base. The pair tells which mode makes IV fail.
+
+  Not a gamma rescaling: GF is IV's at gamma (gap_res 0.00279, r-20261125-180441-89cc). IV reaches HF max_step 1 and
+  SL converged 1 only at x10, where its GF gap_res is 0.0109 (r-20261125-181303-cca0).
+predicted_effect:
+  - metric: C0a-g5.gap_res
+    direction: same
+    size: "0.00216 as IV (r-20261127-201150-ea67), to Newton tolerance; leak_pre 1.45e-4 likewise"
+  - metric: C0b-s2.shear_parasitic
+    direction: up
+    size: "from 1.0e-5 (IV, r-20261127-201150-ea67) to about 7e-5, inside the dev D7 screen 1.74e-4"
+  - metric: C2-g6.newton_iters
+    direction: down
+    size: "from 76 (IV, r-20261127-201150-ea67) to <= 65"
+  - metric: C4-g6.converged
+    direction: up
+    size: "from not converged (IV, r-20261127-201150-ea67) to converged, shear_parasitic <= 0.0622 (dev D8 screen)"
+  - metric: C2-g5.a_err
+    direction: same
+    size: "within 0.02 of IV's +0.118 (r-20261127-201150-ea67)"
+  - metric: HF.max_step
+    direction: up
+    size: "promo median from 0.5 (IV, r-20261125-180441-89cc) to 1; SL converged from 0.5 to 1"
+  - metric: SF.shear_parasitic
+    direction: up
+    size: "promo median from 0.000247 (IV, r-20261125-180441-89cc) to about 0.0016, <= 0.00384 (D7)"
+kill_criterion: >-
+  The dev runs are on contact-v1.0, the promo runs against Target D.
+  The hunch is refuted if any of the following holds:
+  (a) dev C4-g6 does not converge (IV does not, r-20261127-201150-ea67), or C2-g5 or C2-g6 stops converging;
+  (b) C2-g6 newton_iters is >= 76 (IV, r-20261127-201150-ea67);
+  (c) C0b-s2 shear_parasitic is > 1.74e-4 (the dev D7 screen, from faltus2026 r-20261127-201026-a6a1);
+  (d) on promo, the HF max_step median is <= 0.5 or SL converged is < 1 (IV 0.5 / 0.5, r-20261125-180441-89cc), or
+  the SF shear_parasitic median is > 0.00384 (D7).
+  The test is invalid (implementation error) if any C0a or C1 metric differs from IV's by more than 1e-8 relative.
+known_relatives:
+  - "Closest: Ateshian, Rajan, Chahine, Canal and Hung (2009, J. Biomech. Eng.): cartilage solid matrix with a continuous fibre distribution whose fibres bear tension only (snippet). Also the conewise linear elasticity of Curnier, He and Zysset (1995, J. Elasticity) and Soltz and Ateshian (2000), where stiffness switches with the sign of the strain along a texture direction. Differs by: used as a stabiliser of a fictitious contact medium, reduced to the two in-plane principal stretches, with no compressive part, so that the closure law stays the base medium's."
+  - "Miehe, Welschinger and Hofacker (2010, IJNME 83:1273), spectral split by the sign of principal strains (used with third-medium contact in arXiv 2603.15635, snippet). Differs by: here a tensile part is added on top of an unsplit medium, not degraded."
+  - "Wriggers, Schroeder and Schwarz (2013, Comput. Mech. 52:837), zoo wriggers2013: a principal-stretch term on the compressed direction, the opposite side."
+  - "Li, Kaufman and Jiang (2021, C-IPC, arXiv 2012.04457): barriers limiting stretch from above (snippet). Differs by: a quadratic penalty, with no limit value."
+  - "Bluhm, Sigmund and Poulios (2021, arXiv 2010.14277) HuHu, and Frederiksen et al. (2025) HuHu-LuLu: gradient regularizations, the judge's fixed kr."
+  - "Label at most 'variant of conewise or tension-only fibre elasticity'. Not claimed novel; only the referee assigns 'plausibly new'."
+status: open
+verdict_note: ""
+author: hunch-generator/transfer

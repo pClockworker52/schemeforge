@@ -1,0 +1,86 @@
+arena: contact
+slot: medium
+lens: transfer
+statement: >-
+  Transfer from interior-point and barrier methods, through the IPC barrier of computer graphics. Add to neo_hooke at
+  gamma a clamped, C2 log barrier on each in-plane principal stretch, active only below s_hat:
+  psi = psi_neo(C; gamma) + 5 gamma K sum_i b(lambda_i / s_hat), with b(x) = -(x - 1)^2 ln x for x < 1 and 0 otherwise.
+  Here s_hat = 0.25, lambda_i = sqrt(c_i) for the in-plane eigenvalues of C (closed form with the safe square root of
+  wriggers2013), and K = lmbda + 2 mu / 3.
+  The barrier is exactly zero where both stretches exceed s_hat. That covers leak_pre at s = 0.5, and SF up to
+  shear 3, where the smallest stretch is 0.303.
+  Claim: the medium gains stiffness only on the last quarter of the closure (the approach band), where the zoo's
+  robust media are stiff. GF stays within D1 and leak_pre and SF equal neo_hooke's, so the robustness costs no D6 or
+  D7. This is the known IPC barrier applied to a new argument.
+mechanism: >-
+  Transfer.
+  - Interior-point methods keep iterates feasible with a log barrier, whose singularity scales the force as 1/s near
+    the boundary. This is the weakest singular law, and it gives the residual thickness ~ gamma.
+  - IPC (Li et al. 2020) clamps that barrier to a finite activation distance d_hat with b = -(d - d_hat)^2 ln(d/d_hat).
+    The barrier is then exactly zero beyond d_hat and C2 at d_hat. Their ablation shows that C0 and C1 clampings break
+    Newton.
+
+  In the medium, the "distance" is the principal stretch across the closing layer. The barrier therefore stiffens only
+  the approach band s < 0.25, where faltus2026 and wriggers2013 are much stiffer than neo_hooke: faltus's closure
+  stress is about 25x neo's at s = 0.1, estimated from the zoo formulas. Outside the band nothing changes:
+  - leak_pre (s = 0.5), SF, C0b and the open-gap far field stay neo_hooke's at gamma;
+  - the log singularity keeps s* ~ gamma. At dev C0a-g5, neo + barrier gives about 1.2e-3, against neo's 6.53e-4
+    (r-20261127-201108-122e).
+  The sum over both stretches is a symmetric spectral function of a C2 scalar function, so the energy is C2 in C. In
+  wriggers2013 (felupe ex20) the anisotropic term does not vanish at its activation tol = 0.5, and its eigenvector
+  switch has a kink.
+
+  What does not transfer: IPC's guarantee of robustness rests on its CCD-filtered line search, and the judge's
+  Newton has none. Only the barrier's shape transfers.
+  Evidence against: faltus2026 x0.01 has an approach band of comparable stiffness and HF max_step 0.5
+  (r-20261125-181302-40b2).
+  D4 is not addressed: the extra load near the contact edge moves a_err up, which helps at C2-g6 (-0.039) and hurts at
+  C2-g5 (+0.123, both r-20261127-201108-122e).
+
+  Not a gamma rescaling: it differs from neo_hooke only in the band s < 0.25, and from wriggers2013 in barrier law
+  (log instead of s^-5) and smoothness. neo_hooke x10 reaches HF max_step 1 but has GF leak_pre 0.00284 > D6
+  (r-20261125-181302-d6e0). The candidate's leak is neo's at gamma.
+predicted_effect:
+  - metric: C0a-g5.gap_res
+    direction: up
+    size: "from 6.53e-4 (neo_hooke, r-20261127-201108-122e) to about 1.2e-3, inside the dev D1 screen 0.0029"
+  - metric: C0a-g3.gap_res
+    direction: up
+    size: "from 0.0316 (r-20261127-201108-122e) to about 0.08 (barrier active at gamma = 1e-3)"
+  - metric: C0a-g5.leak_pre
+    direction: same
+    size: "1.95e-4 as neo_hooke (r-20261127-201108-122e); C0b-s2 1.0e-5 likewise (smallest stretch 0.414 > s_hat)"
+  - metric: C2-g6.newton_iters
+    direction: down
+    size: "from 87 (neo_hooke, r-20261127-201108-122e) to <= 75"
+  - metric: C4-g6.converged
+    direction: up
+    size: "from not converged (r-20261127-201108-122e) to converged, shear_parasitic <= 0.0622 (dev D8 screen)"
+  - metric: C2-g6.a_err
+    direction: up
+    size: "from -0.039 (r-20261127-201108-122e) to -0.02 .. +0.01; C2-g5 from +0.123 to +0.13 .. +0.18"
+  - metric: HF.max_step
+    direction: up
+    size: "promo median from 0.375 (neo_hooke, r-20261125-180441-78df) to 1; SL converged from 0 to 1"
+  - metric: GF.gap_res
+    direction: up
+    size: "promo median from 0.00104 (r-20261125-180441-78df) to about 0.0025, <= 0.0034 (D1); GF leak_pre 0.000285 and SF 0.000247 unchanged"
+kill_criterion: >-
+  The dev runs are on contact-v1.0, the promo runs against Target D.
+  The hunch is refuted if any of the following holds:
+  (a) dev C2-g5 or C2-g6 does not converge, or C2-g6 newton_iters is >= 87 (neo_hooke, r-20261127-201108-122e);
+  (b) dev C4-g6 does not converge (neo_hooke does not, r-20261127-201108-122e);
+  (c) dev C0a-g5 gap_res is > 0.0029 (the dev D1 screen, from faltus2026 r-20261127-201026-a6a1);
+  (d) the promo HF max_step median is <= 0.375 (neo_hooke, r-20261125-180441-78df), or the GF gap_res median is
+  > 0.0034 (D1).
+  The test is invalid (implementation error) if C0a-g5 leak_pre or C0b-s2 differs from neo_hooke
+  (r-20261127-201108-122e) by more than 1e-8 relative. The barrier must be inactive there.
+known_relatives:
+  - "Closest: Li, Ferguson, Schneider, Langlois, Zorin, Panozzo, Jiang and Kaufman (2020, Incremental Potential Contact, ACM TOG 39(4)): the clamped barrier b(d) = -(d - d_hat)^2 ln(d / d_hat), C2 at d_hat; technical supplement: C0/C1 clampings fail Newton (snippet). Differs by: the argument is a principal stretch of a continuum medium at each quadrature point; no distances and no line search; added to a gamma-scaled neo-Hooke."
+  - "Wriggers, Schroeder and Schwarz (2013, Comput. Mech. 52:837), as in felupe ex20 (zoo wriggers2013): activation on the smallest principal stretch below tol = 0.5 with (1 - lambda)^24 / lambda^2. Differs by: log barrier (s^-1 instead of s^-5 near the wall), C2 clamping, a symmetric sum over both stretches, and activation at 0.25, below SF's smallest stretch."
+  - "Li, Kaufman and Jiang (2021, C-IPC, arXiv 2012.04457): C2 constitutive barrier for strain limiting on principal stretches (snippet)."
+  - "Interior-point log barriers (Nesterov and Nemirovski 1994): the source of the 1/s law; their path-following corresponds to load stepping, which the slot cannot use."
+  - "Label at most 'variant of Wriggers 2013 with the IPC barrier'. Not claimed novel; only the referee assigns 'plausibly new'."
+status: open
+verdict_note: ""
+author: hunch-generator/transfer
