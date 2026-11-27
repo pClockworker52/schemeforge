@@ -14,7 +14,13 @@ by the modeller and confirmed by Peter ("go ahead") on 2026-11-27. Record only; 
    docs/handoff-archive.md (section "2026-11-27").
 5. Checks before the clean-up commits: `pytest -q` 333 passed; `ruff check .` clean.
 
-## Not done: remote branch deletion (blocked in the cloud)
+## Remote branch deletion: done by Peter, 2026-11-27
+
+Peter deleted the 18 branches below and `coldspray/opencourant-sph` (19 in all) from WSL on 2026-11-27 (the cloud session's
+attempt was refused by its permission classifier). Verified with `git ls-remote --heads`: only `main` and
+`claude/exciting-fermi-qy077p` remain.
+
+### As recorded before the deletion
 
 The cloud session's permission classifier refused `git push origin --delete` for the branches below. Each is fully
 contained in `claude/exciting-fermi-qy077p` (checked with `git merge-base --is-ancestor` on 2026-11-27), so deleting

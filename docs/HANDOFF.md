@@ -19,8 +19,9 @@ force-push.
 
 ## Sync items
 
-- Done 2026-11-27: the desktop commits 9fe91e1..607c851 are pushed (765b44c); §42 is merged (5208b15), so
-  `coldspray/opencourant-sph` is fully merged and can be deleted with the others.
+- Done 2026-11-27: the desktop commits 9fe91e1..607c851 are pushed (765b44c); §42 is merged (5208b15); Peter deleted
+  every `coldspray/*` remote branch. Only `main` and `claude/exciting-fermi-qy077p` remain. The fork's WSL A notes
+  still name `coldspray/opencourant-sph` as the results branch: a new task recreates it from this branch.
 
 ## Open threads (facts with sources)
 
@@ -53,13 +54,12 @@ force-push.
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | breaker review after Peter's run; clean-up |
 | Desktop | schemeforge | — (pushed 765b44c) |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-26-a closed, §42); closed tasks: docs/research/tasks/wsl-a.md |
-| WSL B | `coldspray/bonding-methods-reading` (merged 2026-11-27, cbe2d88) | b9: only Dai 2025 left (closed access) |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | none (2026-11-26-a closed, §42); closed tasks: docs/research/tasks/wsl-a.md |
+| WSL B | none (`coldspray/bonding-methods-reading` merged cbe2d88, deleted) | b9: only Dai 2025 left (closed access) |
 
 ## Open for Peter
 
 - The breaker run in WSL (docs/judge/contact_promo_wsl.md §3); then the quarantine ids to the cloud session.
-- Remote branch deletion: blocked in the cloud by the permission classifier (see the clean-up record).
 
 ## Hunch budget
 
