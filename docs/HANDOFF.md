@@ -29,8 +29,8 @@ force-push.
   5/7).
 - **B4 exposure log:** one exposure not yet logged (a bond-strength pattern in a search snippet, PMC11544021 =
   Tang 2024, data/tang2024_reading.md). Details are with the desktop session.
-- **WSL A housekeeping:** the G1 raw files in `~/oc_runs/hvi_seclin/g1` were kept until §42 was merged (DECISIONS
-  2026-11-26 "Proposal B closed"); §42 is merged (5208b15), so they may go.
+- **WSL A housekeeping:** task 2026-11-27-a (tasks/wsl-a.md): delete `~/oc_runs/hvi_seclin/g1`, report on a recreated
+  `coldspray/opencourant-sph`.
 - Noted, not decided: a G1 rerun with nodal contact-force output (B's E1-F), own proposal needed (DECISIONS 2026-11-26
   contact-edge entry). A candidate for the unpause list, with the kernel-completion probe.
 
@@ -65,7 +65,7 @@ force-push.
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | breaker review after Peter's run; clean-up |
 | Desktop | schemeforge | — (pushed 765b44c) |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | none (2026-11-26-a closed, §42); closed tasks: docs/research/tasks/wsl-a.md |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | 2026-11-27-a (delete the G1 raw files); 2026-11-26-a closed (§42); closed tasks: docs/research/tasks/wsl-a.md |
 | WSL B | none (`coldspray/bonding-methods-reading` merged cbe2d88, deleted) | b9: only Dai 2025 left (closed access) |
 
 ## Open for Peter

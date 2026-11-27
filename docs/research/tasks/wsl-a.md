@@ -5,6 +5,27 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-27-a: delete the G1 raw files of task 2026-11-26-a (housekeeping; open)
+
+**Basis:** DECISIONS 2026-11-26 "Proposal B closed" (G1 raw files kept until §42 is merged) and task 2026-11-26-a's
+closing note ("keep until §42 is merged to main; then report its size, and delete only with the modeller's OK").
+§42 is merged (5208b15) and on `main`. This is the modeller's OK, given at Peter's request (chat 2026-11-27). No run,
+no build, no result section. The cold-spray pause is unchanged (DECISIONS 2026-11-27).
+
+1. **Check first.** Pull `claude/exciting-fermi-qy077p`. Confirm that §42 and the five rows files
+   `docs/research/opencourant/results/tl_cal10_seclin_{g0,runs,g1,g1_rich,g2_expected}.csv` are there, and that the
+   fork holds SPEC-TL-b §22.2 and `hvi/results/tl_cal10_seclin_*` (G1 evaluation `4b4cc0719`, Richardson item
+   `2d8c756f6`). The raw files are inputs only; if any number in §42 or SPEC-TL-b §22.2 exists only in a file under
+   `~/oc_runs/hvi_seclin/g1`, stop and report it instead of deleting.
+2. **List, then delete.** Write the list of entries under `~/oc_runs/hvi_seclin/g1` with the total size, check it, and
+   delete exactly that list. Delete nothing outside `g1`. If `~/oc_runs/hvi_seclin` holds anything else, report
+   its paths and sizes, untouched. The .vtk cache was already deleted (DECISIONS 2026-11-26); confirm it is gone.
+   Leave the §25, §30 and CS-23 run files untouched.
+3. **Report in one commit message** (empty commit is enough) on `coldspray/opencourant-sph`. The branch was deleted in
+   the clean-up of 2026-11-27, so recreate it from `claude/exciting-fermi-qy077p` first. The message gives the path
+   deleted, the number of entries, the space freed in bytes, anything left in `~/oc_runs/hvi_seclin`, and the sha
+   that holds §42 (5208b15 on this branch, 87a1d4e as written).
+
 ## Task 2026-11-26-a: proposal B, equilibrium resultants around the contact edge (convergence check; closed: G1 failed, negative; §42 87a1d4e)
 
 **Closed (2026-11-26).** Verification §42 on `coldspray/opencourant-sph` at `87a1d4e`. The follow-on contact-edge
