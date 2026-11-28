@@ -1,6 +1,7 @@
-# Edge-energy check, 2026-11-28 (does the energy delivered to the interface converge on TLSPH?), draft r1
+# Edge-energy check, 2026-11-28 (does the energy delivered to the interface converge on TLSPH?), r1 (frozen)
 
-**Status: DRAFT r1, not frozen.** `kind = check`, not a hunch; the hunch budget is unaffected. Drafted 2026-11-28
+**Frozen 2026-11-28, approved by Peter ("Freeze r1"), as drafted in 46a4a53, before any run, build or number.**
+Was: draft r1. `kind = check`, not a hunch; the hunch budget is unaffected. Drafted 2026-11-28
 (cloud, modeller) on Peter's request ("Draft it."; r0 in eec71a6). Revised the same day after Peter's questions
 ("Let's check the edge energy." Why no stress? Why no J with large yielding? Don't overfit on the record; should the
 missing TLSPH internal energy be fixed?). Spec, rule and prediction are fixed before any number is computed. No number
