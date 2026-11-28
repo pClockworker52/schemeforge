@@ -10,6 +10,9 @@ Judged item J (H20 rows):
 Reported, not judged: reversal ratios (Al/Cu, Cu/Ti, Cu/W); S1 distance of CS-25's absolute v_cr on all nine H20
 mismatched rows; CS-25's limiting face against Z9's regime label; the ratios without the size correction.
 
+Fix 2026-11-28 (after the first run crashed on blank windows, before any number was printed): rows without a numeric
+window are reported as not scorable. The rule is unchanged.
+
 Run: uv run python scripts/cs25_score.py [--data PATH]   (PATH defaults to docs/research/data/vcr_lipit.csv)
 """
 
@@ -39,6 +42,11 @@ def vrow(r: dict) -> tuple[float, float, float, float]:
     return float(r["vcr_low_mps"]), float(r["vcr_high_mps"]), float(r["vcr_mid_mps"]), float(r["d_um"])
 
 
+def scorable(*rows: dict) -> bool:
+    """True if every row has a numeric window (Hassani 2020 prints NA where no window satisfies its definition)."""
+    return all(r["vcr_low_mps"] and r["vcr_high_mps"] and r["vcr_mid_mps"] and r["d_um"] for r in rows)
+
+
 def ratio(num: dict, den: dict, size: bool = True) -> tuple[float, float]:
     """(r_obs, hw) of two rows."""
     lo1, hi1, m1, d1 = vrow(num)
@@ -65,6 +73,10 @@ def main() -> None:
     print(f"Item J (tol = hw + {TOL_EXTRA}; size exponent {SIZE_EXPONENT})")
     agree = disagree = closer = 0
     for (num, den) in JUDGED:
+        if not scorable(h20[num], h20[den]):
+            print(f"  {num[0]} on {num[1]} / {den[0]} on {den[1]}: not scorable (no numeric window; notes: "
+                  f"{h20[num]['notes'] if not scorable(h20[num]) else h20[den]['notes']})")
+            continue
         pp, ss = mat(props, num[0]), mat(props, num[1])
         ref = mat(props, den[0])
         v0 = ALPHA * ref["c"]
@@ -91,12 +103,18 @@ def main() -> None:
 
     print("Reported: reversal ratios v_cr(Y on X) / v_cr(X on Y), size-corrected (CS-25 predicts 1.000)")
     for x, y in REVERSALS:
+        if not scorable(h20[(y, x)], h20[(x, y)]):
+            print(f"  {y} on {x} / {x} on {y}: not scorable (no numeric window)")
+            continue
         r, hw = ratio(h20[(y, x)], h20[(x, y)])
         print(f"  {y} on {x} / {x} on {y}: {r:.3f} (ln {math.log(r):+.3f}, hw {hw:.3f})")
 
     print("Reported: CS-25 absolute v_cr on the H20 mismatched rows (S1 distance), limiting face, Z9 regime")
     for (x, y), r in sorted(h20.items(), key=lambda kv: kv[1]["id"]):
         if x == y:
+            continue
+        if not scorable(r):
+            print(f"  {r['id']} {x} on {y}: not scorable (no numeric window) | Z9 regime {r['regime']}")
             continue
         lo, hi, _, _ = vrow(r)
         pp, ss = mat(props, x), mat(props, y)
