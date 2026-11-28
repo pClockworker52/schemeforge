@@ -4093,3 +4093,143 @@ nothing about §25.
 **Disk.** The G1 .vtk cache (7.2 GB, 483 files) was deleted after evaluation from a checked file list. The raw
 animation and time-history files are kept in `~/oc_runs/hvi_seclin/g1` (4.8 GB) until this section is merged; they are
 not deleted without the modeller's OK.
+
+## 43. Kernel completion across a TLSPH contact, Stage A (static model): KC-full fails, KC-f fails (task 2026-11-27-b)
+
+**Verdicts by the frozen rule, over K2a–K5.**
+- **KC-full: fails.** e_face exceeds 0.175 in K3b (0.3135), K4 (0.2273) and K3a (0.2206). Each of these cases decides
+  the verdict on its own; K3b is the largest. The transmitted force is 1 within 1e-12 in every case, and e_bulk is ≤ 6e-13.
+- **KC-f: fails.** The transmitted force misses 1 in every case (0.14 in K3a to 0.71 in K3b), and e_face is above 0.175
+  in every case. Every case decides it; K3a is the largest.
+- BCT is reported and not judged: 0.9999 on every layer in every case.
+
+Consequence as the spec states it: kernel completion is recorded as a negative result **in this form**, and there is
+no Stage B. The face-layer deficit stays a known limit (solver-facts §3). Nothing here bears on bonding or on the edge
+singularity. `kind = check`, Python only: no solver run, no build, no solver output read.
+
+- Spec: `docs/research/kernel-completion-2026-11-27.md`, frozen 9369e6c (as drafted in eae3ed5). The modeller's
+  answers to four readings (e769c1d) are clarifications, not spec changes:
+  - K5's B lattice contains A's columns;
+  - K5 layer value is the volume-weighted mean (min and max reported, not judged);
+  - hourglass force over own pairs only;
+  - L0 point force = t × the particle's lateral area.
+- Script `hvi/scripts/tl_kc_static.py` (fork `cs12`, all definitions in its docstring). Fork commits:
+  - script and model checks `8863ccf4d`;
+  - BCT guard sign fix `0ec8a458c` (below);
+  - rows `1f6335482`.
+- Rows: `opencourant/results/tl_kc_static.csv` (per law and case), `tl_kc_static_profiles.csv` (all 40 layers per side)
+  and `tl_kc_static_checks.csv`.
+
+**Model:**
+- explicit lateral periodic cell of side s_A with images; the same discretisation as `tl_endlayer.py` (SPEC-TL-b §4.2);
+- u_z only. This is exact here: every neighbourhood is mirror-symmetric in x and y, and K is diagonal. The script
+  checks both and would stop otherwise;
+- far ends loaded consistently (−P* B_k);
+- solved by least squares at minimum norm. The null space is 2 when the bodies are not coupled kinematically (L0, BCT,
+  KC-f) and 1 for KC-full.
+
+**Model checks** (committed with the script before any K2–K5 number; `tl_kc_static_checks.csv`): **both pass.**
+1. L0 on K1: p₁ / p₂ = 0.65151 / 0.83971 on A and on B (reference 0.6515 / 0.8397, tolerance 0.002).
+2. KC-full on K1: max |p − 1| over all layers 5.9e-13, transmitted force 1 + 5.5e-13, residual 9.5e-14. The limits are
+   1e-9, 1e-9 and 1e-10. The modeller reproduced it in the cloud.
+
+**Deviations from the spec:** none. There is one script fix, made after the first cases run and before any row was
+committed. In the script B_k is the force of a uniform unit tension, which is minus the §4.3 B (the counterpart of
+∫N n dA). The guard value therefore came out −0.673 instead of +0.673. The guard (0.45, SPEC-TL-b §5.2) then kept the
+point load everywhere, and BCT reproduced L0. The weights do not depend on the sign. After the fix BCT on K1 gives
+0.9999, as `tl_endlayer.py` bct_shepard does. The fix touches only the BCT reference row. L0, KC-f and KC-full are
+unchanged, and so are the check rows. The minimum guard value is 0.673 in every case, so the guard never fires.
+
+**Full table** (p_k = P_k / t for layers 1 / 2 / 3; A = top three layers of the lower body, B = bottom three of the
+upper body; T − 1 = transmitted force / (t · area) − 1):
+
+| case | law | p₁ / p₂ / p₃, A | p₁ / p₂ / p₃, B | e_face | e_bulk | T − 1 | residual |
+|---|---|---|---|---|---|---|---|
+| K1 | L0 | 0.6515 / 0.8397 / 1.0107 | 0.6515 / 0.8397 / 1.0107 | 0.3485 | 3.8e-14 | 0 | 5.9e-14 |
+| K1 | KC-f | 0.1653 / 0.2316 / 0.3012 | 0.1653 / 0.2316 / 0.3012 | 0.8347 | 0.37 | −0.67 | 6.8e-02 |
+| K1 | KC-full | 1.0000 / 1.0000 / 1.0000 | 1.0000 / 1.0000 / 1.0000 | 0.0000 | 5.2e-13 | +5.5e-13 | 9.5e-14 |
+| K1 | BCT | 0.9999 / 0.9999 / 0.9999 | 0.9999 / 0.9999 / 0.9999 | 0.0001 | 2.8e-14 | 2e-16 | 4.2e-14 |
+| K2a | L0 | 0.6515 / 0.8397 / 1.0107 | 0.6515 / 0.8397 / 1.0107 | 0.3485 | 3.8e-14 | 0 | 5.9e-14 |
+| K2a | KC-f | 0.1688 / 0.2362 / 0.3068 | 0.1688 / 0.2362 / 0.3068 | 0.8312 | 0.36 | −0.66 | 6.9e-02 |
+| K2a | KC-full | 1.0008 / 0.9997 / 1.0004 | 1.0008 / 0.9997 / 1.0004 | 0.0008 | 2.7e-13 | +1.2e-13 | 1.5e-13 |
+| K2a | BCT | 0.9999 / 0.9999 / 0.9999 | 0.9999 / 0.9999 / 0.9999 | 0.0001 | 2.8e-14 | 2e-16 | 4.2e-14 |
+| K2b | L0 | 0.6515 / 0.8397 / 1.0107 | 0.6515 / 0.8397 / 1.0107 | 0.3485 | 3.8e-14 | 0 | 5.9e-14 |
+| K2b | KC-f | 0.1806 / 0.2512 / 0.3244 | 0.1806 / 0.2512 / 0.3244 | 0.8194 | 0.35 | −0.65 | 7.0e-02 |
+| K2b | KC-full | 1.0072 / 0.9972 / 1.0000 | 1.0072 / 0.9972 / 1.0000 | 0.0072 | 7.1e-14 | +1.5e-13 | 1.1e-13 |
+| K2b | BCT | 0.9999 / 0.9999 / 0.9999 | 0.9999 / 0.9999 / 0.9999 | 0.0001 | 2.8e-14 | 2e-16 | 4.2e-14 |
+| K3a | L0 | 0.6515 / 0.8397 / 1.0107 | 0.6515 / 0.8397 / 1.0107 | 0.3485 | 3.9e-14 | 0 | 5.5e-14 |
+| K3a | KC-f | 0.0543 / 0.0917 / 0.1376 | 0.0543 / 0.0917 / 0.1376 | 0.9457 | 0.45 | −0.86 | 4.5e-02 |
+| K3a | KC-full | 0.7794 / 1.0167 / 1.0154 | 0.7794 / 1.0167 / 1.0154 | **0.2206** | 5.3e-14 | −3.7e-14 | 1.6e-13 |
+| K3a | BCT | 0.9999 / 0.9999 / 0.9999 | 0.9999 / 0.9999 / 0.9999 | 0.0001 | 3.3e-14 | 2e-16 | 7.0e-14 |
+| K3b | L0 | 0.6515 / 0.8397 / 1.0107 | 0.6515 / 0.8397 / 1.0107 | 0.3485 | 3.9e-14 | 0 | 4.8e-14 |
+| K3b | KC-f | 0.5050 / 0.6504 / 0.7861 | 0.5050 / 0.6504 / 0.7861 | 0.4950 | 0.12 | −0.29 | 6.8e-02 |
+| K3b | KC-full | 1.3135 / 0.9312 / 1.0011 | 1.3135 / 0.9312 / 1.0011 | **0.3135** | 4.7e-13 | +4.6e-13 | 1.1e-13 |
+| K3b | BCT | 0.9999 / 0.9999 / 0.9999 | 0.9999 / 0.9999 / 0.9999 | 0.0001 | 3.7e-14 | 2e-16 | 3.6e-14 |
+| K4 | L0 | 0.6515 / 0.8397 / 1.0107 | 0.6515 / 0.8397 / 1.0107 | 0.3485 | 4.8e-14 | 0 | 6.1e-14 |
+| K4 | KC-f | 0.1653 / 0.2316 / 0.3012 | 0.1653 / 0.2316 / 0.3012 | 0.8347 | 0.37 | −0.67 | 6.8e-02 |
+| K4 | KC-full | 0.7727 / 1.0214 / 0.9988 | 1.2273 / 0.9785 / 1.0012 | **0.2273** | 6.2e-14 | −8.0e-14 | 9.3e-14 |
+| K4 | BCT | 0.9999 / 0.9999 / 0.9999 | 0.9999 / 0.9999 / 0.9999 | 0.0001 | 3.5e-14 | 2e-16 | 3.7e-14 |
+| K5 | L0 | 0.6515 / 0.8397 / 1.0107 | 0.6515 / 0.8397 / 1.0107 | 0.3485 | 2.6e-14 | 0 | 7.6e-14 |
+| K5 | KC-f | 0.4030 / 0.5276 / 0.6457 | 0.2594 / 0.4026 / 0.5372 | 0.7406 | 0.25 | −0.35 | 4.5e-02 |
+| K5 | KC-full | 0.9982 / 0.9706 / 0.9982 | 1.0359 / 1.0408 / 1.0409 | 0.0408 | 5.6e-13 | −6.3e-13 | 3.0e-13 |
+| K5 | BCT | 0.9999 / 0.9999 / 0.9999 | 0.9999 / 0.9999 / 0.9999 | 0.0001 | 2.6e-14 | 2e-16 | 5.7e-14 |
+
+- K5, B side: the minimum and maximum over the layer's particles are reported and not judged.
+  - KC-full: 1.034–1.037, 1.038–1.044, 1.039–1.043.
+  - KC-f: 0.221–0.293 on layer 1.
+- KC-f on K1 is reported and not judged (the spec).
+- L0 does not depend on the case: its bodies are uncoupled, and the model is scale-invariant.
+
+**KC-f has no static equilibrium.** This is a property of the formulation, shown by the operator; it is not a
+reading. In KC-f, F, P and the hourglass force come from each body's own pairs, so each body's rigid translation is a
+null mode (null space 2). The cross forces depend on the stresses only, not on the gap. The operator therefore has a
+second left null vector besides momentum: about +1 on A and −1 on B in the bulk, and −3.64 / +1.48 / +0.97 on A's face
+layers 1–3 (K1). The far loads are not orthogonal to it, so no displacement field balances them. The tabled KC-f
+values are the least-squares state: residual 0.045–0.070 and a transmitted force of 0.14–0.71. The rule's "fails"
+clause applies: the transmitted force misses 1 by more than 1e-9.
+
+**Reported only: the face-layer B_k with the cross pairs** (z component, per unit area, layers 1 / 2 / 3). Without
+the cross pairs it is −1.4854 / +0.4710 / +0.0143 on A in every case, and the mirror on B.
+
+| case | KC-f, A | KC-full, A | KC-full, B |
+|---|---|---|---|
+| K1 | +0.4785 / +0.4928 / +0.0143 | 0 / 0 / 0 | 0 / 0 / 0 |
+| K2a | +0.4727 / +0.4946 / +0.0143 | −0.0017 / +0.0015 / −0.0006 | +0.0017 / −0.0015 / +0.0006 |
+| K2b | +0.4528 / +0.4918 / +0.0143 | −0.0101 / +0.0028 / +0.0004 | +0.0101 / −0.0028 / −0.0004 |
+| K3a | +0.9152 / +0.5862 / +0.0143 | +0.2393 / +0.0472 / −0.0252 | −0.2393 / −0.0472 / +0.0252 |
+| K3b | −0.0847 / +0.4717 / +0.0143 | −0.2740 / +0.0279 / +0.0075 | +0.2740 / −0.0279 / −0.0075 |
+| K4 | +0.4785 / +0.4928 / +0.0143 | 0 / 0 / 0 | 0 / 0 / 0 |
+| K5 | +0.4431 / +0.4710 / +0.0143 | −0.0562 / +0.0332 / +0.0078 | +0.0102 / −0.0655 / +0.0692 |
+
+**Observations** (labelled; they go beyond the rule and are not judged):
+- KC-full's face error follows the residual B_k with the cross pairs: small in K2, large in K3, and moderate in K5,
+  which fails only the consistency band (0.041 against 0.035).
+- In K4 the B_k with the cross pairs is zero, as in K1, but the face errors are ∓0.23. This fits the spec's
+  prediction reasoning: a face particle's F mixes the two materials' displacements.
+- The K3 sign follows d: compressed spacing (0.8 s) gives layer 1 low, widened spacing (1.2 s) gives it high.
+
+**Against the prediction** (spec, frozen before any number):
+- Model checks pass, 0.95: right.
+- KC-full: consistent 0.15, partial 0.45, fails 0.40. Outcome: **fails**.
+  - K2 offsets e_face ≤ 0.035, 0.6: right (0.0008, 0.0072).
+  - K3 spacing, 0.45: wrong (0.22, 0.31).
+  - K4 stiffness, 0.3: wrong (0.23).
+  - K5 finer side, 0.35: wrong, narrowly (0.041).
+- KC-f: consistent 0.20, partial 0.45, fails 0.35. Outcome: **fails**. The mechanism (no static equilibrium) was not
+  foreseen; the prediction expected only that K1 would not be exact.
+- BCT e_face ≤ 1e-3 on K1, K2 and K4, 0.8: right (1e-4). On K5, 0.5: right (1e-4).
+- The label stays "variant of kernel-interaction SPH contact". No literature was checked in this task (Campbell,
+  Vignjevic and Libersky 2000 not read).
+
+**Disclosure of what was read.**
+- Read: the spec (9369e6c) and task (6ea305c, e769c1d); `hvi/scripts/tl_endlayer.py` and its printed output;
+  SPEC-TL-b §4.2, §4.3 and §5.2 (text only, for the BCT definition and guard); `tl_mod.F90` lines around the hourglass
+  force (source, for the formula).
+- Not read: no solver output, parser key or run directory.
+- Order of events:
+  1. Only the model checks were run before commit `8863ccf4d`.
+  2. WSL A stopped to ask about the readings.
+  3. K1–K5 were computed after e769c1d.
+  4. The first cases run was not committed. It showed the BCT sign error (fixed in `0ec8a458c`) and the KC-f residual.
+     It was then rerun complete.
+- Stage B was not started.

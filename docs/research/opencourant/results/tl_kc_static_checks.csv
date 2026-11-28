@@ -1,0 +1,10 @@
+kind,check,case,law,quantity,value,reference,tolerance,passed
+check,1,K1,L0,p1_A,0.6515148804282895,0.6515,0.002,1
+check,1,K1,L0,p2_A,0.8397081658444598,0.8397,0.002,1
+check,1,K1,L0,p1_B,0.6515148804283003,0.6515,0.002,1
+check,1,K1,L0,p2_B,0.8397081658444582,0.8397,0.002,1
+check,1,K1,L0,residual,5.92344099117903e-14,,,
+check,2,K1,KC-full,max_all_layers_|p-1|,5.910827383104333e-13,0.0,1e-09,1
+check,2,K1,KC-full,transmitted,1.0000000000005518,1.0,1e-09,1
+check,2,K1,KC-full,residual,9.50578591535356e-14,0.0,1e-10,1
+check,2,K1,KC-full,null_dim,1,,,
