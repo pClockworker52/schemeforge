@@ -1,25 +1,22 @@
-# Handoff — 2026-11-28: CS-25 frozen; scoring script committed, run waits for Peter's go (current state only)
+# Handoff — 2026-11-28: CS-25 scored (undetermined, parked); next is a task under Peter's convergence priority (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md." Then read docs/STATUS.md (top), the last DECISIONS entry
-(2026-11-28, CS-25 registered) and **docs/research/coldspray-hunch-cs25.md** (frozen).
+**Start the next session with:** "Read docs/HANDOFF.md." Then read docs/STATUS.md (top), the last three DECISIONS
+entries (2026-11-28), coldspray-hunch-cs25.md (result section), problem-formalism.md §2(c)-(d), driver-check-2026-11-17.md.
 
 Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep it in step). Two sessions may write:
 `git fetch` and fast-forward before every commit; never force-push.
 
-## Current task: score CS-25 on Peter's go
+## Next task: choose a convergence task with Peter
 
-- **CS-25 frozen** (fc2d232; as drafted in a5a82be, tolerance 0.15 unchanged; rule 1 data clause waived). Count 3 of 5.
-- **Scoring:** `scripts/cs25_score.py` (35f803c), committed before it is run, checked only on synthetic tables. Not
-  yet run on `vcr_lipit.csv`; no judged row (H20-04, -05, -07) or denominator read.
-- **Why it waits:** Peter asked "0.15 seems strict. Why?" at the freeze. Answer (chat; DECISIONS): the effective
-  tolerance is half-widths + 0.15, about 0.23–0.37 in ln; looser would let comparator-like values agree. Until the
-  run, a dated amendment of the tolerance is still before any judged value is read.
-- **After the run:** result section in the hunch file (post hoc label), DECISIONS entry, hunch index, then the
-  literature step (label only).
-- **Then:** Peter's priority (DECISIONS 2026-11-28): "finding something that converges". CS-25 does not address the
-  solver's non-converging interface states; the next task should.
+- **Peter's priority** (DECISIONS 2026-11-28): "Finding something that converges has priority now."
+- **CS-25 done:** undetermined, because the judged rows H20-04/05/07 have no v_cr window (drafting error); parked.
+  Reported: reversal symmetry fails (0.711, 0.764). Count 2 of 5.
+- **Open for Peter:** the proposed presence check of judged fields before a freeze (DECISIONS 2026-11-28).
+- **Known about convergence (record):** a(t) converges; annulus plastic work, pressure-slip history, ring stretch,
+  v_edge and ring Y do not (driver check); e(off) drifts 14 % R/16 -> R/32 (§30); the edge field is singular
+  (problem-formalism §2(c)); lesson of 2026-11-24: build criteria from finite (energy-type) quantities.
 
 ## State in brief (2026-11-28)
 
@@ -40,14 +37,14 @@ Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep
 
 | Session | Where | Open task |
 |---|---|---|
-| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | score CS-25 on Peter's go; then a convergence task |
+| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | convergence task, to be chosen with Peter |
 | WSL A | fork `sph-hvi-contact` `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-27-b closed, §43) |
 | WSL B | — | none (b9: only Dai 2025 left, closed access) |
 
 ## Open for Peter
 
-- Go for the CS-25 run (or a tolerance amendment first).
 - The next task under the convergence priority.
+- The proposed presence check before a freeze.
 - Later: Phase 7 (Arena 2 search) vs further cold-spray work.
 - Small open items:
   - the B4 exposure log entry for the Tang 2024 snippet (details with the desktop session);
@@ -55,8 +52,8 @@ Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep
 
 ## Hunch budget
 
-**3 of 5:** CS-10, CS-17, CS-25.
-- Parked: CS-20 (2026-11-24), CS-14/14b.
+**2 of 5:** CS-10, CS-17.
+- Parked: CS-25 (2026-11-28, not scorable), CS-20 (2026-11-24), CS-14/14b.
 - Supported: CS-22b (§31; caveat DECISIONS 2026-11-23).
 - Retired: CS-12.
 - Refuted: CS-24 (2026-11-28, post hoc), CS-23 (§39), CS-22 part 1 (§30), CS-21 part 1 (§28), CS-18b (§20).

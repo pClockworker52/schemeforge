@@ -280,3 +280,54 @@ may change it before the freeze, not after.
    `rho_kg_m3` of the P-H20 rows; used under rule P1 since the retrospective test) and `vcr_lipit.csv` (`id`,
    `particle`, `substrate`, `vcr_low_mps`, `vcr_high_mps`, `vcr_mid_mps`, `d_um`; used by CS-24). The `regime` column
    is read for a report-only line. Not covered: none.
+
+## Result (2026-11-28, after the freeze; post hoc, exposed data)
+
+`uv run python scripts/cs25_score.py` (committed in 35f803c before it was run). The first run crashed on blank fields
+before printing any number. The fix (a13ae83, rule unchanged) reports rows without a numeric window as not scorable.
+
+**Verdict J: UNDETERMINED: not scorable.** H20-04 (Cu on W), H20-05 (Sn on Cu) and H20-07 (W on Cu) carry no v_cr
+window. Hassani 2020 Table 1 prints NA ("no post-impact indentations found; no window satisfying the definition",
+"no window; competition with melting", "no window satisfying the definition"). So 0 agree and 0 disagree, which is
+"undetermined" by the frozen rule.
+- **This is a drafting error.** Before the freeze the modeller checked these rows' metadata (`regime`, `d_um`) and
+  that no file quoted them, but not that their v_cr fields were filled. The blanks are why no file quoted them. The
+  facts check of the checklist covers columns, not the presence of values in the judged rows.
+
+**Reported, not judged:**
+
+| Item | Value | CS-25 |
+|---|---|---|
+| Reversal Cu on Al / Al on Cu (size-corrected) | 0.711 (ln −0.341, hw 0.137) | 1.000 |
+| Reversal Ti on Cu / Cu on Ti | 0.764 (ln −0.270, hw 0.183) | 1.000 |
+| Reversal W on Cu / Cu on W | not scorable | 1.000 |
+
+| Row | CS-25 v_cr [m/s] | window [m/s] | S1 | limiting face | Z9 regime |
+|---|---|---|---|---|---|
+| H20-01 Al on Ni | 1241 | 1080–1210 | 0.027 | substrate | splatting |
+| H20-02 Al on Ti | 922 | 1000–1110 | 0.074 | substrate | splatting |
+| H20-03 Al on Cu | 979 | 855–990 | 0.000 | substrate | splatting |
+| H20-06 Cu on Al | 979 | 625–710 | 0.404 | particle | penetration |
+| H20-08 Ti on Cu | 744 | 525–685 | 0.097 | substrate | co-deformation |
+| H20-09 Cu on Ti | 744 | 765–845 | 0.026 | particle | co-deformation |
+
+H20-04, -05 and -07 are not scorable (Z9: splatting, splatting, penetration). No-size-correction ratios: not printed
+for J (nothing scorable).
+
+**Reading (post hoc; not a verdict):**
+- **The law's structural prediction fails on exposed data.** CS-25 is symmetric under swapping particle and
+  substrate. Both scorable reversal pairs break that symmetry beyond their windows: the reversed pair needs 24–29 %
+  less. A symmetric planar partition cannot represent this. The asymmetry has to come from what the frozen form left
+  out (the geometry of a sphere on a half-space, and strength).
+- **Absolute values:** the splatting and co-deformation rows lie within 10 % of their windows (S1 ≤ 0.097) with no
+  constant fitted. The penetration row (Cu on Al) misses by 40 %. These are the context pairs the form was chosen on,
+  so this is not evidence.
+- **The NA notes** (no indentation of W under Cu, melting competition for Sn) are qualitative. They carry no weight
+  for or against CS-25.
+- **Against the prediction:** undetermined 0.35, as it happened, but for a reason the author did not foresee.
+- **Literature step:** not run. The verdict does not depend on it, and the label stays at most "variant of Z6
+  extended to dissimilar pairs with Z9's partition and a co-exposure rule".
+
+**Consequences, as fixed in "What follows" (undetermined):** parked with CS-20 until an unseen dissimilar-pair source
+appears; hunch count back to 2 of 5. The reversal failure means that a later test, if one comes, tests a form already
+known to miss a symmetry property on exposed data.
