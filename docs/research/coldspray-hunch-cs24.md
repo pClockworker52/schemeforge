@@ -4,10 +4,9 @@
 modeller's reasoning on partner-aware contact against problem-formalism.md. Zero-code in the solver sense: a closed-form
 law evaluated on the single-impact table. No solver run.
 - **Budget:** registration would make the count 3 of 5.
-- **Rule 1 (discriminates on obtainable data): not met as it stands.** Every row it can be tested on is exposed:
-  `data/vcr_lipit.csv`, read in this track since 2026-11-03. No unseen source with a substrate-material series is
-  known. Registration therefore needs Peter's waiver of rule 1's data clause, as for CS-20, CS-21 part 2 and CS-22
-  part 2, and any verdict is labelled **post hoc (exposed data)**.
+- **Rule 1's data clause: waived by Peter (chat 2026-11-28; DECISIONS 2026-11-28).** Every row it can be tested on is
+  exposed (`data/vcr_lipit.csv`, read in this track since 2026-11-03). Any verdict is labelled **post hoc (exposed
+  data)**.
 - **Exposure disclosure (B4 spirit).**
   - This session read only the table's metadata: column names, the (source, particle, substrate) row counts and the
     particle sizes. No v_cr value was read.
@@ -17,6 +16,10 @@ law evaluated on the single-impact table. No solver run.
     exposed and is not judged as a discriminating test.**
   - Earlier sessions read Hassani 2020 (the mismatched pairs) in full. The modeller has no recollection of its pair
     values, but the exposure is real.
+  - **2026-11-28, while adding item B:** the `notes` column of the CH rows and of H20-17 was read. It prints the
+    authors' room-temperature comparison values: Al 810 m/s at 14.4 µm, Sn 330 m/s, Ti 765 m/s, and quotes of
+    797–824 and 810 ± 16 m/s for Al–Al. These are item B's references. The heated values (`vcr_*` of CH) and every
+    item-A value remain unread.
 
 ## Hunch
 
@@ -28,7 +31,10 @@ law evaluated on the single-impact table. No solver run.
     Bonding needs the interface layer to reach a temperature rise set by the particle's melting margin, and that
     rise is limited by heat flowing into BOTH bodies during the contact. The substrate is a heat sink whose strength
     is its thermal effusivity e = sqrt(k rho c_p). So v_cr depends on the substrate's thermal effusivity, not only
-    on its mechanical properties, and on particle size through the contact time.
+    on its mechanical properties, and on particle size through the contact time. It acts in matched pairs too: the
+    interface starts at the effusivity-weighted mean of the two temperatures, so for identical materials heating
+    the substrate by dT counts half as much as heating the particle by dT. Particle-only thermal laws (Z1, Z2) give
+    the substrate's temperature no weight.
   mechanism: >-
     problem-formalism.md §2(a): the only physical length below R is the thermal one, sqrt(kappa t), and it is a
     two-body length: heat made next to the interface drains into both bodies, partitioned by effusivity (contact of
@@ -47,9 +53,9 @@ law evaluated on the single-impact table. No solver run.
     - metric: d ln v_cr / d ln d at fixed materials (exposed, reported only)
       direction: down
       size: "-0.2 exactly"
-    - metric: v_cr on a heated substrate / room-temperature substrate, matched pairs (reported only)
-      direction: down
-      size: "((T_m - T_i,hot) / (T_m - T_i,room))^0.4 with T_i effusivity-weighted"
+    - metric: v_cr on a heated substrate / room-temperature substrate, matched pairs (item B, judged)
+      direction: down (particle-only laws Z1, Z2 predict no change)
+      size: "((T_m - T_i,hot) / (T_m - T_i,room))^0.4, T_i = (T_p + T_s) / 2 for matched pairs"
   kill_criterion: see "Rule" below (fixed before any v_cr value is read)
   known_relatives:
     - "Schmidt, Gärtner, Assadi, Kreye 2006 (zoo Z2): thermal diffusion explains the size effect; Z2 carries d. Size
@@ -82,7 +88,7 @@ Effusivity e [J m⁻² K⁻¹ s⁻½]: Al 23 957, Cu 37 173, Ni 18 944, Ti 7 172
 - **Never read/used before; to be sourced before the freeze** (a handbook such as Incropera Table A.1, entered in
   `properties.csv`): k for Cu, Ni, Ti and Sn; c_p for Ti and Sn. The provisional values here are from memory.
 
-**Judged (the mismatched pairs of H20; v_cr(X on Y) / v_cr(X on X)):**
+**Item A, judged (the mismatched pairs of H20; v_cr(X on Y) / v_cr(X on X)):**
 
 | Particle on substrate | Predicted ratio | Predicted sign of the change |
 |---|---|---|
@@ -96,22 +102,53 @@ Effusivity e [J m⁻² K⁻¹ s⁻½]: Al 23 957, Cu 37 173, Ni 18 944, Ti 7 172
 Ordering for Al particles: Ti < Ni < Al < Cu substrate. This is not the order of substrate hardness, and it puts the
 soft, conductive Cu above the hard, insulating Ti.
 
+**Item B, judged (matched pairs on a heated substrate, CH rows against the authors' quoted room-temperature
+values):**
+
+| Pair | Particle / substrate temperature | Predicted v_cr change against room temperature |
+|---|---|---|
+| Al on Al | 292 / 364 K | −2.3 % |
+| Sn on Sn | 292 / 364 K | −7.1 % |
+| Ti on Ti | 292 / 348 K | −0.7 % |
+
+Z1 and Z2 predict 0 for all three, since the particle temperature is unchanged.
+
 **Reported only (exposed or confounded):**
 - Size (DW rows): v_cr(39.4 µm) / v_cr(10.3 µm) = 0.765 for Al; v_cr(24.9 µm) / v_cr(6.9 µm) = 0.774 for Ti.
-- Heated substrates (CH rows, matched pairs, T_i the effusivity-weighted mean): Al −2.3 %, Sn −7.1 %, Ti −0.7 %.
 - The absolute values of the 11 matched materials with Λ fitted on one row, against zoo Z6.
 
-## Rule (fixed now; applied once, after the freeze, to the H20 rows)
+## Rule (fixed now; applied once, after the freeze)
+
+### Item A (the H20 mismatched pairs)
 
 1. **Unit.** For each of the six pairs, the observed ratio r_obs = v_cr,mid(X on Y) / v_cr,mid(X on X), with both rows
    from H20. Correct for size with the law's own (d_XY / d_XX)^(1/5), using the `d_um` column.
 2. **Resolved.** A pair is resolved if |ln r_obs| exceeds the combined half-width of the two windows,
    ln(v_high / v_low) / 2 summed over both rows. Otherwise it is unresolved and not counted.
 3. **Score.** For each resolved pair, agree if sign(ln r_obs) = sign(e_Y − e_X); otherwise disagree.
-4. **Verdict:**
+4. **Verdict A:**
    - **supported (post hoc):** at least 4 resolved pairs, and agreements ≥ 2 × disagreements;
    - **refuted:** disagreements ≥ agreements among the resolved pairs;
    - **undetermined:** otherwise, including fewer than 4 resolved pairs.
+
+### Item B (CH heated substrates, matched)
+
+1. **Unit:** r_obs = v_cr(CH row) / v_cr(room temperature, as quoted in the row's notes). For Al, correct for size
+   with (15.5 / 14.4)^(1/5). Sn and Ti quote no size, so they are not corrected.
+2. **Resolved** if |ln r_obs| exceeds the CH row's printed relative uncertainty plus 0.02. The 0.02 is H20's stated
+   velocity uncertainty, standing in for the quoted room-temperature value, which has no window.
+3. **Agree** if r_obs < 1.
+4. **Verdict B:**
+   - **supported (post hoc):** at least 2 resolved, all agree;
+   - **refuted:** at least 1 resolved and disagreements ≥ agreements;
+   - **undetermined:** otherwise.
+
+### Overall
+
+Items A and B are reported separately; neither is pooled into the other.
+- **Supported:** A supported and B not refuted.
+- **Refuted:** A refuted.
+- Otherwise the result is mixed or undetermined, stated as it is.
 5. **Reported with the verdict, not judged:**
    - ln r_obs against the predicted ln ratio for every pair;
    - the same sign test with the substrate's dynamic yield strength in place of effusivity (`Yd_micro_MPa` of the
@@ -123,7 +160,9 @@ Before the freeze, the effusivity values are sourced and the predicted table rec
 
 ## Author's prediction (judgment, before any v_cr value is read)
 
-- supported 0.25, refuted 0.40, undetermined 0.35.
+- Item A: supported 0.25, refuted 0.40, undetermined 0.35.
+- Item B: supported 0.20, refuted 0.15, undetermined 0.65. The predicted shifts are small against the windows; Sn
+  (−7 %) is the only one likely to be resolved.
 - Why not higher: mechanical mismatch (Z9) probably dominates the pair differences. Al on Ni lies close to 1. Hassani
   2020 framed its results mechanically. A thermal sink that matters for the size effect may still be too weak to
   show between substrates within LIPIT's ±2 % windows.
