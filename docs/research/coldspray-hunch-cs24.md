@@ -191,3 +191,57 @@ Before the freeze, the effusivity values are sourced and the predicted table rec
 4. Facts check (coldspray-procedure.md): no solver output is read. The inputs are `vcr_lipit.csv` columns
    (`vcr_low_mps`, `vcr_high_mps`, `vcr_mid_mps`, `d_um`, `particle`, `substrate`, `T_substrate_K`) and
    `properties.csv` columns. Not covered: the k and c_p entries, which are newly sourced (2026-11-28) and never read/used before in a judged item.
+
+## Result (2026-11-28, after the freeze; post hoc, exposed data)
+
+`python scripts/cs24_score.py` (committed in 21667a7 before it was run; inputs `vcr_lipit.csv` and `properties.csv`).
+
+**Verdict: REFUTED** (item A refuted, so overall refuted by the frozen rule). Item B: supported (post hoc), with the
+magnitude missed (below).
+
+**Item A, mismatched pairs** (r_obs size-corrected; agree = same sign as e_Y − e_X):
+
+| Pair | r_obs | ln r_obs | half-width | Predicted r | Result | Comparator (harder substrate → higher v_cr) agrees |
+|---|---|---|---|---|---|---|
+| Al on Cu | 1.082 | +0.079 | 0.101 | 1.102 | unresolved | – |
+| Al on Ni | 1.344 | +0.295 | 0.085 | 0.957 | disagree | yes |
+| Al on Ti | 1.260 | +0.231 | 0.080 | 0.842 | disagree | yes |
+| Cu on Al | 1.120 | +0.113 | 0.090 | 0.925 | disagree | no |
+| Cu on Ti | 1.400 | +0.336 | 0.076 | 0.813 | disagree | yes |
+| Ti on Cu | 0.825 | −0.192 | 0.220 | 1.569 | unresolved | – |
+
+4 resolved, 0 agree, 4 disagree: **refuted.** Ti on Cu, which carried most of the predicted weight, went the other
+way (0.83 against 1.57 predicted), within its wide window.
+
+**Item B, heated substrates, matched pairs:**
+
+| Pair | r_obs | ln r_obs | tolerance | Predicted r | Result |
+|---|---|---|---|---|---|
+| Al | 0.890 | −0.117 | 0.069 | 0.977 | agree |
+| Sn | 0.818 | −0.201 | 0.094 | 0.929 | agree |
+| Ti | 0.935 | −0.068 | 0.076 | 0.993 | unresolved |
+
+2 resolved, both agree: **supported (post hoc).** But the drops are about 5× (Al) and 2.6× (Sn) the predicted ones.
+
+**Against the prediction:**
+- Item A: refuted 0.40, the most likely outcome; it happened.
+- Item B: undetermined 0.65; it came out supported.
+- The Ti on Cu weight was the wrong bet.
+
+**Observations** (labelled; beyond the rule, not judged):
+- Every resolved mismatched pair needs a *higher* v_cr than the matched one, whichever way the effusivity goes. The
+  mismatch itself raises v_cr, which is Hassani 2020's own framing (zoo Z9).
+- The mechanical comparator agrees on 3 of 4 resolved pairs. Cu on Al (soft substrate, still higher v_cr) breaks it.
+  So hardness alone does not order these pairs either.
+- Item B's direction is right, but the size is several times the effusivity-weighted T_i shift. Reading, not tested:
+  substrate heating acts mostly through the substrate's own *state* (it softens), not through thermal partition at
+  the interface. That is partner awareness of the mechanical kind, the matched-pair route Peter's remark points to.
+  CS-24 does not model it.
+- The literature step (after the freeze) was not run: the verdict does not depend on it. Item B's direction
+  (substrate preheating lowers v_cr) is Chaban 2021's own result and is likely known more widely. Label: rediscovery
+  of a known direction.
+
+**Consequences, as fixed in "What follows":**
+- Refuted: recorded as a negative result. The thermal reading of partner awareness is closed at the R1 level, and the
+  size effect stays with Z2 / Z8.
+- No measurement item and no solver form follow.

@@ -73,8 +73,7 @@ force-push.
 
 ## Open for Peter
 
-- CS-24 draft (substrate as heat sink, docs/research/coldspray-hunch-cs24.md): rule 1 waiver or unseen source; then
-  source k/c_p, recompute, freeze. Kernel completion closed by §43.
+- Next for cold spray after CS-24 (refuted, post hoc; DECISIONS 2026-11-28). Kernel completion closed by §43.
 
 ## Hunch budget
 
