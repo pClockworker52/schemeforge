@@ -10,8 +10,9 @@ Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep
 
 ## Next task: edge-energy check draft → Peter (review, freeze), then WSL A task
 
-- **Draft:** docs/research/edge-energy-check-2026-11-28.md (not frozen; no number computed). Its §2 states the case
-  against first; the modeller's odds of a converged interface excess are 0.10.
+- **Draft r1:** docs/research/edge-energy-check-2026-11-28.md (not frozen; no number computed). Judged: energy
+  delivered to the interface layer per contact area, by body, from per-particle energies (Stage 0 fork output change,
+  then reruns of AL08/16/32off). Odds: S0 passes 0.70; finite interface energy 0.20 given S0.
 - **Alternative raised to Peter:** a numerical-dissipation sweep (hourglass coefficient, pair viscosity) on R/8 and
   R/16, since numerical dissipation is the largest mesh drift (§41).
 - After a freeze: write the WSL A task (post-processing only, like task 2026-11-24-a).

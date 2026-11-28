@@ -1,143 +1,183 @@
-# Edge-energy check, 2026-11-28 (does an energy-per-area quantity at the interface converge on TLSPH?), draft
+# Edge-energy check, 2026-11-28 (does the energy delivered to the interface converge on TLSPH?), draft r1
 
-**Status: DRAFT, not frozen.** `kind = check`, not a hunch; the hunch budget is unaffected. Drafted 2026-11-28 (cloud,
-modeller) on Peter's request ("Draft it."), under his priority "finding something that converges" (DECISIONS
-2026-11-28). Post-processing of existing files only: no run, no build. Spec, rule and prediction are fixed before any
-number is computed. No number was computed for this draft.
+**Status: DRAFT r1, not frozen.** `kind = check`, not a hunch; the hunch budget is unaffected. Drafted 2026-11-28
+(cloud, modeller) on Peter's request ("Draft it."; r0 in eec71a6). Revised the same day after Peter's questions
+("Let's check the edge energy." Why no stress? Why no J with large yielding? Don't overfit on the record; should the
+missing TLSPH internal energy be fixed?). Spec, rule and prediction are fixed before any number is computed. No number
+has been computed.
+
+**What changed from r0:**
+- r0 measured plastic-work *content* from ε_p only, because the frames carry no stress. That is a W_ann-type
+  quantity (driver check), and it stays only as a reported comparator (Part C).
+- The judged quantity is now the **energy flux into the interface layer**, by body. It is computed exactly from
+  conservation, using two output-only additions to the fork: a per-particle internal energy and per-particle numerical
+  work.
+- A contour or domain J around the moving edge is computed from stresses and reported with its path dependence.
+- This needs a fork output change and reruns of the §30 off decks (Stage 0, Stage A).
 
 ## 1. Question
 
-Point values at the contact edge do not converge on any host: Y − 1, p_n beyond 0.25 a, the edge ε_p (§25–§27, §41).
-problem-formalism §2(c) reads the edge as a crack tip, where point values are singular by construction. The lesson
-of 2026-11-24 says criteria should be built from finite quantities, and in fracture mechanics the finite quantities
-are energies.
+Point values at the contact edge do not converge (Y − 1, p_n beyond 0.25 a, edge ε_p; §25–§27, §41). The edge behaves
+like a crack tip (problem-formalism §2(c)). The lesson of 2026-11-24 says criteria should be built from finite
+quantities, and energy flow to a moving front is the fracture-mechanics candidate.
 
-**Question:** on the §30 TLSPH off runs (R/8, R/16, R/32), does the **plastic dissipation per unit contact area** in
-an interface layer converge? Does its **interface excess** (the part concentrated at the interface, beyond the bulk
-trend) converge?
+**Question:** on Al–Al 600 m/s TLSPH off runs at R/8, R/16 and R/32, does the energy that each body delivers to its
+interface layer, per unit contact area, converge? Does its **interface excess**, the part concentrated at the
+interface beyond the bulk trend, converge? Each body is evaluated separately: particle and substrate are the two
+partners that feed the interface.
 
-If the excess converges, it is the first converged *interface* quantity in the track other than a(t). It would be in
-J/m², the unit of a bond energy.
+## 2. Background, sorted by what it applies to
 
-## 2. The case against (written before any number; read this first)
+### 2a. Facts about the instrument (apply to every quantity on this host, whatever the concept)
 
-1. **No stress in the files.** The frames hold positions, `SPHELEM_Plastic_Strain`, `ELEMENT_ID` and `PART_ID` (§41
-   Q1). They carry no stress tensor and no energy density, and the engine writes no TL internal energy (solver-facts
-   §3). The fracture quantity that is finite at a tip is the energy **flux** J. It needs stresses, so it needs a rerun
-   with stress output, which is not proposed here. This check uses dissipation **content**, from ε_p through
-   Johnson–Cook.
-2. **Large-scale yielding.** J is path-independent, and finite, only when the plastic zone is small against the
-   geometry, or for proportional loading. In cold spray the whole particle yields, the edge passes ε_p 1, softening
-   makes h_eff < 0 from ε_p ≈ 0.37 (§2(b)), and the edge unloads into the jet. A domain small enough to be local is
-   not path-independent; one large enough to be path-independent is the whole body.
-3. **A moving singular front leaves a singular wake.** Each point at depth d saw the edge pass at distance about d.
-   With the stationary HRR exponents (ε ∼ r^−0.845, σε ∼ 1/r), the wake's plastic work density goes as 1/d, and its
-   depth integral diverges logarithmically. At these meshes that is a drift of about ln 2 / ln(ρ/s), 0.25–0.35 per
-   halving, which reads as "not converging". A growing front is less singular than a stationary one (Rice & Sorensen
-   1978 and later work for hardening; from memory, not read), so the wake may be integrable. So **"not converging" here
-   does not refute the crack-tip reading (§13 case B).**
-4. **Precedent.** The annulus plastic work W_ann, an energy integral at the edge, did not converge: on quads at 0.00
-   to 0.43 of judged points, and in the TLSPH survival probe with 4.5–30 % differences between R/16 and R/32
-   (driver-check-2026-11-17.md). Even the whole-body plastic work on quads moved 2–12 % between R/128 and R/256.
-5. **The outermost layer grows with refinement.** The band check (§41) found the ε_p peak in the outermost particle
-   layer rising from 0.76–0.87 to 2.1 (R/8 to R/32) while its width in µm stayed at 0.6–0.9 µm. A peak that rises at
-   fixed width makes the excess grow.
-6. **Numerical dissipation is the largest drift.** |W_hg| fell from 29.7 to 11.9 nJ (substrate) and |W_visc| from 20.2
-   to 9.1 nJ (particle), against a rebound energy of 2.7 nJ (§41 sinks). Energy that numerical dissipation stops
-   taking must go somewhere, so the physical dissipation cannot converge until that does.
+- **Numerical dissipation is the largest mesh drift** (§41 sinks): |W_hg| 29.7 → 11.9 nJ (substrate), |W_visc| 20.2 →
+  9.1 nJ (particle), R/8 → R/32, against a rebound energy of 2.7 nJ. Today it is known only as a global total.
+  - Stage 0 adds it per particle, so this check can see where it sits and remove it from the physical flux.
+  - The hourglass accumulator is biased under ringing (§17), so its per-particle values are reported with that caveat.
+- The **ε_p peak sits in the outermost particle layer** and rises 0.76–0.87 → 2.1 at a nearly fixed width of
+  0.6–0.9 µm (§41). This may be physics (a singular edge) or a TLSPH surface-layer error; §41 could not tell which.
+- The **face-layer deficit** of TLSPH (end layers carry 0.655 / 0.845 of the stress; §17, §22).
+- e(off) drifts 0.094 / 0.065 / 0.057 (§30), and energy closes to 0.25 % with BCT off (§20.5).
 
-What this check can still decide: whether **any** interface-layer energy per area converges on TLSPH, and whether the
-excess behaves like the observed outer-layer spike (§2 item 5). It cannot separate a singular but well-posed edge
-(case B) from a TLSPH surface-layer error (case C).
+### 2b. Concept precedents (apply only where this check measures the same thing)
 
-## 3. Definitions (committed in the script before any profile is read)
+- **W_ann** (driver check 2026-11-17): plastic work in an annulus at the edge did not converge (quads; TLSPH probe
+  4.5–30 %). It applies to Part C, which measures the same kind of quantity. **It does not apply to the judged flux:**
+  that is total energy (internal plus kinetic), delivered across the layer's boundary, separated by body and with
+  numerical work removed. Nothing like it has been measured in the track.
+- Pointwise thresholds (CS-12 skin Y, §26) and outer drivers (§27) are different concepts; not used here.
 
-- **Runs:** AL08off, AL16off, AL32off (engine `27e53d5f0`, §30), Al–Al, 600 m/s, P-HG-Al, R = 10 µm. Spacing s = 1.25
-  / 0.625 / 0.3125 µm.
-- **Judged frame:** A019, t = 24.0 ns = 1.02 t_p (as in the band check). Reported: the frame nearest 0.5 t_p.
-- **Depth:** as in the band check, in the reference configuration (frame 0). Particle d = R − |X − X_c|; substrate d =
-  depth below the original top surface.
-- **Plastic work density (judged):** isothermal Johnson–Cook at T_r with CE = 1,
-  w_p(ε) = A ε + B ε^(n+1)/(n+1), with A 148.4 MPa, B 345.5 MPa, n 0.183 (P-HG-Al) [J/m³]. This is an upper bound,
-  because heating lowers σ_y. It is a monotone map of ε_p, so convergence of w_p is convergence of the ε_p field
-  weighted by the work.
-  - Reported: the plastic-heating-only adiabatic variant (T from ∫σ_y dε_p / ρc_p, the §34 lower-bound
-    temperature).
-- **Layer dissipation per contact area:** γ(ρ) = Σ_{d_i ≤ ρ} V⁰_i w_p(ε_p,i) / A_c [J/m²], for each body separately.
-  The sum runs over the whole layer, jet included. V⁰_i = s³ (lattice volume). A_c = π a² / 4 for the quarter model,
-  with a = a(t) at the frame: the largest current radial position of a particle with nonzero contact force in the
-  interface file.
-  - ρ ∈ {1.25, 2.5, 3.75, 5} µm, which is at least one spacing on every mesh.
-- **Interface excess:** the intercept of γ(ρ) at zero thickness, extrapolating the bulk slope between 2.5 and 5 µm:
-  γ_ex = 2 γ(2.5) − γ(5) [J/m²]. This is the Gibbs-type surface excess of dissipation.
-- **Mesh differences:** for a quantity q, Δ_ab = |q_b − q_a| / |q_b| between meshes a (coarser) and b (finer).
-- **Class per quantity and body:**
+### 2c. Why J is not ruled out by large-scale yielding
+
+- **The energy flux into a region around a moving front is defined for any material.** It is the work of the outside
+  material through the boundary, plus the energy the moving boundary sweeps in (Freund's dynamic energy-flux integral;
+  from memory).
+- What large-scale yielding breaks is **path independence**: material between two contours dissipates, so F(ρ) depends
+  on the contour size ρ. That dependence is information, not a defect: F(ρ₁) − F(ρ₂) is the dissipation and storage
+  rate between the two contours. The tip limit ρ → 0 is the energy reaching the front itself. For ideal plasticity
+  that limit is zero, and with hardening and rate it may be finite.
+- Formulations built for this case: Atluri's T* for incremental plasticity, and configurational forces, J_tip = J_far −
+  C_p, with C_p the plastic configurational force (Simha, Fischer, Kolednik and co-authors; from memory, not read). A
+  frictionless contact edge is not a crack, but configurational forces apply to any moving front.
+- r0 said J could not be formulated here. That was wrong: what fails is path independence, not the definition.
+
+### 2d. What a singular front implies (reasoning, not tested)
+
+- If the edge field were stationary-HRR-like (σε ∼ 1/r), the energy density around the current edge is integrable in
+  2D, so the flux into a small torus around the edge is finite.
+- The *wake* (material the edge has passed, at depth d) would carry w ∼ 1/d, which has a log-divergent depth integral.
+- A growing front is less singular than a stationary one (from memory), so the wake may be integrable.
+- Model check M4 shows how a log-divergent wake would score. "Not converging" therefore does not by itself refute the
+  crack-tip reading.
+
+## 3. Stage 0: fork outputs and their rung (WSL A)
+
+**Build (output only; must be bitwise neutral on written metrics, T-A0):** a per-particle record at each animation
+frame, quarter model:
+- w_i [J]: accumulated stress work V⁰_i ∫ P:Ḟ dt (the per-particle terms of `tl_diag`'s E_int);
+- h_i, q_i [J]: accumulated hourglass and pair-viscosity work on particle i (the per-particle terms of W_hg and
+  W_visc);
+- the Cauchy stress σ_i (6 components) and J_i = det F_i;
+- velocity and position (already written).
+
+**Rung (all must pass before Stage A):**
+- **S0-1 sums:** Σ w_i, Σ h_i and Σ q_i per body equal `tl_diag.csv`'s E_int, W_hg and W_visc to ≤ 0.1 % of KE₀ at
+  every frame. Run: AL08off rerun (about 100 s).
+- **S0-2 neutrality:** the rerun reproduces the §30 AL08off written metrics (e, `tl_diag.csv`, interface file) bit for
+  bit, headers masked.
+- **S0-3 stress:** −tr σ_i / 3 matches the written pressure P_i to ≤ 10⁻⁶ relative.
+- **S0-4 elastic reversibility (known answer):** the elastic body-on-body T-B2 deck (conforming sphere R = 10 µm on
+  a block, 20 m/s, §22.1), at R/16. An elastic interface keeps no energy. After separation, the interface-layer energy ε_b(ρ) of section 4 must
+  return to ≤ 5 % of its in-contact peak, and the per-particle numerical work must stay ≤ 1 % of KE₀.
+
+If S0 fails: stop and report; no Stage A.
+
+## 4. Stage A: judged quantities (reruns AL08off, AL16off, AL32off with the Stage 0 outputs)
+
+Engine as §30 (`27e53d5f0`) plus the output change; decks unchanged. Cost: about 100 s, 0.5 h and 11–12 h. The R/32
+memory stays near §30's 12.7–14.2 GiB plus the new arrays.
+
+**Definitions** (committed in the script before any profile is read):
+- **Depth** in the reference configuration: particle d = R − |X − X_c|; substrate d = depth below the original top
+  surface. ρ ∈ {1.25, 2.5, 3.75, 5} µm. Layer set S_b(ρ) = particles of body b with d ≤ ρ.
+- **Contact area:** A_c(t) = π a(t)² / 4 (quarter), with a the largest current radial position of a particle with
+  nonzero contact force in the interface file.
+- **Energy delivered to the layer per contact area**, by conservation:
+  ε_b(ρ, t) = Σ_{i ∈ S_b(ρ)} [ (w_i + k_i + h_i + q_i)(t) − (w_i + k_i + h_i + q_i)(0) ] / A_c(t) [J/m²],
+  with k_i = ½ m_i |v_i|².
+  - Adding h_i and q_i books the numerical work done in the layer as received energy. The physical flux is then the
+    energy the layer received from its surroundings and through the contact, whichever sink took it.
+  - Reported: the same without h_i and q_i, and h_i + q_i alone.
+- **Interface excess:** ε_ex,b = 2 ε_b(2.5) − ε_b(5) [J/m²], the intercept of the bulk trend at zero thickness.
+- **Partner share** (reported): ε_ex,p / (ε_ex,p + ε_ex,s).
+- **Judged frame:** A019 (1.02 t_p). Reported: the frame nearest 0.5 t_p, and the time series.
+- **Mesh differences:** Δ_ab = |q_b − q_a| / |q_b| (a coarser, b finer). Classes:
   - **converged:** Δ_16,32 ≤ 0.05 and Δ_16,32 ≤ 0.6 Δ_8,16;
   - **converging:** Δ_16,32 ≤ 0.15 and Δ_16,32 ≤ 0.6 Δ_8,16;
   - **not converging:** otherwise.
 
-## 4. Q1: files (reading only; stop if it fails)
+**Model checks** (on the real frame-0 lattices, run before any real profile; manufactured w fields, k = h = q = 0):
 
-1. Frames A000 and A019 (and the 0.5 t_p frame) of all three off runs, with positions, ε_p and ids. These were read in
-   §41; the run files were kept (task 2026-11-24-b deleted only the derived arrays).
-2. a(t) at those frames from the interface file (contact-force list). **Never read for these runs.** Check that
-   a(A019) on the three meshes differs by less than 5 %. a(t) converges elsewhere (driver check; TLSPH probe median
-   2.8 %). If it does not, stop and report it.
-3. Particle volume s³: check against the deck's lattice.
-
-## 5. Model checks (on the real lattices, before any real profile is used)
-
-Manufactured ε_p fields placed on the frame-0 positions of each mesh. Bulk ε_b = 0.2 for r_ref ≤ 8 µm in both
-bodies, 0 outside.
-
-| Check | Field | Required class of γ_ex (both bodies) |
+| Check | Field (energy density per reference volume, in units of w₀; bulk 0.2 for r_ref ≤ 8 µm) | Required class of ε_ex |
 |---|---|---|
-| M1 converged band | ε_b + 1.0 exp(−d / 1 µm) | converged |
-| M2 integrable singular front | ε_b + 0.5 (d / 1 µm)^−0.5 | converging or converged |
-| M3 observed spike | ε_b + P exp(−d / 0.75 µm), P = 0.8 / 1.3 / 2.1 at R/8 / R/16 / R/32 | not converging |
-| M4 stationary HRR wake (reported only) | ε_b + 0.5 (d / 1 µm)^−0.845 | expected not converging (§2 item 3) |
+| M1 converged band | 0.2 + exp(−d / 1 µm) | converged |
+| M2 integrable singular front | 0.2 + 0.5 (d / 1 µm)^−0.5 | converging or converged |
+| M3 rising surface spike | 0.2 + P exp(−d / 0.75 µm), P = 0.8 / 1.3 / 2.1 at R/8 / R/16 / R/32 | not converging |
+| M4 log-divergent wake (reported) | 0.2 + 0.5 (d / 1 µm)^−1 | expected not converging |
 
-If M1 or M2 fails its class, or M3 comes out converging or converged, the metric fails its rung (standing rigor
-rule, coldspray-procedure.md): stop and report **not determinable**.
+If M1 or M2 fails its class, or M3 comes out converging or converged, the estimator fails its rung: **not
+determinable**.
 
-## 6. Outcomes (judged at A019)
+## 5. Outcomes (judged at A019)
 
-- **Finite interface dissipation (on TLSPH):** γ_ex is converged or converging on both bodies, and γ_ex ≥ 0.2 γ(2.5)
-  on R/32 for both bodies (the excess is a real share, not round-off around zero).
-- **Bulk only:** γ(5) is converged or converging on both bodies, but γ_ex is not (or is below the 0.2 share).
-- **Nothing converges:** neither holds.
-- **Not determinable:** Q1 stops, or a model check fails.
+- **Finite interface energy:** ε_ex,b converged or converging for both bodies, and |ε_ex,b| ≥ 0.2 |ε_b(2.5)| on R/32
+  for both (a real share).
+- **Bulk only:** ε_b(5) converged or converging for both bodies, ε_ex not.
+- **Nothing converges:** neither.
+- **Not determinable:** Stage 0 fails, Q1 fails (a(A019) differs by > 5 % across meshes), or a model check fails.
 
 **Reported, not judged:**
-- γ(ρ) for every ρ, body and mesh, with Δ and class;
-- the adiabatic variant;
-- the 0.5 t_p frame;
-- the sinks from `tl_diag.csv` at A019 (W_hg, W_visc, W_d, E_c) beside Σ γ·A_c, to show whether γ's drift tracks the
-  numerical-dissipation drift;
-- the CS-23 30× bonded runs (§39), if their frames allow, the same quantities.
+- **Part B, domain J around the moving edge.** Weight q = 1 for ℓ ≤ ρ/2, falling linearly to 0 at ℓ = ρ, with ℓ the
+  r–z distance to the current edge point.
+  - F_b(ρ) = −Σ_{i ∈ b} V_i ∇q_i · [σ_i · v_i − e_i (v_i − u_e)], with V_i = J_i V⁰_i, e_i = (w_i + k_i)/V_i and u_e
+    the edge velocity from central differences of a(t).
+  - Per unit edge length, for each ρ: the profile F_b(ρ) (path dependence) and its trend toward small ρ.
+  - Not judged, because u_e from differences of a(t) does not converge (driver check).
+- **Part C, comparator (W_ann-type):** the plastic-work content γ_b(ρ) from ε_p through isothermal Johnson–Cook (r0's
+  quantity), with its excess. Whether total-energy flux and plastic content behave differently is the direct test of
+  whether the flux is a different concept in practice.
+- **Where numerical work sits:** h + q per layer and its share of ε_b(ρ), by mesh.
+- **The CS-23 30× bonded runs:** the same quantities, if a rerun is approved later (not part of this check).
 
-## 7. Prediction (judgment, before any number)
+## 6. Prediction (judgment, before any number)
 
-- Finite interface dissipation 0.10; bulk only 0.30; nothing converges 0.45; not determinable 0.15.
-- Why so low: §2 items 4–6 are measured, and each one alone predicts a drifting excess. Item 3 says that even a
-  well-posed singular edge may drift at these meshes.
-- Not determinable 0.15: Q1 item 2 (a(t) from the interface file) is unread, and M2 may not reach "converging" at R/32.
+- Stage 0 passes: 0.70 (S0-1 depends on the accumulators being per particle in the source; S0-4 on the hourglass bias
+  under ringing).
+- Given Stage 0 passes: finite interface energy 0.20, bulk only 0.35, nothing converges 0.30, not determinable 0.15.
+- Why these odds:
+  - The instrument facts (2a) act on any quantity: the outer-layer spike and the drift of numerical dissipation can
+    put a mesh-dependent amount of energy into the outermost layer.
+  - The concept itself is untested, and booking numerical work as received energy removes the most obvious cause of
+    drift. That is why the odds are higher than r0's 0.10 for the plastic content.
+  - M2 versus M4 (section 2d) limits what "not converging" means.
 
-## 8. What follows (stated now)
+## 7. What follows (stated now)
 
-- **Finite interface dissipation:** a converged interface quantity in J/m² exists on TLSPH. Next would be a hunch
-  comparing γ_ex with a bond-energy scale, and a stress-output rerun for a domain J (Stage B), both after Peter's
-  review.
-- **Bulk only:** the interface excess is the non-converging part, like every point value. A criterion built from
-  finite quantities then needs the interface's own length (cohesive zone), or a different host.
-- **Nothing converges:** even bulk dissipation drifts. The first thing to make converge is the numerical dissipation
-  (§2 item 6); the next check would be a dissipation sweep (hourglass coefficient, pair viscosity) on R/8 and R/16.
-- **Not determinable:** recorded; no rerun is decided here.
+- **Finite interface energy:** the first converged interface quantity besides a(t), split by partner. Next would be a
+  hunch on whether bonding needs ε_ex to exceed an interface energy (cohesive G_c), with the partner split as the
+  contact's model of its partners. Peter decides.
+- **Bulk only:** the excess is the non-converging part. Compare it with Part C and with the per-particle numerical
+  work: if the drift sits in h + q, the next task is the dissipation itself.
+- **Nothing converges:** the instrument does not converge even in energy. A dissipation sweep (hourglass coefficient,
+  pair viscosity) on R/8 and R/16 comes next.
+- **Not determinable:** recorded; Peter decides.
 
-## 9. Cost and facts check
+## 8. Facts check (coldspray-procedure.md)
 
-- One WSL A post-processing session, as for the band check. Frame conversion needs a few GB of scratch, deleted after.
-- **Facts checked** (solver-facts §3, §41).
-  - Covered: frame fields and ids, frame times, the judged frame A019, `tl_diag.csv` sinks.
-  - **Not covered: never read/used before; check the output first:** (i) a(t) from the §30 off runs' interface file
-    (Q1 item 2); (ii) V⁰ = s³ as the particle volume (Q1 item 3).
+- Covered: positions, ε_p, ids and frame times (§41); `tl_diag.csv` E_int, W_hg, W_visc per body (§41 sinks); TLSPH
+  stress fields can be written (T-B2 runs, §22.1); the §30 decks request only EPSP, P and VEL animations (§34).
+- **Not covered: never read/used before; check the output first:**
+  - (i) per-particle w, h, q (new output, Stage 0);
+  - (ii) σ and J per particle in an impact run;
+  - (iii) a(t) from the interface file of the §30 off runs;
+  - (iv) the T-B2 deck at R/16 for S0-4 (run before at R/32 and R/64 only).
