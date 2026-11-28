@@ -1,4 +1,4 @@
-# Handoff — 2026-11-28: CS-25 scored (undetermined, parked); next is a task under Peter's convergence priority (current state only)
+# Handoff — 2026-11-28: CS-25 parked; edge-energy check drafted, waiting on Peter (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
@@ -8,7 +8,14 @@ entries (2026-11-28), coldspray-hunch-cs25.md (result section), problem-formalis
 Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep it in step). Two sessions may write:
 `git fetch` and fast-forward before every commit; never force-push.
 
-## Next task: choose a convergence task with Peter
+## Next task: edge-energy check draft → Peter (review, freeze), then WSL A task
+
+- **Draft:** docs/research/edge-energy-check-2026-11-28.md (not frozen; no number computed). Its §2 states the case
+  against first; the modeller's odds of a converged interface excess are 0.10.
+- **Alternative raised to Peter:** a numerical-dissipation sweep (hourglass coefficient, pair viscosity) on R/8 and
+  R/16, since numerical dissipation is the largest mesh drift (§41).
+- After a freeze: write the WSL A task (post-processing only, like task 2026-11-24-a).
+
 
 - **Peter's priority** (DECISIONS 2026-11-28): "Finding something that converges has priority now."
 - **CS-25 done:** undetermined, because the judged rows H20-04/05/07 have no v_cr window (drafting error); parked.
@@ -37,7 +44,7 @@ Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep
 
 | Session | Where | Open task |
 |---|---|---|
-| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | convergence task, to be chosen with Peter |
+| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | edge-energy check draft to Peter; WSL A task after a freeze |
 | WSL A | fork `sph-hvi-contact` `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-27-b closed, §43) |
 | WSL B | — | none (b9: only Dai 2025 left, closed access) |
 
