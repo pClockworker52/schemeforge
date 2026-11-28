@@ -1,41 +1,33 @@
-# Handoff — 2026-11-28: next task is drafting hunch CS-25 (the contact as an object with a model of its partners) (current state only)
+# Handoff — 2026-11-28: CS-25 drafted, waiting on Peter (waiver, tolerance, freeze) (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md and draft CS-25." Then read:
-- docs/STATUS.md (top);
-- the last four DECISIONS entries (`python scripts/decisions_index.py`);
-- **docs/research/interface-as-object-2026-11-28.md**, the brief;
-- problem-formalism.md;
-- coldspray-hunch-cs24.md (result section);
-- multi-particle-tried.md;
-- coldspray-hunch-cs20.md;
-- reduced-route-plan.md (R3).
+**Start the next session with:** "Read docs/HANDOFF.md." Then read docs/STATUS.md (top) and
+**docs/research/coldspray-hunch-cs25.md** (the draft). Background: docs/research/interface-as-object-2026-11-28.md
+(the brief), coldspray-hunch-cs24.md (result section).
 
-Branch: `claude/exciting-fermi-qy077p` (`main` was fast-forwarded on 2026-11-27 and is behind again; no instruction to
-keep it in step). Two sessions may write: `git fetch` and fast-forward before every commit; never force-push.
+Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep it in step). Two sessions may write:
+`git fetch` and fast-forward before every commit; never force-push.
 
-## Next task: draft CS-25 (Peter, chat 2026-11-28: "Write it as a hunch. This will need a bit of reasoning and a fresh session.")
+## Current task: CS-25 draft → Peter
 
-- **Idea** (Peter's reframing): what is missing is the *contact's* model of its partners, not a body's model of its
-  partner. The interface as an object with its own state and length, fed by both partners.
-- **Brief:** docs/research/interface-as-object-2026-11-28.md. It covers:
-  - what the contact is in the formalism today;
-  - why the interface is the home for the missing length and for regularising the bond-front singularity;
-  - the third-body view;
-  - the CS-24 observations (co-exposure; heating acts through supply);
-  - the limits: near the closed interface-state route, inputs must be converged (only a(t) is), identifiability, no
-    unseen ring maps, and what was already tried;
-  - the one feasible form the modeller sees: an a(t)-driven interface-state model with a film-coverage state and a
-    co-exposure rule;
-  - five questions to settle before drafting.
-- **Process:** `coldspray-hunch-cs25.md`, drafted first; mechanism, predictions and kill criterion fixed before any
-  data. Literature (relatives) checked without exposing data. Peter freezes.
-  - Budget: 2 of 5 open, so registration would make it 3 of 5.
-  - Rule 1's data clause will most likely need a waiver, since all v_cr data is exposed and there are no unseen ring
-    maps. Say so in the draft.
-- **Do not** re-propose CS-12 (Bay stretch), CS-20 (switch radius) or the pressure–slip driver without saying how CS-25
-  differs.
+- **Draft:** docs/research/coldspray-hunch-cs25.md (not registered). Predictions: `scripts/cs25_predict.py` (reads
+  properties.csv only; no v_cr value read in the drafting session).
+- **Form:** the contact holds a model of both partners (B, Z) and the edge kinematics a(t). Each face is cleaned iff
+  the edge is subsonic for it and it is compressed by μ_i = p/B_i ≥ α/2 under the shared acoustic pressure; the
+  particle bonds iff both faces are clean (co-exposure).
+  - v_cr = (α/2) max(B_p, B_s)(1/Z_p + 1/Z_s), α = 0.15 from Z6, nothing fitted. Matched pairs: Z6 + CS-20 strong form.
+  - Chosen with the six CS-24 ratios in view (sound-speed-only and OR forms discarded); they are context only.
+- **Judged item J** (post hoc, H20 rows outside the record, not yet read): Cu on W 1.689, Sn on Cu 1.794, W on Cu
+  1.689 (against Cu on Cu); comparators Z6 particle-only and Z6-mean; tol = summed half-widths + 0.15.
+- **Open for Peter:**
+  1. rule 1 data-clause waiver, or not registering it (registration makes the count 3 of 5);
+  2. the tolerance (0.15) and the verdict thresholds;
+  3. freeze.
+- **After a freeze:** `scripts/cs25_score.py` committed before it is run; literature step after the freeze (a search
+  would surface Hassani 2020's pair values); verdict labelled post hoc.
+- **Known gaps (in the draft):** no strength, temperature or size term; CH heating not explained; nothing new for
+  matched pairs; planar partition likely misses penetration pairs (Cu on Al context miss ×1.5).
 
 ## State in brief (2026-11-28)
 
@@ -56,13 +48,13 @@ keep it in step). Two sessions may write: `git fetch` and fast-forward before ev
 
 | Session | Where | Open task |
 |---|---|---|
-| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | draft CS-25 (fresh session) |
+| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | CS-25 draft to Peter; score after a freeze |
 | WSL A | fork `sph-hvi-contact` `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-27-b closed, §43) |
 | WSL B | — | none (b9: only Dai 2025 left, closed access) |
 
 ## Open for Peter
 
-- CS-25 draft → freeze (and probably a rule 1 waiver).
+- CS-25 draft → rule 1 waiver, tolerance, freeze (docs/research/coldspray-hunch-cs25.md).
 - Later: Phase 7 (Arena 2 search) vs further cold-spray work.
 - Small open items:
   - the B4 exposure log entry for the Tang 2024 snippet (details with the desktop session);
