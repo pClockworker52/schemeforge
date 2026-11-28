@@ -1,6 +1,6 @@
 # Cold spray: hunch CS-24 (the substrate as a heat sink: a partner-aware thermal v_cr law), DRAFT
 
-**Draft 2026-11-28 (cloud, modeller), not registered, not frozen.** Peter asked for it (chat 2026-11-28), after the
+**Draft 2026-11-28 (cloud, modeller), not registered, not frozen. Ready for the freeze** (checklist below). Peter asked for it (chat 2026-11-28), after the
 modeller's reasoning on partner-aware contact against problem-formalism.md. Zero-code in the solver sense: a closed-form
 law evaluated on the single-impact table. No solver run.
 - **Budget:** registration would make the count 3 of 5.
@@ -80,13 +80,14 @@ law evaluated on the single-impact table. No solver run.
 Mechanical partner effects (Z9) and thermal ones can both be present. This hunch only claims that the thermal one is
 visible in the sign of v_cr changes between substrates.
 
-## Predictions (provisional numbers; recomputed with sourced properties at the freeze)
+## Predictions (sourced properties, 2026-11-28)
 
-Effusivity e [J m⁻² K⁻¹ s⁻½]: Al 23 957, Cu 37 173, Ni 18 944, Ti 7 172, Sn 10 480.
-- **Provenance:** Al k and c_p from P-HG-Al (`properties.csv`). Cu and Ni c_p from P-HG-Cu and P-HG-Ni. ρ from the
-  H20 rows.
-- **Never read/used before; to be sourced before the freeze** (a handbook such as Incropera Table A.1, entered in
-  `properties.csv`): k for Cu, Ni, Ti and Sn; c_p for Ti and Sn. The provisional values here are from memory.
+Effusivity e = √(k ρ c_p) [J m⁻² K⁻¹ s⁻½]: Al 23 957, Cu 37 173, Ni 18 965, Ti 7 187, Sn 10 528.
+- ρ from the P-H20 rows.
+- k and c_p from the P-WP rows (`properties.csv`, Wikipedia element infoboxes, added 2026-11-28; c_p = molar heat
+  capacity / standard atomic weight). They agree with P-HG for Al, Cu and Ni c_p to the printed digit.
+- The values computed from memory before the sourcing differed by under 0.3 %; no prediction changed beyond the third
+  digit (Ti on Cu 1.571 → 1.569).
 
 **Item A, judged (the mismatched pairs of H20; v_cr(X on Y) / v_cr(X on X)):**
 
@@ -180,11 +181,12 @@ Before the freeze, the effusivity values are sourced and the predicted table rec
 
 ## Before the freeze (checklist)
 
-1. Source k (Cu, Ni, Ti, Sn) and c_p (Ti, Sn) and enter them in `properties.csv` with sources; recompute the table.
-2. Peter: rule 1 waiver (data clause), or a named unseen source.
-3. Literature: read Schmidt et al. 2006's thermal size-effect derivation, or record that it was not read. Search
-   for a substrate-thermal-property effect on v_cr in the literature (WSL B, metadata and abstracts only, leak-scanned;
-   the blind list is used up, so there is no blind conflict).
+1. ~~Source k and c_p; recompute.~~ Done 2026-11-28 (above).
+2. ~~Peter: rule 1 waiver.~~ Waived 2026-11-28 (DECISIONS).
+3. **Moved to after the freeze:** the literature step. It means reading Schmidt et al. 2006's derivation and searching
+   for any substrate-thermal-property effect on v_cr. A search on that topic would likely surface Hassani 2020's pair
+   results, which are item A's data. The step sets only the label, not the prediction, so it runs after the freeze
+   and before the verdict is labelled.
 4. Facts check (coldspray-procedure.md): no solver output is read. The inputs are `vcr_lipit.csv` columns
    (`vcr_low_mps`, `vcr_high_mps`, `vcr_mid_mps`, `d_um`, `particle`, `substrate`, `T_substrate_K`) and
-   `properties.csv` columns. Not covered: the new k and c_p entries (never read/used before).
+   `properties.csv` columns. Not covered: the k and c_p entries, which are newly sourced (2026-11-28) and never read/used before in a judged item.
