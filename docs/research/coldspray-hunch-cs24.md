@@ -1,9 +1,10 @@
-# Cold spray: hunch CS-24 (the substrate as a heat sink: a partner-aware thermal v_cr law), DRAFT
+# Cold spray: hunch CS-24 (the substrate as a heat sink: a partner-aware thermal v_cr law), registration (frozen)
 
-**Draft 2026-11-28 (cloud, modeller), not registered, not frozen. Ready for the freeze** (checklist below). Peter asked for it (chat 2026-11-28), after the
+**Registered and frozen 2026-11-28, approved by Peter ("Freeze"), as drafted in 1c8b8e4, before any v_cr value of
+item A or of item B's heated rows was read.** Drafted 2026-11-28 (cloud, modeller). Peter asked for it (chat 2026-11-28), after the
 modeller's reasoning on partner-aware contact against problem-formalism.md. Zero-code in the solver sense: a closed-form
 law evaluated on the single-impact table. No solver run.
-- **Budget:** registration would make the count 3 of 5.
+- **Budget:** this registration makes the count 3 of 5.
 - **Rule 1's data clause: waived by Peter (chat 2026-11-28; DECISIONS 2026-11-28).** Every row it can be tested on is
   exposed (`data/vcr_lipit.csv`, read in this track since 2026-11-03). Any verdict is labelled **post hoc (exposed
   data)**.
@@ -25,7 +26,7 @@ law evaluated on the single-impact table. No solver run.
 
 ```yaml
 - id: CS-24
-  status: draft (not registered)
+  status: open (registered and frozen 2026-11-28)
   lens: transfer / partner-aware (Peter's partner-aware contact idea, thermal reading)
   statement: >-
     Bonding needs the interface layer to reach a temperature rise set by the particle's melting margin, and that
