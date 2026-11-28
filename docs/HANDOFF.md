@@ -1,33 +1,25 @@
-# Handoff — 2026-11-28: CS-25 drafted, waiting on Peter (waiver, tolerance, freeze) (current state only)
+# Handoff — 2026-11-28: CS-25 frozen; scoring script committed, run waits for Peter's go (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
-**Start the next session with:** "Read docs/HANDOFF.md." Then read docs/STATUS.md (top) and
-**docs/research/coldspray-hunch-cs25.md** (the draft). Background: docs/research/interface-as-object-2026-11-28.md
-(the brief), coldspray-hunch-cs24.md (result section).
+**Start the next session with:** "Read docs/HANDOFF.md." Then read docs/STATUS.md (top), the last DECISIONS entry
+(2026-11-28, CS-25 registered) and **docs/research/coldspray-hunch-cs25.md** (frozen).
 
 Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep it in step). Two sessions may write:
 `git fetch` and fast-forward before every commit; never force-push.
 
-## Current task: CS-25 draft → Peter
+## Current task: score CS-25 on Peter's go
 
-- **Draft:** docs/research/coldspray-hunch-cs25.md (not registered). Predictions: `scripts/cs25_predict.py` (reads
-  properties.csv only; no v_cr value read in the drafting session).
-- **Form:** the contact holds a model of both partners (B, Z) and the edge kinematics a(t). Each face is cleaned iff
-  the edge is subsonic for it and it is compressed by μ_i = p/B_i ≥ α/2 under the shared acoustic pressure; the
-  particle bonds iff both faces are clean (co-exposure).
-  - v_cr = (α/2) max(B_p, B_s)(1/Z_p + 1/Z_s), α = 0.15 from Z6, nothing fitted. Matched pairs: Z6 + CS-20 strong form.
-  - Chosen with the six CS-24 ratios in view (sound-speed-only and OR forms discarded); they are context only.
-- **Judged item J** (post hoc, H20 rows outside the record, not yet read): Cu on W 1.689, Sn on Cu 1.794, W on Cu
-  1.689 (against Cu on Cu); comparators Z6 particle-only and Z6-mean; tol = summed half-widths + 0.15.
-- **Open for Peter:**
-  1. rule 1 data-clause waiver, or not registering it (registration makes the count 3 of 5);
-  2. the tolerance (0.15) and the verdict thresholds;
-  3. freeze.
-- **After a freeze:** `scripts/cs25_score.py` committed before it is run; literature step after the freeze (a search
-  would surface Hassani 2020's pair values); verdict labelled post hoc.
-- **Known gaps (in the draft):** no strength, temperature or size term; CH heating not explained; nothing new for
-  matched pairs; planar partition likely misses penetration pairs (Cu on Al context miss ×1.5).
+- **CS-25 frozen** (fc2d232; as drafted in a5a82be, tolerance 0.15 unchanged; rule 1 data clause waived). Count 3 of 5.
+- **Scoring:** `scripts/cs25_score.py` (35f803c), committed before it is run, checked only on synthetic tables. Not
+  yet run on `vcr_lipit.csv`; no judged row (H20-04, -05, -07) or denominator read.
+- **Why it waits:** Peter asked "0.15 seems strict. Why?" at the freeze. Answer (chat; DECISIONS): the effective
+  tolerance is half-widths + 0.15, about 0.23–0.37 in ln; looser would let comparator-like values agree. Until the
+  run, a dated amendment of the tolerance is still before any judged value is read.
+- **After the run:** result section in the hunch file (post hoc label), DECISIONS entry, hunch index, then the
+  literature step (label only).
+- **Then:** Peter's priority (DECISIONS 2026-11-28): "finding something that converges". CS-25 does not address the
+  solver's non-converging interface states; the next task should.
 
 ## State in brief (2026-11-28)
 
@@ -48,13 +40,14 @@ Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep
 
 | Session | Where | Open task |
 |---|---|---|
-| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | CS-25 draft to Peter; score after a freeze |
+| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | score CS-25 on Peter's go; then a convergence task |
 | WSL A | fork `sph-hvi-contact` `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-27-b closed, §43) |
 | WSL B | — | none (b9: only Dai 2025 left, closed access) |
 
 ## Open for Peter
 
-- CS-25 draft → rule 1 waiver, tolerance, freeze (docs/research/coldspray-hunch-cs25.md).
+- Go for the CS-25 run (or a tolerance amendment first).
+- The next task under the convergence priority.
 - Later: Phase 7 (Arena 2 search) vs further cold-spray work.
 - Small open items:
   - the B4 exposure log entry for the Tang 2024 snippet (details with the desktop session);
@@ -62,7 +55,7 @@ Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep
 
 ## Hunch budget
 
-**2 of 5:** CS-10, CS-17.
+**3 of 5:** CS-10, CS-17, CS-25.
 - Parked: CS-20 (2026-11-24), CS-14/14b.
 - Supported: CS-22b (§31; caveat DECISIONS 2026-11-23).
 - Retired: CS-12.
