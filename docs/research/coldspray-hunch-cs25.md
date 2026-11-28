@@ -1,11 +1,14 @@
-# Cold spray: hunch CS-25 (the contact as an object with a model of its partners: co-exposure by per-face compression), draft
+# Cold spray: hunch CS-25 (the contact as an object with a model of its partners: co-exposure by per-face compression), registration (frozen)
 
-**Status: DRAFT, not registered, not frozen.** Drafted 2026-11-28 (cloud, modeller) from the brief
+**Registered and frozen 2026-11-28, approved by Peter ("Freeze"), as drafted in a5a82be, with the tolerance 0.15
+unchanged, before any v_cr value of the judged rows (H20-04, H20-05, H20-07) or of their denominators was read.**
+Drafted 2026-11-28 (cloud, modeller) from the brief
 [interface-as-object-2026-11-28.md](interface-as-object-2026-11-28.md), on Peter's request ("Write it as a hunch. This
 will need a bit of reasoning and a fresh session."). Zero-code in the solver sense: an a(t)-driven interface model
 whose v_cr consequence is a closed form, evaluated on the single-impact table. No solver run.
-- **Budget:** registration would make the count 3 of 5.
-- **Rule 1's data clause is not met; a waiver is needed.** Every row it can be tested on is exposed
+- **Budget:** this registration makes the count 3 of 5.
+- **Rule 1's data clause: waived by Peter (chat 2026-11-28: "I waive the data clause. Finding something that
+  converges has priority now."; DECISIONS 2026-11-28).** Every row it can be tested on is exposed
   (`data/vcr_lipit.csv`). The judged item below uses three H20 rows whose v_cr values are not quoted anywhere in the
   record, and fixes the predictions before they are read. That is weaker than unseen data, and any verdict is labelled
   **post hoc (exposed data)**. The real test (unseen pairs, residue maps, ring maps) has no source.
@@ -148,7 +151,7 @@ size-corrected there):
 
 ```yaml
 - id: CS-25
-  status: draft (not registered)
+  status: open (registered and frozen 2026-11-28)
   lens: partner-aware contact, Peter's reframing (the contact's model of its partners)
   statement: >-
     The contact is an object with a model of both partners. An interface element born at radius r when the edge
@@ -223,7 +226,7 @@ Cu on W and W on Cu share the denominator row and get the same CS-25 value; they
 - **Ring:** at v_cr the unbonded centre of a dissimilar pair is larger than that of a matched pair (r_in/R 0.18–0.27
   against 0.148 for the nine H20 pairs), with its edge set by the partner with the lower sound speed.
 
-## 6. Rule (to be fixed at the freeze; applied once, after it)
+## 6. Rule (fixed at the freeze; applied once, after it)
 
 **Judged item J** (H20-04 Cu on W, H20-05 Sn on Cu, H20-07 W on Cu):
 1. **Unit.** r_obs = v_cr,mid(numerator) / v_cr,mid(denominator) as in the table above, both rows from H20. Correct for
@@ -267,8 +270,9 @@ may change it before the freeze, not after.
 
 ## Before the freeze (checklist)
 
-1. **Peter: rule 1 waiver** (data clause), or a decision not to register.
-2. **Peter: the tolerance** (0.15) and the verdict thresholds.
+1. ~~Peter: rule 1 waiver.~~ Waived 2026-11-28 (DECISIONS).
+2. ~~Peter: the tolerance and the verdict thresholds.~~ Frozen as drafted (Peter asked why 0.15; answered in chat,
+   see DECISIONS 2026-11-28).
 3. **Literature step after the freeze** (as for CS-24): any search for dissimilar-pair v_cr laws would likely surface
    Hassani 2020's pair values, which are item J's data. The step sets only the label, not the prediction.
 4. **Scoring script** `scripts/cs25_score.py`, committed after the freeze and before it is run.
