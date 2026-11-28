@@ -1,4 +1,4 @@
-# Handoff — 2026-11-28: CS-25 parked; edge-energy check drafted, waiting on Peter (current state only)
+# Handoff — 2026-11-28: edge-energy check r1 frozen; WSL A task 2026-11-28-a open (current state only)
 
 Earlier versions: docs/handoff-archive.md (verbatim, 2026-11-21; track state at the pause, 2026-11-27) and git history.
 
@@ -8,15 +8,14 @@ entries (2026-11-28), coldspray-hunch-cs25.md (result section), problem-formalis
 Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep it in step). Two sessions may write:
 `git fetch` and fast-forward before every commit; never force-push.
 
-## Next task: edge-energy check draft → Peter (review, freeze), then WSL A task
+## Current task: edge-energy check, WSL A task 2026-11-28-a
 
-- **Draft r1:** docs/research/edge-energy-check-2026-11-28.md (not frozen; no number computed). Judged: energy
-  delivered to the interface layer per contact area, by body, from per-particle energies (Stage 0 fork output change,
-  then reruns of AL08/16/32off). Odds: S0 passes 0.70; finite interface energy 0.20 given S0.
-- **Alternative raised to Peter:** a numerical-dissipation sweep (hourglass coefficient, pair viscosity) on R/8 and
-  R/16, since numerical dissipation is the largest mesh drift (§41).
-- After a freeze: write the WSL A task (post-processing only, like task 2026-11-24-a).
-
+- **Spec frozen:** docs/research/edge-energy-check-2026-11-28.md r1 (929afee; as drafted in 46a4a53). Judged: energy
+  delivered to the interface layer per contact area by body, and its excess; Stage 0 output-only fork change first.
+- **Task:** docs/research/tasks/wsl-a.md, 2026-11-28-a (fork branch `energy-out` from `27e53d5f0`; results to
+  `coldspray/opencourant-sph`, §44). Stops at the first failure: preflight (per-particle accumulators), S0-1..S0-4,
+  model checks, Q1.
+- **Next for the modeller:** merge §44 when WSL A reports; record the verdict (DECISIONS, solver-facts lines).
 
 - **Peter's priority** (DECISIONS 2026-11-28): "Finding something that converges has priority now."
 - **CS-25 done:** undetermined, because the judged rows H20-04/05/07 have no v_cr window (drafting error); parked.
@@ -45,8 +44,8 @@ Branch: `claude/exciting-fermi-qy077p` (`main` is behind; no instruction to keep
 
 | Session | Where | Open task |
 |---|---|---|
-| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | edge-energy check draft to Peter; WSL A task after a freeze |
-| WSL A | fork `sph-hvi-contact` `cs12`; results to `coldspray/opencourant-sph` | none (2026-11-27-b closed, §43) |
+| Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | merge §44 when WSL A reports |
+| WSL A | fork `sph-hvi-contact` `energy-out` (new, from `27e53d5f0`); results to `coldspray/opencourant-sph` | task 2026-11-28-a (edge-energy check) |
 | WSL B | — | none (b9: only Dai 2025 left, closed access) |
 
 ## Open for Peter

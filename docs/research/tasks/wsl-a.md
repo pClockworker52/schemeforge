@@ -5,6 +5,66 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
+## Task 2026-11-28-a: edge-energy check (Stage 0 fork outputs and rung, then Stage A reruns)
+
+**Basis:** DECISIONS 2026-11-28 (Peter's priority: "finding something that converges"). Spec, frozen 929afee (as
+drafted in 46a4a53): [../edge-energy-check-2026-11-28.md](../edge-energy-check-2026-11-28.md). Where this task and
+the spec differ, the spec holds. `kind = check`; no hunch, no budget. **Stage 0 must pass before any Stage A run.
+Stop and report at the first failure.** Interleave with nothing big: the R/32 rerun runs alone on the machine.
+
+1. **Set-up.**
+   - Pull `claude/exciting-fermi-qy077p`. Bring `coldspray/opencourant-sph` up to date with it (fast-forward or
+     merge; never force-push).
+   - Fork: a new branch `energy-out` from the §30 engine `27e53d5f0` (spec §4: engine as §30 plus the output change).
+2. **Preflight (source reading only; no build yet).** Report file:line for each item in the commit message of step 3
+   and in §44:
+   - where `tl_diag.csv`'s E_int, W_hg and W_visc are accumulated, and whether each is a sum of per-particle terms. If
+     any is not (for example a global formula), **stop and report** before building: S0-1 cannot be met as written;
+   - where the TL Cauchy stress and det F live per particle at an animation write;
+   - the §30 AL08off, AL16off and AL32off decks and their animation times (frames 1.333 ns apart, A019 = 24.0 ns).
+3. **Build (output only).** A new key, e.g. `out.energy` (default off). At every animation time it writes one record
+   per TL particle, quarter model: id, w_i, h_i, q_i [J] (accumulated stress work V⁰ ∫ P:Ḟ dt, hourglass work, pair
+   viscous work, the per-particle terms of E_int, W_hg, W_visc), Cauchy σ_i (6 components) and J_i.
+   - Document the format and units in the source header and in §44.
+   - T-A0 with the key off: identical on written metrics (55 runs, headers masked). Commit before step 4.
+4. **Stage 0 rung** (spec §3), rows `opencourant/results/edge_energy_s0.csv` here and the same in the fork:
+   - **S0-1:** AL08off rerun with `out.energy` on; per body Σ w, Σ h, Σ q against `tl_diag.csv` E_int, W_hg, W_visc
+     at every frame, ≤ 0.1 % of KE₀;
+   - **S0-2:** the same rerun reproduces the §30 AL08off written metrics (e, `tl_diag.csv`, interface file) bit for
+     bit, headers masked;
+   - **S0-3:** −tr σ_i / 3 against the written P_i, ≤ 10⁻⁶ relative, every particle, every frame;
+   - **S0-4:** the T-B2 deck (§22.1) at R/16 with `out.energy` on. After separation the interface-layer ε_b(ρ) (spec
+     §4 definition, both bodies, all four ρ) returns to ≤ 5 % of its in-contact peak, and Σ (h + q) stays ≤ 1 % of
+     KE₀. If T-B2 has not been run at R/16 before, check its set-up file first (spec §8 item iv).
+   - Commit the rows. If any item fails, stop and report: no step 5.
+5. **Script and model checks, committed before any real profile is read.**
+   - `hvi/scripts/edge_energy.py`: every definition of spec §4 in its docstring (depth, layer sets, A_c, ε_b, ε_ex,
+     partner share, Δ and classes, Part B weight and flux, Part C isothermal Johnson–Cook content).
+   - Run M1–M4 on the frame-0 lattices of the three meshes. Rows `edge_energy_model_checks.csv`. If M1 or M2 misses
+     its class, or M3 comes out converging or converged: stop, **not determinable**.
+6. **Stage A reruns.** AL08off, AL16off, AL32off with `out.energy` on, decks otherwise unchanged (about 100 s, 0.5 h,
+   11–12 h; R/32 near 14.2 GiB plus the new arrays).
+   - Check that each run reproduces its §30 e(off) and `tl_diag.csv`; report any difference, but do not judge it.
+   - **Q1:** a(A019) from the interface file on the three meshes, within 5 % of each other. If not: stop, not
+     determinable.
+7. **Compute and judge** by spec §5 at A019, both bodies: ε_b(ρ) and ε_ex,b with Δ and classes, then the outcome.
+   Reported, not judged: ε_b without h + q, h + q per layer, the partner share, the 0.5 t_p frame and the time series,
+   Part B (F_b(ρ) profile), Part C (plastic content and its excess). Rows `edge_energy_{a,b,c}.csv`.
+8. **Write-up:** verification **§44** on `coldspray/opencourant-sph`.
+   - Include the preflight findings, the rung, the model checks, the tables, the verdict, the predictions against the
+     outcome, a disclosure of what was read, and any deviation from the spec (listed before the verdict).
+   - Observations beyond the rule are labelled. Keep the raw `out.energy` files until the modeller has merged §44;
+     then report their size.
+
+**Modeller's clarifications (2026-11-28; they fix details the spec leaves open, all in reported parts):**
+- **Part B edge point:** (a, z_e), with z_e the mean current z of the particles carrying contact force within one
+  spacing s of r = a, both bodies pooled. ∇q is the analytic gradient of q(ℓ) in the r–z plane. Per unit edge length
+  means divided by π a / 2 (quarter).
+- **Part B u_e:** (ȧ, ż_e) by central differences over animation frames.
+- **Part C:** w_p from ε_p with A 148.4 MPa, B 345.5 MPa, n 0.183 at T_r and CE = 1 (spec r0 definition).
+
+If a definition of the judged part turns out ambiguous while coding, stop and ask the modeller before step 7.
+
 ## Task 2026-11-27-b: kernel completion across a TLSPH contact, Stage A (static model; closed: both forms fail, §43, merged)
 
 **Basis:** DECISIONS 2026-11-27, "Cold-spray track unpaused" (Peter: option 1). Spec, frozen 9369e6c (as drafted in
