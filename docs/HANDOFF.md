@@ -73,7 +73,8 @@ force-push.
 
 ## Open for Peter
 
-- What the cold-spray track does after §43 (kernel completion failed in Stage A).
+- CS-24 draft (substrate as heat sink, docs/research/coldspray-hunch-cs24.md): rule 1 waiver or unseen source; then
+  source k/c_p, recompute, freeze. Kernel completion closed by §43.
 
 ## Hunch budget
 
