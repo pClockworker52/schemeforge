@@ -5,7 +5,7 @@ newest open task, push results to `coldspray/opencourant-sph`. Write only your o
 opencourant-verification.md and your own scripts and results. Do not edit STATUS, HANDOFF, DECISIONS, the hunch
 files or this file. Blind-list papers stay closed.
 
-## Task 2026-11-27-b: kernel completion across a TLSPH contact, Stage A (static model; open)
+## Task 2026-11-27-b: kernel completion across a TLSPH contact, Stage A (static model; closed: both forms fail, §43, merged)
 
 **Basis:** DECISIONS 2026-11-27, "Cold-spray track unpaused" (Peter: option 1). Spec, frozen 9369e6c (as drafted in
 eae3ed5): [../kernel-completion-2026-11-27.md](../kernel-completion-2026-11-27.md). Where this task and the spec

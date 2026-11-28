@@ -17,7 +17,8 @@ force-push.
    recorded, DECISIONS 2026-11-27). WSL needs `git fetch --tags` before a contact eval.
 2. **Clean the repository** (scope confirmed by Peter 2026-11-27; record docs/reports/2026-11-27-repo-cleanup.md).
 3. **Unpause cold spray: done** (DECISIONS 2026-11-27): resumes with the kernel-completion probe. Stage A frozen
-   (9369e6c; docs/research/kernel-completion-2026-11-27.md). WSL A task 2026-11-27-b open; then merge §43.
+   (9369e6c; docs/research/kernel-completion-2026-11-27.md). §43 merged: **both forms fail** (KC-full on
+   interface spacing and stiffness contrast; KC-f has no static equilibrium). No Stage B. Next: Peter.
 
 ## Sync items
 
@@ -67,12 +68,12 @@ force-push.
 |---|---|---|
 | Cloud (modeller) | schemeforge, `claude/exciting-fermi-qy077p` | breaker review after Peter's run; clean-up |
 | Desktop | schemeforge | — (pushed 765b44c) |
-| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | 2026-11-27-b (kernel completion, Stage A); 2026-11-27-a closed (e67d639); 2026-11-26-a closed (§42); closed tasks: docs/research/tasks/wsl-a.md |
+| WSL A | fork `sph-hvi-contact` branch `cs12`; results to `coldspray/opencourant-sph` (deleted; recreate for a new task) | none (2026-11-27-b closed, §43); 2026-11-27-a closed (e67d639); 2026-11-26-a closed (§42); closed tasks: docs/research/tasks/wsl-a.md |
 | WSL B | none (`coldspray/bonding-methods-reading` merged cbe2d88, deleted) | b9: only Dai 2025 left (closed access) |
 
 ## Open for Peter
 
-- After §43: whether Stage B (solver build) follows, by the spec's 'What follows'.
+- What the cold-spray track does after §43 (kernel completion failed in Stage A).
 
 ## Hunch budget
 
